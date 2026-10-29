@@ -1,0 +1,10 @@
+[package]
+name = "echidna-api"
+description = "Echidna API: projects, library and versioning"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+axum.workspace = true
+tokio.workspace = true

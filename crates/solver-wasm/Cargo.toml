@@ -1,0 +1,13 @@
+[package]
+name = "echidna-solver-wasm"
+description = "wasm-bindgen wrapper around echidna-solver"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+echidna-solver.workspace = true
+wasm-bindgen.workspace = true

@@ -1,0 +1,8 @@
+[package]
+name = "echidna-solver"
+description = "Modified Nodal Analysis circuit solver for Echidna"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]

@@ -1,0 +1,12 @@
+node_modules/
+.turbo/
+dist/
+.next/
+out/
+coverage/
+target/
+pkg/
+*.tsbuildinfo
+.env*.local
+.DS_Store
+HANDOFF.md
