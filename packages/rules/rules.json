@@ -1,0 +1,7 @@
+{
+  "rules": [
+    { "id": "voltageRating", "metric": "voltage", "rating": "maxVoltage", "warnAt": 0.8, "failAbove": 1 },
+    { "id": "currentRating", "metric": "current", "rating": "maxCurrent", "warnAt": 0.8, "failAbove": 1 },
+    { "id": "powerRating", "metric": "power", "rating": "maxPower", "warnAt": 0.8, "failAbove": 1 }
+  ]
+}

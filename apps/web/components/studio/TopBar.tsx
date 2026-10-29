@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { usePreferencesStore } from "@/stores/preferences";
 import { IconButton } from "@/components/app/IconButton";
 import { Separator } from "@/components/ui/separator";
+import { useStudioStore } from "@/stores/studio";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +27,8 @@ export const TopBar = ({ libraryOpen, onToggleLibrary }: Props) => {
   const learnMode = usePreferencesStore((s) => s.learnMode);
   const setLearnMode = usePreferencesStore((s) => s.setLearnMode);
   const learnId = useId();
+  const simulating = useStudioStore((s) => s.simulating);
+  const setSimulating = useStudioStore((s) => s.setSimulating);
 
   return (
     <header className="flex h-12 shrink-0 items-center gap-3 border-b bg-background px-3">
@@ -55,14 +58,18 @@ export const TopBar = ({ libraryOpen, onToggleLibrary }: Props) => {
         </div>
         <Tooltip>
           <TooltipTrigger asChild>
-            <span tabIndex={0} className="max-md:hidden">
-              <Button size="sm" disabled>
-                <Play data-icon="inline-start" />
-                {t("simulate")}
-              </Button>
-            </span>
+            <Button
+              size="sm"
+              variant={simulating ? "default" : "outline"}
+              aria-pressed={simulating}
+              onClick={() => setSimulating(!simulating)}
+              className="max-md:hidden"
+            >
+              <Play data-icon="inline-start" />
+              {t("simulate")}
+            </Button>
           </TooltipTrigger>
-          <TooltipContent>{t("simulateUnavailable")}</TooltipContent>
+          <TooltipContent>{simulating ? t("simulateOn") : t("simulateOff")}</TooltipContent>
         </Tooltip>
         <Separator orientation="vertical" className="h-5! max-md:hidden" />
         <div className="flex items-center gap-1">

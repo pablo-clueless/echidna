@@ -123,14 +123,19 @@
     "blankBoard": "空白电路板",
     "learnMode": "学习模式",
     "simulate": "仿真",
-    "simulateUnavailable": "仿真功能将随求解器一同推出",
     "toggleLibrary": "显示或隐藏元件库",
     "panels": "面板",
     "library": {
       "title": "元件",
       "search": "搜索元件",
-      "emptyTitle": "暂无元件",
-      "emptyDescription": "元件库加载后，您设备的元件将显示在这里。"
+      "noMatchTitle": "没有匹配的元件",
+      "noMatchDescription": "试试其他名称，例如电阻或 LED。",
+      "addHint": "选择以添加，或拖到原理图上",
+      "categories": {
+        "power": "电源",
+        "passives": "无源元件",
+        "semiconductors": "半导体"
+      }
     },
     "viewport": {
       "label": "3D 电路板视图"
@@ -138,13 +143,45 @@
     "schematic": {
       "title": "原理图",
       "emptyTitle": "原理图为空",
-      "emptyDescription": "放置一个元件，开始连接您的电路。"
+      "emptyDescription": "从“元件”中拖入一个元件，或从示例电路开始。",
+      "openExample": "打开 3.3 V 稳压器示例",
+      "rotate": "旋转 (R)",
+      "delete": "删除 (Del)",
+      "canvasLabel": "原理图编辑器",
+      "canvasRole": "原理图",
+      "partLabel": "{id}，{name}",
+      "hint": "从一个引脚拖到另一个引脚以连线 · <key>R</key> 旋转 · <key>Del</key> 删除 · 双击适应视图"
     },
     "inspector": {
       "title": "检查器",
       "emptyTitle": "未选择任何内容",
       "emptyDescription": "选择一个元件以查看其实时数值。",
-      "selected": "已选择：{id}"
+      "parameters": "参数",
+      "liveValues": "实时数值",
+      "ratings": "额定值",
+      "pinVoltage": "{pin} 处电压",
+      "current": "电流",
+      "power": "耗散功率",
+      "resetParam": "恢复为元件默认值",
+      "invalidNumber": "请输入数字，例如 220 或 4.7k。",
+      "verdict": {
+        "pass": "在额定范围内",
+        "warn": "警告",
+        "fail": "不通过",
+        "likelyFail": "可能不通过"
+      },
+      "ofRating": "{limit} 的 {percent}",
+      "swapsTitle": "替换建议",
+      "swapTo": "使用 {value}：{verdict}",
+      "swapVerdict": {
+        "pass": "合适",
+        "warn": "警告",
+        "fail": "不通过"
+      },
+      "checking": "正在检查…",
+      "net": "网络",
+      "netVoltage": "电压",
+      "connections": "已连接引脚"
     },
     "validator": {
       "label": "验证",
@@ -156,7 +193,74 @@
       "fail": "失败",
       "likelyFail": "可能失败",
       "warn": "警告",
-      "estimated": "估算"
+      "estimated": "估算",
+      "idle": "添加元件即可开始检查",
+      "solvedIn": "用时 {ms} ms",
+      "errors": {
+        "singular": "无法求解此电路。请检查是否有电源直接并接在一起。",
+        "noConvergence": "求解器未能为此电路找到稳定解。",
+        "pinCount": "{id} 的连线不正确。",
+        "invalidValue": "{id} 的数值无法用于求解。",
+        "internal": "求解时出错。请重试此修改。"
+      }
+    },
+    "simulateOn": "实时：每次修改都会计算并检查。选择即可暂停。",
+    "simulateOff": "已暂停。选择即可实时计算并检查修改。",
+    "params": {
+      "voltage": "电压",
+      "current": "电流",
+      "resistance": "电阻",
+      "capacitance": "电容",
+      "inductance": "电感",
+      "outputVoltage": "输出电压",
+      "dropoutVoltage": "压差",
+      "quiescentCurrent": "静态电流"
+    },
+    "provenance": {
+      "datasheet": "数据手册",
+      "teardown": "拆解",
+      "estimated": "估算",
+      "user": "由你设置"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "额定电压",
+        "explain": "此元件两端电压为额定值的 {percent}。保持在 80% 以下以留出余量；超过 100% 可能被击穿。"
+      },
+      "currentRating": {
+        "name": "额定电流",
+        "explain": "此元件的电流为额定最大值的 {percent}。超过 80% 会发热并加速老化；超过 100% 可能损坏。"
+      },
+      "powerRating": {
+        "name": "额定功率",
+        "explain": "此元件将额定功率的 {percent} 转化为热量。超过 80% 会变热；超过 100% 可能烧毁。"
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "直流电源",
+      "summary": "固定电压源"
+    },
+    "ground": {
+      "name": "地",
+      "summary": "0 V 参考"
+    },
+    "resistor": {
+      "name": "电阻，¼ W",
+      "summary": "限制电流"
+    },
+    "capacitor-ceramic": {
+      "name": "陶瓷电容，16 V",
+      "summary": "直流下开路"
+    },
+    "led-red-5mm": {
+      "name": "红色 LED，5 mm",
+      "summary": "持续 20 mA"
+    },
+    "ldo-3v3": {
+      "name": "3.3 V 稳压器 (LDO)",
+      "summary": "1117 型，最高 0.8 A"
     }
   }
 }

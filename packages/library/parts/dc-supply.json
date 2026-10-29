@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dc-supply",
+  "name": "DC supply",
+  "kind": "supply",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "pos", "name": "+" },
+    { "id": "neg", "name": "−" }
+  ],
+  "params": {
+    "voltage": { "value": 5, "unit": "V", "source": "datasheet", "reference": "Nominal setting" }
+  },
+  "ratings": {},
+  "interfaces": [],
+  "model": "voltageSource",
+  "footprintId": "generic/terminal-2",
+  "meshUrl": "generic/terminal-2"
+}

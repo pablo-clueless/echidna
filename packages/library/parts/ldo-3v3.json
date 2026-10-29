@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ldo-3v3",
+  "name": "3.3 V LDO regulator (1117 type)",
+  "kind": "regulator",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "in", "name": "IN" },
+    { "id": "out", "name": "OUT" },
+    { "id": "gnd", "name": "GND" }
+  ],
+  "params": {
+    "outputVoltage": { "value": 3.3, "unit": "V", "source": "datasheet", "reference": "Fixed output version" },
+    "dropoutVoltage": { "value": 1.1, "unit": "V", "source": "estimated", "reference": "Typical for 1117-type regulators" },
+    "quiescentCurrent": { "value": 0.005, "unit": "A", "source": "estimated", "reference": "Typical for 1117-type regulators" }
+  },
+  "ratings": {
+    "maxVoltage": { "value": 15, "unit": "V", "source": "estimated", "reference": "Typical for 1117-type regulators" },
+    "maxCurrent": { "value": 0.8, "unit": "A", "source": "estimated", "reference": "Typical for 1117-type regulators" },
+    "maxPower": { "value": 1, "unit": "W", "source": "estimated", "reference": "SOT-223 without heatsinking" }
+  },
+  "ratingPins": {
+    "maxVoltage": ["in", "gnd"],
+    "maxCurrent": ["out"]
+  },
+  "interfaces": [],
+  "model": "linearRegulator",
+  "footprintId": "generic/sot-223",
+  "meshUrl": "generic/sot-223"
+}

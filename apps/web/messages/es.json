@@ -123,14 +123,19 @@
     "blankBoard": "Placa en blanco",
     "learnMode": "Modo aprendizaje",
     "simulate": "Simular",
-    "simulateUnavailable": "La simulación llegará con el solucionador",
     "toggleLibrary": "Mostrar u ocultar la biblioteca de componentes",
     "panels": "Paneles",
     "library": {
       "title": "Componentes",
       "search": "Buscar componentes",
-      "emptyTitle": "Aún no hay componentes",
-      "emptyDescription": "Las piezas de tu dispositivo aparecerán aquí cuando se cargue la biblioteca."
+      "noMatchTitle": "Ningún componente coincide",
+      "noMatchDescription": "Prueba con otro nombre, como resistencia o LED.",
+      "addHint": "Selecciona para añadir o arrastra al esquema",
+      "categories": {
+        "power": "Alimentación",
+        "passives": "Pasivos",
+        "semiconductors": "Semiconductores"
+      }
     },
     "viewport": {
       "label": "Vista 3D de la placa"
@@ -138,13 +143,45 @@
     "schematic": {
       "title": "Esquema",
       "emptyTitle": "El esquema está vacío",
-      "emptyDescription": "Coloca un componente para empezar a cablear tu circuito."
+      "emptyDescription": "Arrastra un componente desde Componentes o empieza con el circuito de ejemplo.",
+      "openExample": "Abrir el ejemplo del regulador de 3,3 V",
+      "rotate": "Girar (R)",
+      "delete": "Eliminar (Supr)",
+      "canvasLabel": "Editor de esquemas",
+      "canvasRole": "esquema",
+      "partLabel": "{id}, {name}",
+      "hint": "Arrastra de un pin a otro para cablear · <key>R</key> girar · <key>Supr</key> eliminar · doble clic para ajustar"
     },
     "inspector": {
       "title": "Inspector",
       "emptyTitle": "Nada seleccionado",
       "emptyDescription": "Selecciona un componente para ver sus valores en directo.",
-      "selected": "Seleccionado: {id}"
+      "parameters": "Parámetros",
+      "liveValues": "Valores en directo",
+      "ratings": "Valores nominales",
+      "pinVoltage": "Tensión en {pin}",
+      "current": "Corriente",
+      "power": "Potencia disipada",
+      "resetParam": "Restablecer el valor predeterminado del componente",
+      "invalidNumber": "Introduce un número, como 220 o 4,7k.",
+      "verdict": {
+        "pass": "Dentro del límite",
+        "warn": "Aviso",
+        "fail": "Fallo",
+        "likelyFail": "Fallo probable"
+      },
+      "ofRating": "{percent} de {limit}",
+      "swapsTitle": "Sustituciones sugeridas",
+      "swapTo": "Usar {value}: {verdict}",
+      "swapVerdict": {
+        "pass": "Encaja",
+        "warn": "Aviso",
+        "fail": "Falla"
+      },
+      "checking": "Comprobando…",
+      "net": "Red",
+      "netVoltage": "Tensión",
+      "connections": "Pines conectados"
     },
     "validator": {
       "label": "Validación",
@@ -156,7 +193,74 @@
       "fail": "Fallo",
       "likelyFail": "Probable fallo",
       "warn": "Advertencia",
-      "estimated": "estimado"
+      "estimated": "estimado",
+      "idle": "Añade componentes para empezar a comprobar",
+      "solvedIn": "Calculado en {ms} ms",
+      "errors": {
+        "singular": "No se puede calcular este circuito. Comprueba que no haya fuentes conectadas directamente entre sí.",
+        "noConvergence": "El solucionador no encontró una solución estable para este circuito.",
+        "pinCount": "{id} no está bien cableado.",
+        "invalidValue": "{id} tiene un valor que el solucionador no puede usar.",
+        "internal": "Algo falló durante el cálculo. Vuelve a intentar el cambio."
+      }
+    },
+    "simulateOn": "En directo: cada cambio se calcula y se comprueba. Selecciona para pausar.",
+    "simulateOff": "En pausa. Selecciona para calcular y comprobar los cambios en directo.",
+    "params": {
+      "voltage": "Tensión",
+      "current": "Corriente",
+      "resistance": "Resistencia",
+      "capacitance": "Capacidad",
+      "inductance": "Inductancia",
+      "outputVoltage": "Tensión de salida",
+      "dropoutVoltage": "Tensión de caída",
+      "quiescentCurrent": "Corriente de reposo"
+    },
+    "provenance": {
+      "datasheet": "Hoja de datos",
+      "teardown": "Desmontaje",
+      "estimated": "Estimación",
+      "user": "Definido por ti"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "Tensión nominal",
+        "explain": "La tensión en este componente es el {percent} de su valor nominal. Mantenla por debajo del 80 % para tener margen; por encima del 100 % puede averiarse."
+      },
+      "currentRating": {
+        "name": "Corriente nominal",
+        "explain": "Este componente conduce el {percent} de la corriente máxima prevista. Por encima del 80 % se calienta y se desgasta antes; por encima del 100 % puede fallar."
+      },
+      "powerRating": {
+        "name": "Potencia nominal",
+        "explain": "Este componente convierte en calor el {percent} de su potencia nominal. Por encima del 80 % se calienta; por encima del 100 % puede quemarse."
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "Fuente de continua",
+      "summary": "Fuente de tensión fija"
+    },
+    "ground": {
+      "name": "Tierra",
+      "summary": "Referencia de 0 V"
+    },
+    "resistor": {
+      "name": "Resistencia, ¼ W",
+      "summary": "Limita la corriente"
+    },
+    "capacitor-ceramic": {
+      "name": "Condensador cerámico, 16 V",
+      "summary": "Circuito abierto en continua"
+    },
+    "led-red-5mm": {
+      "name": "LED rojo, 5 mm",
+      "summary": "20 mA en continuo"
+    },
+    "ldo-3v3": {
+      "name": "Regulador de 3,3 V (LDO)",
+      "summary": "Tipo 1117, hasta 0,8 A"
     }
   }
 }

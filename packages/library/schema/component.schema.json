@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://echidna.dev/schema/component.schema.json",
+  "title": "Echidna component spec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "kind", "deviceTypes", "pins", "params", "ratings", "interfaces", "model", "footprintId", "meshUrl"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "led", "diode", "regulator"] },
+    "deviceTypes": {
+      "type": "array",
+      "items": { "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"] },
+      "uniqueItems": true
+    },
+    "pins": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name"],
+        "properties": { "id": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "params": { "type": "object", "additionalProperties": { "$ref": "#/$defs/specValue" } },
+    "ratings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxVoltage": { "$ref": "#/$defs/specValue" },
+        "maxCurrent": { "$ref": "#/$defs/specValue" },
+        "maxPower": { "$ref": "#/$defs/specValue" },
+        "maxTemperature": { "$ref": "#/$defs/specValue" }
+      }
+    },
+    "ratingPins": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^max(Voltage|Current|Power|Temperature)$": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["protocol"],
+        "properties": {
+          "protocol": { "type": "string" },
+          "lanes": { "type": "integer", "minimum": 1 },
+          "connector": { "type": "string" }
+        }
+      }
+    },
+    "model": { "enum": ["ground", "resistor", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator"] },
+    "footprintId": { "type": "string" },
+    "meshUrl": { "type": "string" },
+    "attribution": {
+      "type": "object",
+      "required": ["source", "licence"],
+      "properties": { "source": { "type": "string" }, "licence": { "type": "string" }, "url": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "specValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit", "source"],
+      "properties": {
+        "value": { "type": "number" },
+        "unit": { "enum": ["V", "A", "W", "Ω", "F", "H", "K", "m", "kg", "s", "Hz", "N", "J", "C", "W/K", "K/W", "1"] },
+        "source": { "enum": ["datasheet", "teardown", "estimated"] },
+        "reference": { "type": "string" }
+      }
+    }
+  }
+}

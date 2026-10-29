@@ -1,4 +1,11 @@
-//! Modified Nodal Analysis solver. DC operating point, transient and AC analyses land in later phases.
+//! Modified Nodal Analysis circuit solver. DC operating point lands in Phase 1; transient and AC follow.
+
+mod circuit;
+mod dc;
+mod matrix;
+
+pub use circuit::{Circuit, DcSolution, Element, ElementKind, SolveError, THERMAL_VOLTAGE};
+pub use dc::solve_dc;
 
 /// Returns the crate version, used by the WASM wrapper and API to report which solver build is running.
 pub fn version() -> &'static str {

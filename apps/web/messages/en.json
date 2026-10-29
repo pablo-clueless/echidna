@@ -123,14 +123,19 @@
     "blankBoard": "Blank board",
     "learnMode": "Learn mode",
     "simulate": "Simulate",
-    "simulateUnavailable": "Simulation arrives with the solver",
     "toggleLibrary": "Show or hide the component library",
     "panels": "Panels",
     "library": {
       "title": "Components",
       "search": "Search components",
-      "emptyTitle": "No components yet",
-      "emptyDescription": "Parts for your device will appear here once the library is loaded."
+      "noMatchTitle": "No parts match",
+      "noMatchDescription": "Try another name, such as resistor or LED.",
+      "addHint": "Select to add, or drag onto the schematic",
+      "categories": {
+        "power": "Power",
+        "passives": "Passives",
+        "semiconductors": "Semiconductors"
+      }
     },
     "viewport": {
       "label": "3D board view"
@@ -138,13 +143,45 @@
     "schematic": {
       "title": "Schematic",
       "emptyTitle": "The schematic is empty",
-      "emptyDescription": "Place a component to start wiring your circuit."
+      "emptyDescription": "Drag a part from Components, or start from the example circuit.",
+      "openExample": "Open the 3.3 V regulator example",
+      "rotate": "Rotate (R)",
+      "delete": "Delete (Del)",
+      "canvasLabel": "Schematic editor",
+      "canvasRole": "schematic",
+      "partLabel": "{id}, {name}",
+      "hint": "Drag pin to pin to wire · <key>R</key> rotate · <key>Del</key> delete · double-click to fit"
     },
     "inspector": {
       "title": "Inspector",
       "emptyTitle": "Nothing selected",
       "emptyDescription": "Select a component to see its live values.",
-      "selected": "Selected: {id}"
+      "parameters": "Parameters",
+      "liveValues": "Live values",
+      "ratings": "Ratings",
+      "pinVoltage": "Voltage at {pin}",
+      "current": "Current",
+      "power": "Power dissipated",
+      "resetParam": "Reset to the part’s default",
+      "invalidNumber": "Enter a number, such as 220 or 4.7k.",
+      "verdict": {
+        "pass": "Within rating",
+        "warn": "Warning",
+        "fail": "Fail",
+        "likelyFail": "Likely to fail"
+      },
+      "ofRating": "{percent} of {limit}",
+      "swapsTitle": "Swap suggestions",
+      "swapTo": "Use {value}: {verdict}",
+      "swapVerdict": {
+        "pass": "Fits",
+        "warn": "Warning",
+        "fail": "Fails"
+      },
+      "checking": "Checking…",
+      "net": "Net",
+      "netVoltage": "Voltage",
+      "connections": "Connected pins"
     },
     "validator": {
       "label": "Validator",
@@ -156,7 +193,74 @@
       "fail": "Fail",
       "likelyFail": "Likely to fail",
       "warn": "Warning",
-      "estimated": "estimated"
+      "estimated": "estimated",
+      "idle": "Add parts to start checking",
+      "solvedIn": "Solved in {ms} ms",
+      "errors": {
+        "singular": "This circuit can’t be solved. Check for supplies wired directly across each other.",
+        "noConvergence": "The solver couldn’t settle on an answer for this circuit.",
+        "pinCount": "{id} isn’t wired correctly.",
+        "invalidValue": "{id} has a value the solver can’t use.",
+        "internal": "Something went wrong while solving. Try the change again."
+      }
+    },
+    "simulateOn": "Live: every change is solved and checked. Select to pause.",
+    "simulateOff": "Paused. Select to solve and check changes live.",
+    "params": {
+      "voltage": "Voltage",
+      "current": "Current",
+      "resistance": "Resistance",
+      "capacitance": "Capacitance",
+      "inductance": "Inductance",
+      "outputVoltage": "Output voltage",
+      "dropoutVoltage": "Dropout voltage",
+      "quiescentCurrent": "Quiescent current"
+    },
+    "provenance": {
+      "datasheet": "Datasheet",
+      "teardown": "Teardown",
+      "estimated": "Estimate",
+      "user": "Set by you"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "Voltage rating",
+        "explain": "The voltage across this part is {percent} of its rating. Keep it below 80% for a safety margin; above 100% the part can break down."
+      },
+      "currentRating": {
+        "name": "Current rating",
+        "explain": "This part is carrying {percent} of the most current it is rated for. Above 80% it runs hot and wears out sooner; above 100% it can fail."
+      },
+      "powerRating": {
+        "name": "Power rating",
+        "explain": "This part is turning {percent} of its rated power into heat. Above 80% it gets hot; above 100% it can burn out."
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "DC supply",
+      "summary": "Fixed voltage source"
+    },
+    "ground": {
+      "name": "Ground",
+      "summary": "0 V reference"
+    },
+    "resistor": {
+      "name": "Resistor, ¼ W",
+      "summary": "Limits current"
+    },
+    "capacitor-ceramic": {
+      "name": "Ceramic capacitor, 16 V",
+      "summary": "Open circuit at DC"
+    },
+    "led-red-5mm": {
+      "name": "Red LED, 5 mm",
+      "summary": "20 mA continuous"
+    },
+    "ldo-3v3": {
+      "name": "3.3 V regulator (LDO)",
+      "summary": "1117 type, up to 0.8 A"
     }
   }
 }

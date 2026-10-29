@@ -10,3 +10,6 @@ pkg/
 .env*.local
 .DS_Store
 HANDOFF.md
+packages/solver/wasm/
+apps/web/test-results/
+apps/web/playwright-report/

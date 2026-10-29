@@ -4,6 +4,7 @@ import { usePanelRef } from "react-resizable-panels";
 import { useState } from "react";
 
 import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
+import { useSimulation } from "@/lib/simulation/useSimulation";
 import { ValidatorDrawer } from "./validator/ValidatorDrawer";
 import { PersistedPanelGroup } from "./PersistedPanelGroup";
 import { useMediaQuery } from "@/lib/useMediaQuery";
@@ -74,4 +75,7 @@ const DesktopStudio = () => {
 /**
  * Studio layout: resizable panels on wider screens, a full-screen viewport with bottom sheets on phones.
  */
-export const StudioShell = () => (useMediaQuery("(min-width: 48rem)", true) ? <DesktopStudio /> : <MobileStudio />);
+export const StudioShell = () => {
+  useSimulation();
+  return useMediaQuery("(min-width: 48rem)", true) ? <DesktopStudio /> : <MobileStudio />;
+};

@@ -62,6 +62,8 @@ export type ComponentSpec = {
   pins: PinDef[];
   params: Record<string, SpecValue>;
   ratings: Ratings;
+  /** Pins each rating is measured across. Defaults to every pin. */
+  ratingPins?: Partial<Record<keyof Ratings, string[]>>;
   interfaces: Interface[];
   model: string;
   footprintId: string;

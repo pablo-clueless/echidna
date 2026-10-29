@@ -123,14 +123,19 @@
     "blankBoard": "空の基板",
     "learnMode": "学習モード",
     "simulate": "シミュレーション",
-    "simulateUnavailable": "シミュレーションはソルバーとともに提供されます",
     "toggleLibrary": "部品ライブラリの表示を切り替え",
     "panels": "パネル",
     "library": {
       "title": "部品",
       "search": "部品を検索",
-      "emptyTitle": "部品はまだありません",
-      "emptyDescription": "ライブラリが読み込まれると、デバイスの部品がここに表示されます。"
+      "noMatchTitle": "一致する部品がありません",
+      "noMatchDescription": "抵抗や LED など、別の名前で試してください。",
+      "addHint": "選択して追加、または回路図へドラッグ",
+      "categories": {
+        "power": "電源",
+        "passives": "受動部品",
+        "semiconductors": "半導体"
+      }
     },
     "viewport": {
       "label": "3D 基板ビュー"
@@ -138,13 +143,45 @@
     "schematic": {
       "title": "回路図",
       "emptyTitle": "回路図は空です",
-      "emptyDescription": "部品を配置して回路の配線を始めましょう。"
+      "emptyDescription": "「部品」から部品をドラッグするか、サンプル回路から始めてください。",
+      "openExample": "3.3 V レギュレーターのサンプルを開く",
+      "rotate": "回転 (R)",
+      "delete": "削除 (Del)",
+      "canvasLabel": "回路図エディター",
+      "canvasRole": "回路図",
+      "partLabel": "{id}、{name}",
+      "hint": "ピンからピンへドラッグして配線 · <key>R</key> 回転 · <key>Del</key> 削除 · ダブルクリックで全体表示"
     },
     "inspector": {
       "title": "インスペクター",
       "emptyTitle": "何も選択されていません",
       "emptyDescription": "部品を選択するとリアルタイムの値が表示されます。",
-      "selected": "選択中：{id}"
+      "parameters": "パラメーター",
+      "liveValues": "ライブ値",
+      "ratings": "定格",
+      "pinVoltage": "{pin} の電圧",
+      "current": "電流",
+      "power": "消費電力",
+      "resetParam": "部品の既定値に戻す",
+      "invalidNumber": "220 や 4.7k のように数値を入力してください。",
+      "verdict": {
+        "pass": "定格内",
+        "warn": "警告",
+        "fail": "不合格",
+        "likelyFail": "不合格の可能性"
+      },
+      "ofRating": "{limit} の {percent}",
+      "swapsTitle": "交換の候補",
+      "swapTo": "{value} を使用：{verdict}",
+      "swapVerdict": {
+        "pass": "適合",
+        "warn": "警告",
+        "fail": "不適合"
+      },
+      "checking": "確認中…",
+      "net": "ネット",
+      "netVoltage": "電圧",
+      "connections": "接続されたピン"
     },
     "validator": {
       "label": "検証",
@@ -156,7 +193,74 @@
       "fail": "失敗",
       "likelyFail": "失敗の可能性",
       "warn": "警告",
-      "estimated": "推定"
+      "estimated": "推定",
+      "idle": "部品を追加するとチェックを開始します",
+      "solvedIn": "{ms} ms で計算",
+      "errors": {
+        "singular": "この回路は計算できません。電源同士が直接つながっていないか確認してください。",
+        "noConvergence": "この回路の安定した解が見つかりませんでした。",
+        "pinCount": "{id} の配線が正しくありません。",
+        "invalidValue": "{id} の値は計算に使用できません。",
+        "internal": "計算中に問題が発生しました。もう一度変更してください。"
+      }
+    },
+    "simulateOn": "ライブ：変更のたびに計算とチェックを行います。選択すると一時停止します。",
+    "simulateOff": "一時停止中。選択すると変更をライブで計算・チェックします。",
+    "params": {
+      "voltage": "電圧",
+      "current": "電流",
+      "resistance": "抵抗値",
+      "capacitance": "静電容量",
+      "inductance": "インダクタンス",
+      "outputVoltage": "出力電圧",
+      "dropoutVoltage": "ドロップアウト電圧",
+      "quiescentCurrent": "静止電流"
+    },
+    "provenance": {
+      "datasheet": "データシート",
+      "teardown": "分解調査",
+      "estimated": "推定",
+      "user": "ユーザー設定"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "定格電圧",
+        "explain": "この部品にかかる電圧は定格の {percent} です。余裕を持たせるため 80% 未満に保ってください。100% を超えると破壊するおそれがあります。"
+      },
+      "currentRating": {
+        "name": "定格電流",
+        "explain": "この部品に流れる電流は最大定格の {percent} です。80% を超えると発熱して劣化が早まり、100% を超えると故障するおそれがあります。"
+      },
+      "powerRating": {
+        "name": "定格電力",
+        "explain": "この部品は定格電力の {percent} を熱に変えています。80% を超えると熱くなり、100% を超えると焼損するおそれがあります。"
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "直流電源",
+      "summary": "固定電圧源"
+    },
+    "ground": {
+      "name": "グラウンド",
+      "summary": "0 V 基準"
+    },
+    "resistor": {
+      "name": "抵抗、¼ W",
+      "summary": "電流を制限"
+    },
+    "capacitor-ceramic": {
+      "name": "セラミックコンデンサー、16 V",
+      "summary": "直流では開放"
+    },
+    "led-red-5mm": {
+      "name": "赤色 LED、5 mm",
+      "summary": "連続 20 mA"
+    },
+    "ldo-3v3": {
+      "name": "3.3 V レギュレーター (LDO)",
+      "summary": "1117 タイプ、最大 0.8 A"
     }
   }
 }

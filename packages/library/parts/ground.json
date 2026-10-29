@@ -1,0 +1,14 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ground",
+  "name": "Ground",
+  "kind": "ground",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [{ "id": "gnd", "name": "GND" }],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "model": "ground",
+  "footprintId": "",
+  "meshUrl": ""
+}

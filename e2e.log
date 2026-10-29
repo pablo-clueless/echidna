@@ -1,0 +1,42 @@
+
+Running 2 tests using 2 workers
+
+(node:43988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [chromium] › e2e\acceptance.spec.ts:59:5 › acceptance (fr) › a smaller series resistor overloads the LED, flagged within 100 ms (17.7s)
+  ✘  1 [chromium] › e2e\acceptance.spec.ts:59:5 › acceptance (en) › a smaller series resistor overloads the LED, flagged within 100 ms (20.2s)
+
+
+  1) [chromium] › e2e\acceptance.spec.ts:59:5 › acceptance (en) › a smaller series resistor overloads the LED, flagged within 100 ms 
+
+    Error: warning shown in 105.9 ms
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 100
+    Received:   105.90000000596046
+
+      68 |       const warnMs = await commitAndTime(page, smaller, s.validator.label, s.validator.warn);
+      69 |       await expect(validator).toContainText(s.rules.currentRating.name);
+    > 70 |       expect(warnMs, `warning shown in ${warnMs.toFixed(1)} ms`).toBeLessThan(BUDGET_MS);
+         |                                                                  ^
+      71 |
+      72 |       const failMs = await commitAndTime(page, smallest, s.validator.label, s.validator.fail);
+      73 |       expect(failMs, `fail shown in ${failMs.toFixed(1)} ms`).toBeLessThan(BUDGET_MS);
+        at C:\Users\xplic\Documents\vscode\echidna\apps\web\e2e\acceptance.spec.ts:70:66
+
+    Error Context: test-results\acceptance-acceptance-en-a-5e1b0-e-LED-flagged-within-100-ms-chromium\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\acceptance-acceptance-en-a-5e1b0-e-LED-flagged-within-100-ms-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\acceptance-acceptance-en-a-5e1b0-e-LED-flagged-within-100-ms-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e\acceptance.spec.ts:59:5 › acceptance (en) › a smaller series resistor overloads the LED, flagged within 100 ms 
+  1 passed (28.8s)

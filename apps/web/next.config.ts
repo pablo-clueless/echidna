@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@echidna/core", "@echidna/ui-tokens"],
+  transpilePackages: ["@echidna/core", "@echidna/library", "@echidna/rules", "@echidna/solver", "@echidna/ui-tokens"],
 };
 
 export default withNextIntl(nextConfig);

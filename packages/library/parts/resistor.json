@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "resistor",
+  "name": "Resistor, ¼ W",
+  "kind": "resistor",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "1", "name": "1" },
+    { "id": "2", "name": "2" }
+  ],
+  "params": {
+    "resistance": { "value": 150, "unit": "Ω", "source": "datasheet", "reference": "Nominal value" }
+  },
+  "ratings": {
+    "maxPower": { "value": 0.25, "unit": "W", "source": "datasheet", "reference": "Standard ¼ W carbon film rating at 70 °C" }
+  },
+  "interfaces": [],
+  "model": "resistor",
+  "footprintId": "generic/axial-0.4in",
+  "meshUrl": "generic/resistor-axial"
+}

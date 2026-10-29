@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "capacitor-ceramic",
+  "name": "Ceramic capacitor, 16 V",
+  "kind": "capacitor",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "1", "name": "1" },
+    { "id": "2", "name": "2" }
+  ],
+  "params": {
+    "capacitance": { "value": 1e-5, "unit": "F", "source": "datasheet", "reference": "Nominal value" }
+  },
+  "ratings": {
+    "maxVoltage": { "value": 16, "unit": "V", "source": "datasheet", "reference": "Rated voltage" }
+  },
+  "interfaces": [],
+  "model": "capacitor",
+  "footprintId": "generic/0805",
+  "meshUrl": "generic/chip-0805"
+}

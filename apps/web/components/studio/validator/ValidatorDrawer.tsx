@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronDown, ChevronUp, CircleCheck } from "lucide-react";
-import { useFormatter, useTranslations } from "next-intl";
+import { ChevronDown, ChevronUp, CircleAlert, CircleCheck } from "lucide-react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import type { Violation } from "@echidna/core";
 import { useMemo } from "react";
 
@@ -11,6 +11,8 @@ import { useLayoutStore } from "@/stores/layout";
 import { useStudioStore } from "@/stores/studio";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { formatQuantity } from "@/lib/units";
+import { ruleKey } from "@/lib/messageKeys";
 import { cn } from "@/lib/utils";
 
 const dotClass = {
@@ -27,10 +29,10 @@ const textClass = {
 
 const IssueRow = ({ issue }: { issue: Violation }) => {
   const t = useTranslations("Studio.validator");
-  const format = useFormatter();
+  const tRules = useTranslations("Studio.rules");
   const selectComponent = useStudioStore((s) => s.selectComponent);
   const verdict = verdictKey(issue);
-  const value = (n: number) => format.number(n, { maximumSignificantDigits: 4 });
+  const locale = useLocale();
 
   return (
     <Item asChild size="xs" className="w-full text-left hover:bg-muted">
@@ -41,13 +43,13 @@ const IssueRow = ({ issue }: { issue: Violation }) => {
         <ItemContent className="min-w-0">
           <ItemTitle>
             <span className="font-mono">{issue.componentId}</span>
-            <span className="truncate font-normal text-muted-foreground">{issue.ruleId}</span>
+            <span className="truncate font-normal text-muted-foreground">{tRules(`${ruleKey(issue.ruleId)}.name`)}</span>
           </ItemTitle>
         </ItemContent>
         <ItemActions className="gap-3">
           {issue.estimated && <span className="text-xs text-muted-foreground italic">{t("estimated")}</span>}
           <span className="font-mono text-sm tabular-nums">
-            {value(issue.actual)} / {value(issue.limit)} {issue.unit}
+            {formatQuantity(issue.actual, issue.unit, locale)} / {formatQuantity(issue.limit, issue.unit, locale)}
           </span>
           <span className={cn("min-w-24 text-right text-xs font-medium whitespace-nowrap", textClass[verdict])}>
             {t(verdict)}
@@ -64,15 +66,37 @@ export const ValidatorDrawer = () => {
   const expanded = useLayoutStore((s) => s.validatorExpanded);
   const setExpanded = useLayoutStore((s) => s.setValidatorExpanded);
 
+  const simulation = useStudioStore((s) => s.simulation);
+  const format = useFormatter();
   const issues = useMemo(() => toIssues(violations), [violations]);
   const mode = drawerMode(issues.length, expanded);
   const { fails, warns } = countIssues(issues);
+  const timing = simulation && (
+    <span className="ml-auto font-mono text-xs text-muted-foreground tabular-nums">
+      {t("solvedIn", { ms: format.number(simulation.latencyMs, { maximumFractionDigits: 0 }) })}
+    </span>
+  );
+
+  if (simulation?.error) {
+    const { error } = simulation;
+    return (
+      <section
+        aria-label={t("label")}
+        role="status"
+        className="flex min-h-9 shrink-0 items-center gap-2 border-t px-3 py-1.5 text-sm"
+      >
+        <CircleAlert className="size-4 shrink-0 text-status-fail-text" aria-hidden />
+        <span>{t(`errors.${error.code}`, { id: "elementId" in error ? error.elementId : "" })}</span>
+      </section>
+    );
+  }
 
   if (mode === "clean") {
     return (
       <section aria-label={t("label")} className="flex h-9 shrink-0 items-center gap-2 border-t px-3 text-sm">
         <CircleCheck className="size-4 text-status-pass-text" aria-hidden />
-        <span className="text-muted-foreground">{t("allPassed")}</span>
+        <span className="text-muted-foreground">{simulation ? t("allPassed") : t("idle")}</span>
+        {timing}
       </section>
     );
   }
@@ -91,10 +115,11 @@ export const ValidatorDrawer = () => {
             {t("warns", { count: warns })}
           </Badge>
         )}
+        {timing}
         <Button
           variant="ghost"
           size="xs"
-          className="ml-auto"
+          className={timing ? undefined : "ml-auto"}
           onClick={() => setExpanded(!expanded)}
           aria-expanded={mode === "expanded"}
         >

@@ -11,3 +11,5 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 echidna-solver.workspace = true
 wasm-bindgen.workspace = true
+serde.workspace = true
+serde-wasm-bindgen.workspace = true

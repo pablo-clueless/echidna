@@ -10,7 +10,7 @@ import echidna from "./tools/eslint/index.js";
 
 export default defineConfig(
   {
-    ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/.turbo/**", "target/**", "**/next-env.d.ts"],
+    ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/.turbo/**", "target/**", "packages/solver/wasm/**", "**/next-env.d.ts"],
   },
   {
     files: ["**/*.{ts,tsx,js,mjs}"],

@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "led-red-5mm",
+  "name": "Red LED, 5 mm",
+  "kind": "led",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "a", "name": "Anode" },
+    { "id": "k", "name": "Cathode" }
+  ],
+  "params": {
+    "saturationCurrent": { "value": 3.23e-19, "unit": "A", "source": "datasheet", "reference": "Fitted to typical forward voltage 2.0 V at 20 mA" },
+    "emissionCoefficient": { "value": 2, "unit": "1", "source": "datasheet", "reference": "Fitted to typical forward voltage 2.0 V at 20 mA" }
+  },
+  "ratings": {
+    "maxCurrent": { "value": 0.02, "unit": "A", "source": "datasheet", "reference": "Typical continuous forward current for 5 mm red LEDs" }
+  },
+  "interfaces": [],
+  "model": "diode",
+  "footprintId": "generic/led-5mm",
+  "meshUrl": "generic/led-5mm"
+}
