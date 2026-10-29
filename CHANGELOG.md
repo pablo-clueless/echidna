@@ -15,3 +15,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - `echidna-solver` and `echidna-solver-wasm` crate stubs.
 - `echidna-api` service stub with a `/health` endpoint.
 - README.
+- `@echidna/web`: Next.js 16 App Router app with localised routes for English, French, Spanish, Chinese, Japanese and Russian, falling back to English for missing strings.
+- Compact language menu and a sun / moon theme toggle, built with shadcn/ui. The theme follows the system until toggled, is remembered per user and applies before first paint.
+- Tailwind CSS v4 and shadcn/ui, themed from the Echidna design tokens.
+- Studio at `/[locale]/studio`: top bar (project, preset, Learn mode, Simulate), collapsible component library, 3D board view, and a resizable schematic / inspector column clamped to 20–80%.
+- Validator drawer: a slim "All checks passed" bar when clean, a peek of the two worst issues with counts, and an expandable full list. Selecting an issue selects its component, and estimate-based fails read "Likely to fail".
+- Panel sizes, library collapse, drawer state and Learn mode are remembered per user.
+- Home page: a live "Try a swap" demo (5 V supply, series resistor, LED) where changing the resistor recalculates the LED current, animates current flow and LED glow, and updates the pass / warn / fail verdict. Also sections on the three slot checks, the six device types and value provenance, with load and scroll animations that respect reduced motion.
+- Studio panels use shadcn/ui building blocks: empty states, search input group, issue list items, severity badges and tooltips on icon buttons. The 3D grid follows the theme.
+- Home hero: an isometric 3D development board that assembles itself in a loop. Nine parts (processor, memory, capacitors, resistors, USB-C, inductor, crystal, LED and pin header) drop into place one by one, each highlighted in orange with a label as it lands, then the board powers up, its traces glow and the LED lights before the parts lift away and it starts again. A panel under the board tracks which parts are placed. The animation pauses off screen and shows the finished, powered board when reduced motion is on.
+- DM Sans and DM Mono, with Noto Sans fallbacks for Russian, Chinese and Japanese that load only on those locales. Latin and Cyrillic fonts are self-hosted, so they load even when Google Fonts is unreachable.
+- Studio on phones: the 3D view fills the screen, and the component library, schematic and inspector open as bottom sheets from a tab bar. Learn mode and Simulate are kept to larger screens.
+- ESLint for the whole repo: arrow functions everywhere except Next.js layouts, React Hooks and Next.js rules, imports sorted by line length, and a British English spelling check on user-facing text and English messages.
+- Missing-translation report (`pnpm --filter @echidna/web i18n:report`), also written to the GitHub Actions job summary.
+- GitHub Actions CI: lint, typecheck, tests, build and the translation report for the web app; formatting, Clippy and tests for the Rust crates.
+- Rust toolchain pinned to 1.98.0.
+
+### Changed
+
+- The "Try a swap" demo moved from the hero to its own section below it.
+- Token font stacks now read `--font-*` variables first, so the app can supply self-hosted fonts.

@@ -1,0 +1,162 @@
+{
+  "Metadata": {
+    "description": "Compose circuit boards and devices in 3D, simulate them and see instantly whether every component will work."
+  },
+  "Home": {
+    "openStudio": "Open the studio",
+    "footer": "Echidna is in early development.",
+    "hero": {
+      "eyebrow": "A 3D studio for circuit boards and devices",
+      "titleTop": "Know it <mark>works</mark>",
+      "titleBottom": "before you build it.",
+      "lead": "Place parts, swap them and see straight away whether every component stays within its limits. Built for makers, students and anyone curious about what is inside their devices.",
+      "secondary": "How verdicts work"
+    },
+    "demo": {
+      "title": "Try a swap",
+      "caption": "A 5 V supply, a series resistor and a red LED. Choose a smaller resistor and watch the current climb.",
+      "diagramLabel": "Circuit: 5 V supply, series resistor and LED in a single loop",
+      "resistor": "Series resistor",
+      "moreResistance": "More resistance",
+      "lessResistance": "Less resistance",
+      "current": "LED current",
+      "rating": "Of its {rating} mA rating",
+      "pass": "Within limits",
+      "warn": "Close to its limit",
+      "fail": "Over its rating",
+      "explainPass": "The LED draws {current} mA, comfortably under its {rating} mA rating.",
+      "explainWarn": "The LED is at {percent} of its rating. It will light, but there is no headroom left.",
+      "explainFail": "The LED would draw {current} mA against a {rating} mA rating. It will overheat and fail early.",
+      "note": "Simplified here with a fixed 2 V LED drop. The studio solves the full circuit."
+    },
+    "checks": {
+      "heading": "Every part passes three checks",
+      "lead": "A component only fits a slot when all three agree. If one fails, Echidna tells you which and by how much.",
+      "connects": {
+        "title": "It connects",
+        "body": "The interface matches: the right socket, connector and number of lanes."
+      },
+      "powered": {
+        "title": "It is powered",
+        "body": "The slot’s rails can supply the voltage and current the part needs."
+      },
+      "cool": {
+        "title": "It stays cool",
+        "body": "The heat it gives off fits the slot’s thermal budget and the cooling around it."
+      }
+    },
+    "devices": {
+      "heading": "Six kinds of device, one set of rules",
+      "lead": "Recreate a real device from a preset or start from a blank board. Each type has its own catalogue of swappable parts.",
+      "smartphone": {
+        "name": "Smartphones",
+        "examples": "iPhone and Galaxy presets"
+      },
+      "desktop": {
+        "name": "Desktop PCs",
+        "examples": "Budget, gaming and workstation builds"
+      },
+      "laptop": {
+        "name": "Laptops",
+        "examples": "Ultrabook and gaming presets"
+      },
+      "drone": {
+        "name": "Drones",
+        "examples": "DJI Mini series and 5-inch FPV"
+      },
+      "iot": {
+        "name": "Dev boards",
+        "examples": "Raspberry Pi, ESP32 and Arduino"
+      },
+      "wearable": {
+        "name": "Wearables",
+        "examples": "Smartwatch and fitness band"
+      }
+    },
+    "provenance": {
+      "heading": "Every number shows where it came from",
+      "lead": "Values are labelled as datasheet, teardown or estimate, so you know how far to trust a verdict. When a fail rests only on estimates, Echidna says it is likely to fail rather than certain.",
+      "datasheet": "Datasheet",
+      "teardown": "Teardown",
+      "estimated": "Estimate",
+      "rows": {
+        "battery": "Battery energy",
+        "display": "Display current",
+        "soc": "Processor peak power"
+      }
+    },
+    "cta": {
+      "heading": "Start with a blank board",
+      "body": "Open the studio, pick a part from the library and see its verdict as you place it."
+    },
+    "assembly": {
+      "label": "Animation: parts being placed one by one onto a development board, which then powers up",
+      "board": "Dev board",
+      "placed": "{placed} of {total} placed",
+      "placing": "Placing parts",
+      "powered": "Powered · all checks passed",
+      "resetting": "Starting again",
+      "parts": {
+        "soc": "Processor",
+        "memory": "Flash memory",
+        "capacitors": "Decoupling capacitors",
+        "resistors": "Resistors",
+        "usb": "USB-C connector",
+        "inductor": "Power inductor",
+        "crystal": "Crystal oscillator",
+        "led": "Status LED",
+        "header": "Pin header"
+      }
+    },
+    "swap": {
+      "heading": "Change one part, see the verdict",
+      "lead": "Every swap is checked the moment you make it. Try it here with the simplest circuit there is."
+    }
+  },
+  "Preferences": {
+    "language": "Language",
+    "toggleTheme": "Toggle theme"
+  },
+  "Studio": {
+    "title": "Studio",
+    "untitledProject": "Untitled project",
+    "blankBoard": "Blank board",
+    "learnMode": "Learn mode",
+    "simulate": "Simulate",
+    "simulateUnavailable": "Simulation arrives with the solver",
+    "toggleLibrary": "Show or hide the component library",
+    "panels": "Panels",
+    "library": {
+      "title": "Components",
+      "search": "Search components",
+      "emptyTitle": "No components yet",
+      "emptyDescription": "Parts for your device will appear here once the library is loaded."
+    },
+    "viewport": {
+      "label": "3D board view"
+    },
+    "schematic": {
+      "title": "Schematic",
+      "emptyTitle": "The schematic is empty",
+      "emptyDescription": "Place a component to start wiring your circuit."
+    },
+    "inspector": {
+      "title": "Inspector",
+      "emptyTitle": "Nothing selected",
+      "emptyDescription": "Select a component to see its live values.",
+      "selected": "Selected: {id}"
+    },
+    "validator": {
+      "label": "Validator",
+      "allPassed": "All checks passed",
+      "fails": "{count, plural, one {# fail} other {# fails}}",
+      "warns": "{count, plural, one {# warning} other {# warnings}}",
+      "expand": "Show all issues",
+      "collapse": "Show fewer",
+      "fail": "Fail",
+      "likelyFail": "Likely to fail",
+      "warn": "Warning",
+      "estimated": "estimated"
+    }
+  }
+}

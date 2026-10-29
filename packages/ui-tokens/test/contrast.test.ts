@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
+
 import { contrastRatio, WCAG_AA_NON_TEXT, WCAG_AA_TEXT } from "../src/contrast";
-import { palette } from "../src/palette";
 import { themes, type ThemeName } from "../src/themes";
+import { palette } from "../src/palette";
 import { toCss } from "../src/css";
 
 const statuses = ["Fail", "Warn", "Pass"] as const;

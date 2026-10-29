@@ -1,26 +1,29 @@
 export type Locale = "en" | "fr" | "es" | "zh" | "ja" | "ru";
 
-const latinSans = ['"DM Sans"'];
+const family = (variable: string, name: string): string => `var(--font-${variable}, "${name}")`;
+
+const latinSans = [family("dm-sans", "DM Sans")];
 const systemSans = ["system-ui", "sans-serif"];
 
 const localeSansFallbacks: Record<Locale, string[]> = {
   en: [],
   fr: [],
   es: [],
-  ru: ['"Noto Sans"'],
-  zh: ['"Noto Sans SC"'],
-  ja: ['"Noto Sans JP"'],
+  ru: [family("noto-sans", "Noto Sans")],
+  zh: [family("noto-sans-sc", "Noto Sans SC")],
+  ja: [family("noto-sans-jp", "Noto Sans JP")],
 };
 
 /**
  * Builds the UI font stack for a locale: DM Sans first, then the locale's script fallback, then system fonts.
+ * Each family reads a `--font-*` variable first so a host app can inject self-hosted font names.
  * @param locale - The active locale.
  * @returns A CSS `font-family` value.
  */
 export const sansStack = (locale: Locale): string =>
   [...latinSans, ...localeSansFallbacks[locale], ...systemSans].join(", ");
 
-export const monoStack = ['"DM Mono"', "ui-monospace", "monospace"].join(", ");
+export const monoStack = [family("dm-mono", "DM Mono"), "ui-monospace", "monospace"].join(", ");
 
 export const fontSize = {
   xs: "0.75rem",

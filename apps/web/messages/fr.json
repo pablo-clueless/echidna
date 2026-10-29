@@ -1,0 +1,162 @@
+{
+  "Metadata": {
+    "description": "Composez des circuits imprimés et des appareils en 3D, simulez-les et voyez instantanément si chaque composant fonctionnera."
+  },
+  "Home": {
+    "openStudio": "Ouvrir le studio",
+    "footer": "Echidna est en début de développement.",
+    "hero": {
+      "eyebrow": "Un studio 3D pour circuits imprimés et appareils",
+      "titleTop": "Sachez que ça <mark>marche</mark>",
+      "titleBottom": "avant de le fabriquer.",
+      "lead": "Placez des composants, échangez-les et voyez immédiatement si chacun reste dans ses limites. Conçu pour les makers, les étudiants et tous les curieux de ce qui se cache dans leurs appareils.",
+      "secondary": "Comment fonctionnent les verdicts"
+    },
+    "demo": {
+      "title": "Essayez un échange",
+      "caption": "Une alimentation 5 V, une résistance en série et une LED rouge. Choisissez une résistance plus faible et regardez le courant monter.",
+      "diagramLabel": "Circuit : alimentation 5 V, résistance en série et LED en une seule boucle",
+      "resistor": "Résistance en série",
+      "moreResistance": "Plus de résistance",
+      "lessResistance": "Moins de résistance",
+      "current": "Courant de la LED",
+      "rating": "De sa valeur nominale de {rating} mA",
+      "pass": "Dans les limites",
+      "warn": "Proche de sa limite",
+      "fail": "Au-delà de sa valeur nominale",
+      "explainPass": "La LED consomme {current} mA, bien en dessous de sa valeur nominale de {rating} mA.",
+      "explainWarn": "La LED est à {percent} de sa valeur nominale. Elle s’allumera, mais sans aucune marge.",
+      "explainFail": "La LED consommerait {current} mA pour une valeur nominale de {rating} mA. Elle va surchauffer et lâcher prématurément.",
+      "note": "Simplifié ici avec une chute de tension fixe de 2 V sur la LED. Le studio résout le circuit complet."
+    },
+    "checks": {
+      "heading": "Chaque composant passe trois vérifications",
+      "lead": "Un composant ne s’insère dans un emplacement que si les trois sont satisfaites. Si l’une échoue, Echidna vous dit laquelle et de combien.",
+      "connects": {
+        "title": "Il se branche",
+        "body": "L’interface correspond : le bon socket, le bon connecteur et le bon nombre de voies."
+      },
+      "powered": {
+        "title": "Il est alimenté",
+        "body": "Les rails de l’emplacement fournissent la tension et le courant nécessaires."
+      },
+      "cool": {
+        "title": "Il reste frais",
+        "body": "La chaleur dégagée respecte le budget thermique de l’emplacement et son refroidissement."
+      }
+    },
+    "devices": {
+      "heading": "Six types d’appareils, un seul ensemble de règles",
+      "lead": "Recréez un appareil réel à partir d’un préréglage ou partez d’une carte vierge. Chaque type a son propre catalogue de composants interchangeables.",
+      "smartphone": {
+        "name": "Smartphones",
+        "examples": "Préréglages iPhone et Galaxy"
+      },
+      "desktop": {
+        "name": "PC de bureau",
+        "examples": "Configurations économique, gaming et station de travail"
+      },
+      "laptop": {
+        "name": "Ordinateurs portables",
+        "examples": "Préréglages ultraportable et gaming"
+      },
+      "drone": {
+        "name": "Drones",
+        "examples": "Série DJI Mini et FPV 5 pouces"
+      },
+      "iot": {
+        "name": "Cartes de développement",
+        "examples": "Raspberry Pi, ESP32 et Arduino"
+      },
+      "wearable": {
+        "name": "Objets connectés portables",
+        "examples": "Montre connectée et bracelet d’activité"
+      }
+    },
+    "provenance": {
+      "heading": "Chaque valeur indique sa provenance",
+      "lead": "Les valeurs sont étiquetées fiche technique, démontage ou estimation, pour savoir à quel point se fier à un verdict. Quand un échec ne repose que sur des estimations, Echidna parle d’échec probable plutôt que certain.",
+      "datasheet": "Fiche technique",
+      "teardown": "Démontage",
+      "estimated": "Estimation",
+      "rows": {
+        "battery": "Énergie de la batterie",
+        "display": "Courant de l’écran",
+        "soc": "Puissance crête du processeur"
+      }
+    },
+    "cta": {
+      "heading": "Commencez avec une carte vierge",
+      "body": "Ouvrez le studio, choisissez un composant dans la bibliothèque et voyez son verdict dès que vous le placez."
+    },
+    "assembly": {
+      "label": "Animation : des composants placés un à un sur une carte de développement, qui se met ensuite sous tension",
+      "board": "Carte de développement",
+      "placed": "{placed} sur {total} placés",
+      "placing": "Placement des composants",
+      "powered": "Sous tension · tous les contrôles réussis",
+      "resetting": "Nouveau départ",
+      "parts": {
+        "soc": "Processeur",
+        "memory": "Mémoire flash",
+        "capacitors": "Condensateurs de découplage",
+        "resistors": "Résistances",
+        "usb": "Connecteur USB-C",
+        "inductor": "Inductance de puissance",
+        "crystal": "Oscillateur à quartz",
+        "led": "LED d’état",
+        "header": "Barrette de broches"
+      }
+    },
+    "swap": {
+      "heading": "Changez une pièce, voyez le verdict",
+      "lead": "Chaque échange est vérifié dès que vous le faites. Essayez ici avec le circuit le plus simple qui soit."
+    }
+  },
+  "Preferences": {
+    "language": "Langue",
+    "toggleTheme": "Changer de thème"
+  },
+  "Studio": {
+    "title": "Studio",
+    "untitledProject": "Projet sans titre",
+    "blankBoard": "Carte vierge",
+    "learnMode": "Mode apprentissage",
+    "simulate": "Simuler",
+    "simulateUnavailable": "La simulation arrivera avec le solveur",
+    "toggleLibrary": "Afficher ou masquer la bibliothèque de composants",
+    "panels": "Panneaux",
+    "library": {
+      "title": "Composants",
+      "search": "Rechercher des composants",
+      "emptyTitle": "Aucun composant pour l’instant",
+      "emptyDescription": "Les composants de votre appareil apparaîtront ici une fois la bibliothèque chargée."
+    },
+    "viewport": {
+      "label": "Vue 3D de la carte"
+    },
+    "schematic": {
+      "title": "Schéma",
+      "emptyTitle": "Le schéma est vide",
+      "emptyDescription": "Placez un composant pour commencer à câbler votre circuit."
+    },
+    "inspector": {
+      "title": "Inspecteur",
+      "emptyTitle": "Aucune sélection",
+      "emptyDescription": "Sélectionnez un composant pour voir ses valeurs en direct.",
+      "selected": "Sélectionné : {id}"
+    },
+    "validator": {
+      "label": "Validation",
+      "allPassed": "Toutes les vérifications sont réussies",
+      "fails": "{count, plural, one {# échec} other {# échecs}}",
+      "warns": "{count, plural, one {# avertissement} other {# avertissements}}",
+      "expand": "Afficher tous les problèmes",
+      "collapse": "Réduire",
+      "fail": "Échec",
+      "likelyFail": "Échec probable",
+      "warn": "Avertissement",
+      "estimated": "estimé"
+    }
+  }
+}

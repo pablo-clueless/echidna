@@ -1,0 +1,162 @@
+{
+  "Metadata": {
+    "description": "回路基板やデバイスを3Dで組み立ててシミュレーションし、すべての部品が動作するかをすぐに確認できます。"
+  },
+  "Home": {
+    "openStudio": "スタジオを開く",
+    "footer": "Echidna は開発の初期段階です。",
+    "hero": {
+      "eyebrow": "回路基板とデバイスのための 3D スタジオ",
+      "titleTop": "作る前に、",
+      "titleBottom": "<mark>動く</mark>とわかる。",
+      "lead": "部品を配置して入れ替えるだけで、すべての部品が定格内に収まっているかをすぐに確認できます。メイカー、学生、そしてデバイスの中身が気になるすべての人のために。",
+      "secondary": "判定のしくみ"
+    },
+    "demo": {
+      "title": "入れ替えてみる",
+      "caption": "5 V 電源、直列抵抗、赤色 LED。抵抗を小さくすると電流が上がっていく様子がわかります。",
+      "diagramLabel": "回路：5 V 電源、直列抵抗、LED の単一ループ",
+      "resistor": "直列抵抗",
+      "moreResistance": "抵抗を大きく",
+      "lessResistance": "抵抗を小さく",
+      "current": "LED 電流",
+      "rating": "定格 {rating} mA に対して",
+      "pass": "定格内",
+      "warn": "限界に近い",
+      "fail": "定格超過",
+      "explainPass": "LED の電流は {current} mA で、定格 {rating} mA を十分下回っています。",
+      "explainWarn": "LED は定格の {percent} に達しています。点灯はしますが、余裕はありません。",
+      "explainFail": "LED に {current} mA が流れます（定格 {rating} mA）。過熱して早期に故障します。",
+      "note": "ここでは LED の電圧降下を 2 V 固定で簡略化しています。スタジオでは回路全体を解析します。"
+    },
+    "checks": {
+      "heading": "すべての部品は 3 つのチェックを通過します",
+      "lead": "3 つすべてを満たしたときだけ、部品はスロットに収まります。1 つでも満たさなければ、どれがどれだけ足りないかを Echidna が示します。",
+      "connects": {
+        "title": "接続できる",
+        "body": "インターフェースが一致している：ソケット、コネクタ、レーン数が正しいこと。"
+      },
+      "powered": {
+        "title": "給電できる",
+        "body": "スロットの電源レールが、部品に必要な電圧と電流を供給できること。"
+      },
+      "cool": {
+        "title": "熱くなりすぎない",
+        "body": "発熱量がスロットの熱予算と周囲の冷却能力に収まること。"
+      }
+    },
+    "devices": {
+      "heading": "6 種類のデバイス、ひとつのルール",
+      "lead": "プリセットから実在のデバイスを再現するか、空の基板から始めましょう。種類ごとに入れ替え可能な部品のカタログがあります。",
+      "smartphone": {
+        "name": "スマートフォン",
+        "examples": "iPhone と Galaxy のプリセット"
+      },
+      "desktop": {
+        "name": "デスクトップ PC",
+        "examples": "エントリー、ゲーミング、ワークステーション構成"
+      },
+      "laptop": {
+        "name": "ノート PC",
+        "examples": "ウルトラブックとゲーミングのプリセット"
+      },
+      "drone": {
+        "name": "ドローン",
+        "examples": "DJI Mini シリーズと 5 インチ FPV"
+      },
+      "iot": {
+        "name": "開発ボード",
+        "examples": "Raspberry Pi、ESP32、Arduino"
+      },
+      "wearable": {
+        "name": "ウェアラブル",
+        "examples": "スマートウォッチとフィットネスバンド"
+      }
+    },
+    "provenance": {
+      "heading": "すべての数値に出典があります",
+      "lead": "数値にはデータシート、分解調査、推定のいずれかのラベルが付き、判定をどこまで信頼できるかがわかります。推定値だけに基づく失敗は、断定ではなく「失敗の可能性」と表示されます。",
+      "datasheet": "データシート",
+      "teardown": "分解調査",
+      "estimated": "推定",
+      "rows": {
+        "battery": "バッテリー容量",
+        "display": "ディスプレイ電流",
+        "soc": "プロセッサのピーク電力"
+      }
+    },
+    "cta": {
+      "heading": "空の基板から始めましょう",
+      "body": "スタジオを開き、ライブラリから部品を選んで配置すると、その場で判定が表示されます。"
+    },
+    "assembly": {
+      "label": "アニメーション：部品が開発ボードに一つずつ配置され、その後ボードに電源が入る",
+      "board": "開発ボード",
+      "placed": "{total} 個中 {placed} 個を配置",
+      "placing": "部品を配置中",
+      "powered": "通電中 · すべてのチェックに合格",
+      "resetting": "最初から",
+      "parts": {
+        "soc": "プロセッサ",
+        "memory": "フラッシュメモリ",
+        "capacitors": "デカップリングコンデンサ",
+        "resistors": "抵抗",
+        "usb": "USB-C コネクタ",
+        "inductor": "パワーインダクタ",
+        "crystal": "水晶発振器",
+        "led": "ステータス LED",
+        "header": "ピンヘッダ"
+      }
+    },
+    "swap": {
+      "heading": "部品を一つ替えて、判定を確かめる",
+      "lead": "交換するたびにすぐチェックします。ここでは最もシンプルな回路で試せます。"
+    }
+  },
+  "Preferences": {
+    "language": "言語",
+    "toggleTheme": "テーマを切り替え"
+  },
+  "Studio": {
+    "title": "スタジオ",
+    "untitledProject": "無題のプロジェクト",
+    "blankBoard": "空の基板",
+    "learnMode": "学習モード",
+    "simulate": "シミュレーション",
+    "simulateUnavailable": "シミュレーションはソルバーとともに提供されます",
+    "toggleLibrary": "部品ライブラリの表示を切り替え",
+    "panels": "パネル",
+    "library": {
+      "title": "部品",
+      "search": "部品を検索",
+      "emptyTitle": "部品はまだありません",
+      "emptyDescription": "ライブラリが読み込まれると、デバイスの部品がここに表示されます。"
+    },
+    "viewport": {
+      "label": "3D 基板ビュー"
+    },
+    "schematic": {
+      "title": "回路図",
+      "emptyTitle": "回路図は空です",
+      "emptyDescription": "部品を配置して回路の配線を始めましょう。"
+    },
+    "inspector": {
+      "title": "インスペクター",
+      "emptyTitle": "何も選択されていません",
+      "emptyDescription": "部品を選択するとリアルタイムの値が表示されます。",
+      "selected": "選択中：{id}"
+    },
+    "validator": {
+      "label": "検証",
+      "allPassed": "すべてのチェックに合格しました",
+      "fails": "{count, plural, other {失敗 # 件}}",
+      "warns": "{count, plural, other {警告 # 件}}",
+      "expand": "すべての問題を表示",
+      "collapse": "折りたたむ",
+      "fail": "失敗",
+      "likelyFail": "失敗の可能性",
+      "warn": "警告",
+      "estimated": "推定"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { anyEstimated, compareViolations, isDeviceType, type Violation } from "./index";
 
 const violation = (overrides: Partial<Violation>): Violation => ({

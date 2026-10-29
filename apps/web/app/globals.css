@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --animate-rise: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-pop: pop 0.35s cubic-bezier(0.3, 1.5, 0.5, 1) both;
+  --animate-draw: draw 0.9s cubic-bezier(0.6, 0, 0.2, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+  }
+
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-primary-text: var(--colour-primary-text);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-status-fail: var(--colour-status-fail-fill);
+  --color-status-fail-foreground: var(--colour-status-fail-on-fill);
+  --color-status-fail-text: var(--colour-status-fail-text);
+  --color-status-warn: var(--colour-status-warn-fill);
+  --color-status-warn-foreground: var(--colour-status-warn-on-fill);
+  --color-status-warn-text: var(--colour-status-warn-text);
+  --color-status-warn-border: var(--colour-status-warn-border);
+  --color-status-pass: var(--colour-status-pass-fill);
+  --color-status-pass-foreground: var(--colour-status-pass-on-fill);
+  --color-status-pass-text: var(--colour-status-pass-text);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: var(--colour-surface);
+  --foreground: var(--colour-text);
+  --card: var(--colour-surface);
+  --card-foreground: var(--colour-text);
+  --popover: var(--colour-surface);
+  --popover-foreground: var(--colour-text);
+  --primary: var(--colour-primary);
+  --primary-foreground: var(--colour-on-primary);
+  --secondary: color-mix(in srgb, var(--colour-text) 6%, var(--colour-surface));
+  --secondary-foreground: var(--colour-text);
+  --muted: color-mix(in srgb, var(--colour-text) 6%, var(--colour-surface));
+  --muted-foreground: color-mix(in srgb, var(--colour-text) 70%, var(--colour-surface));
+  --accent: color-mix(in srgb, var(--colour-primary) 14%, var(--colour-surface));
+  --accent-foreground: var(--colour-text);
+  --destructive: var(--colour-status-fail-fill);
+  --border: color-mix(in srgb, var(--colour-text) 15%, transparent);
+  --input: color-mix(in srgb, var(--colour-text) 22%, transparent);
+  --ring: var(--colour-primary);
+  --radius: 0.625rem;
+  --sidebar: color-mix(in srgb, var(--colour-text) 3%, var(--colour-surface));
+  --sidebar-foreground: var(--colour-text);
+  --sidebar-border: var(--border);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html,
+  body {
+    height: 100%;
+    user-select: none;
+  }
+  
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    line-height: var(--line-height-normal);
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    @apply font-mono tabular-nums;
+  }
+
+  a {
+    color: var(--colour-primary-text);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Unlayered on purpose: injected extension styles on `body` outrank anything inside a cascade layer. */
+body {
+  font-family: var(--font-sans);
+}

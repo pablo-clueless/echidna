@@ -1,0 +1,162 @@
+{
+  "Metadata": {
+    "description": "在 3D 中组装电路板和设备，进行仿真，即时了解每个元件能否正常工作。"
+  },
+  "Home": {
+    "openStudio": "打开工作室",
+    "footer": "Echidna 仍处于早期开发阶段。",
+    "hero": {
+      "eyebrow": "面向电路板和设备的 3D 工作室",
+      "titleTop": "动手之前，",
+      "titleBottom": "先确认它<mark>能用</mark>。",
+      "lead": "放置元件、更换元件，立即看到每个元件是否都在其额定范围内。专为创客、学生以及所有对设备内部充满好奇的人打造。",
+      "secondary": "了解判定原理"
+    },
+    "demo": {
+      "title": "试着换一个",
+      "caption": "5 V 电源、一个串联电阻和一个红色 LED。选择更小的电阻，看看电流如何上升。",
+      "diagramLabel": "电路：5 V 电源、串联电阻和 LED 组成单回路",
+      "resistor": "串联电阻",
+      "moreResistance": "电阻更大",
+      "lessResistance": "电阻更小",
+      "current": "LED 电流",
+      "rating": "占 {rating} mA 额定值",
+      "pass": "在额定范围内",
+      "warn": "接近极限",
+      "fail": "超出额定值",
+      "explainPass": "LED 电流为 {current} mA，远低于 {rating} mA 的额定值。",
+      "explainWarn": "LED 已达到额定值的 {percent}。它能点亮，但已没有余量。",
+      "explainFail": "LED 电流将达到 {current} mA，而额定值为 {rating} mA。它会过热并过早损坏。",
+      "note": "此处简化为固定 2 V 的 LED 压降。工作室会求解完整电路。"
+    },
+    "checks": {
+      "heading": "每个元件都要通过三项检查",
+      "lead": "只有三项全部满足，元件才能装入插槽。如果有一项未通过，Echidna 会告诉你是哪一项、差多少。",
+      "connects": {
+        "title": "能接上",
+        "body": "接口匹配：插座、连接器和通道数都正确。"
+      },
+      "powered": {
+        "title": "能供上电",
+        "body": "插槽的供电轨能提供元件所需的电压和电流。"
+      },
+      "cool": {
+        "title": "不会过热",
+        "body": "元件的发热量在插槽的散热预算和冷却能力之内。"
+      }
+    },
+    "devices": {
+      "heading": "六类设备，一套规则",
+      "lead": "从预设复刻真实设备，或从空白电路板开始。每类设备都有自己的可替换元件目录。",
+      "smartphone": {
+        "name": "智能手机",
+        "examples": "iPhone 和 Galaxy 预设"
+      },
+      "desktop": {
+        "name": "台式电脑",
+        "examples": "入门、游戏和工作站配置"
+      },
+      "laptop": {
+        "name": "笔记本电脑",
+        "examples": "超极本和游戏本预设"
+      },
+      "drone": {
+        "name": "无人机",
+        "examples": "DJI Mini 系列和 5 英寸 FPV"
+      },
+      "iot": {
+        "name": "开发板",
+        "examples": "Raspberry Pi、ESP32 和 Arduino"
+      },
+      "wearable": {
+        "name": "可穿戴设备",
+        "examples": "智能手表和健身手环"
+      }
+    },
+    "provenance": {
+      "heading": "每个数值都标明来源",
+      "lead": "数值会标注为数据手册、拆解或估算，让你知道判定结果有多可信。如果失败判定只基于估算，Echidna 会说“可能失败”，而不是断定失败。",
+      "datasheet": "数据手册",
+      "teardown": "拆解",
+      "estimated": "估算",
+      "rows": {
+        "battery": "电池能量",
+        "display": "屏幕电流",
+        "soc": "处理器峰值功率"
+      }
+    },
+    "cta": {
+      "heading": "从空白电路板开始",
+      "body": "打开工作室，从元件库中选一个元件，放置时即可看到判定结果。"
+    },
+    "assembly": {
+      "label": "动画：元件逐个放置到开发板上，随后开发板通电",
+      "board": "开发板",
+      "placed": "已放置 {placed}/{total}",
+      "placing": "正在放置元件",
+      "powered": "已通电 · 全部检查通过",
+      "resetting": "重新开始",
+      "parts": {
+        "soc": "处理器",
+        "memory": "闪存",
+        "capacitors": "去耦电容",
+        "resistors": "电阻",
+        "usb": "USB-C 接口",
+        "inductor": "功率电感",
+        "crystal": "晶体振荡器",
+        "led": "状态指示灯",
+        "header": "排针"
+      }
+    },
+    "swap": {
+      "heading": "换一个元件，立即看到结论",
+      "lead": "每次替换都会立即检查。在这里用最简单的电路试一试。"
+    }
+  },
+  "Preferences": {
+    "language": "语言",
+    "toggleTheme": "切换主题"
+  },
+  "Studio": {
+    "title": "工作室",
+    "untitledProject": "未命名项目",
+    "blankBoard": "空白电路板",
+    "learnMode": "学习模式",
+    "simulate": "仿真",
+    "simulateUnavailable": "仿真功能将随求解器一同推出",
+    "toggleLibrary": "显示或隐藏元件库",
+    "panels": "面板",
+    "library": {
+      "title": "元件",
+      "search": "搜索元件",
+      "emptyTitle": "暂无元件",
+      "emptyDescription": "元件库加载后，您设备的元件将显示在这里。"
+    },
+    "viewport": {
+      "label": "3D 电路板视图"
+    },
+    "schematic": {
+      "title": "原理图",
+      "emptyTitle": "原理图为空",
+      "emptyDescription": "放置一个元件，开始连接您的电路。"
+    },
+    "inspector": {
+      "title": "检查器",
+      "emptyTitle": "未选择任何内容",
+      "emptyDescription": "选择一个元件以查看其实时数值。",
+      "selected": "已选择：{id}"
+    },
+    "validator": {
+      "label": "验证",
+      "allPassed": "所有检查均已通过",
+      "fails": "{count, plural, other {# 项失败}}",
+      "warns": "{count, plural, other {# 项警告}}",
+      "expand": "显示所有问题",
+      "collapse": "收起",
+      "fail": "失败",
+      "likelyFail": "可能失败",
+      "warn": "警告",
+      "estimated": "估算"
+    }
+  }
+}

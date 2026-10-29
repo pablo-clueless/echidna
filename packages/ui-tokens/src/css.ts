@@ -1,6 +1,6 @@
 import { fontSize, fontWeight, lineHeight, monoStack, sansStack, type Locale } from "./typography";
-import { radius, space } from "./spacing";
 import { themes, type ThemeColours } from "./themes";
+import { radius, space } from "./spacing";
 
 const kebab = (key: string): string => key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 

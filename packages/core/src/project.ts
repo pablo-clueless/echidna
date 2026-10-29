@@ -1,5 +1,5 @@
-import type { Device } from "./layout";
 import type { Netlist } from "./netlist";
+import type { Device } from "./layout";
 
 export type Project = {
   id: string;

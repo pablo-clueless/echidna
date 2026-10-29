@@ -1,0 +1,162 @@
+{
+  "Metadata": {
+    "description": "Compón placas de circuito y dispositivos en 3D, simúlalos y comprueba al instante si cada componente funcionará."
+  },
+  "Home": {
+    "openStudio": "Abrir el estudio",
+    "footer": "Echidna está en una fase temprana de desarrollo.",
+    "hero": {
+      "eyebrow": "Un estudio 3D para placas de circuito y dispositivos",
+      "titleTop": "Comprueba que <mark>funciona</mark>",
+      "titleBottom": "antes de construirlo.",
+      "lead": "Coloca piezas, cámbialas y comprueba al instante si cada componente se mantiene dentro de sus límites. Pensado para makers, estudiantes y cualquiera con curiosidad por lo que hay dentro de sus dispositivos.",
+      "secondary": "Cómo funcionan los veredictos"
+    },
+    "demo": {
+      "title": "Prueba un cambio",
+      "caption": "Una fuente de 5 V, una resistencia en serie y un LED rojo. Elige una resistencia menor y observa cómo sube la corriente.",
+      "diagramLabel": "Circuito: fuente de 5 V, resistencia en serie y LED en un solo lazo",
+      "resistor": "Resistencia en serie",
+      "moreResistance": "Más resistencia",
+      "lessResistance": "Menos resistencia",
+      "current": "Corriente del LED",
+      "rating": "De su valor nominal de {rating} mA",
+      "pass": "Dentro de los límites",
+      "warn": "Cerca de su límite",
+      "fail": "Por encima de su valor nominal",
+      "explainPass": "El LED consume {current} mA, muy por debajo de su valor nominal de {rating} mA.",
+      "explainWarn": "El LED está al {percent} de su valor nominal. Se encenderá, pero sin ningún margen.",
+      "explainFail": "El LED consumiría {current} mA frente a un valor nominal de {rating} mA. Se sobrecalentará y fallará antes de tiempo.",
+      "note": "Simplificado aquí con una caída fija de 2 V en el LED. El estudio resuelve el circuito completo."
+    },
+    "checks": {
+      "heading": "Cada pieza supera tres comprobaciones",
+      "lead": "Un componente solo encaja en una ranura si cumple las tres. Si una falla, Echidna te dice cuál y por cuánto.",
+      "connects": {
+        "title": "Se conecta",
+        "body": "La interfaz coincide: el zócalo, el conector y el número de carriles correctos."
+      },
+      "powered": {
+        "title": "Recibe alimentación",
+        "body": "Los raíles de la ranura suministran la tensión y la corriente que necesita la pieza."
+      },
+      "cool": {
+        "title": "Se mantiene fresco",
+        "body": "El calor que desprende cabe en el presupuesto térmico de la ranura y su refrigeración."
+      }
+    },
+    "devices": {
+      "heading": "Seis tipos de dispositivo, un mismo conjunto de reglas",
+      "lead": "Recrea un dispositivo real a partir de un preajuste o empieza con una placa en blanco. Cada tipo tiene su propio catálogo de piezas intercambiables.",
+      "smartphone": {
+        "name": "Smartphones",
+        "examples": "Preajustes de iPhone y Galaxy"
+      },
+      "desktop": {
+        "name": "PC de sobremesa",
+        "examples": "Equipos económicos, gaming y estación de trabajo"
+      },
+      "laptop": {
+        "name": "Portátiles",
+        "examples": "Preajustes ultrabook y gaming"
+      },
+      "drone": {
+        "name": "Drones",
+        "examples": "Serie DJI Mini y FPV de 5 pulgadas"
+      },
+      "iot": {
+        "name": "Placas de desarrollo",
+        "examples": "Raspberry Pi, ESP32 y Arduino"
+      },
+      "wearable": {
+        "name": "Wearables",
+        "examples": "Reloj inteligente y pulsera de actividad"
+      }
+    },
+    "provenance": {
+      "heading": "Cada número muestra de dónde viene",
+      "lead": "Los valores se etiquetan como hoja de datos, desmontaje o estimación, para que sepas cuánto fiarte de un veredicto. Cuando un fallo se basa solo en estimaciones, Echidna dice que probablemente fallará, no que fallará seguro.",
+      "datasheet": "Hoja de datos",
+      "teardown": "Desmontaje",
+      "estimated": "Estimación",
+      "rows": {
+        "battery": "Energía de la batería",
+        "display": "Corriente de la pantalla",
+        "soc": "Potencia máxima del procesador"
+      }
+    },
+    "cta": {
+      "heading": "Empieza con una placa en blanco",
+      "body": "Abre el estudio, elige una pieza de la biblioteca y mira su veredicto al colocarla."
+    },
+    "assembly": {
+      "label": "Animación: piezas colocadas una a una sobre una placa de desarrollo, que después se enciende",
+      "board": "Placa de desarrollo",
+      "placed": "{placed} de {total} colocadas",
+      "placing": "Colocando piezas",
+      "powered": "Encendida · todas las comprobaciones superadas",
+      "resetting": "Empezando de nuevo",
+      "parts": {
+        "soc": "Procesador",
+        "memory": "Memoria flash",
+        "capacitors": "Condensadores de desacoplo",
+        "resistors": "Resistencias",
+        "usb": "Conector USB-C",
+        "inductor": "Inductor de potencia",
+        "crystal": "Oscilador de cristal",
+        "led": "LED de estado",
+        "header": "Tira de pines"
+      }
+    },
+    "swap": {
+      "heading": "Cambia una pieza y mira el veredicto",
+      "lead": "Cada cambio se comprueba en cuanto lo haces. Pruébalo aquí con el circuito más sencillo posible."
+    }
+  },
+  "Preferences": {
+    "language": "Idioma",
+    "toggleTheme": "Cambiar tema"
+  },
+  "Studio": {
+    "title": "Estudio",
+    "untitledProject": "Proyecto sin título",
+    "blankBoard": "Placa en blanco",
+    "learnMode": "Modo aprendizaje",
+    "simulate": "Simular",
+    "simulateUnavailable": "La simulación llegará con el solucionador",
+    "toggleLibrary": "Mostrar u ocultar la biblioteca de componentes",
+    "panels": "Paneles",
+    "library": {
+      "title": "Componentes",
+      "search": "Buscar componentes",
+      "emptyTitle": "Aún no hay componentes",
+      "emptyDescription": "Las piezas de tu dispositivo aparecerán aquí cuando se cargue la biblioteca."
+    },
+    "viewport": {
+      "label": "Vista 3D de la placa"
+    },
+    "schematic": {
+      "title": "Esquema",
+      "emptyTitle": "El esquema está vacío",
+      "emptyDescription": "Coloca un componente para empezar a cablear tu circuito."
+    },
+    "inspector": {
+      "title": "Inspector",
+      "emptyTitle": "Nada seleccionado",
+      "emptyDescription": "Selecciona un componente para ver sus valores en directo.",
+      "selected": "Seleccionado: {id}"
+    },
+    "validator": {
+      "label": "Validación",
+      "allPassed": "Todas las comprobaciones son correctas",
+      "fails": "{count, plural, one {# fallo} other {# fallos}}",
+      "warns": "{count, plural, one {# advertencia} other {# advertencias}}",
+      "expand": "Mostrar todos los problemas",
+      "collapse": "Mostrar menos",
+      "fail": "Fallo",
+      "likelyFail": "Probable fallo",
+      "warn": "Advertencia",
+      "estimated": "estimado"
+    }
+  }
+}

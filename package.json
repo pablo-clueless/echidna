@@ -6,17 +6,28 @@
     "node": ">=24"
   },
   "scripts": {
+    "dev": "turbo run dev",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "turbo run test",
     "rust:check": "cargo check --workspace --all-targets",
-    "rust:test": "cargo test --workspace"
+    "rust:test": "cargo test --workspace",
+    "rust:lint": "cargo fmt --all --check && cargo clippy --workspace --all-targets -- -D warnings"
   },
   "devDependencies": {
+    "@eslint/json": "^2.1.1",
+    "@next/eslint-plugin-next": "^16.4.3",
     "@types/node": "^24.0.0",
+    "eslint": "^10.13.0",
+    "eslint-plugin-perfectionist": "^5.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
     "tsx": "^4.20.0",
     "turbo": "^2.5.0",
     "typescript": "^5.9.0",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^3.2.0"
   }
 }
