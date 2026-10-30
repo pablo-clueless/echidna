@@ -215,6 +215,20 @@
           "reversed": "Está conectado al revés: el cátodo tiene más tensión que el ánodo.",
           "open": "No circula corriente por él: el circuito no está cerrado o la tensión es demasiado baja para encenderlo."
         }
+      },
+      "switchOn": {
+        "title": "Tras el encendido",
+        "at": "A los {time}",
+        "voltage": "Tensión, de {from} a {to}",
+        "currentInto": "Corriente que entra por {pin}",
+        "currentOutOf": "Corriente que sale por {pin}",
+        "scrub": "Tiempo tras el encendido",
+        "valueText": "{time}: {voltage}, {current}",
+        "span": "Se muestran {time}, tiempo suficiente para que se estabilice.",
+        "unsettled": "Sigue cambiando tras {time}; tarda más en estabilizarse.",
+        "hint": "Señala las gráficas, o selecciónalas y usa las flechas, para reproducir el encendido en la placa.",
+        "instant": "Nada en este circuito almacena energía, así que alcanza estos valores en cuanto se enciende.",
+        "failed": "No se pudo simular el encendido de este circuito. Revisa si hay valores extremos, como un condensador mucho mayor de lo previsto."
       }
     },
     "validator": {
@@ -270,6 +284,18 @@
       "powerRating": {
         "name": "Potencia nominal",
         "explain": "Este componente convierte en calor el {percent} de su potencia nominal. Por encima del 80 % se calienta; por encima del 100 % puede quemarse."
+      },
+      "switchOnVoltage": {
+        "name": "Tensión al encender",
+        "explain": "Justo después del encendido, la tensión en este componente llega brevemente al {percent} de su valor nominal, más de lo que alcanza al estabilizarse. Puede deberse a una oscilación entre una bobina y un condensador; más resistencia en el lazo la amortigua."
+      },
+      "switchOnCurrent": {
+        "name": "Corriente al encender",
+        "explain": "Mientras el circuito arranca, este componente conduce el {percent} de su corriente nominal durante un milisegundo o más, normalmente mientras se carga un condensador grande. Un condensador más pequeño o más resistencia en serie acortan el pico."
+      },
+      "switchOnPower": {
+        "name": "Calor al encender",
+        "explain": "Mientras el circuito arranca, este componente convierte en calor el {percent} de su potencia nominal durante un milisegundo o más, normalmente mientras se carga un condensador grande. Un condensador más pequeño o más resistencia en serie acortan el pico."
       }
     }
   },

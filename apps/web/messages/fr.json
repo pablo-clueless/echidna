@@ -215,6 +215,20 @@
           "reversed": "Elle est câblée à l’envers : la cathode est à une tension plus haute que l’anode.",
           "open": "Aucun courant ne la traverse : le circuit n’est pas fermé, ou la tension est trop faible pour l’allumer."
         }
+      },
+      "switchOn": {
+        "title": "Après la mise sous tension",
+        "at": "À {time}",
+        "voltage": "Tension, de {from} à {to}",
+        "currentInto": "Courant entrant par {pin}",
+        "currentOutOf": "Courant sortant par {pin}",
+        "scrub": "Temps après la mise sous tension",
+        "valueText": "{time} : {voltage}, {current}",
+        "span": "Affiché sur {time}, le temps qu’il se stabilise.",
+        "unsettled": "Varie encore après {time} ; il lui faut plus longtemps pour se stabiliser.",
+        "hint": "Pointez les courbes, ou sélectionnez-les et utilisez les flèches, pour rejouer la mise sous tension sur la carte.",
+        "instant": "Rien dans ce circuit ne stocke d’énergie : il atteint ces valeurs dès la mise sous tension.",
+        "failed": "Impossible de simuler la mise sous tension de ce circuit. Vérifiez les valeurs extrêmes, comme un condensateur bien plus grand que prévu."
       }
     },
     "validator": {
@@ -270,6 +284,18 @@
       "powerRating": {
         "name": "Puissance nominale",
         "explain": "Ce composant transforme {percent} de sa puissance nominale en chaleur. Au-delà de 80 %, il chauffe ; au-delà de 100 %, il peut griller."
+      },
+      "switchOnVoltage": {
+        "name": "Tension à la mise sous tension",
+        "explain": "Juste après la mise sous tension, la tension aux bornes de ce composant atteint brièvement {percent} de sa valeur nominale, plus que sa valeur finale. Une oscillation entre une bobine et un condensateur peut en être la cause ; plus de résistance dans la boucle l’amortit."
+      },
+      "switchOnCurrent": {
+        "name": "Courant à la mise sous tension",
+        "explain": "Au démarrage du circuit, ce composant conduit {percent} de son courant nominal pendant une milliseconde ou plus, souvent pendant la charge d’un gros condensateur. Un condensateur plus petit ou plus de résistance en série raccourcit cet appel de courant."
+      },
+      "switchOnPower": {
+        "name": "Chaleur à la mise sous tension",
+        "explain": "Au démarrage du circuit, ce composant transforme en chaleur {percent} de sa puissance nominale pendant une milliseconde ou plus, souvent pendant la charge d’un gros condensateur. Un condensateur plus petit ou plus de résistance en série raccourcit cet appel de courant."
       }
     }
   },

@@ -582,3 +582,26 @@ fn reads_transistors_from_camel_case_json() {
     assert!(s.pin_currents["Q1"][0] > 0.0);
     assert_eq!(s.pin_currents["M1"].len(), 3);
 }
+
+#[test]
+fn regulator_browned_out_by_its_supply_settles_in_dropout() {
+    // Regulating would draw 6.6 A, dropping the 1 Ω supply below zero; off would draw nothing, so the input recovers.
+    // Only dropout is consistent: 3·V(in) = 5 + 2·1.1, so the input sits at 2.4 V and the output at 1.3 V.
+    let s = solve_dc(&circuit(vec![
+        source("V1", "supply", "0", 5.0),
+        resistor("RS", "supply", "in", 1.0),
+        el(
+            "U1",
+            &["in", "out", "0"],
+            ElementKind::LinearRegulator {
+                output_voltage: 3.3,
+                dropout_voltage: 1.1,
+                quiescent_current: 0.0,
+            },
+        ),
+        resistor("RL", "out", "0", 0.5),
+    ]))
+    .unwrap();
+    close(s.node_voltages["in"], 2.4, 1e-9);
+    close(s.node_voltages["out"], 1.3, 1e-9);
+}

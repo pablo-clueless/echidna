@@ -9,6 +9,7 @@ import type { Group } from "three";
 import { footprints, resistorBands } from "@/lib/board/footprints";
 import { LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
 import { BOARD, clampToBoard } from "@/lib/board/placement";
+import { pinCurrentsAt } from "@/lib/simulation/switchOn";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { applyMaskColour } from "./viewport/materials";
 import { projectCopper } from "@/lib/board/copper";
@@ -122,7 +123,13 @@ export const ViewportCanvas = () => {
   const selection = useStudioStore((s) => s.selection);
   const select = useStudioStore((s) => s.select);
   const violations = useStudioStore((s) => s.violations);
-  const pinCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
+  const settledCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
+  const switchOn = useStudioStore((s) => s.switchOn?.outcome);
+  const playhead = useStudioStore((s) => s.playhead);
+  const pinCurrents = useMemo(
+    () => (playhead !== null && switchOn?.ok && switchOn.solution ? pinCurrentsAt(switchOn.solution, playhead) : settledCurrents),
+    [playhead, switchOn, settledCurrents],
+  );
   const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
   const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
   const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");

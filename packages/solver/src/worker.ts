@@ -1,11 +1,15 @@
 import type { SolveRequest, SolveResponse } from "./client";
+import { solveNow, solveSwitchOnNow } from "./solve";
 import init from "../wasm/solver.js";
-import { solveNow } from "./solve";
 
 const ready = init({ module_or_path: new URL("../wasm/solver_bg.wasm", import.meta.url) });
 
 self.addEventListener("message", async (event: MessageEvent<SolveRequest>) => {
   await ready;
-  const response: SolveResponse = { id: event.data.id, outcomes: event.data.circuits.map(solveNow) };
+  const request = event.data;
+  const response: SolveResponse =
+    request.kind === "dc"
+      ? { id: request.id, kind: "dc", outcomes: request.circuits.map(solveNow) }
+      : { id: request.id, kind: "switchOn", outcome: solveSwitchOnNow(request.circuit) };
   self.postMessage(response);
 });

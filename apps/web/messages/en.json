@@ -215,6 +215,20 @@
           "reversed": "It’s wired backwards: the cathode sits at a higher voltage than the anode.",
           "open": "No current flows through it: the circuit isn’t a closed loop, or the voltage is too low to light it."
         }
+      },
+      "switchOn": {
+        "title": "After switch-on",
+        "at": "At {time}",
+        "voltage": "Voltage, {from} to {to}",
+        "currentInto": "Current into {pin}",
+        "currentOutOf": "Current out of {pin}",
+        "scrub": "Time after switch-on",
+        "valueText": "{time}: {voltage}, {current}",
+        "span": "Shown over the first {time}, by when it has settled.",
+        "unsettled": "Still changing after {time}; it takes longer than that to settle.",
+        "hint": "Point at the plots, or focus them and use the arrow keys, to replay switch-on on the board.",
+        "instant": "Nothing in this circuit stores energy, so it reaches these values the moment it is switched on.",
+        "failed": "Couldn’t simulate switch-on for this circuit. Check for parts with extreme values, such as a capacitor far larger than intended."
       }
     },
     "validator": {
@@ -270,6 +284,18 @@
       "powerRating": {
         "name": "Power rating",
         "explain": "This part is turning {percent} of its rated power into heat. Above 80% it gets hot; above 100% it can burn out."
+      },
+      "switchOnVoltage": {
+        "name": "Voltage at switch-on",
+        "explain": "Just after switch-on, the voltage across this part briefly reaches {percent} of its rating, more than it settles to. Ringing between an inductor and a capacitor can do this; more resistance in the loop calms it."
+      },
+      "switchOnCurrent": {
+        "name": "Current at switch-on",
+        "explain": "While the circuit starts up, this part carries {percent} of its rated current for a millisecond or more, usually while a large capacitor charges. A smaller capacitor or more series resistance shortens the surge."
+      },
+      "switchOnPower": {
+        "name": "Heat at switch-on",
+        "explain": "While the circuit starts up, this part turns {percent} of its rated power into heat for a millisecond or more, usually while a large capacitor charges. A smaller capacitor or more series resistance shortens the surge."
       }
     }
   },

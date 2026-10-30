@@ -74,6 +74,15 @@ export type TransientOutcome =
   | { ok: false; error: TransientError; durationMs: number };
 
 /**
+ * A run from switch-on, long enough to show the circuit settle. `solution` is `null` when nothing stores energy, so
+ * the circuit reaches its operating point at once; `settled` is `false` when it was still changing at the longest
+ * run tried.
+ */
+export type SwitchOnOutcome =
+  | { ok: true; solution: TransientSolution | null; settled: boolean; durationMs: number }
+  | { ok: false; error: TransientError; durationMs: number };
+
+/**
  * Narrows an unknown thrown value to a structured solver error.
  * @param value - Anything caught from the WASM boundary.
  * @returns Whether the value carries a known error `code`.

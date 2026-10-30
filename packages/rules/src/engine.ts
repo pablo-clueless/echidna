@@ -1,16 +1,25 @@
 import { anyEstimated, type Ratings, type Severity, type Unit, type Violation } from "@echidna/core";
-import type { DcSolution } from "@echidna/solver/types";
+import type { DcSolution, TransientSolution } from "@echidna/solver/types";
 import type { CircuitBuild } from "@echidna/library";
 
 import defaults from "../rules.json";
 
 export type Metric = "voltage" | "current" | "power";
 
-/** Compares a solved quantity against one of a part's ratings. Thresholds are fractions of the rating. */
+/**
+ * Compares a solved quantity against one of a part's ratings. Thresholds are fractions of the rating.
+ *
+ * `analysis` picks what the rule checks: the DC operating point (the default) or the run from switch-on. On a
+ * switch-on run, the rule grades the worst moment, or with `window` (in seconds) the worst average over any window
+ * that long. Averaging suits current and power, whose ratings are about heating: it ignores the brief spike an
+ * ideal supply drives into a discharged capacitor, which lasts a single time step and has no physical size.
+ */
 export type RatingRule = {
   id: string;
+  analysis?: "dc" | "switchOn";
   metric: Metric;
   rating: keyof Ratings;
+  window?: number;
   warnAt: number;
   failAbove: number;
 };
@@ -40,17 +49,29 @@ const measure = (metric: Metric, voltages: number[], currents: number[], power: 
 };
 
 /**
- * Runs every rule against every solved component that carries the rating the rule checks.
- * @param build - Circuit and spec mapping from `toCircuit`.
- * @param solution - DC operating point for that circuit.
- * @param rules - Rules to apply; defaults to `rules.json`.
- * @returns One verdict per component and applicable rule, passes included.
+ * Highest mean of `samples` over any `width` consecutive samples. The run ends once the circuit has settled, so
+ * windows that run past the end continue at the last value.
+ * @param samples - Equally spaced values.
+ * @param width - Window length in samples.
+ * @returns The worst window's mean.
  */
-export const evaluate = (
-  build: CircuitBuild,
-  solution: DcSolution,
-  rules: readonly RatingRule[] = defaultRules,
-): Violation[] => {
+export const worstAverage = (samples: readonly number[], width: number): number => {
+  const last = samples.at(-1) ?? 0;
+  const at = (i: number) => (i < samples.length ? (samples[i] ?? 0) : last);
+  const n = Math.max(1, Math.round(width));
+  let sum = 0;
+  for (let i = 0; i < n; i++) sum += at(i);
+  let worst = sum;
+  for (let start = 1; start < samples.length; start++) {
+    sum += at(start + n - 1) - at(start - 1);
+    worst = Math.max(worst, sum);
+  }
+  return worst / n;
+};
+
+type Reading = (element: CircuitBuild["circuit"]["elements"][number], rule: RatingRule, indexes: number[]) => number;
+
+const check = (build: CircuitBuild, rules: readonly RatingRule[], read: Reading): Violation[] => {
   const violations: Violation[] = [];
   for (const element of build.circuit.elements) {
     const spec = build.specs[element.id];
@@ -60,9 +81,7 @@ export const evaluate = (
       if (!rating || rating.value <= 0) continue;
       const pinIds = spec.ratingPins?.[rule.rating] ?? spec.pins.map((p) => p.id);
       const indexes = pinIds.map((id) => spec.pins.findIndex((p) => p.id === id)).filter((i) => i >= 0);
-      const voltages = indexes.map((i) => solution.nodeVoltages[element.nodes[i] ?? ""] ?? 0);
-      const currents = indexes.map((i) => solution.pinCurrents[element.id]?.[i] ?? 0);
-      const actual = measure(rule.metric, voltages, currents, solution.componentPower[element.id] ?? 0);
+      const actual = read(element, rule, indexes);
       violations.push({
         componentId: element.id,
         ruleId: rule.id,
@@ -75,4 +94,59 @@ export const evaluate = (
     }
   }
   return violations;
+};
+
+/**
+ * Runs every DC rule against every solved component that carries the rating the rule checks.
+ * @param build - Circuit and spec mapping from `toCircuit`.
+ * @param solution - DC operating point for that circuit.
+ * @param rules - Rules to apply; defaults to `rules.json`, of which only the DC rules run.
+ * @returns One verdict per component and applicable rule, passes included.
+ */
+export const evaluate = (
+  build: CircuitBuild,
+  solution: DcSolution,
+  rules: readonly RatingRule[] = defaultRules,
+): Violation[] =>
+  check(
+    build,
+    rules.filter((r) => (r.analysis ?? "dc") === "dc"),
+    (element, rule, indexes) =>
+      measure(
+        rule.metric,
+        indexes.map((i) => solution.nodeVoltages[element.nodes[i] ?? ""] ?? 0),
+        indexes.map((i) => solution.pinCurrents[element.id]?.[i] ?? 0),
+        solution.componentPower[element.id] ?? 0,
+      ),
+  );
+
+/**
+ * Runs the switch-on rules over a run from switch-on, catching what the operating point cannot show: overshoot,
+ * and a part overloaded while a large capacitor charges.
+ * @param build - Circuit and spec mapping from `toCircuit`.
+ * @param solution - Switch-on run for that circuit, with equal steps.
+ * @param rules - Rules to apply; defaults to `rules.json`, of which only the switch-on rules run.
+ * @returns One verdict per component and applicable rule, passes included.
+ */
+export const evaluateSwitchOn = (
+  build: CircuitBuild,
+  solution: TransientSolution,
+  rules: readonly RatingRule[] = defaultRules,
+): Violation[] => {
+  const step = solution.times[0] ?? 0;
+  return check(
+    build,
+    rules.filter((r) => r.analysis === "switchOn"),
+    (element, rule, indexes) => {
+      const series = solution.times.map((_, t) =>
+        measure(
+          rule.metric,
+          indexes.map((i) => solution.nodeVoltages[element.nodes[i] ?? ""]?.[t] ?? 0),
+          indexes.map((i) => solution.pinCurrents[element.id]?.[i]?.[t] ?? 0),
+          solution.componentPower[element.id]?.[t] ?? 0,
+        ),
+      );
+      return rule.window && step > 0 ? worstAverage(series, rule.window / step) : Math.max(0, ...series);
+    },
+  );
 };

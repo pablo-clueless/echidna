@@ -1,11 +1,11 @@
 "use client";
 
+import { evaluate, evaluateSwitchOn } from "@echidna/rules";
 import { partsById, toCircuit } from "@echidna/library";
-import { evaluate } from "@echidna/rules";
 import { useEffect } from "react";
 
+import { disposeSolver, getSolver, getSwitchOnSolver } from "./solver";
 import { useProjectStore, type ProjectState } from "@/stores/project";
-import { disposeSolver, getSolver } from "./solver";
 import { useStudioStore } from "@/stores/studio";
 import { toNetlist } from "@/lib/project/model";
 
@@ -26,6 +26,7 @@ export const useSimulation = () => {
       const build = toCircuit(toNetlist(project), partsById);
       if (build.circuit.elements.length === 0) {
         useStudioStore.getState().setSimulation(null, []);
+        useStudioStore.getState().setSwitchOn(null);
         return;
       }
       const outcome = await getSolver().solve(build.circuit);
@@ -36,6 +37,19 @@ export const useSimulation = () => {
         { build, solution, error: outcome.ok ? null : outcome.error, latencyMs: performance.now() - editedAt },
         violations,
       );
+
+      // Started only once verdicts are out, so the slower run over time never competes with them for the CPU.
+      if (!solution) {
+        useStudioStore.getState().setSwitchOn(null);
+        return;
+      }
+      const switchOn = await getSwitchOnSolver().switchOn(build.circuit);
+      if (!switchOn || !useStudioStore.getState().simulating) return;
+      const issues =
+        switchOn.ok && switchOn.solution
+          ? evaluateSwitchOn(build, switchOn.solution).filter((v) => v.severity !== "pass")
+          : [];
+      useStudioStore.getState().setSwitchOn({ build, outcome: switchOn }, issues);
     };
 
     void run(useProjectStore.getState());

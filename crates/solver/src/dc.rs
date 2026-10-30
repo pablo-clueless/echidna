@@ -40,6 +40,16 @@ impl RegulatorMode {
             Self::Regulating
         }
     }
+
+    /// One mode closer to `target`. Stepping through dropout, rather than jumping between regulating and off, stops
+    /// Newton–Raphson cycling when a heavy load browns out the input: regulating drags the input below dropout, off
+    /// lets it recover, and only dropout is consistent.
+    fn toward(self, target: Self) -> Self {
+        match (self, target) {
+            (Self::Regulating, Self::Off) | (Self::Off, Self::Regulating) => Self::Dropout,
+            _ => target,
+        }
+    }
 }
 
 /// Conductance from input to ground that stands in for the quiescent current while a regulator is off. It draws the
@@ -625,7 +635,7 @@ fn update(p: &Prepared, state: &mut State, x: &[f64]) -> bool {
             State::Regulator { mode },
         ) => {
             let headroom = v(p.pins[0]) - v(p.pins[2]) - dropout_voltage;
-            let next = RegulatorMode::of(headroom, *output_voltage);
+            let next = mode.toward(RegulatorMode::of(headroom, *output_voltage));
             let settled = next == *mode;
             *mode = next;
             settled

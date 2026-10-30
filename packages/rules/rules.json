@@ -2,6 +2,32 @@
   "rules": [
     { "id": "voltageRating", "metric": "voltage", "rating": "maxVoltage", "warnAt": 0.8, "failAbove": 1 },
     { "id": "currentRating", "metric": "current", "rating": "maxCurrent", "warnAt": 0.8, "failAbove": 1 },
-    { "id": "powerRating", "metric": "power", "rating": "maxPower", "warnAt": 0.8, "failAbove": 1 }
+    { "id": "powerRating", "metric": "power", "rating": "maxPower", "warnAt": 0.8, "failAbove": 1 },
+    {
+      "id": "switchOnVoltage",
+      "analysis": "switchOn",
+      "metric": "voltage",
+      "rating": "maxVoltage",
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    {
+      "id": "switchOnCurrent",
+      "analysis": "switchOn",
+      "metric": "current",
+      "rating": "maxCurrent",
+      "window": 0.001,
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    {
+      "id": "switchOnPower",
+      "analysis": "switchOn",
+      "metric": "power",
+      "rating": "maxPower",
+      "window": 0.001,
+      "warnAt": 0.8,
+      "failAbove": 1
+    }
   ]
 }

@@ -7,6 +7,7 @@ import { partsById } from "@echidna/library";
 import { useMemo } from "react";
 
 import { deriveNets, editableParams, paramValue } from "@/lib/project/model";
+import { SwitchOnResponse } from "./inspector/SwitchOnResponse";
 import { BoardSizeFields } from "./inspector/BoardSizeFields";
 import { SwapSuggestions } from "./inspector/SwapSuggestions";
 import { VariantPicker } from "./inspector/VariantPicker";
@@ -115,6 +116,8 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
             </dl>
           </section>
         )}
+
+        <SwitchOnResponse component={component} spec={spec} />
 
         {checks.length > 0 && (
           <section aria-labelledby="checks-heading" className="grid gap-3">
