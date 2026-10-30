@@ -1,9 +1,21 @@
 import { DoubleSide, MeshPhysicalMaterial, MeshStandardMaterial } from "three";
 
+import type { MaskColour } from "@/stores/layout";
+
+/** Mask colour and the slightly lighter, glossier tone copper takes on under it. */
+const finishes: Record<MaskColour, { mask: string; copper: string }> = {
+  black: { mask: "#0C0D0F", copper: "#262930" },
+  green: { mask: "#0E4A28", copper: "#1C6B3B" },
+  blue: { mask: "#0E2C5E", copper: "#1D4688" },
+  red: { mask: "#6E1212", copper: "#972521" },
+};
+
 /** Shared physical materials, created once so every part reuses the same shader programs. */
 export const materials = {
   /** Satin black solder mask over FR-4. A clearcoat here washes the board out to grey. */
   mask: new MeshStandardMaterial({ color: "#0C0D0F", roughness: 0.68 }),
+  /** Copper tracks and tented vias seen through the mask. */
+  maskedCopper: new MeshStandardMaterial({ color: "#1D1F23", roughness: 0.42 }),
   /** Exposed laminate on the board edge and hole walls. */
   laminate: new MeshStandardMaterial({ color: "#B7A77C", roughness: 0.85 }),
   /** ENIG pad finish. */
@@ -33,3 +45,13 @@ export const bandMaterial = (colour: string) => {
   return material;
 };
 
+
+/**
+ * Recolours the solder mask, and the copper seen through it, on every board at once.
+ * @param colour - Mask colour.
+ */
+export const applyMaskColour = (colour: MaskColour) => {
+  const finish = finishes[colour];
+  materials.mask.color.set(finish.mask);
+  materials.maskedCopper.color.set(finish.copper);
+};

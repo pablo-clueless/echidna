@@ -40,6 +40,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - 3D board: a 100 × 70 mm board with black solder mask, gold pads, solder joints, silkscreen designators and mounting holes, and generic parts sized from their packages: resistor colour bands follow the value, the regulator shows its output voltage and the LED glows with its simulated current. Parts drag with 0.5 mm snap, and selection and verdicts are outlined on the board.
 - 3D camera toolbar: zoom, fit board, 3D and top views, with keyboard shortcuts (+, −, F, T, Home, arrow keys to pan) and smooth transitions. Fitting shows the whole board on tall screens such as phones.
 - Through-hole parts sit in drilled, plated holes, with copper rings on both faces and solder joints on the underside. The holes move with the part.
+- The 3D board is routed automatically: copper tracks follow the wiring on both layers at 45°, with tented vias where a track changes layer and wider tracks for supply and ground. The routing is a preview, not checked for manufacture.
+- The 3D board has fiducials, a "REV A" legend with the project name, and a choice of black, green, blue or red solder mask, remembered per user.
+- Underside view (B) in the 3D toolbar; the camera can now orbit beneath the board to the solder side.
 - Collapsible component categories in the library, remembered per user and opened while searching.
 - Golden DC circuits in `tools/golden`, compared against ngspice in CI to within 0.1 %.
 - Solver models for NPN and PNP bipolar transistors (Ebers–Moll with Early effect) and n- and p-channel MOSFETs (SPICE level 1), with SPICE-style voltage limiting, and six transistor golden circuits.

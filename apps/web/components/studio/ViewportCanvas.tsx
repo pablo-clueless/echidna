@@ -1,18 +1,23 @@
 "use client";
 
-import { Canvas, type ThreeEvent, useThree } from "@react-three/fiber";
+import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Environment, Grid, Lightformer } from "@react-three/drei";
-import { useEffect, useMemo, useState } from "react";
 import { partsById } from "@echidna/library";
+import type { Group } from "three";
 
-import { footprints, drillsFor, resistorBands } from "@/lib/board/footprints";
+import { footprints, resistorBands } from "@/lib/board/footprints";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
+import { applyMaskColour } from "./viewport/materials";
+import { projectCopper } from "@/lib/board/copper";
 import { useProjectStore } from "@/stores/project";
+import { useLayoutStore } from "@/stores/layout";
 import { paramValue } from "@/lib/project/model";
 import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
 import { CameraRig } from "./viewport/CameraRig";
 import { PartMesh } from "./viewport/PartMesh";
+import { Traces } from "./viewport/Traces";
 import { Board } from "./viewport/Board";
 
 /** Board size in millimetres: 100 × 70 mm, 1.6 mm FR-4. Placements in the store are in metres. */
@@ -72,8 +77,11 @@ const StudioLighting = () => (
       <Lightformer form="rect" intensity={0.7} position={[0, 1.1, 2]} rotation={[0, Math.PI, 0]} scale={[5, 1.2, 1]} />
       <Lightformer form="rect" intensity={1.6} position={[-2, 0.6, 0.5]} rotation={[0, Math.PI / 2, 0]} scale={[4, 0.5, 1]} />
       <Lightformer form="rect" intensity={1.2} position={[2, 0.8, -0.5]} rotation={[0, -Math.PI / 2, 0]} scale={[4, 0.4, 1]} />
+      {/* Soft fill from below, so the solder side reads in the underside view. */}
+      <Lightformer form="rect" intensity={0.9} position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3, 3, 1]} />
     </Environment>
     <ambientLight intensity={0.15} />
+    <directionalLight position={[-0.05, -0.12, -0.04]} intensity={0.5} />
     <directionalLight
       position={[0.12, 0.3, 0.16]}
       intensity={1.6}
@@ -91,26 +99,33 @@ const StudioLighting = () => (
   </>
 );
 
+/** Hides its children while the camera is below the board, so the floor grid never covers the underside. */
+const AboveBoardOnly = ({ children }: { children: ReactNode }) => {
+  const ref = useRef<Group>(null);
+  useFrame(({ camera }) => {
+    if (ref.current) ref.current.visible = camera.position.y > 0;
+  });
+  return <group ref={ref}>{children}</group>;
+};
+
 export const ViewportCanvas = () => {
   const colours = gridColours[useResolvedTheme()];
   const fontFamily = useMonoFont();
   const components = useProjectStore((s) => s.components);
   const board = useProjectStore((s) => s.board);
+  const wires = useProjectStore((s) => s.wires);
+  const projectName = useProjectStore((s) => s.name);
+  const maskColour = useLayoutStore((s) => s.maskColour);
   const placeOnBoard = useProjectStore((s) => s.placeOnBoard);
   const selection = useStudioStore((s) => s.selection);
   const select = useStudioStore((s) => s.select);
   const violations = useStudioStore((s) => s.violations);
   const pinCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
   const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
-  const drills = useMemo(
-    () =>
-      components.flatMap((c) => {
-        const footprint = footprints[partsById.get(c.specId)?.footprintId ?? ""];
-        const at = board[c.id];
-        return footprint && at ? drillsFor(footprint, at.x / MM, at.z / MM, at.rotation) : [];
-      }),
-    [components, board],
-  );
+  const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
+  const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");
+
+  useEffect(() => applyMaskColour(maskColour), [maskColour]);
 
   useEffect(() => {
     if (!dragging) return;
@@ -153,7 +168,8 @@ export const ViewportCanvas = () => {
       <DevHandle />
 
       <group scale={MM}>
-        <Board {...BOARD} drills={drills} />
+        <Board {...BOARD} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
+        <Traces routing={copper.routing} thickness={BOARD.thickness} />
       </group>
 
       {components.map((c) => {
@@ -207,6 +223,7 @@ export const ViewportCanvas = () => {
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
+      <AboveBoardOnly>
       <Grid
         args={[1, 1]}
         position={[0, -0.0001, 0]}
@@ -220,6 +237,7 @@ export const ViewportCanvas = () => {
         fadeStrength={1.5}
         infiniteGrid
       />
+      </AboveBoardOnly>
       <CameraRig enabled={!dragging} centre={[0, TOP, 0]} radius={FRAME_RADIUS} narrowRadius={NARROW_FRAME_RADIUS} />
     </Canvas>
   );

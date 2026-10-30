@@ -55,8 +55,8 @@ describe("drillsFor", () => {
   it("drills only through-hole pads", () => {
     expect(drillsFor(footprints["generic/0805"]!, 0, 0, 0)).toEqual([]);
     expect(drillsFor(axial, 10, -5, 0)).toEqual([
-      { x: 10 - 5.08, z: -5, diameter: 0.8 },
-      { x: 10 + 5.08, z: -5, diameter: 0.8 },
+      { x: 10 - 5.08, z: -5, diameter: 1 },
+      { x: 10 + 5.08, z: -5, diameter: 1 },
     ]);
   });
 

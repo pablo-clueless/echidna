@@ -50,6 +50,7 @@ export const CameraRig = ({ enabled, centre, radius, narrowRadius }: Props) => {
       fit: () => void controls.fitToSphere(board(), true),
       top: () => frame(0, 0),
       angled: () => frame(ANGLED.azimuth, ANGLED.polar),
+      underside: () => frame(ANGLED.azimuth, Math.PI - ANGLED.polar),
       pan: (x, y) => void controls.truck(x * controls.distance, -y * controls.distance, true),
     });
     return () => setCamera(null);
@@ -63,7 +64,7 @@ export const CameraRig = ({ enabled, centre, radius, narrowRadius }: Props) => {
       dollyToCursor
       minDistance={0.008}
       maxDistance={0.6}
-      maxPolarAngle={Math.PI * 0.49}
+      maxPolarAngle={Math.PI}
       smoothTime={0.2}
     />
   );
