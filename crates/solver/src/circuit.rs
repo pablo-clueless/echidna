@@ -56,6 +56,64 @@ pub enum ElementKind {
         #[serde(default)]
         quiescent_current: f64,
     },
+    /// Pins: collector, base, emitter. Ebers–Moll transport model with the forward Early effect, which is SPICE
+    /// Gummel–Poon with its high-injection, leakage, resistance and charge parameters left at their defaults.
+    Bjt {
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        #[serde(default = "unity")]
+        reverse_beta: f64,
+        /// Forward Early voltage `VAF`. Zero leaves the effect out, as in SPICE.
+        #[serde(default)]
+        early_voltage: f64,
+    },
+    /// Pins: drain, gate, source, with the body tied to the source. Shichman–Hodges (SPICE level 1) model
+    /// without body effect or junction diodes.
+    Mosfet {
+        channel: Channel,
+        /// `VTO` in the SPICE sign convention, so negative for an enhancement-mode p-channel part.
+        threshold_voltage: f64,
+        /// `KP·W/L`, in A/V².
+        transconductance: f64,
+        /// `LAMBDA`, in 1/V.
+        #[serde(default)]
+        channel_length_modulation: f64,
+    },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum BjtPolarity {
+    Npn,
+    Pnp,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum Channel {
+    N,
+    P,
+}
+
+impl BjtPolarity {
+    /// `+1` for NPN and `−1` for PNP, so one set of equations covers both.
+    pub(crate) fn sign(self) -> f64 {
+        match self {
+            Self::Npn => 1.0,
+            Self::Pnp => -1.0,
+        }
+    }
+}
+
+impl Channel {
+    /// `+1` for n-channel and `−1` for p-channel, so one set of equations covers both.
+    pub(crate) fn sign(self) -> f64 {
+        match self {
+            Self::N => 1.0,
+            Self::P => -1.0,
+        }
+    }
 }
 
 const fn unity() -> f64 {
@@ -65,7 +123,7 @@ const fn unity() -> f64 {
 impl ElementKind {
     pub(crate) fn pin_count(&self) -> usize {
         match self {
-            Self::LinearRegulator { .. } => 3,
+            Self::LinearRegulator { .. } | Self::Bjt { .. } | Self::Mosfet { .. } => 3,
             _ => 2,
         }
     }

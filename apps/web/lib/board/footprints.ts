@@ -130,3 +130,23 @@ export const resistorBands = (ohms: number): string[] | null => {
   if (!first || !second || !multiplier) return null;
   return [first, second, multiplier, GOLD];
 };
+
+export type Drill = { x: number; z: number; diameter: number };
+
+/**
+ * Board positions of a placed footprint's plated holes.
+ * @param footprint - Footprint to drill.
+ * @param x - Part origin across the board, in millimetres.
+ * @param z - Part origin along the board's depth, in millimetres.
+ * @param rotation - Part rotation in degrees, clockwise seen from above, as stored on the board.
+ * @returns One drill per through-hole pad.
+ */
+export const drillsFor = (footprint: Footprint, x: number, z: number, rotation: number): Drill[] => {
+  const angle = (-rotation * Math.PI) / 180;
+  const [cos, sin] = [Math.cos(angle), Math.sin(angle)];
+  return footprint.pads.flatMap((pad) =>
+    pad.drill === undefined
+      ? []
+      : [{ x: x + pad.x * cos + pad.z * sin, z: z - pad.x * sin + pad.z * cos, diameter: pad.drill }],
+  );
+};

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { parts } from "@echidna/library";
+import { Vector3 } from "three";
 
-import { footprints, resistorBands } from "./footprints";
+import { footprints, drillsFor, resistorBands } from "./footprints";
 
 describe("footprints", () => {
   it.each(parts.filter((p) => p.footprintId))("$id has a pad for every pin", (spec) => {
@@ -45,5 +46,26 @@ describe("resistorBands", () => {
     expect(resistorBands(0)).toBeNull();
     expect(resistorBands(Number.NaN)).toBeNull();
     expect(resistorBands(1e12)).toBeNull();
+  });
+});
+
+describe("drillsFor", () => {
+  const axial = footprints["generic/axial-0.4in"]!;
+
+  it("drills only through-hole pads", () => {
+    expect(drillsFor(footprints["generic/0805"]!, 0, 0, 0)).toEqual([]);
+    expect(drillsFor(axial, 10, -5, 0)).toEqual([
+      { x: 10 - 5.08, z: -5, diameter: 0.8 },
+      { x: 10 + 5.08, z: -5, diameter: 0.8 },
+    ]);
+  });
+
+  it("follows the part's rotation as the 3D view applies it", () => {
+    for (const rotation of [90, 180, 270, 37]) {
+      const [first] = drillsFor(axial, 3, 4, rotation);
+      const expected = new Vector3(-5.08, 0, 0).applyAxisAngle(new Vector3(0, 1, 0), (-rotation * Math.PI) / 180);
+      expect(first?.x).toBeCloseTo(3 + expected.x, 9);
+      expect(first?.z).toBeCloseTo(4 + expected.z, 9);
+    }
   });
 });

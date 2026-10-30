@@ -1,4 +1,4 @@
-import { MeshPhysicalMaterial, MeshStandardMaterial } from "three";
+import { DoubleSide, MeshPhysicalMaterial, MeshStandardMaterial } from "three";
 
 /** Shared physical materials, created once so every part reuses the same shader programs. */
 export const materials = {
@@ -8,6 +8,8 @@ export const materials = {
   laminate: new MeshStandardMaterial({ color: "#B7A77C", roughness: 0.85 }),
   /** ENIG pad finish. */
   gold: new MeshStandardMaterial({ color: "#E2B866", metalness: 1, roughness: 0.28 }),
+  /** Copper plating inside drilled holes, rendered from both sides so the barrel reads from any angle. */
+  plating: new MeshStandardMaterial({ color: "#B8893A", metalness: 1, roughness: 0.35, side: DoubleSide }),
   /** Tin-lead or SAC solder and tinned leads. */
   solder: new MeshStandardMaterial({ color: "#D6DADF", metalness: 1, roughness: 0.18 }),
   lead: new MeshStandardMaterial({ color: "#C3C8CE", metalness: 1, roughness: 0.3 }),

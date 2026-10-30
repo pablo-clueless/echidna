@@ -2,10 +2,10 @@
 
 import { Canvas, type ThreeEvent, useThree } from "@react-three/fiber";
 import { Environment, Grid, Lightformer } from "@react-three/drei";
+import { useEffect, useMemo, useState } from "react";
 import { partsById } from "@echidna/library";
-import { useEffect, useState } from "react";
 
-import { footprints, resistorBands } from "@/lib/board/footprints";
+import { footprints, drillsFor, resistorBands } from "@/lib/board/footprints";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { useProjectStore } from "@/stores/project";
 import { paramValue } from "@/lib/project/model";
@@ -19,8 +19,10 @@ import { Board } from "./viewport/Board";
 const BOARD = { width: 100, depth: 70, thickness: 1.6 };
 const MM = 0.001;
 const TOP = BOARD.thickness * MM;
-/** Slightly inside the board's half-diagonal, so "fit" fills the view without cropping the corners in a wide panel. */
+/** Slightly inside the board's half-diagonal, so "fit" fills a wide view without cropping the corners. */
 const FRAME_RADIUS = 0.052;
+/** Just outside the half-diagonal (61 mm), so a tall view such as a phone shows the whole board. */
+const NARROW_FRAME_RADIUS = 0.064;
 const EDGE_MARGIN = 0.004;
 const SNAP = 0.0005;
 const LED_NOMINAL_CURRENT = 0.02;
@@ -100,6 +102,15 @@ export const ViewportCanvas = () => {
   const violations = useStudioStore((s) => s.violations);
   const pinCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
   const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
+  const drills = useMemo(
+    () =>
+      components.flatMap((c) => {
+        const footprint = footprints[partsById.get(c.specId)?.footprintId ?? ""];
+        const at = board[c.id];
+        return footprint && at ? drillsFor(footprint, at.x / MM, at.z / MM, at.rotation) : [];
+      }),
+    [components, board],
+  );
 
   useEffect(() => {
     if (!dragging) return;
@@ -142,7 +153,7 @@ export const ViewportCanvas = () => {
       <DevHandle />
 
       <group scale={MM}>
-        <Board {...BOARD} />
+        <Board {...BOARD} drills={drills} />
       </group>
 
       {components.map((c) => {
@@ -170,6 +181,7 @@ export const ViewportCanvas = () => {
                 footprint={footprint}
                 designator={c.id}
                 fontFamily={fontFamily}
+                thickness={BOARD.thickness}
                 outline={selected ? highlights.selected : worst(c.id)}
               />
             )}
@@ -208,7 +220,7 @@ export const ViewportCanvas = () => {
         fadeStrength={1.5}
         infiniteGrid
       />
-      <CameraRig enabled={!dragging} centre={[0, TOP, 0]} radius={FRAME_RADIUS} />
+      <CameraRig enabled={!dragging} centre={[0, TOP, 0]} radius={FRAME_RADIUS} narrowRadius={NARROW_FRAME_RADIUS} />
     </Canvas>
   );
 };

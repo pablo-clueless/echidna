@@ -8,7 +8,25 @@ export type ElementKind =
   | { kind: "voltageSource"; voltage: number }
   | { kind: "currentSource"; current: number }
   | { kind: "diode"; saturationCurrent: number; emissionCoefficient?: number; seriesResistance?: number }
-  | { kind: "linearRegulator"; outputVoltage: number; dropoutVoltage?: number; quiescentCurrent?: number };
+  | { kind: "linearRegulator"; outputVoltage: number; dropoutVoltage?: number; quiescentCurrent?: number }
+  | {
+      kind: "bjt";
+      polarity: "npn" | "pnp";
+      saturationCurrent: number;
+      forwardBeta: number;
+      reverseBeta?: number;
+      /** Forward Early voltage; zero or absent leaves the effect out. */
+      earlyVoltage?: number;
+    }
+  | {
+      kind: "mosfet";
+      channel: "n" | "p";
+      /** SPICE `VTO`, so negative for an enhancement-mode p-channel part. */
+      thresholdVoltage: number;
+      /** `KP·W/L`, in A/V². */
+      transconductance: number;
+      channelLengthModulation?: number;
+    };
 
 /** A solver element: one node name per pin, in the order the kind defines. */
 export type CircuitElement = ElementKind & { id: string; nodes: string[] };

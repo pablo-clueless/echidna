@@ -16,6 +16,7 @@ const value = (n: number) => n.toExponential(12);
  * Node and element names are replaced with SPICE-safe ones, since ours contain `:` and `/`.
  * Our behavioural regulator becomes a B-source holding `min(V(gnd) + Vset, V(in) − dropout)` behind a 0 V
  * sense source, a current-controlled source drawing the output current from the input, and the quiescent current.
+ * MOSFETs have their body tied to the source, as ours do.
  * @param circuit - Circuit in solver format.
  * @param title - First line of the deck.
  * @returns The deck and name mappings.
@@ -70,6 +71,24 @@ export const toSpice = (circuit: Circuit, title: string): SpiceDeck => {
         lines.push(`Vsense${name} ${pass} ${output} DC 0`);
         lines.push(`F${name} ${input} 0 Vsense${name} 1`);
         lines.push(`Iq${name} ${input} ${ground} DC ${value(element.quiescentCurrent ?? 0)}`);
+        break;
+      }
+      case "bjt": {
+        const model = `qmod${name}`;
+        const early = element.earlyVoltage ? ` VAF=${value(element.earlyVoltage)}` : "";
+        lines.push(`Q${name} ${a} ${b} ${c} ${model}`);
+        lines.push(
+          `.model ${model} ${element.polarity.toUpperCase()}(IS=${value(element.saturationCurrent)} BF=${value(element.forwardBeta)} BR=${value(element.reverseBeta ?? 1)}${early})`,
+        );
+        break;
+      }
+      case "mosfet": {
+        const model = `mmod${name}`;
+        // W = L, so KP alone sets the gain. IS = 0 removes the bulk junctions, which our model leaves out.
+        lines.push(`M${name} ${a} ${b} ${c} ${c} ${model} W=100u L=100u`);
+        lines.push(
+          `.model ${model} ${element.channel.toUpperCase()}MOS(LEVEL=1 VTO=${value(element.thresholdVoltage)} KP=${value(element.transconductance)} LAMBDA=${value(element.channelLengthModulation ?? 0)} IS=0)`,
+        );
         break;
       }
     }

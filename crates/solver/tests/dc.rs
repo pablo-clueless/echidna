@@ -1,4 +1,7 @@
-use echidna_solver::{Circuit, Element, ElementKind, SolveError, THERMAL_VOLTAGE, solve_dc};
+use echidna_solver::{
+    BjtPolarity, Channel, Circuit, DcSolution, Element, ElementKind, SolveError, THERMAL_VOLTAGE,
+    solve_dc,
+};
 
 fn el(id: &str, nodes: &[&str], kind: ElementKind) -> Element {
     Element {
@@ -163,7 +166,7 @@ fn diode_series_resistance_adds_drop() {
     assert!(real.branch_currents["D1"] < ideal.branch_currents["D1"]);
 }
 
-fn regulator(supply: f64, load: f64) -> echidna_solver::DcSolution {
+fn regulator(supply: f64, load: f64) -> DcSolution {
     solve_dc(&circuit(vec![
         source("V1", "vin", "0", supply),
         el(
@@ -282,4 +285,213 @@ fn reads_camel_case_json() {
     let out = serde_json::to_value(&s).unwrap();
     assert!(out["nodeVoltages"]["a"].is_number());
     assert!(out["componentPower"]["R1"].is_number());
+}
+
+const BETA_F: f64 = 100.0;
+const BJT_IS: f64 = 1e-14;
+
+fn bjt(id: &str, c: &str, b: &str, e: &str, polarity: BjtPolarity, early_voltage: f64) -> Element {
+    el(
+        id,
+        &[c, b, e],
+        ElementKind::Bjt {
+            polarity,
+            saturation_current: BJT_IS,
+            forward_beta: BETA_F,
+            reverse_beta: 1.0,
+            early_voltage,
+        },
+    )
+}
+
+/// Common-emitter stage with a fixed base current: `sign` −1 builds the PNP mirror image.
+fn common_emitter(polarity: BjtPolarity, early_voltage: f64) -> DcSolution {
+    let sign = match polarity {
+        BjtPolarity::Npn => 1.0,
+        BjtPolarity::Pnp => -1.0,
+    };
+    solve_dc(&circuit(vec![
+        source("V1", "vcc", "0", sign * 10.0),
+        resistor("RC", "vcc", "c", 1_000.0),
+        el(
+            "I1",
+            &["0", "b"],
+            ElementKind::CurrentSource {
+                current: sign * 10e-6,
+            },
+        ),
+        bjt("Q1", "c", "b", "0", polarity, early_voltage),
+    ]))
+    .unwrap()
+}
+
+#[test]
+fn bjt_in_forward_active_has_gain_beta() {
+    let s = common_emitter(BjtPolarity::Npn, 0.0);
+    let ic = s.pin_currents["Q1"][0];
+    close(ic, BETA_F * 10e-6, 1e-6);
+    close(s.node_voltages["c"], 10.0 - 1_000.0 * ic, 1e-9);
+    close(
+        s.node_voltages["b"],
+        THERMAL_VOLTAGE * (ic / BJT_IS + 1.0).ln(),
+        1e-4,
+    );
+    let sum: f64 = s.pin_currents["Q1"].iter().sum();
+    assert!(sum.abs() < 1e-15, "KCL off by {sum}");
+}
+
+#[test]
+fn early_effect_raises_collector_current_with_vce() {
+    let vaf = 50.0;
+    let s = common_emitter(BjtPolarity::Npn, vaf);
+    let vbc = s.node_voltages["b"] - s.node_voltages["c"];
+    close(
+        s.pin_currents["Q1"][0],
+        BETA_F * 10e-6 * (1.0 - vbc / vaf),
+        1e-5,
+    );
+}
+
+#[test]
+fn pnp_mirrors_npn() {
+    let npn = common_emitter(BjtPolarity::Npn, 40.0);
+    let pnp = common_emitter(BjtPolarity::Pnp, 40.0);
+    for (node, v) in &npn.node_voltages {
+        close(-pnp.node_voltages[node], *v, 1e-9);
+    }
+    for (pin, i) in npn.pin_currents["Q1"].iter().enumerate() {
+        close(-pnp.pin_currents["Q1"][pin], *i, 1e-9);
+    }
+}
+
+#[test]
+fn bjt_saturates_when_overdriven() {
+    let s = solve_dc(&circuit(vec![
+        source("V1", "vcc", "0", 5.0),
+        resistor("RB", "vcc", "b", 1_000.0),
+        resistor("RC", "vcc", "c", 1_000.0),
+        bjt("Q1", "c", "b", "0", BjtPolarity::Npn, 0.0),
+    ]))
+    .unwrap();
+    let [ic, ib, _] = s.pin_currents["Q1"][..] else {
+        panic!("three pins")
+    };
+    assert!(s.node_voltages["c"] < 0.2, "Vce {}", s.node_voltages["c"]);
+    assert!(ic < BETA_F * ib);
+}
+
+fn mosfet(id: &str, d: &str, g: &str, s: &str, channel: Channel, vto: f64) -> Element {
+    el(
+        id,
+        &[d, g, s],
+        ElementKind::Mosfet {
+            channel,
+            threshold_voltage: vto,
+            transconductance: 1e-3,
+            channel_length_modulation: 0.0,
+        },
+    )
+}
+
+/// N-channel switch with the gate held at `vg` and the drain pulled up through `rd`, or its p-channel mirror.
+fn fet_stage(channel: Channel, vg: f64, rd: f64, swap: bool) -> DcSolution {
+    let sign = channel_sign(channel);
+    let (d, s) = if swap { ("0", "d") } else { ("d", "0") };
+    solve_dc(&circuit(vec![
+        source("VDD", "vdd", "0", sign * 10.0),
+        source("VG", "g", "0", sign * vg),
+        resistor("RD", "vdd", "d", rd),
+        mosfet("M1", d, "g", s, channel, sign * 1.0),
+    ]))
+    .unwrap()
+}
+
+fn channel_sign(channel: Channel) -> f64 {
+    match channel {
+        Channel::N => 1.0,
+        Channel::P => -1.0,
+    }
+}
+
+#[test]
+fn mosfet_in_saturation_follows_square_law() {
+    let s = fet_stage(Channel::N, 3.0, 1_000.0, false);
+    close(s.pin_currents["M1"][0], 0.5e-3 * 2.0_f64.powi(2), 1e-9);
+    close(s.node_voltages["d"], 8.0, 1e-9);
+    assert_eq!(s.pin_currents["M1"][1], 0.0);
+}
+
+#[test]
+fn mosfet_in_triode_matches_closed_form() {
+    // β(Vov − Vds/2)·Vds = (10 − Vds)/Rd with Vov = 4 V, β = 1 mA/V² and Rd = 10 kΩ.
+    let vds = 4.1 - (4.1_f64.powi(2) - 2.0).sqrt();
+    let s = fet_stage(Channel::N, 5.0, 10_000.0, false);
+    close(s.node_voltages["d"], vds, 1e-9);
+}
+
+#[test]
+fn mosfet_is_symmetric_in_drain_and_source() {
+    let normal = fet_stage(Channel::N, 5.0, 10_000.0, false);
+    let swapped = fet_stage(Channel::N, 5.0, 10_000.0, true);
+    close(swapped.node_voltages["d"], normal.node_voltages["d"], 1e-9);
+    close(
+        swapped.pin_currents["M1"][2],
+        normal.pin_currents["M1"][0],
+        1e-9,
+    );
+}
+
+#[test]
+fn p_channel_mirrors_n_channel() {
+    let n = fet_stage(Channel::N, 5.0, 10_000.0, false);
+    let p = fet_stage(Channel::P, 5.0, 10_000.0, false);
+    close(-p.node_voltages["d"], n.node_voltages["d"], 1e-9);
+    close(-p.pin_currents["M1"][0], n.pin_currents["M1"][0], 1e-9);
+}
+
+#[test]
+fn mosfet_is_off_below_threshold() {
+    let s = fet_stage(Channel::N, 0.5, 1_000.0, false);
+    assert_eq!(s.pin_currents["M1"][0], 0.0);
+    close(s.node_voltages["d"], 10.0, 1e-6);
+}
+
+#[test]
+fn rejects_bad_transistor_values() {
+    let mut q = bjt("Q1", "c", "b", "0", BjtPolarity::Npn, 0.0);
+    if let ElementKind::Bjt { forward_beta, .. } = &mut q.kind {
+        *forward_beta = 0.0;
+    }
+    let err = solve_dc(&circuit(vec![q])).unwrap_err();
+    assert!(matches!(err, SolveError::InvalidValue { element_id, .. } if element_id == "Q1"));
+
+    let mut m = mosfet("M1", "d", "g", "0", Channel::N, 1.0);
+    if let ElementKind::Mosfet {
+        transconductance, ..
+    } = &mut m.kind
+    {
+        *transconductance = -1e-3;
+    }
+    let err = solve_dc(&circuit(vec![m])).unwrap_err();
+    assert!(matches!(err, SolveError::InvalidValue { element_id, .. } if element_id == "M1"));
+}
+
+#[test]
+fn reads_transistors_from_camel_case_json() {
+    let json = r#"{
+        "ground": "0",
+        "elements": [
+            { "id": "V1", "kind": "voltageSource", "nodes": ["vcc", "0"], "voltage": 5 },
+            { "id": "RB", "kind": "resistor", "nodes": ["vcc", "b"], "resistance": 100000 },
+            { "id": "RC", "kind": "resistor", "nodes": ["vcc", "c"], "resistance": 1000 },
+            { "id": "Q1", "kind": "bjt", "nodes": ["c", "b", "0"], "polarity": "npn",
+              "saturationCurrent": 1e-14, "forwardBeta": 100 },
+            { "id": "M1", "kind": "mosfet", "nodes": ["0", "c", "vcc"], "channel": "p",
+              "thresholdVoltage": -1, "transconductance": 1e-3 }
+        ]
+    }"#;
+    let c: Circuit = serde_json::from_str(json).unwrap();
+    let s = solve_dc(&c).unwrap();
+    assert!(s.pin_currents["Q1"][0] > 0.0);
+    assert_eq!(s.pin_currents["M1"].len(), 3);
 }

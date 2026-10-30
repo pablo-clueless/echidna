@@ -38,9 +38,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Inspector: editable values in the user's locale (including `4k7`-style notation), provenance badges, live voltages, currents and power, rating meters with Learn mode explanations, and pre-checked swap suggestions. Selecting a wire shows its net.
 - "Open the 3.3 V regulator example" on the empty schematic.
 - 3D board: a 100 × 70 mm board with black solder mask, gold pads, solder joints, silkscreen designators and mounting holes, and generic parts sized from their packages: resistor colour bands follow the value, the regulator shows its output voltage and the LED glows with its simulated current. Parts drag with 0.5 mm snap, and selection and verdicts are outlined on the board.
-- 3D camera toolbar: zoom, fit board, 3D and top views, with keyboard shortcuts (+, −, F, T, Home, arrow keys to pan) and smooth transitions.
+- 3D camera toolbar: zoom, fit board, 3D and top views, with keyboard shortcuts (+, −, F, T, Home, arrow keys to pan) and smooth transitions. Fitting shows the whole board on tall screens such as phones.
+- Through-hole parts sit in drilled, plated holes, with copper rings on both faces and solder joints on the underside. The holes move with the part.
 - Collapsible component categories in the library, remembered per user and opened while searching.
 - Golden DC circuits in `tools/golden`, compared against ngspice in CI to within 0.1 %.
+- Solver models for NPN and PNP bipolar transistors (Ebers–Moll with Early effect) and n- and p-channel MOSFETs (SPICE level 1), with SPICE-style voltage limiting, and six transistor golden circuits.
 - Playwright end-to-end test of the Phase 1 acceptance scenario in English and French, checking the warning and fail appear within 100 ms.
 - CI builds the WebAssembly solver (with a `wasm-bindgen` CLI matching `Cargo.lock`), runs the end-to-end tests and runs the golden circuits against ngspice.
 

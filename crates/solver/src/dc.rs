@@ -1,14 +1,15 @@
 use std::collections::{BTreeMap, HashMap};
 
 use crate::circuit::{Circuit, DcSolution, Element, ElementKind, SolveError, THERMAL_VOLTAGE};
+use crate::devices::{
+    bjt, critical_voltage, junction, limit_drain_source, limit_fet, limit_junction, mosfet,
+};
 use crate::matrix::System;
 
 const MAX_ITERATIONS: usize = 150;
 const RELTOL: f64 = 1e-6;
 const VNTOL: f64 = 1e-9;
 const ABSTOL: f64 = 1e-15;
-/// Conductance added across every junction, as in SPICE, so a reverse-biased diode never leaves a node floating.
-const GMIN: f64 = 1e-12;
 /// Conductance from every node to ground, so a half-wired schematic still solves instead of going singular.
 const GSHUNT: f64 = 1e-12;
 
@@ -24,8 +25,22 @@ struct Prepared<'a> {
 #[derive(Clone, Copy)]
 enum State {
     None,
-    Junction { vd: f64 },
-    Regulator { dropout: bool },
+    Junction {
+        vd: f64,
+    },
+    Regulator {
+        dropout: bool,
+    },
+    /// Junction voltages with the polarity folded in, so they read as for an NPN.
+    Bjt {
+        vbe: f64,
+        vbc: f64,
+    },
+    /// Gate–source and drain–source voltages with the polarity folded in, so they read as for an n-channel part.
+    Mosfet {
+        vgs: f64,
+        vds: f64,
+    },
 }
 
 /// Finds the DC operating point with Newton–Raphson iteration over a Modified Nodal Analysis system.
@@ -89,6 +104,20 @@ pub fn solve_dc(circuit: &Circuit) -> Result<DcSolution, SolveError> {
                 vd: critical_voltage(saturation_current, emission_coefficient * THERMAL_VOLTAGE),
             },
             ElementKind::LinearRegulator { .. } => State::Regulator { dropout: false },
+            ElementKind::Bjt {
+                saturation_current, ..
+            } => State::Bjt {
+                vbe: critical_voltage(saturation_current, THERMAL_VOLTAGE),
+                vbc: 0.0,
+            },
+            ElementKind::Mosfet {
+                channel,
+                threshold_voltage,
+                ..
+            } => State::Mosfet {
+                vgs: channel.sign() * threshold_voltage,
+                vds: 0.0,
+            },
             _ => State::None,
         })
         .collect();
@@ -181,6 +210,40 @@ fn validate(element: &Element) -> Result<(), SolveError> {
         {
             invalid(
                 "regulator parameters must be finite, with dropout and quiescent current at least zero",
+            )
+        }
+        ElementKind::Bjt {
+            saturation_current,
+            forward_beta,
+            reverse_beta,
+            early_voltage,
+            ..
+        } if !(saturation_current > 0.0
+            && saturation_current.is_finite()
+            && forward_beta > 0.0
+            && forward_beta.is_finite()
+            && reverse_beta > 0.0
+            && reverse_beta.is_finite()
+            && early_voltage >= 0.0
+            && early_voltage.is_finite()) =>
+        {
+            invalid(
+                "transistor parameters must be positive and finite, with the Early voltage at least zero",
+            )
+        }
+        ElementKind::Mosfet {
+            threshold_voltage,
+            transconductance,
+            channel_length_modulation,
+            ..
+        } if !(threshold_voltage.is_finite()
+            && transconductance > 0.0
+            && transconductance.is_finite()
+            && channel_length_modulation >= 0.0
+            && channel_length_modulation.is_finite()) =>
+        {
+            invalid(
+                "MOSFET parameters must be finite, with positive transconductance and channel-length modulation at least zero",
             )
         }
         _ => Ok(()),
@@ -284,8 +347,89 @@ fn stamp(s: &mut System, p: &Prepared, state: State) {
             }
             current(s, *quiescent_current, input, ground);
         }
+        (
+            ElementKind::Bjt {
+                polarity,
+                saturation_current,
+                forward_beta,
+                reverse_beta,
+                early_voltage,
+            },
+            State::Bjt { vbe, vbc },
+        ) => {
+            let sign = polarity.sign();
+            let (collector, base, emitter) = (pin(0), pin(1), pin(2));
+            let point = bjt(
+                *saturation_current,
+                *forward_beta,
+                *reverse_beta,
+                *early_voltage,
+                THERMAL_VOLTAGE,
+                vbe,
+                vbc,
+            );
+            let terms = |(g_be, g_bc): (f64, f64)| {
+                [
+                    (g_be, sign * vbe, base, emitter),
+                    (g_bc, sign * vbc, base, collector),
+                ]
+            };
+            let (gc, gb) = (point.gc, point.gb);
+            nonlinear_current(s, collector, sign * point.ic, &terms(gc));
+            nonlinear_current(s, base, sign * point.ib, &terms(gb));
+            nonlinear_current(
+                s,
+                emitter,
+                -sign * (point.ic + point.ib),
+                &terms((-gc.0 - gb.0, -gc.1 - gb.1)),
+            );
+        }
+        (
+            ElementKind::Mosfet {
+                channel,
+                threshold_voltage,
+                transconductance,
+                channel_length_modulation,
+            },
+            State::Mosfet { vgs, vds },
+        ) => {
+            let sign = channel.sign();
+            let (drain, gate, source) = (pin(0), pin(1), pin(2));
+            let (id, gm, gds) = mosfet(
+                sign * threshold_voltage,
+                *transconductance,
+                *channel_length_modulation,
+                vgs,
+                vds,
+            );
+            let terms = |g: f64| {
+                [
+                    (g * gm, sign * vgs, gate, source),
+                    (g * gds, sign * vds, drain, source),
+                ]
+            };
+            nonlinear_current(s, drain, sign * id, &terms(1.0));
+            nonlinear_current(s, source, -sign * id, &terms(-1.0));
+        }
         _ => unreachable!("state always matches the element kind"),
     }
+}
+
+/// Stamps a current `i0` flowing into the device at `node`, linearised over its controlling voltages. Each term is
+/// `(∂i/∂u, u at the operating point, p, n)` for a voltage `u = V(p) − V(n)`.
+fn nonlinear_current(s: &mut System, node: Node, i0: f64, terms: &[(f64, f64, Node, Node)]) {
+    let Some(k) = node else { return };
+    let mut constant = i0;
+    for &(g, u0, p, n) in terms {
+        if let Some(p) = p {
+            s.add(k, p, g);
+        }
+        if let Some(n) = n {
+            s.add(k, n, -g);
+        }
+        constant -= g * u0;
+    }
+    s.add_rhs(k, -constant);
 }
 
 /// Moves stateful elements to the operating point implied by `x`. Returns `false` if anything moved enough
@@ -328,33 +472,66 @@ fn update(p: &Prepared, state: &mut State, x: &[f64]) -> bool {
             *dropout = next;
             settled
         }
-        _ => true,
-    }
-}
-
-fn junction(is: f64, nvt: f64, vd: f64) -> (f64, f64) {
-    let e = (vd / nvt).exp();
-    (is * (e - 1.0) + GMIN * vd, is / nvt * e + GMIN)
-}
-
-fn critical_voltage(is: f64, nvt: f64) -> f64 {
-    nvt * (nvt / (std::f64::consts::SQRT_2 * is)).ln()
-}
-
-/// SPICE `pnjlim`: stops a junction voltage jumping so far up the exponential that the next step overflows.
-fn limit_junction(proposed: f64, previous: f64, nvt: f64, vcrit: f64) -> f64 {
-    if proposed <= vcrit || (proposed - previous).abs() <= 2.0 * nvt {
-        return proposed;
-    }
-    if previous > 0.0 {
-        let arg = 1.0 + (proposed - previous) / nvt;
-        if arg > 0.0 {
-            previous + nvt * arg.ln()
-        } else {
-            vcrit
+        (
+            ElementKind::Bjt {
+                polarity,
+                saturation_current,
+                ..
+            },
+            State::Bjt { vbe, vbc },
+        ) => {
+            let sign = polarity.sign();
+            let (collector, base, emitter) = (v(p.pins[0]), v(p.pins[1]), v(p.pins[2]));
+            let vcrit = critical_voltage(*saturation_current, THERMAL_VOLTAGE);
+            let mut settled = true;
+            for (state, proposed) in [
+                (vbe, sign * (base - emitter)),
+                (vbc, sign * (base - collector)),
+            ] {
+                let limited = limit_junction(proposed, *state, THERMAL_VOLTAGE, vcrit);
+                settled &= limited == proposed
+                    && (limited - *state).abs() <= RELTOL * limited.abs() + VNTOL;
+                *state = limited;
+            }
+            settled
         }
-    } else {
-        nvt * (proposed / nvt).ln()
+        (
+            ElementKind::Mosfet {
+                channel,
+                threshold_voltage,
+                ..
+            },
+            State::Mosfet { vgs, vds },
+        ) => {
+            let sign = channel.sign();
+            let vto = sign * threshold_voltage;
+            let (drain, gate, source) = (v(p.pins[0]), v(p.pins[1]), v(p.pins[2]));
+            let (proposed_gs, proposed_ds) = (sign * (gate - source), sign * (drain - source));
+            // As SPICE does, limit whichever of gate–source and gate–drain is acting as the gate drive.
+            let (next_gs, next_ds) = if *vds >= 0.0 {
+                let gs = limit_fet(proposed_gs, *vgs, vto);
+                (
+                    gs,
+                    limit_drain_source(gs - (proposed_gs - proposed_ds), *vds),
+                )
+            } else {
+                let gd = limit_fet(proposed_gs - proposed_ds, *vgs - *vds, vto);
+                let ds = -limit_drain_source(-(proposed_gs - gd), -*vds);
+                (gd + ds, ds)
+            };
+            // Rebuilding one voltage from the other rounds, so compare within tolerance rather than exactly.
+            let settled = [
+                (next_gs, proposed_gs),
+                (next_ds, proposed_ds),
+                (next_gs, *vgs),
+                (next_ds, *vds),
+            ]
+            .iter()
+            .all(|(a, b)| (a - b).abs() <= RELTOL * a.abs() + VNTOL);
+            (*vgs, *vds) = (next_gs, next_ds);
+            settled
+        }
+        _ => true,
     }
 }
 
@@ -411,6 +588,42 @@ fn report(
             } => {
                 let i = x[p.branch];
                 vec![-i + quiescent_current, i, -quiescent_current]
+            }
+            ElementKind::Bjt {
+                polarity,
+                saturation_current,
+                forward_beta,
+                reverse_beta,
+                early_voltage,
+            } => {
+                let sign = polarity.sign();
+                let point = bjt(
+                    *saturation_current,
+                    *forward_beta,
+                    *reverse_beta,
+                    *early_voltage,
+                    THERMAL_VOLTAGE,
+                    sign * (v(pin(1)) - v(pin(2))),
+                    sign * (v(pin(1)) - v(pin(0))),
+                );
+                let (ic, ib) = (sign * point.ic, sign * point.ib);
+                vec![ic, ib, -ic - ib]
+            }
+            ElementKind::Mosfet {
+                channel,
+                threshold_voltage,
+                transconductance,
+                channel_length_modulation,
+            } => {
+                let sign = channel.sign();
+                let (id, ..) = mosfet(
+                    sign * threshold_voltage,
+                    *transconductance,
+                    *channel_length_modulation,
+                    sign * (v(pin(1)) - v(pin(2))),
+                    sign * (v(pin(0)) - v(pin(2))),
+                );
+                vec![sign * id, 0.0, -sign * id]
             }
         };
         let power = currents

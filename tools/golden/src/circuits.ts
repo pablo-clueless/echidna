@@ -6,8 +6,15 @@ const RED_LED = { saturationCurrent: 3.23e-19, emissionCoefficient: 2 } as const
 const SIGNAL_DIODE = { saturationCurrent: 2.52e-9, emissionCoefficient: 1.752, seriesResistance: 0.568 } as const;
 /** The 3.3 V LDO from `packages/library/parts/ldo-3v3.json`. */
 const LDO_3V3 = { outputVoltage: 3.3, dropoutVoltage: 1.1, quiescentCurrent: 0.005 } as const;
+/** 2N3904-class NPN, from the widely circulated SPICE model. */
+const NPN = { polarity: "npn", saturationCurrent: 6.734e-15, forwardBeta: 416.4, reverseBeta: 0.7371, earlyVoltage: 74.03 } as const;
+/** 2N3906-class PNP, from the widely circulated SPICE model. */
+const PNP = { polarity: "pnp", saturationCurrent: 1.41e-15, forwardBeta: 180.7, reverseBeta: 4.977, earlyVoltage: 18.7 } as const;
+/** Generic small-signal enhancement-mode MOSFETs. */
+const NMOS = { channel: "n", thresholdVoltage: 2, transconductance: 0.1, channelLengthModulation: 0.01 } as const;
+const PMOS = { channel: "p", thresholdVoltage: -2, transconductance: 0.05, channelLengthModulation: 0.02 } as const;
 
-/** Phase 1 golden DC circuits. Each must have no floating nodes, so ngspice and our solver both have one answer. */
+/** Golden DC circuits. Each must have no floating nodes, so ngspice and our solver both have one answer. */
 export const goldenDc: { name: string; circuit: Circuit }[] = [
   {
     name: "voltage divider",
@@ -102,6 +109,95 @@ export const goldenDc: { name: string; circuit: Circuit }[] = [
         { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 4 },
         { id: "U1", kind: "linearRegulator", nodes: ["in", "out", "0"], ...LDO_3V3 },
         { id: "R1", kind: "resistor", nodes: ["out", "0"], resistance: 100 },
+      ],
+    },
+  },
+  {
+    name: "NPN common-emitter bias",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["vcc", "0"], voltage: 12 },
+        { id: "R1", kind: "resistor", nodes: ["vcc", "b"], resistance: 47_000 },
+        { id: "R2", kind: "resistor", nodes: ["b", "0"], resistance: 10_000 },
+        { id: "RC", kind: "resistor", nodes: ["vcc", "c"], resistance: 2200 },
+        { id: "RE", kind: "resistor", nodes: ["e", "0"], resistance: 470 },
+        { id: "Q1", kind: "bjt", nodes: ["c", "b", "e"], ...NPN },
+      ],
+    },
+  },
+  {
+    name: "NPN switch driving an LED (saturated)",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["vcc", "0"], voltage: 5 },
+        { id: "V2", kind: "voltageSource", nodes: ["in", "0"], voltage: 3.3 },
+        { id: "RB", kind: "resistor", nodes: ["in", "b"], resistance: 1000 },
+        { id: "R1", kind: "resistor", nodes: ["vcc", "a"], resistance: 150 },
+        { id: "D1", kind: "diode", nodes: ["a", "c"], ...RED_LED },
+        { id: "Q1", kind: "bjt", nodes: ["c", "b", "0"], ...NPN },
+      ],
+    },
+  },
+  {
+    name: "PNP high-side bias",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["vcc", "0"], voltage: 9 },
+        { id: "RE", kind: "resistor", nodes: ["vcc", "e"], resistance: 1000 },
+        { id: "R1", kind: "resistor", nodes: ["vcc", "b"], resistance: 10_000 },
+        { id: "R2", kind: "resistor", nodes: ["b", "0"], resistance: 47_000 },
+        { id: "RC", kind: "resistor", nodes: ["c", "0"], resistance: 2200 },
+        { id: "Q1", kind: "bjt", nodes: ["c", "b", "e"], ...PNP },
+      ],
+    },
+  },
+  {
+    name: "n-channel MOSFET with source degeneration (saturation)",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["vdd", "0"], voltage: 10 },
+        { id: "R1", kind: "resistor", nodes: ["vdd", "g"], resistance: 1e6 },
+        { id: "R2", kind: "resistor", nodes: ["g", "0"], resistance: 1e6 },
+        { id: "RD", kind: "resistor", nodes: ["vdd", "d"], resistance: 2200 },
+        { id: "RS", kind: "resistor", nodes: ["s", "0"], resistance: 1000 },
+        {
+          id: "M1",
+          kind: "mosfet",
+          nodes: ["d", "g", "s"],
+          channel: "n",
+          thresholdVoltage: 1.5,
+          transconductance: 2e-3,
+          channelLengthModulation: 0.02,
+        },
+      ],
+    },
+  },
+  {
+    name: "n-channel MOSFET switching an LED (triode)",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["vdd", "0"], voltage: 5 },
+        { id: "V2", kind: "voltageSource", nodes: ["g", "0"], voltage: 5 },
+        { id: "R1", kind: "resistor", nodes: ["vdd", "a"], resistance: 150 },
+        { id: "D1", kind: "diode", nodes: ["a", "d"], ...RED_LED },
+        { id: "M1", kind: "mosfet", nodes: ["d", "g", "0"], ...NMOS },
+      ],
+    },
+  },
+  {
+    name: "p-channel MOSFET high-side switch (triode)",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["vdd", "0"], voltage: 12 },
+        { id: "V2", kind: "voltageSource", nodes: ["g", "0"], voltage: 0 },
+        { id: "RL", kind: "resistor", nodes: ["d", "0"], resistance: 1000 },
+        { id: "M1", kind: "mosfet", nodes: ["d", "g", "vdd"], ...PMOS },
       ],
     },
   },
