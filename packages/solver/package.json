@@ -7,6 +7,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./types": "./src/types.ts",
+    "./solve": "./src/solve.ts",
     "./wasm": "./wasm/solver.js"
   },
   "scripts": {

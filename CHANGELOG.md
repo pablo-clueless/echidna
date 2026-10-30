@@ -30,6 +30,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Missing-translation report (`pnpm --filter @echidna/web i18n:report`), also written to the GitHub Actions job summary.
 - GitHub Actions CI: lint, typecheck, tests, build and the translation report for the web app; formatting, Clippy and tests for the Rust crates.
 - Rust toolchain pinned to 1.98.0.
+- DC operating-point solver in Rust (modified nodal analysis with Newton–Raphson) for resistors, capacitors, inductors, sources, diodes and a behavioural linear regulator with dropout, compiled to WebAssembly and run in a Web Worker.
+- Component library: ground, 5 V supply, 150 Ω resistor, 10 µF ceramic capacitor, red 5 mm LED and a 3.3 V LDO, each with a JSON Schema-checked spec and value provenance.
+- Rule engine with default voltage, current and power rating rules: warn above 80 % of a rating, fail above 100 %, and mark verdicts as estimated when they rest on estimated values.
+- Schematic editor: place parts by dragging or clicking, wire pin to pin, move, rotate (R), nudge with the arrow keys, delete, pan, zoom and double-click to fit. Parts are outlined by verdict, wires show their net voltage, and the drawing scales with its panel.
+- Live simulation: every edit is solved and checked straight away, with the solve time in the validator. Simulate pauses and resumes it.
+- Inspector: editable values in the user's locale (including `4k7`-style notation), provenance badges, live voltages, currents and power, rating meters with Learn mode explanations, and pre-checked swap suggestions. Selecting a wire shows its net.
+- "Open the 3.3 V regulator example" on the empty schematic.
+- 3D board: a 100 × 70 mm board with black solder mask, gold pads, solder joints, silkscreen designators and mounting holes, and generic parts sized from their packages: resistor colour bands follow the value, the regulator shows its output voltage and the LED glows with its simulated current. Parts drag with 0.5 mm snap, and selection and verdicts are outlined on the board.
+- 3D camera toolbar: zoom, fit board, 3D and top views, with keyboard shortcuts (+, −, F, T, Home, arrow keys to pan) and smooth transitions.
+- Collapsible component categories in the library, remembered per user and opened while searching.
+- Golden DC circuits in `tools/golden`, compared against ngspice in CI to within 0.1 %.
+- Playwright end-to-end test of the Phase 1 acceptance scenario in English and French, checking the warning and fail appear within 100 ms.
+- CI builds the WebAssembly solver (with a `wasm-bindgen` CLI matching `Cargo.lock`), runs the end-to-end tests and runs the golden circuits against ngspice.
 
 ### Changed
 

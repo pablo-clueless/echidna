@@ -138,7 +138,16 @@
       }
     },
     "viewport": {
-      "label": "3D board view"
+      "label": "3D board view",
+      "help": "Drag to orbit, right-drag to pan, scroll to zoom. With the view focused, arrow keys pan.",
+      "controls": {
+        "label": "Camera",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "fit": "Fit board",
+        "top": "Top view",
+        "angled": "3D view"
+      }
     },
     "schematic": {
       "title": "Schematic",

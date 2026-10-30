@@ -138,7 +138,16 @@
       }
     },
     "viewport": {
-      "label": "3D 电路板视图"
+      "label": "3D 电路板视图",
+      "help": "拖动以旋转，右键拖动以平移，滚轮缩放。视图获得焦点时，可用方向键平移。",
+      "controls": {
+        "label": "相机",
+        "zoomIn": "放大",
+        "zoomOut": "缩小",
+        "fit": "显示整块电路板",
+        "top": "俯视图",
+        "angled": "3D 视图"
+      }
     },
     "schematic": {
       "title": "原理图",

@@ -5,6 +5,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
   useEffect,
+  useEffectEvent,
   useMemo,
   useRef,
   useState,
@@ -56,6 +57,9 @@ export const SchematicCanvas = () => {
   const [view, setView] = useState<View>({ x: 0, y: 0, scale: 1 });
   const [drag, setDrag] = useState<Drag | null>(null);
   const [hoverPin, setHoverPin] = useState<string | null>(null);
+  const size = useRef<{ width: number; height: number } | null>(null);
+  /** True until the user pans or zooms, so resizing keeps the whole schematic in view. */
+  const fitted = useRef(false);
 
   const components = useProjectStore((s) => s.components);
   const wires = useProjectStore((s) => s.wires);
@@ -111,11 +115,12 @@ export const SchematicCanvas = () => {
     const { width, height } = svg.getBoundingClientRect();
     const xs = pins.map((p) => p.at.x);
     const ys = pins.map((p) => p.at.y);
-    const [minX, maxX, minY, maxY] = [Math.min(...xs) - 2, Math.max(...xs) + 2, Math.min(...ys) - 2, Math.max(...ys) + 2];
+    const [minX, maxX, minY, maxY] = [Math.min(...xs) - 3, Math.max(...xs) + 3, Math.min(...ys) - 2, Math.max(...ys) + 2];
     const scale = Math.max(
       MIN_SCALE,
       Math.min(FIT_MAX_SCALE, width / ((maxX - minX) * GRID), height / ((maxY - minY) * GRID)),
     );
+    fitted.current = true;
     setView({
       scale,
       x: width / 2 - ((minX + maxX) / 2) * GRID * scale,
@@ -129,6 +134,33 @@ export const SchematicCanvas = () => {
     // Refit only when the schematic goes from empty to populated, such as loading the example.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasParts]);
+
+  const onResize = useEffectEvent((width: number, height: number) => {
+    const prev = size.current;
+    size.current = { width, height };
+    if (!prev || prev.width === 0 || (prev.width === width && prev.height === height)) return;
+    if (fitted.current) {
+      fit();
+      return;
+    }
+    // After a manual pan or zoom, scale with the panel width and keep the same point at the centre.
+    setView((v) => {
+      const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, (v.scale * width) / prev.width));
+      const cx = (prev.width / 2 - v.x) / v.scale;
+      const cy = (prev.height / 2 - v.y) / v.scale;
+      return { scale, x: width / 2 - cx * scale, y: height / 2 - cy * scale };
+    });
+  });
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) onResize(entry.contentRect.width, entry.contentRect.height);
+    });
+    observer.observe(svg);
+    return () => observer.disconnect();
+  }, []);
 
   const toGrid = (e: { clientX: number; clientY: number }): Point => {
     const rect = svgRef.current?.getBoundingClientRect();
@@ -146,7 +178,7 @@ export const SchematicCanvas = () => {
   const capture = (e: PointerEvent) => svgRef.current?.setPointerCapture(e.pointerId);
 
   const onBackgroundDown = (e: PointerEvent<SVGSVGElement>) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || e.defaultPrevented) return;
     svgRef.current?.focus({ preventScroll: true });
     select(null);
     capture(e);
@@ -154,7 +186,7 @@ export const SchematicCanvas = () => {
   };
 
   const onComponentDown = (e: PointerEvent, id: string) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || e.defaultPrevented) return;
     e.stopPropagation();
     const placement = schematic[id];
     if (!placement) return;
@@ -167,7 +199,7 @@ export const SchematicCanvas = () => {
   };
 
   const onPinDown = (e: PointerEvent, hit: PinHit) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || e.defaultPrevented) return;
     e.stopPropagation();
     svgRef.current?.focus({ preventScroll: true });
     if (drag?.kind === "wire" && drag.sticky) {
@@ -180,7 +212,7 @@ export const SchematicCanvas = () => {
   };
 
   const onWireDown = (e: PointerEvent, id: string) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || e.defaultPrevented) return;
     e.stopPropagation();
     svgRef.current?.focus({ preventScroll: true });
     select({ kind: "wire", id });
@@ -191,6 +223,7 @@ export const SchematicCanvas = () => {
     setHoverPin(nearestPin(p) ? pinKey((nearestPin(p) as PinHit).ref) : null);
     if (!drag) return;
     if (drag.kind === "pan") {
+      fitted.current = false;
       setView({ ...drag.origin, x: drag.origin.x + e.clientX - drag.start.x, y: drag.origin.y + e.clientY - drag.start.y });
     } else if (drag.kind === "move") {
       const at = { x: Math.round(p.x - drag.offset.x), y: Math.round(p.y - drag.offset.y) };
@@ -228,6 +261,7 @@ export const SchematicCanvas = () => {
     const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, view.scale * Math.exp(-e.deltaY * 0.0015)));
     const cx = e.clientX - rect.left;
     const cy = e.clientY - rect.top;
+    fitted.current = false;
     setView({ scale, x: cx - ((cx - view.x) * scale) / view.scale, y: cy - ((cy - view.y) * scale) / view.scale });
   };
 

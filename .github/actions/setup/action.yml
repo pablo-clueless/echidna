@@ -1,0 +1,25 @@
+name: Set up Echidna
+description: Node, pnpm and dependencies, plus the pinned Rust toolchain and the wasm-bindgen CLI the solver build needs.
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4
+    - uses: actions/setup-node@v5
+      with:
+        node-version: 24
+        cache: pnpm
+    - name: Install pinned Rust toolchain (with the wasm32 target)
+      shell: bash
+      run: rustup show active-toolchain || rustup toolchain install
+    - uses: Swatinem/rust-cache@v2
+    - name: Read the wasm-bindgen version from Cargo.lock
+      id: wasm-bindgen
+      shell: bash
+      # The CLI must match the crate exactly, or the generated bindings are rejected.
+      run: echo "version=$(awk '/^name = "wasm-bindgen"$/ { getline; gsub(/"/, "", $3); print $3 }' Cargo.lock)" >> "$GITHUB_OUTPUT"
+    - uses: taiki-e/install-action@v2
+      with:
+        tool: wasm-bindgen-cli@${{ steps.wasm-bindgen.outputs.version }}
+    - shell: bash
+      run: pnpm install --frozen-lockfile

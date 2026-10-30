@@ -138,7 +138,16 @@
       }
     },
     "viewport": {
-      "label": "Vue 3D de la carte"
+      "label": "Vue 3D de la carte",
+      "help": "Faites glisser pour pivoter, clic droit pour déplacer, molette pour zoomer. Quand la vue est active, les flèches déplacent la caméra.",
+      "controls": {
+        "label": "Caméra",
+        "zoomIn": "Zoom avant",
+        "zoomOut": "Zoom arrière",
+        "fit": "Afficher toute la carte",
+        "top": "Vue de dessus",
+        "angled": "Vue 3D"
+      }
     },
     "schematic": {
       "title": "Schéma",

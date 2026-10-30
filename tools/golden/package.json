@@ -1,0 +1,13 @@
+{
+  "name": "@echidna/golden",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@echidna/solver": "workspace:*"
+  }
+}

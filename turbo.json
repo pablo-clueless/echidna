@@ -9,7 +9,8 @@
       "dependsOn": ["^build"]
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "env": ["REQUIRE_NGSPICE", "NGSPICE"]
     },
     "dev": {
       "dependsOn": ["^build"],

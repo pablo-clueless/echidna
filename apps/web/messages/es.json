@@ -138,7 +138,16 @@
       }
     },
     "viewport": {
-      "label": "Vista 3D de la placa"
+      "label": "Vista 3D de la placa",
+      "help": "Arrastra para orbitar, arrastra con el botón derecho para desplazar y usa la rueda para hacer zoom. Con la vista activa, las flechas desplazan la cámara.",
+      "controls": {
+        "label": "Cámara",
+        "zoomIn": "Acercar",
+        "zoomOut": "Alejar",
+        "fit": "Ver toda la placa",
+        "top": "Vista superior",
+        "angled": "Vista 3D"
+      }
     },
     "schematic": {
       "title": "Esquema",

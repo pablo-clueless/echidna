@@ -18,12 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
       - name: Lint (including British English)
         run: pnpm lint
       - run: pnpm typecheck
@@ -31,6 +26,31 @@ jobs:
       - run: pnpm build
       - name: Missing-translation report
         run: pnpm --filter @echidna/web i18n:report
+      - name: Install Playwright browser
+        run: pnpm --filter @echidna/web exec playwright install --with-deps chromium
+      - name: End-to-end acceptance (en, fr)
+        run: pnpm --filter @echidna/web test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+          retention-days: 7
+
+  golden:
+    name: Golden circuits (ngspice)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+      - name: Install ngspice
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ngspice
+      - name: Compare golden DC circuits against ngspice
+        run: pnpm turbo run test --filter=@echidna/golden
+        env:
+          REQUIRE_NGSPICE: "1"
 
   rust:
     name: Rust
