@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { anyEstimated, compareViolations, isDeviceType, type Violation } from "./index";
+import { anyEstimated, compareViolations, type ComponentSpec, isDeviceType, type Violation, withVariant } from "./index";
 
 const violation = (overrides: Partial<Violation>): Violation => ({
   componentId: "c1",
@@ -42,5 +42,33 @@ describe("compareViolations", () => {
       violation({ componentId: "fail", severity: "fail" }),
     ];
     expect(list.sort(compareViolations).map((v) => v.componentId)).toEqual(["fail", "fail-est", "warn", "pass"]);
+  });
+});
+
+describe("withVariant", () => {
+  const base: ComponentSpec = {
+    id: "led",
+    name: "LED",
+    kind: "led",
+    deviceTypes: [],
+    pins: [],
+    params: { saturationCurrent: { value: 1, unit: "A", source: "datasheet" }, emissionCoefficient: { value: 2, unit: "1", source: "datasheet" } },
+    ratings: {},
+    interfaces: [],
+    variants: [{ id: "red" }, { id: "blue", params: { saturationCurrent: { value: 3, unit: "A", source: "estimated" } } }],
+    model: "diode",
+    footprintId: "",
+    meshUrl: "",
+  };
+
+  it("applies the chosen variant's params over the base", () => {
+    const blue = withVariant(base, "blue");
+    expect(blue.params.saturationCurrent?.value).toBe(3);
+    expect(blue.params.emissionCoefficient?.value).toBe(2);
+  });
+
+  it("falls back to the first variant", () => {
+    expect(withVariant(base).params.saturationCurrent?.value).toBe(1);
+    expect(withVariant(base, "violet").params.saturationCurrent?.value).toBe(1);
   });
 });

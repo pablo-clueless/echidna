@@ -2,12 +2,13 @@ import type { ComponentSpec } from "@echidna/core";
 
 import capacitorCeramic from "../parts/capacitor-ceramic.json";
 import nmos2n7000 from "../parts/nmos-2n7000.json";
-import ledRed5mm from "../parts/led-red-5mm.json";
+import switchSpst from "../parts/switch-spst.json";
 import npn2n3904 from "../parts/npn-2n3904.json";
 import pnp2n3906 from "../parts/pnp-2n3906.json";
 import pmosBs250 from "../parts/pmos-bs250.json";
 import dcSupply from "../parts/dc-supply.json";
 import resistor from "../parts/resistor.json";
+import led5mm from "../parts/led-5mm.json";
 import ldo3v3 from "../parts/ldo-3v3.json";
 import ground from "../parts/ground.json";
 
@@ -17,7 +18,8 @@ export const parts = [
   ground,
   resistor,
   capacitorCeramic,
-  ledRed5mm,
+  switchSpst,
+  led5mm,
   ldo3v3,
   npn2n3904,
   pnp2n3906,

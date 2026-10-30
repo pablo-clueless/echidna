@@ -18,7 +18,7 @@ const regulatorWithLed = (resistance: number): Netlist => ({
     { id: "V1", specId: "dc-supply" },
     { id: "U1", specId: "ldo-3v3" },
     { id: "R1", specId: "resistor", paramOverrides: { resistance } },
-    { id: "D1", specId: "led-red-5mm" },
+    { id: "D1", specId: "led-5mm" },
     { id: "G1", specId: "ground" },
   ],
   nets: [

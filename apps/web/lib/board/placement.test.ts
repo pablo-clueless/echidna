@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { BOARD, freeBoardSpot } from "./placement";
+import { BOARD, BOARD_LIMITS, clampBoardSize, clampToBoard, freeBoardSpot } from "./placement";
 import { footprints } from "./footprints";
 
 const terminal = footprints["generic/terminal-2"]!;
@@ -34,5 +34,26 @@ describe("freeBoardSpot", () => {
       expect(Math.abs(spot.z * 1000) + terminal.courtyard.h / 2).toBeLessThanOrEqual(BOARD.depth / 2);
       placed.push({ at: { ...spot, rotation: 0 }, footprint: terminal });
     }
+  });
+
+  it("fits a part on a resized board", () => {
+    const small = { width: 40, depth: 30 };
+    const spot = freeBoardSpot(terminal, [{ at: { x: 0, z: 0, rotation: 0 as const }, footprint: to92 }], small);
+    expect(Math.abs(spot.x * 1000) + terminal.courtyard.w / 2).toBeLessThanOrEqual(small.width / 2);
+    expect(Math.abs(spot.z * 1000) + terminal.courtyard.h / 2).toBeLessThanOrEqual(small.depth / 2);
+  });
+});
+
+describe("clampBoardSize", () => {
+  it("rounds to whole millimetres within the limits", () => {
+    expect(clampBoardSize({ width: 80.4, depth: 55.6 })).toEqual({ width: 80, depth: 56 });
+    expect(clampBoardSize({ width: 1, depth: 1000 })).toEqual({ width: BOARD_LIMITS.min.width, depth: BOARD_LIMITS.max.depth });
+  });
+});
+
+describe("clampToBoard", () => {
+  it("moves a part off the edge back onto the board", () => {
+    expect(clampToBoard(0.045, -0.03, { width: 60, depth: 40 })).toEqual({ x: 0.026, z: -0.016 });
+    expect(clampToBoard(0.01, 0.005, { width: 60, depth: 40 })).toEqual({ x: 0.01, z: 0.005 });
   });
 });

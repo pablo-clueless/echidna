@@ -170,6 +170,12 @@
       "hint": "Glissez d’une broche à l’autre pour câbler · <key>R</key> pivoter · <key>Suppr</key> supprimer · double-clic pour ajuster"
     },
     "inspector": {
+      "board": {
+        "title": "Carte",
+        "width": "Largeur",
+        "depth": "Profondeur",
+        "outOfRange": "Saisissez une taille de {min} à {max} mm."
+      },
       "title": "Inspecteur",
       "emptyTitle": "Aucune sélection",
       "emptyDescription": "Sélectionnez un composant pour voir ses valeurs en direct.",
@@ -185,7 +191,8 @@
         "pass": "Dans les limites",
         "warn": "Avertissement",
         "fail": "Échec",
-        "likelyFail": "Échec probable"
+        "likelyFail": "Échec probable",
+        "noCurrent": "Aucun courant"
       },
       "ofRating": "{percent} de {limit}",
       "swapsTitle": "Remplacements suggérés",
@@ -198,7 +205,17 @@
       "checking": "Vérification…",
       "net": "Équipotentielle",
       "netVoltage": "Tension",
-      "connections": "Broches connectées"
+      "connections": "Broches connectées",
+      "led": {
+        "on": "Allumée, consomme {current}",
+        "off": "Éteinte",
+        "reasons": {
+          "unwired": "Une de ses pattes n’est pas câblée, donc aucun courant ne peut la traverser.",
+          "shorted": "Les deux pattes sont reliées au même réseau, donc le courant contourne la LED au lieu de la traverser.",
+          "reversed": "Elle est câblée à l’envers : la cathode est à une tension plus haute que l’anode.",
+          "open": "Aucun courant ne la traverse : le circuit n’est pas fermé, ou la tension est trop faible pour l’allumer."
+        }
+      }
     },
     "validator": {
       "label": "Validation",
@@ -273,9 +290,26 @@
       "name": "Condensateur céramique, 16 V",
       "summary": "Circuit ouvert en continu"
     },
-    "led-red-5mm": {
-      "name": "LED rouge, 5 mm",
-      "summary": "20 mA en continu"
+    "switch-spst": {
+      "name": "Interrupteur à glissière, SPST",
+      "summary": "Marche ou arrêt, 0,5 A",
+      "variantLabel": "Position",
+      "variants": {
+        "closed": "Marche (fermé)",
+        "open": "Arrêt (ouvert)"
+      }
+    },
+    "led-5mm": {
+      "name": "LED, 5 mm",
+      "summary": "Couleur au choix, 20 mA en continu",
+      "variantLabel": "Couleur",
+      "variants": {
+        "red": "Rouge",
+        "yellow": "Jaune",
+        "green": "Vert",
+        "blue": "Bleu",
+        "white": "Blanc"
+      }
     },
     "ldo-3v3": {
       "name": "Régulateur 3,3 V (LDO)",

@@ -12,6 +12,8 @@ export type Net = {
 export type NetlistComponent = {
   id: string;
   specId: string;
+  /** Chosen variant of the part, such as an LED colour. */
+  variant?: string;
   paramOverrides?: Record<string, number>;
 };
 

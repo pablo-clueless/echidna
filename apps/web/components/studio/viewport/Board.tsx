@@ -25,12 +25,13 @@ const RING_R = 3;
 const WEB = 0.3;
 /** Fiducial marks: 1 mm copper dots in a 3 mm mask opening, inset from three corners for assembly cameras. */
 const FIDUCIAL_INSET = { x: 10, z: 3.5 };
-const LEGEND = { height: 2.2, length: 60, inset: 9 };
+/** The legend runs from `inset` off the left edge, up to 60 mm or until `clear` of the right edge's fiducial. */
+const LEGEND = { height: 2.2, length: 60, inset: 9, clear: 13 };
 const PX_PER_MM = 40;
 
-const legendTexture = (text: string, fontFamily: string) => {
+const legendTexture = (text: string, fontFamily: string, length: number) => {
   const canvas = document.createElement("canvas");
-  canvas.width = LEGEND.length * PX_PER_MM;
+  canvas.width = length * PX_PER_MM;
   canvas.height = LEGEND.height * PX_PER_MM;
   const ctx = canvas.getContext("2d");
   if (ctx) {
@@ -51,7 +52,8 @@ const legendTexture = (text: string, fontFamily: string) => {
  * hole for every through-hole pin, three fiducials and a silkscreen legend. A hole that would break the outline or merge with another is left undrilled.
  */
 export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: Props) => {
-  const legendMap = useMemo(() => legendTexture(legend, fontFamily), [legend, fontFamily]);
+  const legendLength = Math.min(LEGEND.length, width - LEGEND.inset - LEGEND.clear);
+  const legendMap = useMemo(() => legendTexture(legend, fontFamily, legendLength), [legend, fontFamily, legendLength]);
   useEffect(() => () => legendMap.dispose(), [legendMap]);
   const fiducials = useMemo<[number, number][]>(() => {
     const [fx, fz] = [width / 2 - FIDUCIAL_INSET.x, depth / 2 - FIDUCIAL_INSET.z];
@@ -126,11 +128,11 @@ export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: P
         </group>
       ))}
       <mesh
-        position={[-width / 2 + LEGEND.inset + LEGEND.length / 2, thickness + 0.045, depth / 2 - FIDUCIAL_INSET.z]}
+        position={[-width / 2 + LEGEND.inset + legendLength / 2, thickness + 0.045, depth / 2 - FIDUCIAL_INSET.z]}
         rotation={[-Math.PI / 2, 0, 0]}
         raycast={() => null}
       >
-        <planeGeometry args={[LEGEND.length, LEGEND.height]} />
+        <planeGeometry args={[legendLength, LEGEND.height]} />
         <meshStandardMaterial color="#F3F1EC" alphaMap={legendMap} transparent depthWrite={false} roughness={0.75} />
       </mesh>
       {plated.map(({ x, z, diameter }) => (

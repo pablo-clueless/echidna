@@ -1,0 +1,53 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "led-5mm",
+  "name": "LED, 5 mm",
+  "kind": "led",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "a", "name": "Anode" },
+    { "id": "k", "name": "Cathode" }
+  ],
+  "params": {
+    "saturationCurrent": { "value": 3.23e-19, "unit": "A", "source": "datasheet", "reference": "Fitted to typical forward voltage 2.0 V at 20 mA for 5 mm red LEDs" },
+    "emissionCoefficient": { "value": 2, "unit": "1", "source": "datasheet", "reference": "Fitted to typical forward voltage 2.0 V at 20 mA for 5 mm red LEDs" }
+  },
+  "ratings": {
+    "maxCurrent": { "value": 0.02, "unit": "A", "source": "datasheet", "reference": "Typical continuous forward current for 5 mm LEDs" }
+  },
+  "interfaces": [],
+  "variants": [
+    { "id": "red" },
+    {
+      "id": "yellow",
+      "params": {
+        "saturationCurrent": { "value": 4.67e-20, "unit": "A", "source": "datasheet", "reference": "Fitted to typical forward voltage 2.1 V at 20 mA for 5 mm yellow LEDs" },
+        "emissionCoefficient": { "value": 2, "unit": "1", "source": "datasheet", "reference": "Fitted to typical forward voltage 2.1 V at 20 mA for 5 mm yellow LEDs" }
+      }
+    },
+    {
+      "id": "green",
+      "params": {
+        "saturationCurrent": { "value": 8.9e-20, "unit": "A", "source": "datasheet", "reference": "Fitted to typical forward voltage 3.1 V at 20 mA for 5 mm green LEDs" },
+        "emissionCoefficient": { "value": 3, "unit": "1", "source": "datasheet", "reference": "Fitted to typical forward voltage 3.1 V at 20 mA for 5 mm green LEDs" }
+      }
+    },
+    {
+      "id": "blue",
+      "params": {
+        "saturationCurrent": { "value": 2.45e-20, "unit": "A", "source": "datasheet", "reference": "Fitted to typical forward voltage 3.2 V at 20 mA for 5 mm blue LEDs" },
+        "emissionCoefficient": { "value": 3, "unit": "1", "source": "datasheet", "reference": "Fitted to typical forward voltage 3.2 V at 20 mA for 5 mm blue LEDs" }
+      }
+    },
+    {
+      "id": "white",
+      "params": {
+        "saturationCurrent": { "value": 2.45e-20, "unit": "A", "source": "datasheet", "reference": "Fitted to typical forward voltage 3.2 V at 20 mA for 5 mm white LEDs" },
+        "emissionCoefficient": { "value": 3, "unit": "1", "source": "datasheet", "reference": "Fitted to typical forward voltage 3.2 V at 20 mA for 5 mm white LEDs" }
+      }
+    }
+  ],
+  "model": "diode",
+  "footprintId": "generic/led-5mm",
+  "meshUrl": "generic/led-5mm"
+}

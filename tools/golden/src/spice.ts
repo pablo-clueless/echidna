@@ -41,6 +41,10 @@ export const toSpice = (circuit: Circuit, title: string): SpiceDeck => {
       case "resistor":
         lines.push(`R${name} ${a} ${b} ${value(element.resistance)}`);
         break;
+      case "switch":
+        // A closed switch is its contact resistance; an open one is left out, as the solver leaves it unstamped.
+        if ((element.closed ?? 1) === 1) lines.push(`R${name} ${a} ${b} ${value(element.contactResistance)}`);
+        break;
       case "capacitor":
         lines.push(`C${name} ${a} ${b} ${value(element.capacitance)}`);
         break;

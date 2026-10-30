@@ -1,4 +1,4 @@
-import type { ComponentSpec, Net, Netlist, NetlistComponent, PinRef } from "@echidna/core";
+import { type ComponentSpec, type Net, type Netlist, type NetlistComponent, type PinRef, withVariant } from "@echidna/core";
 
 export type Rotation = 0 | 90 | 180 | 270;
 
@@ -8,6 +8,9 @@ export type SchematicPlacement = { x: number; y: number; rotation: Rotation };
 /** Board placement in metres, on the top copper layer. */
 export type BoardPlacement = { x: number; z: number; rotation: Rotation };
 
+/** Board outline in millimetres. */
+export type BoardSize = { width: number; depth: number };
+
 export type Wire = { id: string; a: PinRef; b: PinRef };
 
 export type ProjectData = {
@@ -16,6 +19,7 @@ export type ProjectData = {
   wires: Wire[];
   schematic: Record<string, SchematicPlacement>;
   board: Record<string, BoardPlacement>;
+  boardSize: BoardSize;
 };
 
 const prefixes: Record<string, string> = {
@@ -27,6 +31,7 @@ const prefixes: Record<string, string> = {
   led: "D",
   diode: "D",
   regulator: "U",
+  switch: "SW",
   npn: "Q",
   pnp: "Q",
   nmos: "Q",
@@ -108,22 +113,31 @@ export const netOfPin = (nets: readonly Net[], pin: PinRef): Net | undefined =>
   nets.find((n) => n.pins.some((p) => samePin(p, pin)));
 
 /**
- * Reads a part's effective parameter, preferring the instance override.
+ * Reads a part's effective parameter: the instance override, then the chosen variant, then the spec.
  * @param component - Netlist component.
  * @param spec - Its part spec.
  * @param key - Parameter name.
  * @returns The value in SI units, or `undefined` when the part has no such parameter.
  */
 export const paramValue = (component: NetlistComponent, spec: ComponentSpec, key: string): number | undefined =>
-  component.paramOverrides?.[key] ?? spec.params[key]?.value;
+  component.paramOverrides?.[key] ?? withVariant(spec, component.variant).params[key]?.value;
 
 /** Device-model internals that are fitted from datasheets rather than chosen by the user, so not shown for editing. */
 export const MODEL_PARAMS: ReadonlySet<string> = new Set([
   "saturationCurrent",
   "emissionCoefficient",
   "seriesResistance",
+  "contactResistance",
   "reverseBeta",
   "earlyVoltage",
   "transconductance",
   "channelLengthModulation",
 ]);
+/**
+ * The parameters the inspector offers for editing: not model internals, and not those a variant sets, such as a
+ * switch's position, which follow the variant picker instead.
+ * @param spec - Part spec.
+ * @returns Parameter names in spec order.
+ */
+export const editableParams = (spec: ComponentSpec): string[] =>
+  Object.keys(spec.params).filter((key) => !MODEL_PARAMS.has(key) && !spec.variants?.some((v) => v.params?.[key]));

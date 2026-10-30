@@ -430,7 +430,7 @@ export const SchematicCanvas = () => {
                 stroke="currentColor"
                 strokeWidth={1.5}
               >
-                <SymbolGlyph kind={spec.kind} />
+                <SymbolGlyph kind={spec.kind} variant={c.variant} />
                 {innerPinLabels[spec.kind]?.map((l) => (
                   <text
                     key={l.text}

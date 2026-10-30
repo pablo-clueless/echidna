@@ -204,6 +204,93 @@ fn regulator_drops_out() {
 }
 
 #[test]
+fn regulator_behind_an_open_switch_is_off() {
+    // An open switch: only its insulation resistance joins the supply to the regulator.
+    let s = solve_dc(&circuit(vec![
+        source("V1", "vsup", "0", 5.0),
+        resistor("SW1", "vsup", "vin", 1e8),
+        el(
+            "U1",
+            &["vin", "vout", "0"],
+            ElementKind::LinearRegulator {
+                output_voltage: 3.3,
+                dropout_voltage: 1.1,
+                quiescent_current: 5e-3,
+            },
+        ),
+        resistor("R1", "vout", "a", 150.0),
+        led("D1", "a", "0"),
+    ]))
+    .unwrap();
+    let vin = s.node_voltages["vin"];
+    assert!((0.0..1e-3).contains(&vin), "input {vin}");
+    assert!(s.node_voltages["vout"].abs() < 1e-6);
+    assert!(s.branch_currents["D1"].abs() < 1e-9);
+    close(s.pin_currents["U1"][0], vin * 5e-3 / 1.1, 1e-12);
+}
+
+fn switched_led(closed: f64) -> DcSolution {
+    solve_dc(&circuit(vec![
+        source("V1", "vin", "0", 5.0),
+        el(
+            "SW1",
+            &["vin", "sw"],
+            ElementKind::Switch {
+                contact_resistance: 0.03,
+                closed,
+            },
+        ),
+        resistor("R1", "sw", "a", 220.0),
+        led("D1", "a", "0"),
+    ]))
+    .unwrap()
+}
+
+#[test]
+fn closed_switch_conducts_through_its_contact_resistance() {
+    let s = switched_led(1.0);
+    let i = s.branch_currents["SW1"];
+    assert!(i > 0.01, "current {i}");
+    close(
+        s.node_voltages["vin"] - s.node_voltages["sw"],
+        i * 0.03,
+        1e-9,
+    );
+}
+
+#[test]
+fn open_switch_passes_no_current() {
+    let s = switched_led(0.0);
+    assert_eq!(s.branch_currents["SW1"], 0.0);
+    assert_eq!(s.pin_currents["SW1"], vec![0.0, 0.0]);
+    assert!(s.branch_currents["D1"].abs() < 1e-12);
+    assert_eq!(s.component_power["SW1"], 0.0);
+}
+
+#[test]
+fn switch_position_must_be_on_or_off() {
+    let result = solve_dc(&circuit(vec![
+        source("V1", "vin", "0", 5.0),
+        el(
+            "SW1",
+            &["vin", "0"],
+            ElementKind::Switch {
+                contact_resistance: 0.03,
+                closed: 0.5,
+            },
+        ),
+    ]));
+    assert!(result.is_err());
+}
+
+#[test]
+fn unpowered_regulator_draws_nothing() {
+    let s = regulator(0.0, 33.0);
+    close(s.node_voltages["vout"], 0.0, 1e-9);
+    close(s.branch_currents["V1"], 0.0, 1e-12);
+}
+
+#[test]
 fn power_is_conserved() {
     let s = solve_dc(&circuit(vec![
         source("V1", "vin", "0", 5.0),

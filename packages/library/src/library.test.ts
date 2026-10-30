@@ -38,7 +38,7 @@ describe("toCircuit", () => {
     components: [
       { id: "V1", specId: "dc-supply" },
       { id: "R1", specId: "resistor", paramOverrides: { resistance: 68 } },
-      { id: "D1", specId: "led-red-5mm" },
+      { id: "D1", specId: "led-5mm" },
       { id: "G1", specId: "ground" },
       { id: "G2", specId: "ground" },
     ],

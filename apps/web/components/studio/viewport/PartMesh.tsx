@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AdditiveBlending,
   CanvasTexture,
   CatmullRomCurve3,
   CurvePath,
@@ -18,6 +19,8 @@ import {
 import { RoundedBox } from "@react-three/drei";
 import { useEffect, useMemo } from "react";
 
+import { LED_LIT_CURRENT, LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
+import { DEFAULT_LED_COLOUR, ledColours } from "@/lib/parts/ledColours";
 import { bandMaterial, materials } from "./materials";
 
 /** Generic part bodies in millimetres, y up from the board surface. Sized like the real packages; no brand artwork. */
@@ -27,9 +30,12 @@ type Props = {
   bands?: string[] | null | undefined;
   /** Laser marking on IC and transistor bodies, such as `3V3` or `2N3904`. */
   marking?: string | undefined;
-  /** LED brightness, 0 when off and 1 at rated current. */
+  /** LED current as a fraction of its rated current: 0 when off, 1 at rated current. */
   glow?: number | undefined;
+  /** LED colour, a key of `ledColours`. */
   ledColour?: string | undefined;
+  /** Whether a switch is closed. */
+  closed?: boolean | undefined;
 };
 
 const v3 = (x: number, y: number, z = 0) => new Vector3(x, y, z);
@@ -233,9 +239,34 @@ const To92 = ({ marking }: { marking?: string | undefined }) => (
   </group>
 );
 
-const Led = ({ glow = 0, colour = "#A3121A" }: { glow?: number | undefined; colour?: string | undefined }) => {
-  const level = Math.min(1.5, Math.max(0, glow));
-  const glowColour = "#FF4A3A";
+/** Soft radial falloff for the light around a lit LED, made once on first use. */
+let haloTexture: CanvasTexture | null = null;
+const halo = () => {
+  if (haloTexture) return haloTexture;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gradient.addColorStop(0, "rgba(255,255,255,1)");
+    gradient.addColorStop(0.25, "rgba(255,255,255,0.45)");
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 128, 128);
+  }
+  haloTexture = new CanvasTexture(canvas);
+  return haloTexture;
+};
+
+/** Below this level the LED reads as off: the same current the inspector reports as dark. */
+const LIT = Math.sqrt(LED_LIT_CURRENT / LED_NOMINAL_CURRENT);
+
+const Led = ({ glow = 0, colour = DEFAULT_LED_COLOUR }: { glow?: number | undefined; colour?: string | undefined }) => {
+  const look = ledColours[colour] ?? ledColours[DEFAULT_LED_COLOUR] ?? { body: "#5A0A0F", light: "#FF3A2A" };
+  // Perceived brightness grows roughly with the square root of current, so a dim LED still visibly lights.
+  const level = Math.min(1.3, Math.sqrt(Math.max(0, glow)));
+  const lit = level >= LIT;
+  const die = LED_STANDOFF + 5.05;
 
   return (
     <group>
@@ -245,29 +276,67 @@ const Led = ({ glow = 0, colour = "#A3121A" }: { glow?: number | undefined; colo
       <mesh position={[1.0, LED_STANDOFF + 4.7, 0]} material={materials.lead}>
         <boxGeometry args={[1.3, 0.5, 0.6]} />
       </mesh>
-      {level > 0.01 && (
-        // The die: a bright core seen through the epoxy, outside tone mapping so it reads as a light source.
-        <mesh position={[0, LED_STANDOFF + 5.05, 0]}>
-          <sphereGeometry args={[0.35 + level * 0.35, 16, 12]} />
-          <meshBasicMaterial color={glowColour} toneMapped={false} transparent opacity={Math.min(1, 0.35 + level)} />
-        </mesh>
+      {lit && (
+        <>
+          {/* The die: a bright core seen through the epoxy, outside tone mapping so it reads as a light source. */}
+          <mesh position={[0, die, 0]}>
+            <sphereGeometry args={[0.4 + level * 0.45, 16, 12]} />
+            <meshBasicMaterial color={look.light} toneMapped={false} transparent opacity={Math.min(1, 0.45 + level)} />
+          </mesh>
+          <sprite position={[0, die + 1, 0]} scale={6 + level * 12} raycast={() => null}>
+            <spriteMaterial
+              map={halo()}
+              color={look.light}
+              transparent
+              opacity={Math.min(0.9, level * 0.7)}
+              blending={AdditiveBlending}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </sprite>
+          <pointLight position={[0, die, 0]} color={look.light} intensity={level * 0.004} distance={0.06} decay={2} />
+        </>
       )}
       <mesh geometry={ledBody} position={[0, LED_STANDOFF, 0]} castShadow>
+        {/* Unlit, the epoxy is a dark, see-through tint, so it never passes for a lit LED. */}
         <meshPhysicalMaterial
-          color={colour}
-          emissive={glowColour}
-          emissiveIntensity={level * 1.8}
+          color={lit ? look.light : look.body}
+          emissive={look.light}
+          emissiveIntensity={lit ? level * 2.4 : 0}
           roughness={0.12}
           clearcoat={1}
           transparent
-          opacity={0.62}
+          opacity={lit ? 0.75 : 0.5}
           side={DoubleSide}
         />
       </mesh>
-      <pointLight position={[0, LED_STANDOFF + 5, 0]} color={glowColour} intensity={level * 0.0004} distance={0.05} decay={2} />
     </group>
   );
 };
+
+/** Miniature slide switch: a steel shell on a black base, with the actuator slid towards pin 2 when closed. */
+const SlideSwitch = ({ closed }: { closed: boolean }) => (
+  <group>
+    <RoundedBox args={[8.6, 1.2, 3.8]} radius={0.2} smoothness={2} position={[0, 0.6, 0]} material={materials.epoxy} castShadow />
+    <RoundedBox args={[8.6, 2.6, 3.8]} radius={0.15} smoothness={2} position={[0, 2.5, 0]} material={materials.lead} castShadow />
+    <mesh position={[0, 3.82, 0]} material={materials.cavity}>
+      <boxGeometry args={[4.4, 0.06, 1.6]} />
+    </mesh>
+    <RoundedBox
+      args={[1.4, 2.4, 1.4]}
+      radius={0.2}
+      smoothness={2}
+      position={[closed ? 1.3 : -1.3, 4.6, 0]}
+      material={materials.epoxy}
+      castShadow
+    />
+    {[-2, 2].map((x) => (
+      <mesh key={x} position={[x, -1, 0]} material={materials.lead}>
+        <boxGeometry args={[0.6, 2, 0.4]} />
+      </mesh>
+    ))}
+  </group>
+);
 
 const Terminal = () => (
   <group>
@@ -294,7 +363,7 @@ const Terminal = () => (
   </group>
 );
 
-export const PartMesh = ({ footprintId, bands, marking, glow, ledColour }: Props) => {
+export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed }: Props) => {
   switch (footprintId) {
     case "generic/axial-0.4in":
       return <Resistor bands={bands} />;
@@ -306,6 +375,8 @@ export const PartMesh = ({ footprintId, bands, marking, glow, ledColour }: Props
       return <Led glow={glow} colour={ledColour} />;
     case "generic/terminal-2":
       return <Terminal />;
+    case "generic/switch-slide":
+      return <SlideSwitch closed={closed ?? true} />;
     case "generic/to-92-ebc":
     case "generic/to-92-sgd":
     case "generic/to-92-dgs":

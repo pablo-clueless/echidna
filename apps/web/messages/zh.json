@@ -170,6 +170,12 @@
       "hint": "从一个引脚拖到另一个引脚以连线 · <key>R</key> 旋转 · <key>Del</key> 删除 · 双击适应视图"
     },
     "inspector": {
+      "board": {
+        "title": "电路板",
+        "width": "宽度",
+        "depth": "深度",
+        "outOfRange": "请输入 {min} 到 {max} mm 之间的尺寸。"
+      },
       "title": "检查器",
       "emptyTitle": "未选择任何内容",
       "emptyDescription": "选择一个元件以查看其实时数值。",
@@ -185,7 +191,8 @@
         "pass": "在额定范围内",
         "warn": "警告",
         "fail": "不通过",
-        "likelyFail": "可能不通过"
+        "likelyFail": "可能不通过",
+        "noCurrent": "无电流"
       },
       "ofRating": "{limit} 的 {percent}",
       "swapsTitle": "替换建议",
@@ -198,7 +205,17 @@
       "checking": "正在检查…",
       "net": "网络",
       "netVoltage": "电压",
-      "connections": "已连接引脚"
+      "connections": "已连接引脚",
+      "led": {
+        "on": "已点亮，电流 {current}",
+        "off": "未点亮",
+        "reasons": {
+          "unwired": "有一根引脚没有连线，因此没有电流流过。",
+          "shorted": "两根引脚连在同一网络上，电流绕过了 LED，而不是流过它。",
+          "reversed": "接反了：阴极电压高于阳极。",
+          "open": "没有电流流过：电路没有形成闭合回路，或电压太低无法点亮。"
+        }
+      }
     },
     "validator": {
       "label": "验证",
@@ -273,9 +290,26 @@
       "name": "陶瓷电容，16 V",
       "summary": "直流下开路"
     },
-    "led-red-5mm": {
-      "name": "红色 LED，5 mm",
-      "summary": "持续 20 mA"
+    "switch-spst": {
+      "name": "拨动开关，SPST",
+      "summary": "开或关，0.5 A",
+      "variantLabel": "位置",
+      "variants": {
+        "closed": "开（闭合）",
+        "open": "关（断开）"
+      }
+    },
+    "led-5mm": {
+      "name": "LED，5 mm",
+      "summary": "可选颜色，持续 20 mA",
+      "variantLabel": "颜色",
+      "variants": {
+        "red": "红色",
+        "yellow": "黄色",
+        "green": "绿色",
+        "blue": "蓝色",
+        "white": "白色"
+      }
     },
     "ldo-3v3": {
       "name": "3.3 V 稳压器 (LDO)",

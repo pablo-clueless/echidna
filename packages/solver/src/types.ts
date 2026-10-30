@@ -3,6 +3,8 @@ import type { SolveResult } from "@echidna/core";
 /** Element models understood by the solver. Mirrors `ElementKind` in `crates/solver`. */
 export type ElementKind =
   | { kind: "resistor"; resistance: number }
+  /** `closed` is 1 to conduct through the contact resistance, 0 for an ideal open circuit. */
+  | { kind: "switch"; contactResistance: number; closed?: number }
   | { kind: "capacitor"; capacitance: number }
   | { kind: "inductor"; inductance: number }
   | { kind: "voltageSource"; voltage: number }

@@ -31,6 +31,13 @@ pub struct Element {
 pub enum ElementKind {
     /// Pins: a, b.
     Resistor { resistance: f64 },
+    /// Pins: a, b. Conducts through its `contact_resistance` while `closed` is 1; an ideal open circuit while it
+    /// is 0, so no current flows at all.
+    Switch {
+        contact_resistance: f64,
+        #[serde(default = "unity")]
+        closed: f64,
+    },
     /// Pins: a, b. Open circuit at DC.
     Capacitor { capacitance: f64 },
     /// Pins: a, b. Short circuit at DC.

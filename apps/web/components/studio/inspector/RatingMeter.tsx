@@ -22,6 +22,9 @@ const textClass = {
   likelyFail: "text-status-fail-text",
 } as const;
 
+/** Current below this, in amperes, is solver leakage through an open or bypassed part, not current it carries. */
+const NO_CURRENT = 1e-8;
+
 /** One rating check for the selected part: actual against rated value, as a bar with a verdict. */
 export const RatingMeter = ({ violation }: { violation: Violation }) => {
   const t = useTranslations("Studio");
@@ -29,6 +32,7 @@ export const RatingMeter = ({ violation }: { violation: Violation }) => {
   const locale = useLocale();
   const learnMode = usePreferencesStore((s) => s.learnMode);
   const ratio = violation.actual / violation.limit;
+  const idle = violation.unit === "A" && violation.actual < NO_CURRENT;
   const verdict = violation.severity === "pass" ? "pass" : verdictKey(violation);
   const percent = format.number(ratio, { style: "percent", maximumFractionDigits: 0 });
 
@@ -36,7 +40,11 @@ export const RatingMeter = ({ violation }: { violation: Violation }) => {
     <div className="grid gap-1">
       <div className="flex items-baseline justify-between gap-2 text-xs">
         <span className="font-medium">{t(`rules.${ruleKey(violation.ruleId)}.name`)}</span>
-        <span className={cn("font-medium", textClass[verdict])}>{t(`inspector.verdict.${verdict}`)}</span>
+        {idle ? (
+          <span className="font-medium text-muted-foreground">{t("inspector.verdict.noCurrent")}</span>
+        ) : (
+          <span className={cn("font-medium", textClass[verdict])}>{t(`inspector.verdict.${verdict}`)}</span>
+        )}
       </div>
       <div
         role="meter"

@@ -46,6 +46,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Collapsible component categories in the library, remembered per user and opened while searching.
 - Golden DC circuits in `tools/golden`, compared against ngspice in CI to within 0.1 %.
 - Solver models for NPN and PNP bipolar transistors (Ebers–Moll with Early effect) and n- and p-channel MOSFETs (SPICE level 1), with SPICE-style voltage limiting, and six transistor golden circuits.
+- LEDs are one generic 5 mm part with a colour chosen in the inspector: red, yellow, green, blue or white, each with its own forward voltage. Saved projects with the old red LED open as a red LED.
+- A lit LED glows in its own colour, with brightness that follows the simulated current, and goes dark when its circuit is open. An unlit LED's epoxy is a dark tint, so it no longer passes for lit.
+- The inspector says whether a selected LED is lit, and when it is dark, why: a lead is unwired, both leads are on the same net, it is wired backwards, or the loop is not closed. A current rating with no current through it reads "No current flowing" instead of "Within rating".
+- A slide switch (SPST, 0.5 A) with an on/off position chosen in the inspector; its schematic symbol and 3D actuator follow the position. The solver has a switch element for it: closed, it conducts through its 30 mΩ contact resistance; open, it is an ideal break and carries exactly no current. The example circuit now runs the supply through it, switched on, so the LED lights as soon as the example loads.
+- The board can be resized from the inspector, from 40 × 30 mm to 200 × 200 mm. Parts left outside a smaller board move in to its edge, and the camera reframes the new outline.
 - Transistor parts: 2N3904 (NPN), 2N3906 (PNP), 2N7000 (n-channel MOSFET) and BS250 (p-channel MOSFET, all values estimated), with schematic symbols, TO-92 footprints and 3D packages marked with the part number.
 - Playwright end-to-end test of the Phase 1 acceptance scenario in English and French, checking the warning and fail appear within 100 ms.
 - CI builds the WebAssembly solver (with a `wasm-bindgen` CLI matching `Cargo.lock`), runs the end-to-end tests and runs the golden circuits against ngspice.
@@ -53,6 +58,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Changed
 
 - The "Try a swap" demo moved from the hero to its own section below it.
+- An unpowered linear regulator now turns off: its output disconnects and its bias current falls with the input, instead of forcing its full quiescent current through whatever feeds it (which drove the input of a regulator behind an open switch to about −500 kV).
+- Pins wired to different ground symbols are now joined by copper on the 3D board, as they already were in the simulation, so every wired pin of a part gets its track instead of only the one not going to ground.
 - New parts land on the board where their footprint clears every placed part, the board edge and the mounting holes, instead of on a fixed grid.
 - Readouts show leftover leakage below a picoamp as zero, and unitless values such as current gain without an SI prefix.
 - Token font stacks now read `--font-*` variables first, so the app can supply self-hosted fonts.

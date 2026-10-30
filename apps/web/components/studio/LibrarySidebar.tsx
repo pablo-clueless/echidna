@@ -18,7 +18,7 @@ import { PanelEmpty } from "./PanelEmpty";
 
 const categories = [
   { key: "power", kinds: ["supply", "regulator", "ground"] },
-  { key: "passives", kinds: ["resistor", "capacitor", "inductor"] },
+  { key: "passives", kinds: ["resistor", "capacitor", "inductor", "switch"] },
   { key: "semiconductors", kinds: ["led", "diode", "npn", "pnp", "nmos", "pmos"] },
 ] as const;
 

@@ -119,13 +119,30 @@ export const innerPinLabels: Record<string, { text: string; x: number; y: number
   ],
 };
 
-export const SymbolGlyph = ({ kind }: { kind: string }) => glyphs[kind] ?? glyphs.resistor;
+/** Single-throw switch: two contacts and a lever that touches the right contact when closed. */
+const toggle = (closed: boolean) => (
+  <>
+    <path d={`${twoPinLeads(1)}${closed ? line(-1, 0, 1, 0) : line(-1, 0, 0.85, -0.8)}`} />
+    {[-1, 1].map((x) => (
+      <circle key={x} cx={g(x)} r={g(0.15)} className="fill-background" />
+    ))}
+  </>
+);
+
+/**
+ * A part's schematic symbol.
+ * @param kind - The spec's `kind`.
+ * @param variant - The chosen variant, for symbols that show it, such as a switch's position. Defaults to the first.
+ */
+export const SymbolGlyph = ({ kind, variant }: { kind: string; variant?: string | undefined }) =>
+  kind === "switch" ? toggle(variant !== "open") : (glyphs[kind] ?? glyphs.resistor);
 
 /** Half-extents of each symbol's body in grid units at rotation 0, for hit areas and selection outlines. */
 export const symbolBounds: Record<string, { w: number; h: number }> = {
   resistor: { w: 2, h: 0.8 },
   capacitor: { w: 2, h: 0.8 },
   inductor: { w: 2, h: 0.6 },
+  switch: { w: 2, h: 0.9 },
   diode: { w: 2, h: 0.8 },
   led: { w: 2, h: 1.3 },
   supply: { w: 1.1, h: 2 },

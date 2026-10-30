@@ -9,7 +9,7 @@
     "$schema": { "type": "string" },
     "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
     "name": { "type": "string", "minLength": 1 },
-    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "led", "diode", "regulator", "npn", "pnp", "nmos", "pmos"] },
+    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "switch", "led", "diode", "regulator", "npn", "pnp", "nmos", "pmos"] },
     "deviceTypes": {
       "type": "array",
       "items": { "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"] },
@@ -55,8 +55,22 @@
         }
       }
     },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "params": { "type": "object", "additionalProperties": { "$ref": "#/$defs/specValue" } },
+          "ratings": { "$ref": "#/properties/ratings" }
+        }
+      }
+    },
     "model": {
-      "enum": ["ground", "resistor", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator", "npn", "pnp", "nmos", "pmos"]
+      "enum": ["ground", "resistor", "switch", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator", "npn", "pnp", "nmos", "pmos"]
     },
     "footprintId": { "type": "string" },
     "meshUrl": { "type": "string" },

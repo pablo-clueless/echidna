@@ -3,14 +3,27 @@ import { partsById } from "@echidna/library";
 import type { PinRef } from "@echidna/core";
 import { create } from "zustand";
 
-import { nextDesignator, type ProjectData, samePin, type SchematicPlacement } from "@/lib/project/model";
+import { type BoardSize, nextDesignator, type ProjectData, samePin, type SchematicPlacement } from "@/lib/project/model";
+import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
 import { regulatorExample } from "@/lib/project/example";
 import { nextRotation } from "@/lib/schematic/symbols";
-import { freeBoardSpot } from "@/lib/board/placement";
 import { footprints } from "@/lib/board/footprints";
 
 export const PROJECT_STORAGE_KEY = "echidna-project";
 
+/** Version 1 projects used a red-only LED part; it is now the generic LED set to red. */
+const migrateLegacyLed = (project: ProjectData): ProjectData => ({
+  ...project,
+  components: project.components.map((c) =>
+    c.specId === "led-red-5mm" ? { ...c, specId: "led-5mm", variant: "red" } : c,
+  ),
+});
+
+/** Projects before version 3 had a fixed board, the default size. */
+const migrateBoardSize = (project: ProjectData): ProjectData => ({
+  ...project,
+  boardSize: { width: BOARD.width, depth: BOARD.depth },
+});
 
 type ProjectActions = {
   addComponent: (specId: string, at: Pick<SchematicPlacement, "x" | "y">) => string | null;
@@ -20,18 +33,27 @@ type ProjectActions = {
   connect: (a: PinRef, b: PinRef) => void;
   removeWire: (id: string) => void;
   setParam: (id: string, key: string, value: number | undefined) => void;
+  setVariant: (id: string, variant: string) => void;
   swapSpec: (id: string, specId: string) => void;
   placeOnBoard: (id: string, x: number, z: number) => void;
+  resizeBoard: (size: BoardSize) => void;
   loadExample: () => void;
   clear: () => void;
 };
 
 export type ProjectState = ProjectData & ProjectActions;
 
-const empty = (): ProjectData => ({ name: "", components: [], wires: [], schematic: {}, board: {} });
+const empty = (): ProjectData => ({
+  name: "",
+  components: [],
+  wires: [],
+  schematic: {},
+  board: {},
+  boardSize: { width: BOARD.width, depth: BOARD.depth },
+});
 
 /** Where a new part lands on the board: clear of every placed part's courtyard. */
-const boardSpotFor = (footprintId: string, project: Pick<ProjectData, "components" | "board">) => {
+const boardSpotFor = (footprintId: string, project: Pick<ProjectData, "components" | "board" | "boardSize">) => {
   const footprint = footprints[footprintId];
   if (!footprint) return { x: 0, z: 0 };
   const placed = project.components.flatMap((c) => {
@@ -39,7 +61,7 @@ const boardSpotFor = (footprintId: string, project: Pick<ProjectData, "component
     const placedFootprint = footprints[partsById.get(c.specId)?.footprintId ?? ""];
     return at && placedFootprint ? [{ at, footprint: placedFootprint }] : [];
   });
-  return freeBoardSpot(footprint, placed);
+  return freeBoardSpot(footprint, placed, project.boardSize);
 };
 
 let wireCount = 0;
@@ -117,9 +139,13 @@ export const useProjectStore = create<ProjectState>()(
             if (c.id !== id) return c;
             const { [key]: _old, ...rest } = c.paramOverrides ?? {};
             const paramOverrides = value === undefined ? rest : { ...rest, [key]: value };
-            return Object.keys(paramOverrides).length ? { ...c, paramOverrides } : { id: c.id, specId: c.specId };
+            const { paramOverrides: _all, ...bare } = c;
+            return Object.keys(paramOverrides).length ? { ...bare, paramOverrides } : bare;
           }),
         })),
+
+      setVariant: (id, variant) =>
+        set((s) => ({ components: s.components.map((c) => (c.id === id ? { ...c, variant } : c)) })),
 
       swapSpec: (id, specId) =>
         set((s) => ({ components: s.components.map((c) => (c.id === id ? { id, specId } : c)) })),
@@ -130,15 +156,38 @@ export const useProjectStore = create<ProjectState>()(
           return current ? { board: { ...s.board, [id]: { ...current, x, z } } } : s;
         }),
 
+      resizeBoard: (size) =>
+        set((s) => {
+          const boardSize = clampBoardSize(size);
+          // Parts left outside the new outline move in to its edge.
+          const board = Object.fromEntries(
+            Object.entries(s.board).map(([id, at]) => [id, { ...at, ...clampToBoard(at.x, at.z, boardSize) }]),
+          );
+          return { boardSize, board };
+        }),
+
       loadExample: () => set(regulatorExample()),
 
       clear: () => set(empty()),
     }),
     {
       name: PROJECT_STORAGE_KEY,
-      version: 1,
+      version: 3,
+      migrate: (persisted, version) => {
+        let project = persisted as ProjectData;
+        if (version < 2) project = migrateLegacyLed(project);
+        if (version < 3) project = migrateBoardSize(project);
+        return project;
+      },
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ name, components, wires, schematic, board }) => ({ name, components, wires, schematic, board }),
+      partialize: ({ name, components, wires, schematic, board, boardSize }) => ({
+        name,
+        components,
+        wires,
+        schematic,
+        board,
+        boardSize,
+      }),
       skipHydration: true,
     },
   ),

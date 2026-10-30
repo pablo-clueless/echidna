@@ -170,6 +170,12 @@
       "hint": "ピンからピンへドラッグして配線 · <key>R</key> 回転 · <key>Del</key> 削除 · ダブルクリックで全体表示"
     },
     "inspector": {
+      "board": {
+        "title": "基板",
+        "width": "幅",
+        "depth": "奥行き",
+        "outOfRange": "{min}〜{max} mm のサイズを入力してください。"
+      },
       "title": "インスペクター",
       "emptyTitle": "何も選択されていません",
       "emptyDescription": "部品を選択するとリアルタイムの値が表示されます。",
@@ -185,7 +191,8 @@
         "pass": "定格内",
         "warn": "警告",
         "fail": "不合格",
-        "likelyFail": "不合格の可能性"
+        "likelyFail": "不合格の可能性",
+        "noCurrent": "電流なし"
       },
       "ofRating": "{limit} の {percent}",
       "swapsTitle": "交換の候補",
@@ -198,7 +205,17 @@
       "checking": "確認中…",
       "net": "ネット",
       "netVoltage": "電圧",
-      "connections": "接続されたピン"
+      "connections": "接続されたピン",
+      "led": {
+        "on": "点灯中、{current}",
+        "off": "消灯",
+        "reasons": {
+          "unwired": "リードの片方が配線されていないため、電流が流れません。",
+          "shorted": "両方のリードが同じネットにつながっているため、電流は LED を通らずに迂回します。",
+          "reversed": "逆向きに配線されています。カソードがアノードより高い電圧になっています。",
+          "open": "電流が流れていません。回路が閉じていないか、点灯させるには電圧が低すぎます。"
+        }
+      }
     },
     "validator": {
       "label": "検証",
@@ -273,9 +290,26 @@
       "name": "セラミックコンデンサー、16 V",
       "summary": "直流では開放"
     },
-    "led-red-5mm": {
-      "name": "赤色 LED、5 mm",
-      "summary": "連続 20 mA"
+    "switch-spst": {
+      "name": "スライドスイッチ（SPST）",
+      "summary": "オン／オフ、0.5 A",
+      "variantLabel": "位置",
+      "variants": {
+        "closed": "オン（閉）",
+        "open": "オフ（開）"
+      }
+    },
+    "led-5mm": {
+      "name": "LED、5 mm",
+      "summary": "色を選択可、連続 20 mA",
+      "variantLabel": "色",
+      "variants": {
+        "red": "赤",
+        "yellow": "黄",
+        "green": "緑",
+        "blue": "青",
+        "white": "白"
+      }
     },
     "ldo-3v3": {
       "name": "3.3 V レギュレーター (LDO)",

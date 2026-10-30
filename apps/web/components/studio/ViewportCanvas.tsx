@@ -2,42 +2,34 @@
 
 import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Environment, Grid, Lightformer } from "@react-three/drei";
 import { partsById } from "@echidna/library";
 import type { Group } from "three";
-import type { Group } from "three";
 
 import { footprints, resistorBands } from "@/lib/board/footprints";
-import { footprints, resistorBands } from "@/lib/board/footprints";
+import { LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
+import { BOARD, clampToBoard } from "@/lib/board/placement";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { applyMaskColour } from "./viewport/materials";
 import { projectCopper } from "@/lib/board/copper";
-import { applyMaskColour } from "./viewport/materials";
-import { projectCopper } from "@/lib/board/copper";
 import { useProjectStore } from "@/stores/project";
-import { useLayoutStore } from "@/stores/layout";
 import { useLayoutStore } from "@/stores/layout";
 import { paramValue } from "@/lib/project/model";
 import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
 import { CameraRig } from "./viewport/CameraRig";
 import { PartMesh } from "./viewport/PartMesh";
-import { BOARD } from "@/lib/board/placement";
 import { Traces } from "./viewport/Traces";
 import { Board } from "./viewport/Board";
 
 /** Placements in the store are in metres; the board and parts are modelled in millimetres. */
 const MM = 0.001;
 const TOP = BOARD.thickness * MM;
-/** Slightly inside the board's half-diagonal, so "fit" fills a wide view without cropping the corners. */
-const FRAME_RADIUS = 0.052;
-/** Just outside the half-diagonal (61 mm), so a tall view such as a phone shows the whole board. */
-const NARROW_FRAME_RADIUS = 0.064;
-const EDGE_MARGIN = 0.004;
+/** Framing radius as a fraction of the board's half-diagonal: slightly inside it, so "fit" fills a wide view without cropping the corners. */
+const FRAME_RADIUS = 0.85;
+/** Just outside the half-diagonal, so a tall view such as a phone shows the whole board. */
+const NARROW_FRAME_RADIUS = 1.05;
 const SNAP = 0.0005;
-const LED_NOMINAL_CURRENT = 0.02;
 /** Transistors print their part number, taken from the end of the spec ID, on the body. */
 const TRANSISTOR_KINDS = new Set(["npn", "pnp", "nmos", "pmos"]);
 
@@ -49,7 +41,7 @@ const gridColours = {
 /** Outline colours: selection uses the brand orange; issues use status colours, never orange. */
 const highlights = { selected: "#DE640E", fail: "#D92D20", warn: "#EAB308" } as const;
 
-const snap = (v: number, min: number, max: number) => Math.min(max, Math.max(min, Math.round(v / SNAP) * SNAP));
+const snap = (v: number) => Math.round(v / SNAP) * SNAP;
 
 /** The page's monospace face, once loaded, so silkscreen matches the rest of the studio. */
 const useMonoFont = () => {
@@ -67,7 +59,6 @@ const useMonoFont = () => {
   return family;
 };
 
-/** Studio lighting baked into an environment map: a large soft key overhead and strip lights for edge highlights. */
 /** Exposes the scene to `window.__echidna.three` in development, for inspecting the camera and renderer. */
 const DevHandle = () => {
   const get = useThree((s) => s.get);
@@ -77,7 +68,8 @@ const DevHandle = () => {
   return null;
 };
 
-const StudioLighting = () => (
+/** Studio lighting baked into an environment map: a large soft key overhead and strip lights for edge highlights. */
+const StudioLighting = ({ reach }: { reach: number }) => (
   <>
     <Environment resolution={256} frames={1} environmentIntensity={0.9}>
       <color attach="background" args={["#303136"]} />
@@ -88,11 +80,8 @@ const StudioLighting = () => (
       <Lightformer form="rect" intensity={1.2} position={[2, 0.8, -0.5]} rotation={[0, -Math.PI / 2, 0]} scale={[4, 0.4, 1]} />
       {/* Soft fill from below, so the solder side reads in the underside view. */}
       <Lightformer form="rect" intensity={0.9} position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3, 3, 1]} />
-      {/* Soft fill from below, so the solder side reads in the underside view. */}
-      <Lightformer form="rect" intensity={0.9} position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3, 3, 1]} />
     </Environment>
     <ambientLight intensity={0.15} />
-    <directionalLight position={[-0.05, -0.12, -0.04]} intensity={0.5} />
     <directionalLight position={[-0.05, -0.12, -0.04]} intensity={0.5} />
     <directionalLight
       position={[0.12, 0.3, 0.16]}
@@ -101,10 +90,10 @@ const StudioLighting = () => (
       shadow-mapSize={[2048, 2048]}
       shadow-bias={-0.0002}
       shadow-normalBias={0.00004}
-      shadow-camera-left={-0.07}
-      shadow-camera-right={0.07}
-      shadow-camera-top={0.07}
-      shadow-camera-bottom={-0.07}
+      shadow-camera-left={-reach}
+      shadow-camera-right={reach}
+      shadow-camera-top={reach}
+      shadow-camera-bottom={-reach}
       shadow-camera-near={0.1}
       shadow-camera-far={0.6}
     />
@@ -120,23 +109,12 @@ const AboveBoardOnly = ({ children }: { children: ReactNode }) => {
   return <group ref={ref}>{children}</group>;
 };
 
-/** Hides its children while the camera is below the board, so the floor grid never covers the underside. */
-const AboveBoardOnly = ({ children }: { children: ReactNode }) => {
-  const ref = useRef<Group>(null);
-  useFrame(({ camera }) => {
-    if (ref.current) ref.current.visible = camera.position.y > 0;
-  });
-  return <group ref={ref}>{children}</group>;
-};
-
 export const ViewportCanvas = () => {
   const colours = gridColours[useResolvedTheme()];
   const fontFamily = useMonoFont();
   const components = useProjectStore((s) => s.components);
   const board = useProjectStore((s) => s.board);
-  const wires = useProjectStore((s) => s.wires);
-  const projectName = useProjectStore((s) => s.name);
-  const maskColour = useLayoutStore((s) => s.maskColour);
+  const boardSize = useProjectStore((s) => s.boardSize);
   const wires = useProjectStore((s) => s.wires);
   const projectName = useProjectStore((s) => s.name);
   const maskColour = useLayoutStore((s) => s.maskColour);
@@ -146,10 +124,6 @@ export const ViewportCanvas = () => {
   const violations = useStudioStore((s) => s.violations);
   const pinCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
   const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
-  const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
-  const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");
-
-  useEffect(() => applyMaskColour(maskColour), [maskColour]);
   const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
   const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");
 
@@ -179,10 +153,12 @@ export const ViewportCanvas = () => {
 
   const onPlaneMove = (e: ThreeEvent<PointerEvent>) => {
     if (!dragging) return;
-    const hx = (BOARD.width / 2) * MM - EDGE_MARGIN;
-    const hz = (BOARD.depth / 2) * MM - EDGE_MARGIN;
-    placeOnBoard(dragging.id, snap(e.point.x + dragging.dx, -hx, hx), snap(e.point.z + dragging.dz, -hz, hz));
+    const { x, z } = clampToBoard(snap(e.point.x + dragging.dx), snap(e.point.z + dragging.dz), boardSize);
+    placeOnBoard(dragging.id, x, z);
   };
+
+  /** Half the board's diagonal, in metres: what the camera frames and the key light's shadows cover. */
+  const halfDiagonal = (Math.hypot(boardSize.width, boardSize.depth) / 2) * MM;
 
   return (
     <Canvas
@@ -192,13 +168,11 @@ export const ViewportCanvas = () => {
       dpr={[1, 2]}
       className={dragging ? "cursor-grabbing" : undefined}
     >
-      <StudioLighting />
+      <StudioLighting reach={halfDiagonal * 1.15} />
       <DevHandle />
 
       <group scale={MM}>
-        <Board {...BOARD} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
-        <Traces routing={copper.routing} thickness={BOARD.thickness} />
-        <Board {...BOARD} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
+        <Board {...boardSize} thickness={BOARD.thickness} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
         <Traces routing={copper.routing} thickness={BOARD.thickness} />
       </group>
 
@@ -237,6 +211,8 @@ export const ViewportCanvas = () => {
               bands={resistance === undefined ? undefined : resistorBands(resistance)}
               marking={outputVoltage === undefined ? partNumber : outputVoltage.toFixed(1).replace(".", "V")}
               glow={current / LED_NOMINAL_CURRENT}
+              ledColour={c.variant}
+              closed={spec.kind === "switch" ? c.variant !== "open" : undefined}
             />
           </group>
         );
@@ -255,23 +231,26 @@ export const ViewportCanvas = () => {
       </mesh>
 
       <AboveBoardOnly>
-      <AboveBoardOnly>
-      <Grid
-        args={[1, 1]}
-        position={[0, -0.0001, 0]}
-        cellSize={0.005}
-        sectionSize={0.025}
-        cellColor={colours.cell}
-        sectionColor={colours.section}
-        cellThickness={0.6}
-        sectionThickness={1}
-        fadeDistance={0.5}
-        fadeStrength={1.5}
-        infiniteGrid
+        <Grid
+          args={[1, 1]}
+          position={[0, -0.0001, 0]}
+          cellSize={0.005}
+          sectionSize={0.025}
+          cellColor={colours.cell}
+          sectionColor={colours.section}
+          cellThickness={0.6}
+          sectionThickness={1}
+          fadeDistance={0.5}
+          fadeStrength={1.5}
+          infiniteGrid
+        />
+      </AboveBoardOnly>
+      <CameraRig
+        enabled={!dragging}
+        centre={[0, TOP, 0]}
+        radius={halfDiagonal * FRAME_RADIUS}
+        narrowRadius={halfDiagonal * NARROW_FRAME_RADIUS}
       />
-      </AboveBoardOnly>
-      </AboveBoardOnly>
-      <CameraRig enabled={!dragging} centre={[0, TOP, 0]} radius={FRAME_RADIUS} narrowRadius={NARROW_FRAME_RADIUS} />
     </Canvas>
   );
 };

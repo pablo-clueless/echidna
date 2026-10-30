@@ -1,5 +1,5 @@
+import { type ComponentSpec, type Netlist, withVariant } from "@echidna/core";
 import type { Circuit, CircuitElement } from "@echidna/solver/types";
-import type { ComponentSpec, Netlist } from "@echidna/core";
 
 export const GROUND_NODE = "0";
 
@@ -7,6 +7,7 @@ export const GROUND_NODE = "0";
 export const requiredParams: Record<string, readonly string[]> = {
   ground: [],
   resistor: ["resistance"],
+  switch: ["contactResistance", "closed"],
   capacitor: ["capacitance"],
   inductor: ["inductance"],
   voltageSource: ["voltage"],
@@ -31,7 +32,7 @@ export type CircuitBuild = {
   circuit: Circuit;
   /** Solver node for a net, so net voltages can be read back from the solution. */
   netNodes: Record<string, string>;
-  /** Spec used for each solved component, by component ID. */
+  /** Spec used for each solved component, by component ID, with its chosen variant applied. */
   specs: Record<string, ComponentSpec>;
 };
 
@@ -46,7 +47,7 @@ export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, Component
   const used: Record<string, ComponentSpec> = {};
   for (const c of netlist.components) {
     const spec = specs.get(c.specId);
-    if (spec) used[c.id] = spec;
+    if (spec) used[c.id] = withVariant(spec, c.variant);
   }
 
   const groundNets = new Set(

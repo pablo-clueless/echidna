@@ -13,7 +13,40 @@ const ABSTOL: f64 = 1e-15;
 /// Conductance from every node to ground, so a half-wired schematic still solves instead of going singular.
 const GSHUNT: f64 = 1e-12;
 
+/// Smallest input voltage a regulator's quiescent current is scaled against while it is off, so a regulator with
+/// no dropout still has a finite resistance to its input.
+const REGULATOR_OFF_SCALE: f64 = 0.1;
+
 type Node = Option<usize>;
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum RegulatorMode {
+    /// Output held at the set voltage.
+    Regulating,
+    /// Input too low to regulate: output follows it, a dropout voltage below.
+    Dropout,
+    /// Input no higher than the dropout voltage: the pass element is off, so the output is disconnected, and the
+    /// bias circuit draws in proportion to the input rather than its full quiescent current.
+    Off,
+}
+
+impl RegulatorMode {
+    fn of(headroom: f64, output_voltage: f64) -> Self {
+        if headroom <= 0.0 {
+            Self::Off
+        } else if headroom < output_voltage {
+            Self::Dropout
+        } else {
+            Self::Regulating
+        }
+    }
+}
+
+/// Conductance from input to ground that stands in for the quiescent current while a regulator is off. It draws the
+/// full quiescent current with the input at the dropout voltage, where the regulator turns on, so the two meet.
+fn regulator_off_conductance(quiescent_current: f64, dropout_voltage: f64) -> f64 {
+    quiescent_current / dropout_voltage.max(REGULATOR_OFF_SCALE)
+}
 
 struct Prepared<'a> {
     element: &'a Element,
@@ -29,7 +62,7 @@ enum State {
         vd: f64,
     },
     Regulator {
-        dropout: bool,
+        mode: RegulatorMode,
     },
     /// Junction voltages with the polarity folded in, so they read as for an NPN.
     Bjt {
@@ -103,7 +136,9 @@ pub fn solve_dc(circuit: &Circuit) -> Result<DcSolution, SolveError> {
             } => State::Junction {
                 vd: critical_voltage(saturation_current, emission_coefficient * THERMAL_VOLTAGE),
             },
-            ElementKind::LinearRegulator { .. } => State::Regulator { dropout: false },
+            ElementKind::LinearRegulator { .. } => State::Regulator {
+                mode: RegulatorMode::Regulating,
+            },
             ElementKind::Bjt {
                 saturation_current, ..
             } => State::Bjt {
@@ -170,6 +205,14 @@ fn validate(element: &Element) -> Result<(), SolveError> {
     match element.kind {
         ElementKind::Resistor { resistance } if !(resistance.is_finite() && resistance > 0.0) => {
             invalid("resistance must be a positive number of ohms")
+        }
+        ElementKind::Switch {
+            contact_resistance, ..
+        } if !(contact_resistance.is_finite() && contact_resistance > 0.0) => {
+            invalid("contact resistance must be a positive number of ohms")
+        }
+        ElementKind::Switch { closed, .. } if closed != 0.0 && closed != 1.0 => {
+            invalid("switch position must be 1 (closed) or 0 (open)")
         }
         ElementKind::Capacitor { capacitance }
             if !(capacitance.is_finite() && capacitance >= 0.0) =>
@@ -300,6 +343,17 @@ fn stamp(s: &mut System, p: &Prepared, state: State) {
         (ElementKind::Resistor { resistance }, _) => {
             conductance(s, 1.0 / resistance, pin(0), pin(1))
         }
+        (
+            ElementKind::Switch {
+                contact_resistance,
+                closed,
+            },
+            _,
+        ) => {
+            if *closed == 1.0 {
+                conductance(s, 1.0 / contact_resistance, pin(0), pin(1));
+            }
+        }
         (ElementKind::Capacitor { .. }, _) => {}
         (ElementKind::Inductor { .. }, _) => {
             branch_kcl(s, p.branch, pin(0), pin(1));
@@ -336,16 +390,30 @@ fn stamp(s: &mut System, p: &Prepared, state: State) {
                 dropout_voltage,
                 quiescent_current,
             },
-            State::Regulator { dropout },
+            State::Regulator { mode },
         ) => {
             let (input, output, ground) = (pin(0), pin(1), pin(2));
             branch_kcl(s, p.branch, output, input);
-            if dropout {
-                branch_voltage(s, p.branch, output, input, -dropout_voltage);
-            } else {
-                branch_voltage(s, p.branch, output, ground, *output_voltage);
+            match mode {
+                RegulatorMode::Regulating => {
+                    branch_voltage(s, p.branch, output, ground, *output_voltage);
+                    current(s, *quiescent_current, input, ground);
+                }
+                RegulatorMode::Dropout => {
+                    branch_voltage(s, p.branch, output, input, -dropout_voltage);
+                    current(s, *quiescent_current, input, ground);
+                }
+                RegulatorMode::Off => {
+                    // No current through the pass element.
+                    s.add(p.branch, p.branch, 1.0);
+                    conductance(
+                        s,
+                        regulator_off_conductance(*quiescent_current, *dropout_voltage),
+                        input,
+                        ground,
+                    );
+                }
             }
-            current(s, *quiescent_current, input, ground);
         }
         (
             ElementKind::Bjt {
@@ -464,12 +532,12 @@ fn update(p: &Prepared, state: &mut State, x: &[f64]) -> bool {
                 dropout_voltage,
                 ..
             },
-            State::Regulator { dropout },
+            State::Regulator { mode },
         ) => {
             let headroom = v(p.pins[0]) - v(p.pins[2]) - dropout_voltage;
-            let next = headroom < *output_voltage;
-            let settled = next == *dropout;
-            *dropout = next;
+            let next = RegulatorMode::of(headroom, *output_voltage);
+            let settled = next == *mode;
+            *mode = next;
             settled
         }
         (
@@ -560,6 +628,17 @@ fn report(
                 let i = (v(pin(0)) - v(pin(1))) / resistance;
                 vec![i, -i]
             }
+            ElementKind::Switch {
+                contact_resistance,
+                closed,
+            } => {
+                let i = if *closed == 1.0 {
+                    (v(pin(0)) - v(pin(1))) / contact_resistance
+                } else {
+                    0.0
+                };
+                vec![i, -i]
+            }
             ElementKind::Capacitor { .. } => vec![0.0, 0.0],
             ElementKind::Inductor { .. } | ElementKind::VoltageSource { .. } => {
                 vec![x[p.branch], -x[p.branch]]
@@ -584,10 +663,19 @@ fn report(
                 vec![i, -i]
             }
             ElementKind::LinearRegulator {
-                quiescent_current, ..
+                output_voltage,
+                dropout_voltage,
+                quiescent_current,
             } => {
                 let i = x[p.branch];
-                vec![-i + quiescent_current, i, -quiescent_current]
+                let supply = v(pin(0)) - v(pin(2));
+                let bias = match RegulatorMode::of(supply - dropout_voltage, *output_voltage) {
+                    RegulatorMode::Off => {
+                        supply * regulator_off_conductance(*quiescent_current, *dropout_voltage)
+                    }
+                    _ => *quiescent_current,
+                };
+                vec![-i + bias, i, -bias]
             }
             ElementKind::Bjt {
                 polarity,

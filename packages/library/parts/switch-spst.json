@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "switch-spst",
+  "name": "Slide switch, SPST",
+  "kind": "switch",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "1", "name": "1" },
+    { "id": "2", "name": "2" }
+  ],
+  "params": {
+    "contactResistance": { "value": 0.03, "unit": "Ω", "source": "datasheet", "reference": "Contact resistance, 30 mΩ maximum, typical for miniature slide switches" },
+    "closed": { "value": 1, "unit": "1", "source": "datasheet", "reference": "Switch position: 1 closed, 0 open" }
+  },
+  "ratings": {
+    "maxCurrent": { "value": 0.5, "unit": "A", "source": "datasheet", "reference": "Typical miniature slide switch rating, 0.5 A at 50 V DC" },
+    "maxVoltage": { "value": 50, "unit": "V", "source": "datasheet", "reference": "Typical miniature slide switch rating, 0.5 A at 50 V DC" }
+  },
+  "interfaces": [],
+  "variants": [
+    { "id": "closed" },
+    {
+      "id": "open",
+      "params": {
+        "closed": { "value": 0, "unit": "1", "source": "datasheet", "reference": "Switch position: 1 closed, 0 open" }
+      }
+    }
+  ],
+  "model": "switch",
+  "footprintId": "generic/switch-slide",
+  "meshUrl": "generic/switch-slide"
+}

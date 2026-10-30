@@ -170,6 +170,12 @@
       "hint": "Drag pin to pin to wire · <key>R</key> rotate · <key>Del</key> delete · double-click to fit"
     },
     "inspector": {
+      "board": {
+        "title": "Board",
+        "width": "Width",
+        "depth": "Depth",
+        "outOfRange": "Enter a size from {min} to {max} mm."
+      },
       "title": "Inspector",
       "emptyTitle": "Nothing selected",
       "emptyDescription": "Select a component to see its live values.",
@@ -185,7 +191,8 @@
         "pass": "Within rating",
         "warn": "Warning",
         "fail": "Fail",
-        "likelyFail": "Likely to fail"
+        "likelyFail": "Likely to fail",
+        "noCurrent": "No current flowing"
       },
       "ofRating": "{percent} of {limit}",
       "swapsTitle": "Swap suggestions",
@@ -198,7 +205,17 @@
       "checking": "Checking…",
       "net": "Net",
       "netVoltage": "Voltage",
-      "connections": "Connected pins"
+      "connections": "Connected pins",
+      "led": {
+        "on": "Lit, drawing {current}",
+        "off": "Off",
+        "reasons": {
+          "unwired": "One of its leads isn’t wired, so no current can flow through it.",
+          "shorted": "Both leads are wired to the same net, so current goes around the LED instead of through it.",
+          "reversed": "It’s wired backwards: the cathode sits at a higher voltage than the anode.",
+          "open": "No current flows through it: the circuit isn’t a closed loop, or the voltage is too low to light it."
+        }
+      }
     },
     "validator": {
       "label": "Validator",
@@ -273,9 +290,26 @@
       "name": "Ceramic capacitor, 16 V",
       "summary": "Open circuit at DC"
     },
-    "led-red-5mm": {
-      "name": "Red LED, 5 mm",
-      "summary": "20 mA continuous"
+    "switch-spst": {
+      "name": "Slide switch, SPST",
+      "summary": "On or off, 0.5 A",
+      "variantLabel": "Position",
+      "variants": {
+        "closed": "On (closed)",
+        "open": "Off (open)"
+      }
+    },
+    "led-5mm": {
+      "name": "LED, 5 mm",
+      "summary": "Choose a colour, 20 mA continuous",
+      "variantLabel": "Colour",
+      "variants": {
+        "red": "Red",
+        "yellow": "Yellow",
+        "green": "Green",
+        "blue": "Blue",
+        "white": "White"
+      }
     },
     "ldo-3v3": {
       "name": "3.3 V regulator (LDO)",

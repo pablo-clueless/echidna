@@ -170,6 +170,12 @@
       "hint": "Arrastra de un pin a otro para cablear · <key>R</key> girar · <key>Supr</key> eliminar · doble clic para ajustar"
     },
     "inspector": {
+      "board": {
+        "title": "Placa",
+        "width": "Ancho",
+        "depth": "Fondo",
+        "outOfRange": "Introduce un tamaño de {min} a {max} mm."
+      },
       "title": "Inspector",
       "emptyTitle": "Nada seleccionado",
       "emptyDescription": "Selecciona un componente para ver sus valores en directo.",
@@ -185,7 +191,8 @@
         "pass": "Dentro del límite",
         "warn": "Aviso",
         "fail": "Fallo",
-        "likelyFail": "Fallo probable"
+        "likelyFail": "Fallo probable",
+        "noCurrent": "No circula corriente"
       },
       "ofRating": "{percent} de {limit}",
       "swapsTitle": "Sustituciones sugeridas",
@@ -198,7 +205,17 @@
       "checking": "Comprobando…",
       "net": "Red",
       "netVoltage": "Tensión",
-      "connections": "Pines conectados"
+      "connections": "Pines conectados",
+      "led": {
+        "on": "Encendido, consume {current}",
+        "off": "Apagado",
+        "reasons": {
+          "unwired": "Una de sus patas no está conectada, así que no puede circular corriente.",
+          "shorted": "Las dos patas están conectadas a la misma red, así que la corriente rodea el LED en lugar de atravesarlo.",
+          "reversed": "Está conectado al revés: el cátodo tiene más tensión que el ánodo.",
+          "open": "No circula corriente por él: el circuito no está cerrado o la tensión es demasiado baja para encenderlo."
+        }
+      }
     },
     "validator": {
       "label": "Validación",
@@ -273,9 +290,26 @@
       "name": "Condensador cerámico, 16 V",
       "summary": "Circuito abierto en continua"
     },
-    "led-red-5mm": {
-      "name": "LED rojo, 5 mm",
-      "summary": "20 mA en continuo"
+    "switch-spst": {
+      "name": "Interruptor deslizante, SPST",
+      "summary": "Encendido o apagado, 0,5 A",
+      "variantLabel": "Posición",
+      "variants": {
+        "closed": "Encendido (cerrado)",
+        "open": "Apagado (abierto)"
+      }
+    },
+    "led-5mm": {
+      "name": "LED, 5 mm",
+      "summary": "Color a elegir, 20 mA en continuo",
+      "variantLabel": "Color",
+      "variants": {
+        "red": "Rojo",
+        "yellow": "Amarillo",
+        "green": "Verde",
+        "blue": "Azul",
+        "white": "Blanco"
+      }
     },
     "ldo-3v3": {
       "name": "Regulador de 3,3 V (LDO)",

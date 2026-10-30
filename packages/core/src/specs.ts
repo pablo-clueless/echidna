@@ -56,6 +56,13 @@ export type Attribution = {
   url?: string;
 };
 
+/** A selectable version of a part, such as an LED's colour, that replaces some of its params and ratings. */
+export type Variant = {
+  id: string;
+  params?: Record<string, SpecValue>;
+  ratings?: Ratings;
+};
+
 export type ComponentSpec = {
   id: string;
   name: string;
@@ -67,6 +74,8 @@ export type ComponentSpec = {
   /** Pins each rating is measured across. Defaults to every pin. */
   ratingPins?: Partial<Record<keyof Ratings, string[]>>;
   interfaces: Interface[];
+  /** Versions the user can choose between. The first is the default. */
+  variants?: Variant[];
   model: string;
   footprintId: string;
   meshUrl: string;
@@ -80,6 +89,22 @@ export type ComponentSpec = {
  */
 export const isDeviceType = (value: string): value is DeviceType =>
   (deviceTypes as readonly string[]).includes(value);
+
+/**
+ * Applies a variant's params and ratings over the base spec.
+ * @param spec - The part spec.
+ * @param variantId - The chosen variant; unknown or missing IDs fall back to the first variant.
+ * @returns The spec as the chosen variant, or `spec` itself when it has no variants.
+ */
+export const withVariant = (spec: ComponentSpec, variantId?: string): ComponentSpec => {
+  const variant = spec.variants?.find((v) => v.id === variantId) ?? spec.variants?.[0];
+  if (!variant) return spec;
+  return {
+    ...spec,
+    params: { ...spec.params, ...variant.params },
+    ratings: { ...spec.ratings, ...variant.ratings },
+  };
+};
 
 /**
  * Reports whether any of the given spec values is an estimate, so verdicts derived from them can be softened.

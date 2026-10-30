@@ -6,10 +6,13 @@ import { MousePointerClick } from "lucide-react";
 import { partsById } from "@echidna/library";
 import { useMemo } from "react";
 
-import { deriveNets, MODEL_PARAMS, paramValue } from "@/lib/project/model";
+import { deriveNets, editableParams, paramValue } from "@/lib/project/model";
+import { BoardSizeFields } from "./inspector/BoardSizeFields";
 import { SwapSuggestions } from "./inspector/SwapSuggestions";
+import { VariantPicker } from "./inspector/VariantPicker";
 import { RatingMeter } from "./inspector/RatingMeter";
 import { paramKey, partKey } from "@/lib/messageKeys";
+import { ledState } from "@/lib/simulation/ledState";
 import { ParamField } from "./inspector/ParamField";
 import { useProjectStore } from "@/stores/project";
 import { swapParam } from "@/lib/simulation/swaps";
@@ -38,7 +41,10 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
   const solution = simulation?.solution;
   const checks = violations.filter((v) => v.componentId === component.id).sort(compareViolations);
   const swap = swapParam(spec);
-  const params = Object.entries(spec.params).filter(([key]) => !MODEL_PARAMS.has(key));
+  const editable = new Set(editableParams(spec));
+  const params = Object.entries(spec.params).filter(([key]) => editable.has(key));
+
+  const led = spec.kind === "led" && simulation && solution ? ledState(simulation.build, solution, component.id) : undefined;
 
   const readouts =
     element && solution
@@ -66,6 +72,17 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
           <p className="font-mono text-base font-semibold">{component.id}</p>
           <p className="text-sm text-muted-foreground">{tParts(`${partKey(spec.id)}.name`)}</p>
         </div>
+
+        <VariantPicker component={component} spec={spec} />
+
+        {led && (
+          <div role="status" className="grid gap-0.5 rounded-md border px-2.5 py-2 text-xs">
+            <p className="font-medium">
+              {led.lit ? t("led.on", { current: formatQuantity(led.current, "A", locale) }) : t("led.off")}
+            </p>
+            {!led.lit && <p className="text-muted-foreground">{t(`led.reasons.${led.reason}`)}</p>}
+          </div>
+        )}
 
         {params.length > 0 && (
           <section aria-labelledby="params-heading" className="grid gap-3">
@@ -157,7 +174,10 @@ export const InspectorPanel = () => {
       ) : selection?.kind === "wire" ? (
         <WireInspector wireId={selection.id} />
       ) : (
-        <PanelEmpty icon={<MousePointerClick />} title={t("emptyTitle")} description={t("emptyDescription")} />
+        <div className="flex flex-1 flex-col overflow-y-auto">
+          <BoardSizeFields />
+          <PanelEmpty icon={<MousePointerClick />} title={t("emptyTitle")} description={t("emptyDescription")} />
+        </div>
       )}
     </section>
   );

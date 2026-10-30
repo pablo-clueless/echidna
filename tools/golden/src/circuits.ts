@@ -1,6 +1,6 @@
 import type { Circuit } from "@echidna/solver/types";
 
-/** Red 5 mm LED model from `packages/library/parts/led-red-5mm.json`. */
+/** Red 5 mm LED model from `packages/library/parts/led-5mm.json`. */
 const RED_LED = { saturationCurrent: 3.23e-19, emissionCoefficient: 2 } as const;
 /** A 1N4148-class signal diode, with series resistance. */
 const SIGNAL_DIODE = { saturationCurrent: 2.52e-9, emissionCoefficient: 1.752, seriesResistance: 0.568 } as const;
