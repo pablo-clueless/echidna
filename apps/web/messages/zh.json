@@ -146,7 +146,15 @@
         "zoomOut": "缩小",
         "fit": "显示整块电路板",
         "top": "俯视图",
-        "angled": "3D 视图"
+        "angled": "3D 视图",
+        "underside": "底面视图"
+      },
+      "mask": {
+        "label": "阻焊层颜色",
+        "black": "黑色",
+        "green": "绿色",
+        "blue": "蓝色",
+        "red": "红色"
       }
     },
     "schematic": {

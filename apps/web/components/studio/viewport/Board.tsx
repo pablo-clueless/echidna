@@ -1,6 +1,6 @@
 "use client";
 
-import { ExtrudeGeometry, Path, Shape } from "three";
+import { CanvasTexture, ExtrudeGeometry, LinearMipmapLinearFilter, Path, SRGBColorSpace, Shape } from "three";
 import { useEffect, useMemo } from "react";
 
 import type { Drill } from "@/lib/board/footprints";
@@ -12,6 +12,9 @@ type Props = {
   thickness: number;
   /** Plated holes for through-hole parts, in board millimetres. */
   drills: Drill[];
+  /** Legend printed along the front edge, such as the project name and revision. */
+  legend: string;
+  fontFamily: string;
 };
 
 const CORNER = 2.5;
@@ -20,12 +23,45 @@ const HOLE_R = 1.6;
 const RING_R = 3;
 /** Laminate kept between a hole and the board edge or a neighbouring hole. */
 const WEB = 0.3;
+/** Fiducial marks: 1 mm copper dots in a 3 mm mask opening, inset from three corners for assembly cameras. */
+const FIDUCIAL_INSET = { x: 10, z: 3.5 };
+const LEGEND = { height: 2.2, length: 60, inset: 9 };
+const PX_PER_MM = 40;
+
+const legendTexture = (text: string, fontFamily: string) => {
+  const canvas = document.createElement("canvas");
+  canvas.width = LEGEND.length * PX_PER_MM;
+  canvas.height = LEGEND.height * PX_PER_MM;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = `600 ${1.5 * PX_PER_MM}px ${fontFamily}`;
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, 0, canvas.height / 2);
+  }
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  texture.minFilter = LinearMipmapLinearFilter;
+  texture.anisotropy = 8;
+  return texture;
+};
 
 /**
- * Bare board in millimetres: solder-mask faces, laminate edges, plated M3 mounting holes in each corner and a plated
- * hole for every through-hole pin. A hole that would break the outline or merge with another is left undrilled.
+ * Bare board in millimetres: solder-mask faces, laminate edges, plated M3 mounting holes in each corner, a plated
+ * hole for every through-hole pin, three fiducials and a silkscreen legend. A hole that would break the outline or merge with another is left undrilled.
  */
-export const Board = ({ width, depth, thickness, drills }: Props) => {
+export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: Props) => {
+  const legendMap = useMemo(() => legendTexture(legend, fontFamily), [legend, fontFamily]);
+  useEffect(() => () => legendMap.dispose(), [legendMap]);
+  const fiducials = useMemo<[number, number][]>(() => {
+    const [fx, fz] = [width / 2 - FIDUCIAL_INSET.x, depth / 2 - FIDUCIAL_INSET.z];
+    return [
+      [-fx, -fz],
+      [fx, -fz],
+      [fx, fz],
+    ];
+  }, [width, depth]);
+
   const mounting = useMemo<Drill[]>(() => {
     const [hx, hz] = [width / 2 - HOLE_INSET, depth / 2 - HOLE_INSET];
     return [
@@ -79,6 +115,24 @@ export const Board = ({ width, depth, thickness, drills }: Props) => {
           <Barrel radius={HOLE_R} thickness={thickness} />
         </group>
       ))}
+      {fiducials.map(([x, z]) => (
+        <group key={`${x},${z}`} position={[x, thickness, z]}>
+          <mesh position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.laminate} receiveShadow>
+            <circleGeometry args={[1.5, 40]} />
+          </mesh>
+          <mesh position={[0, 0.025, 0]} material={materials.gold} receiveShadow>
+            <cylinderGeometry args={[0.5, 0.5, 0.05, 32]} />
+          </mesh>
+        </group>
+      ))}
+      <mesh
+        position={[-width / 2 + LEGEND.inset + LEGEND.length / 2, thickness + 0.045, depth / 2 - FIDUCIAL_INSET.z]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        raycast={() => null}
+      >
+        <planeGeometry args={[LEGEND.length, LEGEND.height]} />
+        <meshStandardMaterial color="#F3F1EC" alphaMap={legendMap} transparent depthWrite={false} roughness={0.75} />
+      </mesh>
       {plated.map(({ x, z, diameter }) => (
         <group key={`${x},${z}`} position={[x, 0, z]}>
           <Barrel radius={diameter / 2} thickness={thickness} />

@@ -10,6 +10,8 @@ export type CameraCommands = {
   top: () => void;
   /** The default three-quarter view. */
   angled: () => void;
+  /** A three-quarter view from below, onto the solder side. */
+  underside: () => void;
   /** Slide the view by a fraction of the current viewing distance; `y` is up the screen. */
   pan: (x: number, y: number) => void;
 };

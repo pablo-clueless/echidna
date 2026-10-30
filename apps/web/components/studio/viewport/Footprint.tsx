@@ -9,7 +9,8 @@ import { materials } from "./materials";
 
 /** Copper and finish thickness, exaggerated a little so pads read at a distance. */
 const PAD_T = 0.05;
-const SILK_Y = 0.012;
+/** Above the copper ridges of tracks, which the silkscreen is printed over. */
+const SILK_Y = 0.045;
 const PX_PER_MM = 40;
 
 type Props = {

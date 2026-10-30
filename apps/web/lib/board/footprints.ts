@@ -39,7 +39,7 @@ const tht = (pin: string, x: number, size: number, drill: number, shape: Pad["sh
 
 export const footprints: Record<string, Footprint> = {
   "generic/axial-0.4in": {
-    pads: [tht("1", -5.08, 1.6, 0.8), tht("2", 5.08, 1.6, 0.8)],
+    pads: [tht("1", -5.08, 2.0, 1.0), tht("2", 5.08, 2.0, 1.0)],
     courtyard: { w: 12.6, h: 3.4 },
     silk: [
       { kind: "rect", x: 0, z: 0, w: 6.8, h: 2.9 },
@@ -78,7 +78,7 @@ export const footprints: Record<string, Footprint> = {
     ref: { x: 0, z: -4.9 },
   },
   "generic/led-5mm": {
-    pads: [tht("a", -1.27, 1.8, 0.9), tht("k", 1.27, 1.8, 0.9, "rect")],
+    pads: [tht("a", -1.27, 1.9, 1.0), tht("k", 1.27, 1.9, 1.0, "rect")],
     courtyard: { w: 6.6, h: 6.6 },
     silk: [{ kind: "circle", x: 0, z: 0, r: 3.05, flatX: 2.55 }],
     ref: { x: 0, z: -3.9 },
@@ -133,6 +133,36 @@ export const resistorBands = (ohms: number): string[] | null => {
 
 export type Drill = { x: number; z: number; diameter: number };
 
+/** A pad placed on the board, in board millimetres. */
+export type PlacedPad = {
+  pin: string;
+  x: number;
+  z: number;
+  /** Radius of a circle that covers the pad, for clearance checks. */
+  radius: number;
+  drill?: number | undefined;
+};
+
+/**
+ * Board positions of a placed footprint's pads.
+ * @param footprint - Footprint to place.
+ * @param x - Part origin across the board, in millimetres.
+ * @param z - Part origin along the board's depth, in millimetres.
+ * @param rotation - Part rotation in degrees, clockwise seen from above, as stored on the board.
+ * @returns Each pad's centre, covering radius and drill.
+ */
+export const placePads = (footprint: Footprint, x: number, z: number, rotation: number): PlacedPad[] => {
+  const angle = (-rotation * Math.PI) / 180;
+  const [cos, sin] = [Math.cos(angle), Math.sin(angle)];
+  return footprint.pads.map((pad) => ({
+    pin: pad.pin,
+    x: x + pad.x * cos + pad.z * sin,
+    z: z - pad.x * sin + pad.z * cos,
+    radius: pad.shape === "round" ? pad.w / 2 : Math.hypot(pad.w, pad.h) / 2,
+    drill: pad.drill,
+  }));
+};
+
 /**
  * Board positions of a placed footprint's plated holes.
  * @param footprint - Footprint to drill.
@@ -141,12 +171,7 @@ export type Drill = { x: number; z: number; diameter: number };
  * @param rotation - Part rotation in degrees, clockwise seen from above, as stored on the board.
  * @returns One drill per through-hole pad.
  */
-export const drillsFor = (footprint: Footprint, x: number, z: number, rotation: number): Drill[] => {
-  const angle = (-rotation * Math.PI) / 180;
-  const [cos, sin] = [Math.cos(angle), Math.sin(angle)];
-  return footprint.pads.flatMap((pad) =>
-    pad.drill === undefined
-      ? []
-      : [{ x: x + pad.x * cos + pad.z * sin, z: z - pad.x * sin + pad.z * cos, diameter: pad.drill }],
+export const drillsFor = (footprint: Footprint, x: number, z: number, rotation: number): Drill[] =>
+  placePads(footprint, x, z, rotation).flatMap((pad) =>
+    pad.drill === undefined ? [] : [{ x: pad.x, z: pad.z, diameter: pad.drill }],
   );
-};

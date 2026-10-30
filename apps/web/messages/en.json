@@ -146,7 +146,15 @@
         "zoomOut": "Zoom out",
         "fit": "Fit board",
         "top": "Top view",
-        "angled": "3D view"
+        "angled": "3D view",
+        "underside": "Underside view"
+      },
+      "mask": {
+        "label": "Solder mask colour",
+        "black": "Black",
+        "green": "Green",
+        "blue": "Blue",
+        "red": "Red"
       }
     },
     "schematic": {

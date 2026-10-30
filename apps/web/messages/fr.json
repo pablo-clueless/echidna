@@ -146,7 +146,15 @@
         "zoomOut": "Zoom arrière",
         "fit": "Afficher toute la carte",
         "top": "Vue de dessus",
-        "angled": "Vue 3D"
+        "angled": "Vue 3D",
+        "underside": "Vue de dessous"
+      },
+      "mask": {
+        "label": "Couleur du vernis épargne",
+        "black": "Noir",
+        "green": "Vert",
+        "blue": "Bleu",
+        "red": "Rouge"
       }
     },
     "schematic": {

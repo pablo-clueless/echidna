@@ -146,7 +146,15 @@
         "zoomOut": "Alejar",
         "fit": "Ver toda la placa",
         "top": "Vista superior",
-        "angled": "Vista 3D"
+        "angled": "Vista 3D",
+        "underside": "Vista inferior"
+      },
+      "mask": {
+        "label": "Color de la máscara de soldadura",
+        "black": "Negro",
+        "green": "Verde",
+        "blue": "Azul",
+        "red": "Rojo"
       }
     },
     "schematic": {

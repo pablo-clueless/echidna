@@ -146,7 +146,15 @@
         "zoomOut": "ズームアウト",
         "fit": "基板全体を表示",
         "top": "上面図",
-        "angled": "3D ビュー"
+        "angled": "3D ビュー",
+        "underside": "裏面ビュー"
+      },
+      "mask": {
+        "label": "ソルダーレジストの色",
+        "black": "黒",
+        "green": "緑",
+        "blue": "青",
+        "red": "赤"
       }
     },
     "schematic": {
