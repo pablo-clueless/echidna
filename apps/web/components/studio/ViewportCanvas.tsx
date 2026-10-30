@@ -2,15 +2,22 @@
 
 import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Environment, Grid, Lightformer } from "@react-three/drei";
 import { partsById } from "@echidna/library";
 import type { Group } from "three";
+import type { Group } from "three";
 
+import { footprints, resistorBands } from "@/lib/board/footprints";
 import { footprints, resistorBands } from "@/lib/board/footprints";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { applyMaskColour } from "./viewport/materials";
 import { projectCopper } from "@/lib/board/copper";
+import { applyMaskColour } from "./viewport/materials";
+import { projectCopper } from "@/lib/board/copper";
 import { useProjectStore } from "@/stores/project";
+import { useLayoutStore } from "@/stores/layout";
 import { useLayoutStore } from "@/stores/layout";
 import { paramValue } from "@/lib/project/model";
 import { useStudioStore } from "@/stores/studio";
@@ -81,8 +88,11 @@ const StudioLighting = () => (
       <Lightformer form="rect" intensity={1.2} position={[2, 0.8, -0.5]} rotation={[0, -Math.PI / 2, 0]} scale={[4, 0.4, 1]} />
       {/* Soft fill from below, so the solder side reads in the underside view. */}
       <Lightformer form="rect" intensity={0.9} position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3, 3, 1]} />
+      {/* Soft fill from below, so the solder side reads in the underside view. */}
+      <Lightformer form="rect" intensity={0.9} position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3, 3, 1]} />
     </Environment>
     <ambientLight intensity={0.15} />
+    <directionalLight position={[-0.05, -0.12, -0.04]} intensity={0.5} />
     <directionalLight position={[-0.05, -0.12, -0.04]} intensity={0.5} />
     <directionalLight
       position={[0.12, 0.3, 0.16]}
@@ -110,11 +120,23 @@ const AboveBoardOnly = ({ children }: { children: ReactNode }) => {
   return <group ref={ref}>{children}</group>;
 };
 
+/** Hides its children while the camera is below the board, so the floor grid never covers the underside. */
+const AboveBoardOnly = ({ children }: { children: ReactNode }) => {
+  const ref = useRef<Group>(null);
+  useFrame(({ camera }) => {
+    if (ref.current) ref.current.visible = camera.position.y > 0;
+  });
+  return <group ref={ref}>{children}</group>;
+};
+
 export const ViewportCanvas = () => {
   const colours = gridColours[useResolvedTheme()];
   const fontFamily = useMonoFont();
   const components = useProjectStore((s) => s.components);
   const board = useProjectStore((s) => s.board);
+  const wires = useProjectStore((s) => s.wires);
+  const projectName = useProjectStore((s) => s.name);
+  const maskColour = useLayoutStore((s) => s.maskColour);
   const wires = useProjectStore((s) => s.wires);
   const projectName = useProjectStore((s) => s.name);
   const maskColour = useLayoutStore((s) => s.maskColour);
@@ -124,6 +146,10 @@ export const ViewportCanvas = () => {
   const violations = useStudioStore((s) => s.violations);
   const pinCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
   const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
+  const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
+  const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");
+
+  useEffect(() => applyMaskColour(maskColour), [maskColour]);
   const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
   const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");
 
@@ -170,6 +196,8 @@ export const ViewportCanvas = () => {
       <DevHandle />
 
       <group scale={MM}>
+        <Board {...BOARD} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
+        <Traces routing={copper.routing} thickness={BOARD.thickness} />
         <Board {...BOARD} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
         <Traces routing={copper.routing} thickness={BOARD.thickness} />
       </group>
@@ -227,6 +255,7 @@ export const ViewportCanvas = () => {
       </mesh>
 
       <AboveBoardOnly>
+      <AboveBoardOnly>
       <Grid
         args={[1, 1]}
         position={[0, -0.0001, 0]}
@@ -240,6 +269,7 @@ export const ViewportCanvas = () => {
         fadeStrength={1.5}
         infiniteGrid
       />
+      </AboveBoardOnly>
       </AboveBoardOnly>
       <CameraRig enabled={!dragging} centre={[0, TOP, 0]} radius={FRAME_RADIUS} narrowRadius={NARROW_FRAME_RADIUS} />
     </Canvas>
