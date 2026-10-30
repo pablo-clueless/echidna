@@ -45,6 +45,17 @@ describe("parseQuantity", () => {
 });
 
 describe("formatQuantity", () => {
+  it("reads values below a picounit as zero, never as a long negative fraction", () => {
+    expect(formatQuantity(-8.88e-20, "V", "en")).toBe("0 V");
+    expect(formatQuantity(3e-13, "A", "en")).toBe("0 A");
+    expect(formatQuantity(2e-12, "A", "en")).toBe("2 pA");
+  });
+
+  it("gives dimensionless values no prefix", () => {
+    expect(formatQuantity(0.7371, "1", "en", 4)).toBe("0.7371");
+    expect(formatQuantity(416.4, "", "fr", 4)).toBe("416,4");
+  });
+
   it("chooses an SI prefix", () => {
     expect(formatQuantity(4700, "Ω", "en")).toBe("4.7 kΩ");
     expect(formatQuantity(0.0187, "A", "en")).toBe("18.7 mA");

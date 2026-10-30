@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "npn-2n3904",
+  "name": "NPN transistor, 2N3904",
+  "kind": "npn",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "c", "name": "Collector" },
+    { "id": "b", "name": "Base" },
+    { "id": "e", "name": "Emitter" }
+  ],
+  "params": {
+    "saturationCurrent": { "value": 6.734e-15, "unit": "A", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3904" },
+    "forwardBeta": { "value": 416.4, "unit": "1", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3904" },
+    "reverseBeta": { "value": 0.7371, "unit": "1", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3904" },
+    "earlyVoltage": { "value": 74.03, "unit": "V", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3904" }
+  },
+  "ratings": {
+    "maxVoltage": { "value": 40, "unit": "V", "source": "datasheet", "reference": "2N3904 datasheet: VCEO" },
+    "maxCurrent": { "value": 0.2, "unit": "A", "source": "datasheet", "reference": "2N3904 datasheet: continuous collector current" },
+    "maxPower": { "value": 0.625, "unit": "W", "source": "datasheet", "reference": "2N3904 datasheet: total dissipation at 25 °C ambient" }
+  },
+  "ratingPins": {
+    "maxVoltage": ["c", "e"],
+    "maxCurrent": ["c"]
+  },
+  "interfaces": [],
+  "model": "npn",
+  "footprintId": "generic/to-92-ebc",
+  "meshUrl": "generic/to-92"
+}

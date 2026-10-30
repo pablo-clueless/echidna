@@ -231,7 +231,9 @@
       "inductance": "Inductance",
       "outputVoltage": "Tension de sortie",
       "dropoutVoltage": "Tension de déchet",
-      "quiescentCurrent": "Courant de repos"
+      "quiescentCurrent": "Courant de repos",
+      "forwardBeta": "Gain en courant (β)",
+      "thresholdVoltage": "Tension de seuil de grille"
     },
     "provenance": {
       "datasheet": "Fiche technique",
@@ -278,6 +280,22 @@
     "ldo-3v3": {
       "name": "Régulateur 3,3 V (LDO)",
       "summary": "Type 1117, jusqu’à 0,8 A"
+    },
+    "npn-2n3904": {
+      "name": "Transistor NPN, 2N3904",
+      "summary": "Commutation ou amplification, 40 V, 200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "Transistor PNP, 2N3906",
+      "summary": "Commutation côté haut, 40 V, 200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "MOSFET canal N, 2N7000",
+      "summary": "Commutation côté bas, 60 V, 200 mA"
+    },
+    "pmos-bs250": {
+      "name": "MOSFET canal P, type BS250",
+      "summary": "Commutation côté haut, environ 45 V"
     }
   }
 }

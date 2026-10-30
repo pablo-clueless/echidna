@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "nmos-2n7000",
+  "name": "N-channel MOSFET, 2N7000",
+  "kind": "nmos",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "d", "name": "Drain" },
+    { "id": "g", "name": "Gate" },
+    { "id": "s", "name": "Source" }
+  ],
+  "params": {
+    "thresholdVoltage": { "value": 2.1, "unit": "V", "source": "datasheet", "reference": "2N7000 datasheet: typical VGS(th)" },
+    "transconductance": { "value": 0.1, "unit": "A/V²", "source": "estimated", "reference": "Fitted to the typical RDS(on) of about 1.2 Ω at VGS = 10 V" },
+    "channelLengthModulation": { "value": 0.01, "unit": "1/V", "source": "estimated", "reference": "Typical for small-signal MOSFETs" }
+  },
+  "ratings": {
+    "maxVoltage": { "value": 60, "unit": "V", "source": "datasheet", "reference": "2N7000 datasheet: VDSS" },
+    "maxCurrent": { "value": 0.2, "unit": "A", "source": "datasheet", "reference": "2N7000 datasheet: continuous drain current" },
+    "maxPower": { "value": 0.4, "unit": "W", "source": "datasheet", "reference": "2N7000 datasheet: total dissipation at 25 °C ambient" }
+  },
+  "ratingPins": {
+    "maxVoltage": ["d", "s"],
+    "maxCurrent": ["d"]
+  },
+  "interfaces": [],
+  "model": "nmos",
+  "footprintId": "generic/to-92-sgd",
+  "meshUrl": "generic/to-92"
+}

@@ -17,6 +17,8 @@ export type Unit =
   | "C"
   | "W/K"
   | "K/W"
+  | "A/V²"
+  | "1/V"
   | "1";
 
 export type SpecValue = {

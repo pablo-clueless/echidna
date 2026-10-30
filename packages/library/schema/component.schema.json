@@ -9,7 +9,7 @@
     "$schema": { "type": "string" },
     "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
     "name": { "type": "string", "minLength": 1 },
-    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "led", "diode", "regulator"] },
+    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "led", "diode", "regulator", "npn", "pnp", "nmos", "pmos"] },
     "deviceTypes": {
       "type": "array",
       "items": { "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"] },
@@ -55,7 +55,9 @@
         }
       }
     },
-    "model": { "enum": ["ground", "resistor", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator"] },
+    "model": {
+      "enum": ["ground", "resistor", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator", "npn", "pnp", "nmos", "pmos"]
+    },
     "footprintId": { "type": "string" },
     "meshUrl": { "type": "string" },
     "attribution": {
@@ -71,7 +73,7 @@
       "required": ["value", "unit", "source"],
       "properties": {
         "value": { "type": "number" },
-        "unit": { "enum": ["V", "A", "W", "Ω", "F", "H", "K", "m", "kg", "s", "Hz", "N", "J", "C", "W/K", "K/W", "1"] },
+        "unit": { "enum": ["V", "A", "W", "Ω", "F", "H", "K", "m", "kg", "s", "Hz", "N", "J", "C", "W/K", "K/W", "A/V²", "1/V", "1"] },
         "source": { "enum": ["datasheet", "teardown", "estimated"] },
         "reference": { "type": "string" }
       }

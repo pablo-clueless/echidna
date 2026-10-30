@@ -231,7 +231,9 @@
       "inductance": "电感",
       "outputVoltage": "输出电压",
       "dropoutVoltage": "压差",
-      "quiescentCurrent": "静态电流"
+      "quiescentCurrent": "静态电流",
+      "forwardBeta": "电流增益 (β)",
+      "thresholdVoltage": "栅极阈值电压"
     },
     "provenance": {
       "datasheet": "数据手册",
@@ -278,6 +280,22 @@
     "ldo-3v3": {
       "name": "3.3 V 稳压器 (LDO)",
       "summary": "1117 型，最高 0.8 A"
+    },
+    "npn-2n3904": {
+      "name": "NPN 晶体管，2N3904",
+      "summary": "开关或放大，40 V，200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "PNP 晶体管，2N3906",
+      "summary": "高边开关，40 V，200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "N 沟道 MOSFET，2N7000",
+      "summary": "低边开关，60 V，200 mA"
+    },
+    "pmos-bs250": {
+      "name": "P 沟道 MOSFET，BS250 型",
+      "summary": "高边开关，约 45 V"
     }
   }
 }

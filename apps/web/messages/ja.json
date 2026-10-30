@@ -231,7 +231,9 @@
       "inductance": "インダクタンス",
       "outputVoltage": "出力電圧",
       "dropoutVoltage": "ドロップアウト電圧",
-      "quiescentCurrent": "静止電流"
+      "quiescentCurrent": "静止電流",
+      "forwardBeta": "電流増幅率 (β)",
+      "thresholdVoltage": "ゲートしきい値電圧"
     },
     "provenance": {
       "datasheet": "データシート",
@@ -278,6 +280,22 @@
     "ldo-3v3": {
       "name": "3.3 V レギュレーター (LDO)",
       "summary": "1117 タイプ、最大 0.8 A"
+    },
+    "npn-2n3904": {
+      "name": "NPN トランジスタ、2N3904",
+      "summary": "スイッチまたは増幅、40 V、200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "PNP トランジスタ、2N3906",
+      "summary": "ハイサイドスイッチ、40 V、200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "N チャネル MOSFET、2N7000",
+      "summary": "ローサイドスイッチ、60 V、200 mA"
+    },
+    "pmos-bs250": {
+      "name": "P チャネル MOSFET、BS250 タイプ",
+      "summary": "ハイサイドスイッチ、約 45 V"
     }
   }
 }

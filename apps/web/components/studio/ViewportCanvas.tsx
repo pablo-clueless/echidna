@@ -17,11 +17,11 @@ import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
 import { CameraRig } from "./viewport/CameraRig";
 import { PartMesh } from "./viewport/PartMesh";
+import { BOARD } from "@/lib/board/placement";
 import { Traces } from "./viewport/Traces";
 import { Board } from "./viewport/Board";
 
-/** Board size in millimetres: 100 × 70 mm, 1.6 mm FR-4. Placements in the store are in metres. */
-const BOARD = { width: 100, depth: 70, thickness: 1.6 };
+/** Placements in the store are in metres; the board and parts are modelled in millimetres. */
 const MM = 0.001;
 const TOP = BOARD.thickness * MM;
 /** Slightly inside the board's half-diagonal, so "fit" fills a wide view without cropping the corners. */
@@ -31,6 +31,8 @@ const NARROW_FRAME_RADIUS = 0.064;
 const EDGE_MARGIN = 0.004;
 const SNAP = 0.0005;
 const LED_NOMINAL_CURRENT = 0.02;
+/** Transistors print their part number, taken from the end of the spec ID, on the body. */
+const TRANSISTOR_KINDS = new Set(["npn", "pnp", "nmos", "pmos"]);
 
 const gridColours = {
   light: { cell: "#E9DFCF", section: "#D2C4AE" },
@@ -180,6 +182,7 @@ export const ViewportCanvas = () => {
         const selected = selection?.kind === "component" && selection.id === c.id;
         const resistance = spec.kind === "resistor" ? paramValue(c, spec, "resistance") : undefined;
         const outputVoltage = spec.kind === "regulator" ? paramValue(c, spec, "outputVoltage") : undefined;
+        const partNumber = TRANSISTOR_KINDS.has(spec.kind) ? spec.id.split("-").at(-1)?.toUpperCase() : undefined;
         const current = spec.kind === "led" ? (pinCurrents?.[c.id]?.[0] ?? 0) : 0;
         return (
           <group
@@ -204,7 +207,7 @@ export const ViewportCanvas = () => {
             <PartMesh
               footprintId={spec.footprintId}
               bands={resistance === undefined ? undefined : resistorBands(resistance)}
-              marking={outputVoltage === undefined ? undefined : outputVoltage.toFixed(1).replace(".", "V")}
+              marking={outputVoltage === undefined ? partNumber : outputVoltage.toFixed(1).replace(".", "V")}
               glow={current / LED_NOMINAL_CURRENT}
             />
           </group>

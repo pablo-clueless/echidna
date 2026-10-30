@@ -231,7 +231,9 @@
       "inductance": "Inductance",
       "outputVoltage": "Output voltage",
       "dropoutVoltage": "Dropout voltage",
-      "quiescentCurrent": "Quiescent current"
+      "quiescentCurrent": "Quiescent current",
+      "forwardBeta": "Current gain (β)",
+      "thresholdVoltage": "Gate threshold voltage"
     },
     "provenance": {
       "datasheet": "Datasheet",
@@ -278,6 +280,22 @@
     "ldo-3v3": {
       "name": "3.3 V regulator (LDO)",
       "summary": "1117 type, up to 0.8 A"
+    },
+    "npn-2n3904": {
+      "name": "NPN transistor, 2N3904",
+      "summary": "Switch or amplifier, 40 V, 200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "PNP transistor, 2N3906",
+      "summary": "High-side switch, 40 V, 200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "N-channel MOSFET, 2N7000",
+      "summary": "Low-side switch, 60 V, 200 mA"
+    },
+    "pmos-bs250": {
+      "name": "P-channel MOSFET, BS250 type",
+      "summary": "High-side switch, about 45 V"
     }
   }
 }

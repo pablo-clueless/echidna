@@ -13,6 +13,18 @@ export const requiredParams: Record<string, readonly string[]> = {
   currentSource: ["current"],
   diode: ["saturationCurrent"],
   linearRegulator: ["outputVoltage"],
+  npn: ["saturationCurrent", "forwardBeta"],
+  pnp: ["saturationCurrent", "forwardBeta"],
+  nmos: ["thresholdVoltage", "transconductance"],
+  pmos: ["thresholdVoltage", "transconductance"],
+};
+
+/** Library models that are one solver element with a fixed polarity, as SPICE `.model` types are. */
+const polarised: Record<string, Record<string, string>> = {
+  npn: { kind: "bjt", polarity: "npn" },
+  pnp: { kind: "bjt", polarity: "pnp" },
+  nmos: { kind: "mosfet", channel: "n" },
+  pmos: { kind: "mosfet", channel: "p" },
 };
 
 export type CircuitBuild = {
@@ -59,7 +71,14 @@ export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, Component
       return net === undefined ? `p:${c.id}/${pin.id}` : (netNodes[net] ?? `n:${net}`);
     });
     const values = Object.fromEntries(Object.entries(spec.params).map(([k, v]) => [k, v.value]));
-    elements.push({ id: c.id, nodes, kind: spec.model, ...values, ...c.paramOverrides } as CircuitElement);
+    elements.push({
+      id: c.id,
+      nodes,
+      kind: spec.model,
+      ...polarised[spec.model],
+      ...values,
+      ...c.paramOverrides,
+    } as CircuitElement);
   }
 
   return { circuit: { ground: GROUND_NODE, elements }, netNodes, specs: used };

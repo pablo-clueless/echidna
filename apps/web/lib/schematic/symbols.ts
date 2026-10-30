@@ -8,6 +8,12 @@ export const PART_MIME = "application/x-echidna-part";
 /** Pixels per schematic grid unit. */
 export const GRID = 20;
 
+const transistorPins = (): Point[] => [
+  { x: 1, y: -2 },
+  { x: -2, y: 0 },
+  { x: 1, y: 2 },
+];
+
 /** Pin offsets in grid units at rotation 0, in the same order as the spec's pins. */
 const pinOffsets: Record<string, Point[]> = {
   supply: [
@@ -20,6 +26,11 @@ const pinOffsets: Record<string, Point[]> = {
     { x: 3, y: 0 },
     { x: 0, y: 2 },
   ],
+  // Collector or drain at the top, base or gate on the left, emitter or source at the bottom.
+  npn: transistorPins(),
+  pnp: transistorPins(),
+  nmos: transistorPins(),
+  pmos: transistorPins(),
 };
 
 const twoPin: Point[] = [

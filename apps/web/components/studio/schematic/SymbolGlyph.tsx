@@ -12,6 +12,57 @@ const arrows = [0, 0.45]
   .map((dx) => `${line(0 + dx, -0.7, 0.45 + dx, -1.15)}M${g(0.45 + dx)} ${g(-1.15)}l-5 1.5l3.5 3.5z`)
   .join("");
 
+/** Filled arrowhead with its tip at `tip`, pointing along `(dx, dy)`, in grid units. */
+const arrowHead = (tip: [number, number], dx: number, dy: number) => {
+  const length = Math.hypot(dx, dy);
+  const [ux, uy] = [dx / length, dy / length];
+  const [back, half] = [0.38, 0.17];
+  const base = [tip[0] - ux * back, tip[1] - uy * back];
+  const corner = (side: number) => `${g((base[0] ?? 0) - uy * half * side)} ${g((base[1] ?? 0) + ux * half * side)}`;
+  return `M${g(tip[0])} ${g(tip[1])}L${corner(1)}L${corner(-1)}z`;
+};
+
+/** Bipolar transistor: base bar on the left, collector up and emitter down; the arrow sits on the emitter. */
+const bjt = (arrowOut: boolean) => {
+  const emitter = { from: [-0.5, 0.35] as const, to: [1, 1.1] as const };
+  const [dx, dy] = [emitter.to[0] - emitter.from[0], emitter.to[1] - emitter.from[1]];
+  const arrow = arrowOut
+    ? arrowHead([emitter.from[0] + dx * 0.8, emitter.from[1] + dy * 0.8], dx, dy)
+    : arrowHead([emitter.from[0] + dx * 0.25, emitter.from[1] + dy * 0.25], -dx, -dy);
+  return (
+    <>
+      <circle cx={g(0.3)} r={g(1.45)} className="fill-background" />
+      <path
+        d={`${line(-2, 0, -0.5, 0)}${line(-0.5, -0.75, -0.5, 0.75)}${line(-0.5, -0.35, 1, -1.1)}${line(1, -1.1, 1, -2)}${line(...emitter.from, ...emitter.to)}${line(1, 1.1, 1, 2)}`}
+      />
+      <path d={arrow} className="fill-current" />
+    </>
+  );
+};
+
+/** Enhancement MOSFET with the body tied to the source: broken channel, insulated gate, and the body arrow. */
+const mosfet = (arrowIn: boolean) => (
+  <>
+    <circle cx={g(0.3)} r={g(1.45)} className="fill-background" />
+    <path
+      d={[
+        line(-2, 0, -0.75, 0),
+        line(-0.75, -0.7, -0.75, 0.7),
+        line(-0.4, -0.85, -0.4, -0.45),
+        line(-0.4, -0.2, -0.4, 0.2),
+        line(-0.4, 0.45, -0.4, 0.85),
+        line(-0.4, -0.65, 1, -0.65),
+        line(1, -0.65, 1, -2),
+        line(-0.4, 0.65, 1, 0.65),
+        line(1, 0.65, 1, 2),
+        line(-0.4, 0, 1, 0),
+        line(1, 0, 1, 0.65),
+      ].join("")}
+    />
+    <path d={arrowIn ? arrowHead([-0.38, 0], -1, 0) : arrowHead([0.55, 0], 1, 0)} className="fill-current" />
+  </>
+);
+
 /** Glyph paths drawn at rotation 0 around the origin, in pixels. Strokes use `currentColor`. */
 const glyphs: Record<string, ReactNode> = {
   resistor: (
@@ -53,6 +104,10 @@ const glyphs: Record<string, ReactNode> = {
       <rect x={g(-2)} y={g(-1.25)} width={g(4)} height={g(2.5)} rx={2} className="fill-background" />
     </>
   ),
+  npn: bjt(true),
+  pnp: bjt(false),
+  nmos: mosfet(true),
+  pmos: mosfet(false),
 };
 
 /** Pin labels drawn inside boxed symbols, which stay upright regardless of rotation. */
@@ -76,4 +131,8 @@ export const symbolBounds: Record<string, { w: number; h: number }> = {
   supply: { w: 1.1, h: 2 },
   ground: { w: 0.8, h: 1 },
   regulator: { w: 3, h: 2 },
+  npn: { w: 2, h: 2 },
+  pnp: { w: 2, h: 2 },
+  nmos: { w: 2, h: 2 },
+  pmos: { w: 2, h: 2 },
 };

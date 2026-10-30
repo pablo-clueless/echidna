@@ -75,4 +75,14 @@ describe("toCircuit", () => {
     );
     expect(circuit.elements.some((e) => e.id === "X1")).toBe(false);
   });
+
+  it.each([
+    ["npn-2n3904", { kind: "bjt", polarity: "npn" }],
+    ["pnp-2n3906", { kind: "bjt", polarity: "pnp" }],
+    ["nmos-2n7000", { kind: "mosfet", channel: "n" }],
+    ["pmos-bs250", { kind: "mosfet", channel: "p" }],
+  ])("gives %s's solver element its device kind and polarity", (specId, expected) => {
+    const { circuit } = toCircuit({ components: [{ id: "Q1", specId }], nets: [], groundNetId: "" }, partsById);
+    expect(circuit.elements[0]).toMatchObject(expected);
+  });
 });

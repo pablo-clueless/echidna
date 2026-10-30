@@ -83,12 +83,14 @@ const engineering = [
  * @param unit - Unit symbol, never translated.
  * @param locale - Active locale.
  * @param digits - Significant digits.
- * @returns Display text.
+ * @returns Display text. Values too small for the smallest prefix, such as leakage left over from the solver, read
+ * as zero, and dimensionless values (unit `""` or `"1"`) take no prefix.
  */
 export const formatQuantity = (value: number, unit: string, locale: string, digits = 3): string => {
-  const magnitude = Math.abs(value);
-  const step =
-    magnitude === 0 ? engineering[3] : (engineering.find((e) => magnitude >= 10 ** e.exp * 0.9995) ?? engineering.at(-1));
+  if (unit === "" || unit === "1") return numberFormat(locale, digits).format(value);
+  const magnitude = Math.abs(value) < 0.5e-12 ? 0 : Math.abs(value);
+  if (magnitude === 0) return `${numberFormat(locale, digits).format(0)} ${unit}`;
+  const step = engineering.find((e) => magnitude >= 10 ** e.exp * 0.9995) ?? engineering.at(-1);
   const scaled = value / 10 ** (step?.exp ?? 0);
   const number = numberFormat(locale, digits).format(scaled);
   return `${number} ${step?.symbol ?? ""}${unit}`;

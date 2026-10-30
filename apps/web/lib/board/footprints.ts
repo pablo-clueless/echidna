@@ -37,6 +37,28 @@ const tht = (pin: string, x: number, size: number, drill: number, shape: Pad["sh
   drill,
 });
 
+/** TO-92 body outline: a 3.5 mm arc behind the pads and a flat face 1.6 mm in front of them. */
+const TO92_OUTLINE: [number, number][] = (() => {
+  const [r, flat] = [3.5, 1.6];
+  const a = Math.asin(flat / r);
+  return Array.from({ length: 41 }, (_, i): [number, number] => {
+    const t = -a + (i / 40) * (Math.PI + 2 * a);
+    return [r * Math.cos(t), -r * Math.sin(t)];
+  }).concat([[r * Math.cos(-a), flat]]);
+})();
+
+/**
+ * Inline TO-92 on a 2.54 mm pitch, the formed-lead layout hobby boards use. Pin 1 is the square pad on the left.
+ * @param pins - Pin IDs from left to right, seen from the flat face.
+ * @returns The footprint.
+ */
+const to92 = (pins: [string, string, string]): Footprint => ({
+  pads: pins.map((pin, i) => tht(pin, (i - 1) * 2.54, 1.6, 0.9, i === 0 ? "rect" : "round")),
+  courtyard: { w: 7.6, h: 7.4 },
+  silk: [{ kind: "line", points: TO92_OUTLINE }],
+  ref: { x: 0, z: -4.4 },
+});
+
 export const footprints: Record<string, Footprint> = {
   "generic/axial-0.4in": {
     pads: [tht("1", -5.08, 2.0, 1.0), tht("2", 5.08, 2.0, 1.0)],
@@ -83,6 +105,9 @@ export const footprints: Record<string, Footprint> = {
     silk: [{ kind: "circle", x: 0, z: 0, r: 3.05, flatX: 2.55 }],
     ref: { x: 0, z: -3.9 },
   },
+  "generic/to-92-ebc": to92(["e", "b", "c"]),
+  "generic/to-92-sgd": to92(["s", "g", "d"]),
+  "generic/to-92-dgs": to92(["d", "g", "s"]),
   "generic/terminal-2": {
     pads: [tht("pos", -2.54, 2.4, 1.3), tht("neg", 2.54, 2.4, 1.3, "rect")],
     courtyard: { w: 10.9, h: 8.4 },

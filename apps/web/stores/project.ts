@@ -6,12 +6,11 @@ import { create } from "zustand";
 import { nextDesignator, type ProjectData, samePin, type SchematicPlacement } from "@/lib/project/model";
 import { regulatorExample } from "@/lib/project/example";
 import { nextRotation } from "@/lib/schematic/symbols";
+import { freeBoardSpot } from "@/lib/board/placement";
+import { footprints } from "@/lib/board/footprints";
 
 export const PROJECT_STORAGE_KEY = "echidna-project";
 
-/** Board grid spacing for automatic placement, in metres. */
-const BOARD_PITCH = 0.012;
-const BOARD_COLUMNS = 7;
 
 type ProjectActions = {
   addComponent: (specId: string, at: Pick<SchematicPlacement, "x" | "y">) => string | null;
@@ -31,13 +30,16 @@ export type ProjectState = ProjectData & ProjectActions;
 
 const empty = (): ProjectData => ({ name: "", components: [], wires: [], schematic: {}, board: {} });
 
-const freeBoardSpot = (board: ProjectData["board"]) => {
-  const taken = Object.values(board);
-  for (let i = 0; ; i++) {
-    const x = ((i % BOARD_COLUMNS) - (BOARD_COLUMNS - 1) / 2) * BOARD_PITCH;
-    const z = (Math.floor(i / BOARD_COLUMNS) - 1) * BOARD_PITCH;
-    if (!taken.some((p) => Math.hypot(p.x - x, p.z - z) < BOARD_PITCH / 2)) return { x, z };
-  }
+/** Where a new part lands on the board: clear of every placed part's courtyard. */
+const boardSpotFor = (footprintId: string, project: Pick<ProjectData, "components" | "board">) => {
+  const footprint = footprints[footprintId];
+  if (!footprint) return { x: 0, z: 0 };
+  const placed = project.components.flatMap((c) => {
+    const at = project.board[c.id];
+    const placedFootprint = footprints[partsById.get(c.specId)?.footprintId ?? ""];
+    return at && placedFootprint ? [{ at, footprint: placedFootprint }] : [];
+  });
+  return freeBoardSpot(footprint, placed);
 };
 
 let wireCount = 0;
@@ -65,7 +67,10 @@ export const useProjectStore = create<ProjectState>()(
         set((s) => ({
           components: [...s.components, { id, specId }],
           schematic: { ...s.schematic, [id]: { ...at, rotation: 0 } },
-          board: spec.model === "ground" ? s.board : { ...s.board, [id]: { ...freeBoardSpot(s.board), rotation: 0 } },
+          board:
+            spec.model === "ground"
+              ? s.board
+              : { ...s.board, [id]: { ...boardSpotFor(spec.footprintId, s), rotation: 0 } },
         }));
         return id;
       },

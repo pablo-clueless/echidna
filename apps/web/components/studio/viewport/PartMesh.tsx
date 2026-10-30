@@ -25,7 +25,7 @@ type Props = {
   footprintId: string;
   /** Resistor colour bands, first to last. */
   bands?: string[] | null | undefined;
-  /** Laser marking on IC bodies, such as `3V3`. */
+  /** Laser marking on IC and transistor bodies, such as `3V3` or `2N3904`. */
   marking?: string | undefined;
   /** LED brightness, 0 when off and 1 at rated current. */
   glow?: number | undefined;
@@ -92,6 +92,38 @@ const gullWing = (width: number) =>
 const smallWing = gullWing(0.7);
 const tabWing = gullWing(3.0);
 
+// TO-92: a 4.6 mm D-shaped body, 4.5 mm tall, standing 3 mm off the board on three leads formed out to 2.54 mm.
+const TO92_STANDOFF = 3;
+const TO92_HEIGHT = 4.5;
+const TO92_FLAT = 1.0;
+const to92Body = (() => {
+  const r = 2.3;
+  const a = Math.asin(TO92_FLAT / r);
+  const shape = new Shape();
+  // Shape y becomes −z after standing the extrusion up, so the flat face ends up at the front.
+  shape.absarc(0, 0, r, -a, Math.PI + a, false);
+  shape.closePath();
+  const geometry = new ExtrudeGeometry(shape, {
+    depth: TO92_HEIGHT,
+    bevelEnabled: true,
+    bevelThickness: 0.15,
+    bevelSize: 0.12,
+    bevelSegments: 2,
+    curveSegments: 32,
+  });
+  geometry.rotateX(-Math.PI / 2);
+  return geometry;
+})();
+const to92Lead = (x: number) => {
+  const path = new CurvePath<Vector3>();
+  const spread = x * 2;
+  path.add(new LineCurve3(v3(x, TO92_STANDOFF + 0.2), v3(x, 2)));
+  path.add(new QuadraticBezierCurve3(v3(x, 2), v3(x, 1.2), v3(spread, 0.9)));
+  path.add(new LineCurve3(v3(spread, 0.9), v3(spread, -2.2)));
+  return new TubeGeometry(path, 24, 0.22, 8);
+};
+const to92Leads = [-1.27, 0, 1.27].map(to92Lead);
+
 // 5 mm LED: flange, cylinder and dome in clear epoxy, standing 2 mm off the board.
 const LED_STANDOFF = 2;
 const ledBody = new LatheGeometry(
@@ -128,11 +160,20 @@ const markingTexture = (text: string) => {
   return texture;
 };
 
-const Marking = ({ text, y, w, h }: { text: string; y: number; w: number; h: number }) => {
+type MarkingProps = {
+  text: string;
+  y: number;
+  w: number;
+  h: number;
+  /** Distance in front of the origin for a marking on an upright face; omit for a marking on top. */
+  front?: number | undefined;
+};
+
+const Marking = ({ text, y, w, h, front }: MarkingProps) => {
   const texture = useMemo(() => markingTexture(text), [text]);
   useEffect(() => () => texture.dispose(), [texture]);
   return (
-    <mesh position={[0, y, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+    <mesh position={[0, y, front ?? 0]} rotation={front === undefined ? [-Math.PI / 2, 0, 0] : [0, 0, 0]}>
       <planeGeometry args={[w, h]} />
       <meshStandardMaterial color="#8E9196" alphaMap={texture} transparent depthWrite={false} roughness={0.9} />
     </mesh>
@@ -179,6 +220,16 @@ const Sot223 = ({ marking }: { marking?: string | undefined }) => (
       <mesh key={x} geometry={smallWing} material={materials.solder} position={[x + 0.35, 0.05, 1.75]} rotation={[0, -Math.PI / 2, 0]} castShadow />
     ))}
     <mesh geometry={tabWing} material={materials.solder} position={[-1.5, 0.05, -1.75]} rotation={[0, Math.PI / 2, 0]} castShadow />
+  </group>
+);
+
+const To92 = ({ marking }: { marking?: string | undefined }) => (
+  <group>
+    <mesh geometry={to92Body} material={materials.epoxy} position={[0, TO92_STANDOFF, 0]} castShadow />
+    {marking && <Marking text={marking} y={TO92_STANDOFF + TO92_HEIGHT * 0.62} w={3.6} h={1.8} front={TO92_FLAT + 0.16} />}
+    {to92Leads.map((geometry, i) => (
+      <mesh key={i} geometry={geometry} material={materials.lead} castShadow />
+    ))}
   </group>
 );
 
@@ -255,6 +306,10 @@ export const PartMesh = ({ footprintId, bands, marking, glow, ledColour }: Props
       return <Led glow={glow} colour={ledColour} />;
     case "generic/terminal-2":
       return <Terminal />;
+    case "generic/to-92-ebc":
+    case "generic/to-92-sgd":
+    case "generic/to-92-dgs":
+      return <To92 marking={marking} />;
     default:
       return <RoundedBox args={[4, 2, 4]} radius={0.2} position={[0, 1, 0]} material={materials.fallback} castShadow />;
   }

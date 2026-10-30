@@ -27,6 +27,10 @@ const prefixes: Record<string, string> = {
   led: "D",
   diode: "D",
   regulator: "U",
+  npn: "Q",
+  pnp: "Q",
+  nmos: "Q",
+  pmos: "Q",
 };
 
 /**
@@ -114,4 +118,12 @@ export const paramValue = (component: NetlistComponent, spec: ComponentSpec, key
   component.paramOverrides?.[key] ?? spec.params[key]?.value;
 
 /** Device-model internals that are fitted from datasheets rather than chosen by the user, so not shown for editing. */
-export const MODEL_PARAMS: ReadonlySet<string> = new Set(["saturationCurrent", "emissionCoefficient", "seriesResistance"]);
+export const MODEL_PARAMS: ReadonlySet<string> = new Set([
+  "saturationCurrent",
+  "emissionCoefficient",
+  "seriesResistance",
+  "reverseBeta",
+  "earlyVoltage",
+  "transconductance",
+  "channelLengthModulation",
+]);

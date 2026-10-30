@@ -19,7 +19,7 @@ import { PanelEmpty } from "./PanelEmpty";
 const categories = [
   { key: "power", kinds: ["supply", "regulator", "ground"] },
   { key: "passives", kinds: ["resistor", "capacitor", "inductor"] },
-  { key: "semiconductors", kinds: ["led", "diode"] },
+  { key: "semiconductors", kinds: ["led", "diode", "npn", "pnp", "nmos", "pmos"] },
 ] as const;
 
 const PartIcon = ({ kind }: { kind: string }) => {

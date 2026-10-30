@@ -46,10 +46,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Collapsible component categories in the library, remembered per user and opened while searching.
 - Golden DC circuits in `tools/golden`, compared against ngspice in CI to within 0.1 %.
 - Solver models for NPN and PNP bipolar transistors (Ebers–Moll with Early effect) and n- and p-channel MOSFETs (SPICE level 1), with SPICE-style voltage limiting, and six transistor golden circuits.
+- Transistor parts: 2N3904 (NPN), 2N3906 (PNP), 2N7000 (n-channel MOSFET) and BS250 (p-channel MOSFET, all values estimated), with schematic symbols, TO-92 footprints and 3D packages marked with the part number.
 - Playwright end-to-end test of the Phase 1 acceptance scenario in English and French, checking the warning and fail appear within 100 ms.
 - CI builds the WebAssembly solver (with a `wasm-bindgen` CLI matching `Cargo.lock`), runs the end-to-end tests and runs the golden circuits against ngspice.
 
 ### Changed
 
 - The "Try a swap" demo moved from the hero to its own section below it.
+- New parts land on the board where their footprint clears every placed part, the board edge and the mounting holes, instead of on a fixed grid.
+- Readouts show leftover leakage below a picoamp as zero, and unitless values such as current gain without an SI prefix.
 - Token font stacks now read `--font-*` variables first, so the app can supply self-hosted fonts.
