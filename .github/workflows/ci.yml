@@ -47,7 +47,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install ngspice
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ngspice
-      - name: Compare golden DC circuits against ngspice
+      - name: Compare golden DC and transient circuits against ngspice
         run: pnpm turbo run test --filter=@echidna/golden
         env:
           REQUIRE_NGSPICE: "1"

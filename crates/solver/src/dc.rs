@@ -20,7 +20,7 @@ const REGULATOR_OFF_SCALE: f64 = 0.1;
 type Node = Option<usize>;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-enum RegulatorMode {
+pub(crate) enum RegulatorMode {
     /// Output held at the set voltage.
     Regulating,
     /// Input too low to regulate: output follows it, a dropout voltage below.
@@ -55,8 +55,17 @@ struct Prepared<'a> {
     branch: usize,
 }
 
+/// Linear stand-in for a capacitor or inductor over one time step, from the integration formula. A capacitor
+/// passes `gain·v + offset` from its first pin to its second; an inductor holds `v = gain·i + offset` across itself.
+/// The default, all zero, is the DC case: capacitors open and inductors shorted.
+#[derive(Clone, Copy, Default)]
+pub(crate) struct Companion {
+    pub gain: f64,
+    pub offset: f64,
+}
+
 #[derive(Clone, Copy)]
-enum State {
+pub(crate) enum State {
     None,
     Junction {
         vd: f64,
@@ -80,111 +89,188 @@ enum State {
 /// Capacitors are open and inductors are shorts. Diode junction voltages are limited between iterations
 /// (SPICE `pnjlim`) so exponential models converge from a cold start.
 pub fn solve_dc(circuit: &Circuit) -> Result<DcSolution, SolveError> {
-    let mut index: HashMap<&str, usize> = HashMap::new();
-    let mut names: Vec<&str> = Vec::new();
-    let mut prepared = Vec::with_capacity(circuit.elements.len());
-    for element in &circuit.elements {
-        validate(element)?;
-        let pins: Vec<Node> = element
-            .nodes
-            .iter()
-            .map(|name| {
-                (*name != circuit.ground).then(|| {
-                    *index.entry(name.as_str()).or_insert_with(|| {
-                        names.push(name.as_str());
-                        names.len() - 1
+    let network = Network::new(circuit)?;
+    let companions = vec![Companion::default(); circuit.elements.len()];
+    let mut states = network.initial_states();
+    let mut x = network.unknowns();
+    let iterations = network.newton(&mut x, &mut states, &companions)?;
+    Ok(network.report(&x, &companions, iterations))
+}
+
+/// A validated circuit numbered into MNA unknowns: external nodes, then internal nodes, then branch currents.
+pub(crate) struct Network<'a> {
+    circuit: &'a Circuit,
+    names: Vec<&'a str>,
+    prepared: Vec<Prepared<'a>>,
+    external: usize,
+    first_branch: usize,
+    size: usize,
+}
+
+impl<'a> Network<'a> {
+    pub(crate) fn new(circuit: &'a Circuit) -> Result<Self, SolveError> {
+        let mut index: HashMap<&str, usize> = HashMap::new();
+        let mut names: Vec<&str> = Vec::new();
+        let mut prepared = Vec::with_capacity(circuit.elements.len());
+        for element in &circuit.elements {
+            validate(element)?;
+            let pins: Vec<Node> = element
+                .nodes
+                .iter()
+                .map(|name| {
+                    (*name != circuit.ground).then(|| {
+                        *index.entry(name.as_str()).or_insert_with(|| {
+                            names.push(name.as_str());
+                            names.len() - 1
+                        })
                     })
                 })
+                .collect();
+            prepared.push((element, pins));
+        }
+
+        let external = names.len();
+        let mut next = external;
+        let mut prepared: Vec<Prepared> = prepared
+            .into_iter()
+            .map(|(element, pins)| {
+                let internal = (element.kind.internal_node_count() > 0).then(|| {
+                    next += 1;
+                    next - 1
+                });
+                Prepared {
+                    element,
+                    pins,
+                    internal,
+                    branch: usize::MAX,
+                }
             })
             .collect();
-        prepared.push((element, pins));
-    }
-
-    let external = names.len();
-    let mut next = external;
-    let mut prepared: Vec<Prepared> = prepared
-        .into_iter()
-        .map(|(element, pins)| {
-            let internal = (element.kind.internal_node_count() > 0).then(|| {
+        let first_branch = next;
+        for p in &mut prepared {
+            if p.element.kind.branch_count() > 0 {
+                p.branch = next;
                 next += 1;
-                next - 1
-            });
-            Prepared {
-                element,
-                pins,
-                internal,
-                branch: usize::MAX,
             }
+        }
+        Ok(Self {
+            circuit,
+            names,
+            prepared,
+            external,
+            first_branch,
+            size: next,
         })
-        .collect();
-    let first_branch = next;
-    for p in &mut prepared {
-        if p.element.kind.branch_count() > 0 {
-            p.branch = next;
-            next += 1;
-        }
     }
-    let size = next;
 
-    let mut states: Vec<State> = prepared
-        .iter()
-        .map(|p| match p.element.kind {
-            ElementKind::Diode {
-                saturation_current,
-                emission_coefficient,
-                ..
-            } => State::Junction {
-                vd: critical_voltage(saturation_current, emission_coefficient * THERMAL_VOLTAGE),
-            },
-            ElementKind::LinearRegulator { .. } => State::Regulator {
-                mode: RegulatorMode::Regulating,
-            },
-            ElementKind::Bjt {
-                saturation_current, ..
-            } => State::Bjt {
-                vbe: critical_voltage(saturation_current, THERMAL_VOLTAGE),
-                vbc: 0.0,
-            },
-            ElementKind::Mosfet {
-                channel,
-                threshold_voltage,
-                ..
-            } => State::Mosfet {
-                vgs: channel.sign() * threshold_voltage,
-                vds: 0.0,
-            },
-            _ => State::None,
+    /// A zeroed vector of unknowns, the starting point for a cold solve.
+    pub(crate) fn unknowns(&self) -> Vec<f64> {
+        vec![0.0; self.size]
+    }
+
+    /// Starting guesses for the non-linear devices, near where they conduct.
+    pub(crate) fn initial_states(&self) -> Vec<State> {
+        self.prepared
+            .iter()
+            .map(|p| match p.element.kind {
+                ElementKind::Diode {
+                    saturation_current,
+                    emission_coefficient,
+                    ..
+                } => State::Junction {
+                    vd: critical_voltage(
+                        saturation_current,
+                        emission_coefficient * THERMAL_VOLTAGE,
+                    ),
+                },
+                ElementKind::LinearRegulator { .. } => State::Regulator {
+                    mode: RegulatorMode::Regulating,
+                },
+                ElementKind::Bjt {
+                    saturation_current, ..
+                } => State::Bjt {
+                    vbe: critical_voltage(saturation_current, THERMAL_VOLTAGE),
+                    vbc: 0.0,
+                },
+                ElementKind::Mosfet {
+                    channel,
+                    threshold_voltage,
+                    ..
+                } => State::Mosfet {
+                    vgs: channel.sign() * threshold_voltage,
+                    vds: 0.0,
+                },
+                _ => State::None,
+            })
+            .collect()
+    }
+
+    /// Iterates from `x` and `states` until both settle, leaving the solution in them, and returns the number of
+    /// iterations taken.
+    pub(crate) fn newton(
+        &self,
+        x: &mut Vec<f64>,
+        states: &mut [State],
+        companions: &[Companion],
+    ) -> Result<usize, SolveError> {
+        for iteration in 1..=MAX_ITERATIONS {
+            let mut system = System::new(self.size);
+            for row in 0..self.external {
+                system.add(row, row, GSHUNT);
+            }
+            for ((p, state), companion) in self.prepared.iter().zip(&*states).zip(companions) {
+                stamp(&mut system, p, *state, *companion);
+            }
+            let x_new = system.solve().ok_or(SolveError::Singular)?;
+
+            let mut settled = iteration > 1;
+            for (p, state) in self.prepared.iter().zip(states.iter_mut()) {
+                settled &= update(p, state, &x_new);
+            }
+            settled &= x_new.iter().zip(&*x).enumerate().all(|(i, (new, old))| {
+                let floor = if i < self.first_branch { VNTOL } else { ABSTOL };
+                (new - old).abs() <= RELTOL * new.abs().max(old.abs()) + floor
+            });
+            *x = x_new;
+
+            if settled {
+                return Ok(iteration);
+            }
+        }
+        Err(SolveError::NoConvergence {
+            iterations: MAX_ITERATIONS,
         })
-        .collect();
-
-    let mut x = vec![0.0; size];
-    for iteration in 1..=MAX_ITERATIONS {
-        let mut system = System::new(size);
-        for row in 0..external {
-            system.add(row, row, GSHUNT);
-        }
-        for (p, state) in prepared.iter().zip(&states) {
-            stamp(&mut system, p, *state);
-        }
-        let x_new = system.solve().ok_or(SolveError::Singular)?;
-
-        let mut settled = iteration > 1;
-        for (p, state) in prepared.iter().zip(states.iter_mut()) {
-            settled &= update(p, state, &x_new);
-        }
-        settled &= x_new.iter().zip(&x).enumerate().all(|(i, (new, old))| {
-            let floor = if i < first_branch { VNTOL } else { ABSTOL };
-            (new - old).abs() <= RELTOL * new.abs().max(old.abs()) + floor
-        });
-        x = x_new;
-
-        if settled {
-            return Ok(report(circuit, &names, &prepared, &x, iteration));
-        }
     }
-    Err(SolveError::NoConvergence {
-        iterations: MAX_ITERATIONS,
-    })
+
+    /// The quantity each element stores energy in: a capacitor's voltage or an inductor's current. Zero for
+    /// everything else.
+    pub(crate) fn stored(&self, x: &[f64]) -> Vec<f64> {
+        let v = |n: Node| n.map_or(0.0, |i| x[i]);
+        self.prepared
+            .iter()
+            .map(|p| match p.element.kind {
+                ElementKind::Capacitor { .. } => v(p.pins[0]) - v(p.pins[1]),
+                ElementKind::Inductor { .. } => x[p.branch],
+                _ => 0.0,
+            })
+            .collect()
+    }
+
+    pub(crate) fn report(
+        &self,
+        x: &[f64],
+        companions: &[Companion],
+        iterations: usize,
+    ) -> DcSolution {
+        report(
+            self.circuit,
+            &self.names,
+            &self.prepared,
+            x,
+            companions,
+            iterations,
+        )
+    }
 }
 
 fn validate(element: &Element) -> Result<(), SolveError> {
@@ -337,7 +423,7 @@ fn branch_voltage(s: &mut System, k: usize, p: Node, n: Node, v: f64) {
     s.add_rhs(k, v);
 }
 
-fn stamp(s: &mut System, p: &Prepared, state: State) {
+fn stamp(s: &mut System, p: &Prepared, state: State, companion: Companion) {
     let pin = |i: usize| p.pins[i];
     match (&p.element.kind, state) {
         (ElementKind::Resistor { resistance }, _) => {
@@ -354,10 +440,14 @@ fn stamp(s: &mut System, p: &Prepared, state: State) {
                 conductance(s, 1.0 / contact_resistance, pin(0), pin(1));
             }
         }
-        (ElementKind::Capacitor { .. }, _) => {}
+        (ElementKind::Capacitor { .. }, _) => {
+            conductance(s, companion.gain, pin(0), pin(1));
+            current(s, companion.offset, pin(0), pin(1));
+        }
         (ElementKind::Inductor { .. }, _) => {
             branch_kcl(s, p.branch, pin(0), pin(1));
-            branch_voltage(s, p.branch, pin(0), pin(1), 0.0);
+            branch_voltage(s, p.branch, pin(0), pin(1), companion.offset);
+            s.add(p.branch, p.branch, -companion.gain);
         }
         (ElementKind::VoltageSource { voltage }, _) => {
             branch_kcl(s, p.branch, pin(0), pin(1));
@@ -608,6 +698,7 @@ fn report(
     names: &[&str],
     prepared: &[Prepared],
     x: &[f64],
+    companions: &[Companion],
     iterations: usize,
 ) -> DcSolution {
     let v = |n: Node| n.map_or(0.0, |i| x[i]);
@@ -621,7 +712,7 @@ fn report(
     let mut pin_currents = BTreeMap::new();
     let mut branch_currents = BTreeMap::new();
     let mut component_power = BTreeMap::new();
-    for p in prepared {
+    for (p, companion) in prepared.iter().zip(companions) {
         let pin = |i: usize| p.pins[i];
         let currents = match &p.element.kind {
             ElementKind::Resistor { resistance } => {
@@ -639,7 +730,10 @@ fn report(
                 };
                 vec![i, -i]
             }
-            ElementKind::Capacitor { .. } => vec![0.0, 0.0],
+            ElementKind::Capacitor { .. } => {
+                let i = companion.gain * (v(pin(0)) - v(pin(1))) + companion.offset;
+                vec![i, -i]
+            }
             ElementKind::Inductor { .. } | ElementKind::VoltageSource { .. } => {
                 vec![x[p.branch], -x[p.branch]]
             }

@@ -54,6 +54,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Transistor parts: 2N3904 (NPN), 2N3906 (PNP), 2N7000 (n-channel MOSFET) and BS250 (p-channel MOSFET, all values estimated), with schematic symbols, TO-92 footprints and 3D packages marked with the part number.
 - Playwright end-to-end test of the Phase 1 acceptance scenario in English and French, checking the warning and fail appear within 100 ms.
 - CI builds the WebAssembly solver (with a `wasm-bindgen` CLI matching `Cargo.lock`), runs the end-to-end tests and runs the golden circuits against ngspice.
+- Transient analysis in the solver (`solveTransient` in WebAssembly): simulates a circuit from switch-on, with capacitors discharged and inductors carrying no current, in equal steps using backward Euler for the first and Gear 2 after. It returns node voltages, pin currents and power over time. Six golden transient circuits (RC charge, RL rise, ringing RLC, an LED switching on as a capacitor charges, a regulator feeding an RC filter, and an NPN turned on through a base RC delay) match ngspice within 1 %.
 
 ### Changed
 

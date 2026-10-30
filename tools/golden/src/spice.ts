@@ -1,4 +1,10 @@
-import type { Circuit } from "@echidna/solver/types";
+import type { Circuit, TransientOptions } from "@echidna/solver/types";
+
+/** A transient run to compare, with the times to sample it at. Each time must fall on a step. */
+export type TransientCheck = TransientOptions & { at: number[] };
+
+/** One value ngspice measures during a transient run. */
+export type Measure = { time: number; name: string } & ({ node: string } | { source: string });
 
 /** A SPICE deck for a circuit, with the names needed to read results back. */
 export type SpiceDeck = {
@@ -7,21 +13,25 @@ export type SpiceDeck = {
   nodes: Map<string, string>;
   /** Our voltage source id → SPICE vector holding its branch current. */
   sourceCurrents: Map<string, string>;
+  /** For a transient deck, the measurements it prints. */
+  measures: Measure[];
 };
 
 const value = (n: number) => n.toExponential(12);
 
 /**
- * Writes an ngspice deck that runs a DC operating point and prints every node voltage and source current.
+ * Writes an ngspice deck that prints every node voltage and source current: at the DC operating point, or with
+ * `transient`, at each of its sample times in a run from switch-on (`uic`), with the step capped at ours.
  * Node and element names are replaced with SPICE-safe ones, since ours contain `:` and `/`.
  * Our behavioural regulator becomes a B-source holding `min(V(gnd) + Vset, V(in) − dropout)` behind a 0 V
  * sense source, a current-controlled source drawing the output current from the input, and the quiescent current.
  * MOSFETs have their body tied to the source, as ours do.
  * @param circuit - Circuit in solver format.
  * @param title - First line of the deck.
+ * @param transient - A transient run to measure instead of the operating point.
  * @returns The deck and name mappings.
  */
-export const toSpice = (circuit: Circuit, title: string): SpiceDeck => {
+export const toSpice = (circuit: Circuit, title: string, transient?: TransientCheck): SpiceDeck => {
   const nodes = new Map<string, string>([[circuit.ground, "0"]]);
   const node = (name: string) => {
     let spice = nodes.get(name);
@@ -98,8 +108,25 @@ export const toSpice = (circuit: Circuit, title: string): SpiceDeck => {
     }
   });
 
-  lines.push(".control", "op", "print all", ".endc", ".end", "");
-  return { netlist: lines.join("\n"), nodes, sourceCurrents };
+  const measures: Measure[] = [];
+  if (transient) {
+    const step = value(transient.timeStep);
+    transient.at.forEach((time, i) => {
+      for (const [ours, spice] of nodes) {
+        if (spice !== "0") measures.push({ time, name: `m${i}_${spice}`, node: ours });
+      }
+      for (const [id, vector] of sourceCurrents) measures.push({ time, name: `m${i}_${vector.replace("#", "_")}`, source: id });
+    });
+    lines.push(".control", `tran ${step} ${value(transient.stopTime)} 0 ${step} uic`);
+    for (const m of measures) {
+      const quantity = "node" in m ? `v(${nodes.get(m.node)})` : `i(${sourceCurrents.get(m.source)?.replace("#branch", "")})`;
+      lines.push(`meas tran ${m.name} find ${quantity} at=${value(m.time)}`);
+    }
+    lines.push(".endc", ".end", "");
+  } else {
+    lines.push(".control", "op", "print all", ".endc", ".end", "");
+  }
+  return { netlist: lines.join("\n"), nodes, sourceCurrents, measures };
 };
 
 const assignment = /^\s*(?:v\(([^)]+)\)|([\w#.]+))\s*=\s*([-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?)\s*$/i;

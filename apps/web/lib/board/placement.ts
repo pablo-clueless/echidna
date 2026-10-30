@@ -2,7 +2,7 @@ import type { BoardPlacement, BoardSize } from "@/lib/project/model";
 import type { Footprint } from "./footprints";
 
 /** Default board in millimetres: 100 × 70 mm, 1.6 mm FR-4. */
-export const BOARD = { width: 100, depth: 70, thickness: 1.6 } as const;
+export const BOARD = { width: 100, depth: 55, thickness: 1.6 } as const;
 /** Smallest and largest board outline the studio offers, in millimetres. */
 export const BOARD_LIMITS = { min: { width: 40, depth: 30 }, max: { width: 200, depth: 200 } } as const;
 /** Part centres stay this far inside the board edge, in millimetres. */

@@ -54,6 +54,25 @@ export type SolveOutcome =
   | { ok: true; solution: DcSolution; durationMs: number }
   | { ok: false; error: SolveError; durationMs: number };
 
+/** Settings for a transient run, in seconds. Steps are equal, no longer than `timeStep`, and end at `stopTime`. */
+export type TransientOptions = { stopTime: number; timeStep: number };
+
+/** A transient run from switch-on. Every series is sampled at `times`, which start one step in. */
+export type TransientSolution = {
+  times: number[];
+  nodeVoltages: Record<string, number[]>;
+  /** Per element, one series per pin, in pin order. */
+  pinCurrents: Record<string, number[][]>;
+  componentPower: Record<string, number[]>;
+  iterations: number;
+};
+
+export type TransientError = SolveError | { code: "invalidAnalysis"; reason: string };
+
+export type TransientOutcome =
+  | { ok: true; solution: TransientSolution; durationMs: number }
+  | { ok: false; error: TransientError; durationMs: number };
+
 /**
  * Narrows an unknown thrown value to a structured solver error.
  * @param value - Anything caught from the WASM boundary.

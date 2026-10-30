@@ -1,5 +1,7 @@
 import type { Circuit } from "@echidna/solver/types";
 
+import type { TransientCheck } from "./spice";
+
 /** Red 5 mm LED model from `packages/library/parts/led-5mm.json`. */
 const RED_LED = { saturationCurrent: 3.23e-19, emissionCoefficient: 2 } as const;
 /** A 1N4148-class signal diode, with series resistance. */
@@ -200,5 +202,86 @@ export const goldenDc: { name: string; circuit: Circuit }[] = [
         { id: "M1", kind: "mosfet", nodes: ["d", "g", "vdd"], ...PMOS },
       ],
     },
+  },
+];
+
+/** Golden transient circuits, each run from switch-on and sampled at times that fall on a step. */
+export const goldenTransient: { name: string; circuit: Circuit; check: TransientCheck }[] = [
+  {
+    name: "RC charge",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 5 },
+        { id: "R1", kind: "resistor", nodes: ["in", "out"], resistance: 1000 },
+        { id: "C1", kind: "capacitor", nodes: ["out", "0"], capacitance: 1e-6 },
+      ],
+    },
+    check: { stopTime: 5e-3, timeStep: 1e-5, at: [1e-4, 5e-4, 1e-3, 2e-3, 5e-3] },
+  },
+  {
+    name: "RL current rise",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 12 },
+        { id: "R1", kind: "resistor", nodes: ["in", "a"], resistance: 100 },
+        { id: "L1", kind: "inductor", nodes: ["a", "0"], inductance: 10e-3 },
+      ],
+    },
+    check: { stopTime: 5e-4, timeStep: 1e-6, at: [1e-5, 5e-5, 1e-4, 2e-4, 5e-4] },
+  },
+  {
+    name: "series RLC ringing",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 5 },
+        { id: "R1", kind: "resistor", nodes: ["in", "a"], resistance: 10 },
+        { id: "L1", kind: "inductor", nodes: ["a", "b"], inductance: 1e-3 },
+        { id: "C1", kind: "capacitor", nodes: ["b", "0"], capacitance: 1e-6 },
+      ],
+    },
+    check: { stopTime: 1e-3, timeStep: 2e-7, at: [5e-5, 1e-4, 2.5e-4, 4e-4, 7e-4, 1e-3] },
+  },
+  {
+    name: "LED switching on as a capacitor charges",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 5 },
+        { id: "R1", kind: "resistor", nodes: ["in", "a"], resistance: 1000 },
+        { id: "C1", kind: "capacitor", nodes: ["a", "0"], capacitance: 10e-6 },
+        { id: "D1", kind: "diode", nodes: ["a", "0"], ...RED_LED },
+      ],
+    },
+    check: { stopTime: 5e-2, timeStep: 5e-5, at: [2e-3, 1e-2, 2e-2, 3e-2, 5e-2] },
+  },
+  {
+    name: "3.3 V regulator feeding an RC filter",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 5 },
+        { id: "U1", kind: "linearRegulator", nodes: ["in", "out", "0"], ...LDO_3V3 },
+        { id: "R1", kind: "resistor", nodes: ["out", "f"], resistance: 100 },
+        { id: "C1", kind: "capacitor", nodes: ["f", "0"], capacitance: 100e-6 },
+      ],
+    },
+    check: { stopTime: 5e-2, timeStep: 5e-5, at: [1e-3, 5e-3, 1e-2, 2e-2, 5e-2] },
+  },
+  {
+    name: "NPN turned on through a base RC delay",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["vcc", "0"], voltage: 5 },
+        { id: "RB", kind: "resistor", nodes: ["vcc", "b"], resistance: 10_000 },
+        { id: "CB", kind: "capacitor", nodes: ["b", "0"], capacitance: 1e-6 },
+        { id: "RC", kind: "resistor", nodes: ["vcc", "c"], resistance: 1000 },
+        { id: "Q1", kind: "bjt", nodes: ["c", "b", "0"], ...NPN },
+      ],
+    },
+    check: { stopTime: 3e-2, timeStep: 2e-5, at: [1e-3, 1.4e-3, 2e-3, 5e-3, 3e-2] },
   },
 ];

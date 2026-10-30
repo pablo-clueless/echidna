@@ -167,6 +167,31 @@ pub struct DcSolution {
     pub iterations: usize,
 }
 
+/// Settings for a transient analysis.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TransientOptions {
+    /// How long to simulate, in seconds.
+    pub stop_time: f64,
+    /// Longest time step, in seconds. The run takes equal steps no longer than this that end exactly at `stop_time`.
+    pub time_step: f64,
+}
+
+/// Result of a transient analysis, one entry per time step. Series are sampled at `times`, which start one step
+/// after switch-on and end at the stop time.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TransientSolution {
+    pub times: Vec<f64>,
+    pub node_voltages: std::collections::BTreeMap<String, Vec<f64>>,
+    /// Current into every pin of each element, in pin order, each a series over `times`.
+    pub pin_currents: std::collections::BTreeMap<String, Vec<Vec<f64>>>,
+    /// Power absorbed by each element over `times`, in watts. Sources delivering power are negative.
+    pub component_power: std::collections::BTreeMap<String, Vec<f64>>,
+    /// Newton–Raphson iterations across all steps.
+    pub iterations: usize,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, thiserror::Error)]
 #[serde(
     tag = "code",
@@ -186,4 +211,6 @@ pub enum SolveError {
     Singular,
     #[error("the solution did not converge after {iterations} iterations")]
     NoConvergence { iterations: usize },
+    #[error("the analysis settings are invalid: {reason}")]
+    InvalidAnalysis { reason: String },
 }

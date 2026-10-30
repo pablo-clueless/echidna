@@ -1,12 +1,12 @@
+import { solveNow, solveTransientNow } from "@echidna/solver/solve";
 import { beforeAll, describe, expect, it } from "vitest";
-import { solveNow } from "@echidna/solver/solve";
 import { initSync } from "@echidna/solver/wasm";
 import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 
 import { ngspiceAvailable, runNgspice } from "./ngspice";
+import { goldenDc, goldenTransient } from "./circuits";
 import { parsePrintAll, toSpice } from "./spice";
-import { goldenDc } from "./circuits";
 
 /** HANDOFF §5: DC results must match ngspice within 0.1 %. */
 const DC_TOLERANCE = 1e-3;
@@ -67,6 +67,59 @@ describe.skipIf(!available)("golden DC circuits against ngspice", () => {
       const actual = outcome.solution.branchCurrents[id];
       if (expected === undefined || actual === undefined) mismatches.push(`I(${id}): missing`);
       else if (!close(actual, expected, CURRENT_FLOOR)) mismatches.push(`I(${id}): ${actual} vs ngspice ${expected}`);
+    }
+    expect(mismatches, deck.netlist).toEqual([]);
+  });
+});
+
+/** HANDOFF §5: transient results must match ngspice within 1 %. */
+const TRANSIENT_TOLERANCE = 1e-2;
+/** Transient floors sit higher, as series pass through zero, where both simulators' step error is largest. */
+const TRANSIENT_VOLTAGE_FLOOR = 1e-2;
+const TRANSIENT_CURRENT_FLOOR = 1e-5;
+
+const runTransient = ({ circuit, check }: (typeof goldenTransient)[number]) => {
+  const outcome = solveTransientNow(circuit, check);
+  if (!outcome.ok) throw new Error(`our solver failed: ${outcome.error.code}`);
+  const { solution } = outcome;
+  const sample = (series: number[] | undefined, time: number) => {
+    const step = solution.times[0] ?? 0;
+    const index = solution.times.findIndex((t) => Math.abs(t - time) < step / 2);
+    return index < 0 ? undefined : series?.[index];
+  };
+  return { solution, sample };
+};
+
+describe("golden transient circuits in our solver", () => {
+  it.each(goldenTransient)("$name runs to its stop time", (golden) => {
+    const { solution } = runTransient(golden);
+    expect(solution.times.at(-1)).toBeCloseTo(golden.check.stopTime, 12);
+  });
+
+  it("charges the RC filter to 63 % in one time constant", () => {
+    const golden = goldenTransient.find((g) => g.name === "RC charge");
+    if (!golden) throw new Error("missing circuit");
+    const { solution, sample } = runTransient(golden);
+    expect(sample(solution.nodeVoltages.out, 1e-3)).toBeCloseTo(5 * (1 - Math.exp(-1)), 3);
+  });
+});
+
+describe.skipIf(!available)("golden transient circuits against ngspice", () => {
+  it.each(goldenTransient)("$name", (golden) => {
+    const { solution, sample } = runTransient(golden);
+    const deck = toSpice(golden.circuit, golden.name, golden.check);
+    const reference = parsePrintAll(runNgspice(deck.netlist));
+
+    const mismatches: string[] = [];
+    for (const m of deck.measures) {
+      const expected = reference.get(m.name);
+      const [label, actual, floor] =
+        "node" in m
+          ? [`V(${m.node})`, sample(solution.nodeVoltages[m.node], m.time), TRANSIENT_VOLTAGE_FLOOR]
+          : [`I(${m.source})`, sample(solution.pinCurrents[m.source]?.[0], m.time), TRANSIENT_CURRENT_FLOOR];
+      if (expected === undefined || actual === undefined) mismatches.push(`${label} at ${m.time} s: missing`);
+      else if (Math.abs(actual - expected) > TRANSIENT_TOLERANCE * Math.max(Math.abs(expected), floor))
+        mismatches.push(`${label} at ${m.time} s: ${actual} vs ngspice ${expected}`);
     }
     expect(mismatches, deck.netlist).toEqual([]);
   });
