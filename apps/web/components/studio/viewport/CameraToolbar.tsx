@@ -1,10 +1,10 @@
 "use client";
 
-import { Box, FlipVertical2, Minus, Plus, Scan, SquareDashed, type LucideIcon } from "lucide-react";
+import { Box, Flame, FlipVertical2, Minus, Plus, Scan, SquareDashed, Zap, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { type MaskColour, maskColours, type Overlay, useLayoutStore } from "@/stores/layout";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { type MaskColour, maskColours, useLayoutStore } from "@/stores/layout";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { type CameraCommands, useViewportStore } from "@/stores/viewport";
 import { Button } from "@/components/ui/button";
@@ -38,15 +38,20 @@ const groups: { command: Command; icon: LucideIcon }[][] = [
   ],
 ];
 
+const overlayIcons: Record<Overlay, LucideIcon> = { current: Zap, heat: Flame };
+
 const shown = (key: string) => (key === "-" ? "−" : key.length === 1 ? key.toUpperCase() : key);
 
-/** On-screen controls for the 3D view: zoom, fit the board, preset angles and the solder-mask colour. */
+/** On-screen controls for the 3D view: zoom, fit the board, preset angles, simulation overlays and the solder-mask colour. */
 export const CameraToolbar = () => {
   const t = useTranslations("Studio.viewport.controls");
   const tMask = useTranslations("Studio.viewport.mask");
+  const tOverlays = useTranslations("Studio.viewport.overlays");
   const camera = useViewportStore((s) => s.camera);
   const maskColour = useLayoutStore((s) => s.maskColour);
   const setMaskColour = useLayoutStore((s) => s.setMaskColour);
+  const shownOverlays = useLayoutStore((s) => s.overlays);
+  const setOverlays = useLayoutStore((s) => s.setOverlays);
 
   return (
     <div
@@ -79,6 +84,34 @@ export const CameraToolbar = () => {
           ))}
         </div>
       ))}
+      <ToggleGroup
+        type="multiple"
+        orientation="vertical"
+        size="sm"
+        spacing={0}
+        aria-label={tOverlays("label")}
+        value={shownOverlays}
+        onValueChange={(value) => setOverlays(value as Overlay[])}
+        className="rounded-lg border bg-background/85 p-0.5 shadow-xs backdrop-blur-sm"
+      >
+        {(Object.keys(overlayIcons) as Overlay[]).map((overlay) => {
+          const Icon = overlayIcons[overlay];
+          return (
+            <Tooltip key={overlay}>
+              <TooltipTrigger asChild>
+                <ToggleGroupItem
+                  value={overlay}
+                  aria-label={tOverlays(overlay)}
+                  className="size-8 aria-pressed:bg-primary/15 aria-pressed:text-primary-text"
+                >
+                  <Icon />
+                </ToggleGroupItem>
+              </TooltipTrigger>
+              <TooltipContent side="left">{tOverlays(overlay)}</TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </ToggleGroup>
       <ToggleGroup
         type="single"
         orientation="vertical"

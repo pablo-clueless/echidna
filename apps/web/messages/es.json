@@ -149,6 +149,14 @@
         "angled": "Vista 3D",
         "underside": "Vista inferior"
       },
+      "overlays": {
+        "label": "Capas",
+        "current": "Flujo de corriente",
+        "heat": "Calor",
+        "currentHint": "Los trazos recorren el cobre en el sentido de la corriente, más rápido cuanta más corriente hay.",
+        "heatTitle": "Temperatura estimada de los componentes",
+        "unsolved": "Las capas aparecen cuando se simula el circuito."
+      },
       "mask": {
         "label": "Color de la máscara de soldadura",
         "black": "Negro",

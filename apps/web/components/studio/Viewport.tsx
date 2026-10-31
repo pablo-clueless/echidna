@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 
 import { cameraShortcuts, CameraToolbar } from "./viewport/CameraToolbar";
+import { OverlayLegend } from "./viewport/OverlayLegend";
 import { useViewportStore } from "@/stores/viewport";
 
 const ViewportCanvas = dynamic(() => import("./ViewportCanvas").then((m) => m.ViewportCanvas), { ssr: false });
@@ -57,6 +58,7 @@ export const Viewport = () => {
       </p>
       <ViewportCanvas />
       <CameraToolbar />
+      <OverlayLegend />
     </section>
   );
 };

@@ -3,9 +3,16 @@
 export type Layer = "top" | "bottom";
 export type Point = [number, number];
 
-/** A pad to connect. Through-hole pads reach both layers; surface-mount pads only the top. */
-export type RoutePad = { net: string; x: number; z: number; radius: number; throughHole: boolean };
-export type Trace = { net: string; layer: Layer; width: number; points: Point[] };
+/**
+ * A pad to connect. Through-hole pads reach both layers; surface-mount pads only the top. `pin` identifies the part
+ * pin the pad belongs to, so tracks can say which pads they join.
+ */
+export type RoutePad = { net: string; x: number; z: number; radius: number; throughHole: boolean; pin?: string };
+/**
+ * A copper track. `ends` names the pins of the connection it is part of, the first at the end where `points`
+ * starts, when both pads have a `pin`. A connection can take more than one track, such as a stub to a via.
+ */
+export type Trace = { net: string; layer: Layer; width: number; points: Point[]; ends?: [string, string] };
 export type Via = { net: string; x: number; z: number };
 export type Routing = { traces: Trace[]; vias: Via[] };
 
@@ -121,9 +128,11 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number): Routi
           return { at, via: { net, x: at[0], z: at[1] } };
         };
         const [start, end] = [exit(from, to), exit(to, from)];
+        const ends = (k: number): Pick<Trace, "ends"> =>
+          from.pin && to.pin ? { ends: k === 0 ? [from.pin, to.pin] : [to.pin, from.pin] } : {};
         const stubs = [start, end].flatMap((e, k) => {
           const pad = k === 0 ? from : to;
-          return e.via ? [{ net, layer: "top" as const, width, points: [[pad.x, pad.z], e.at] as Point[] }] : [];
+          return e.via ? [{ net, layer: "top" as const, width, points: [[pad.x, pad.z], e.at] as Point[], ...ends(k) }] : [];
         });
         const newVias = [start.via, end.via].filter((v): v is Via => v !== undefined);
         for (const diagonalFirst of [true, false]) {
@@ -132,7 +141,7 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number): Routi
             clashes(points, layer, net, half, [from, to]) +
             stubs.reduce((n, s) => n + clashes(s.points, "top", net, half, [from, to]), 0);
           candidates.push({
-            traces: [...stubs, { net, layer, width, points }],
+            traces: [...stubs, { net, layer, width, points, ...ends(0) }],
             vias: newVias,
             cost: conflicts * 1000 + newVias.length * 5 + (layer === "bottom" ? 2 : 0) + pathLength(points) * 0.01,
           });

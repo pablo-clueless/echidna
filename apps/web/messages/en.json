@@ -149,6 +149,14 @@
         "angled": "3D view",
         "underside": "Underside view"
       },
+      "overlays": {
+        "label": "Overlays",
+        "current": "Current flow",
+        "heat": "Heat",
+        "currentHint": "Dashes run along the copper the way current flows, faster for more current.",
+        "heatTitle": "Estimated part temperature",
+        "unsolved": "Overlays appear once the circuit is simulated."
+      },
       "mask": {
         "label": "Solder mask colour",
         "black": "Black",

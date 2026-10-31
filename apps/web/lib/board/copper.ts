@@ -38,8 +38,9 @@ export const projectCopper = (
     if (!footprint || !at) continue;
     for (const pad of placePads(footprint, at.x * 1000, at.z * 1000, at.rotation)) {
       if (pad.drill !== undefined) drills.push({ x: pad.x, z: pad.z, diameter: pad.drill });
-      const net = netOf.get(pinKey({ componentId: component.id, pinId: pad.pin }));
-      if (net) pads.push({ net, x: pad.x, z: pad.z, radius: pad.radius, throughHole: pad.drill !== undefined });
+      const pin = pinKey({ componentId: component.id, pinId: pad.pin });
+      const net = netOf.get(pin);
+      if (net) pads.push({ net, x: pad.x, z: pad.z, radius: pad.radius, throughHole: pad.drill !== undefined, pin });
     }
   }
 

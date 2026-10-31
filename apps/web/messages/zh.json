@@ -149,6 +149,14 @@
         "angled": "3D 视图",
         "underside": "底面视图"
       },
+      "overlays": {
+        "label": "叠加显示",
+        "current": "电流流向",
+        "heat": "热量",
+        "currentHint": "虚线沿铜线按电流方向移动，电流越大移动越快。",
+        "heatTitle": "元件估算温度",
+        "unsolved": "电路仿真后才会显示叠加内容。"
+      },
       "mask": {
         "label": "阻焊层颜色",
         "black": "黑色",

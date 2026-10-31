@@ -3,9 +3,11 @@
 import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Environment, Grid, Lightformer } from "@react-three/drei";
+import { partTemperature } from "@echidna/rules";
 import { partsById } from "@echidna/library";
 import type { Group } from "three";
 
+import { pinCurrentLookup, trackCurrents } from "@/lib/board/currents";
 import { footprints, resistorBands } from "@/lib/board/footprints";
 import { LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
 import { paramValue, switchClosed } from "@/lib/project/model";
@@ -13,6 +15,7 @@ import { BOARD, clampToBoard } from "@/lib/board/placement";
 import { pinCurrentsAt } from "@/lib/simulation/switchOn";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { applyMaskColour } from "./viewport/materials";
+import { CurrentFlow } from "./viewport/CurrentFlow";
 import { projectCopper } from "@/lib/board/copper";
 import { useProjectStore } from "@/stores/project";
 import { useLayoutStore } from "@/stores/layout";
@@ -20,6 +23,7 @@ import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
 import { CameraRig } from "./viewport/CameraRig";
 import { PartMesh } from "./viewport/PartMesh";
+import { HeatGlow } from "./viewport/HeatGlow";
 import { Traces } from "./viewport/Traces";
 import { Board } from "./viewport/Board";
 
@@ -119,11 +123,14 @@ export const ViewportCanvas = () => {
   const wires = useProjectStore((s) => s.wires);
   const projectName = useProjectStore((s) => s.name);
   const maskColour = useLayoutStore((s) => s.maskColour);
+  const overlays = useLayoutStore((s) => s.overlays);
+  const ambient = useProjectStore((s) => s.ambientTemperature);
   const placeOnBoard = useProjectStore((s) => s.placeOnBoard);
   const selection = useStudioStore((s) => s.selection);
   const select = useStudioStore((s) => s.select);
   const violations = useStudioStore((s) => s.violations);
   const settledCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
+  const settledPower = useStudioStore((s) => s.simulation?.solution?.componentPower);
   const switchOn = useStudioStore((s) => s.switchOn?.outcome);
   const playhead = useStudioStore((s) => s.playhead);
   const pinCurrents = useMemo(
@@ -132,6 +139,16 @@ export const ViewportCanvas = () => {
   );
   const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
   const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
+  const showCurrent = overlays.includes("current");
+  const showHeat = overlays.includes("heat") && settledPower !== undefined;
+  // Follows the switch-on playhead like the LEDs do, so scrubbing shows current building up in the copper.
+  const trackFlow = useMemo(
+    () =>
+      showCurrent && pinCurrents
+        ? trackCurrents(copper.routing, pinCurrentLookup(components, partsById, pinCurrents))
+        : null,
+    [showCurrent, pinCurrents, copper.routing, components],
+  );
   const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");
 
   useEffect(() => applyMaskColour(maskColour), [maskColour]);
@@ -181,6 +198,7 @@ export const ViewportCanvas = () => {
       <group scale={MM}>
         <Board {...boardSize} thickness={BOARD.thickness} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
         <Traces routing={copper.routing} thickness={BOARD.thickness} />
+        {trackFlow && <CurrentFlow routing={copper.routing} thickness={BOARD.thickness} currents={trackFlow} />}
       </group>
 
       {components.map((c) => {
@@ -193,6 +211,12 @@ export const ViewportCanvas = () => {
         const outputVoltage = spec.kind === "regulator" ? paramValue(c, spec, "outputVoltage") : undefined;
         const partNumber = TRANSISTOR_KINDS.has(spec.kind) ? spec.id.split("-").at(-1)?.toUpperCase() : undefined;
         const current = spec.kind === "led" ? (pinCurrents?.[c.id]?.[0] ?? 0) : 0;
+        // Heat is the settled estimate: parts take seconds to warm, far longer than a switch-on run.
+        const thermalResistance = spec.params.thermalResistance?.value;
+        const temperature =
+          showHeat && thermalResistance
+            ? partTemperature(settledPower?.[c.id] ?? 0, { resistance: thermalResistance, ambient })
+            : undefined;
         return (
           <group
             key={c.id}
@@ -212,6 +236,9 @@ export const ViewportCanvas = () => {
                 thickness={BOARD.thickness}
                 outline={selected ? highlights.selected : worst(c.id)}
               />
+            )}
+            {footprint && temperature !== undefined && (
+              <HeatGlow courtyard={footprint.courtyard} temperature={temperature} ambient={ambient} />
             )}
             <PartMesh
               footprintId={spec.footprintId}

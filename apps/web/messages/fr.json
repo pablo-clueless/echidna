@@ -149,6 +149,14 @@
         "angled": "Vue 3D",
         "underside": "Vue de dessous"
       },
+      "overlays": {
+        "label": "Superpositions",
+        "current": "Circulation du courant",
+        "heat": "Chaleur",
+        "currentHint": "Les tirets suivent le cuivre dans le sens du courant, plus vite quand le courant est plus fort.",
+        "heatTitle": "Température estimée des composants",
+        "unsolved": "Les superpositions apparaissent une fois le circuit simulé."
+      },
       "mask": {
         "label": "Couleur du vernis épargne",
         "black": "Noir",
