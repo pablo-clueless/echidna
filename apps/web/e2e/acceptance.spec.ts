@@ -6,6 +6,9 @@ import fr from "../messages/fr.json" with { type: "json" };
 /** The Phase 1 acceptance budget: verdicts on screen within 100 ms of the edit. */
 const BUDGET_MS = 100;
 
+// Timed runs one after another in one worker, so each locale's measurement never includes the other's CPU load.
+test.describe.configure({ mode: "default" });
+
 const locales = [
   { locale: "en", messages: en, smaller: "68", smallest: "47" },
   { locale: "fr", messages: fr, smaller: "0,068k", smallest: "47" },
