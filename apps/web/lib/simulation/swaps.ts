@@ -73,13 +73,18 @@ export const swapCandidates = (
  * Grades each candidate by the worst verdict it would produce across the whole circuit.
  * @param candidates - Variants from `swapCandidates`.
  * @param outcomes - Solver outcomes in the same order.
+ * @param ambient - Air temperature around the board in kelvin.
  * @returns A fits / warns / fails verdict per candidate.
  */
-export const gradeSwaps = (candidates: readonly SwapCandidate[], outcomes: readonly SolveOutcome[]): SwapVerdict[] =>
+export const gradeSwaps = (
+  candidates: readonly SwapCandidate[],
+  outcomes: readonly SolveOutcome[],
+  ambient?: number,
+): SwapVerdict[] =>
   candidates.map(({ value, build }, i) => {
     const outcome = outcomes[i];
     if (!outcome?.ok) return { value, severity: "fail", estimated: false, worst: null };
-    const worst = evaluate(build, outcome.solution as DcSolution).sort(compareViolations)[0] ?? null;
+    const worst = evaluate(build, outcome.solution as DcSolution, undefined, ambient).sort(compareViolations)[0] ?? null;
     return {
       value,
       severity: worst?.severity ?? "pass",

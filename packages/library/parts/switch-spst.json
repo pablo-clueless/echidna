@@ -26,6 +26,7 @@
       }
     }
   ],
+  "actuation": "latching",
   "model": "switch",
   "footprintId": "generic/switch-slide",
   "meshUrl": "generic/switch-slide"

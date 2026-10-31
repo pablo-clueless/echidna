@@ -12,12 +12,14 @@
   "params": {
     "thresholdVoltage": { "value": -2, "unit": "V", "source": "estimated", "reference": "Typical VGS(th) for BS250-type parts" },
     "transconductance": { "value": 0.0125, "unit": "A/V²", "source": "estimated", "reference": "Fitted to a typical RDS(on) of about 10 Ω at VGS = −10 V" },
-    "channelLengthModulation": { "value": 0.02, "unit": "1/V", "source": "estimated", "reference": "Typical for small-signal MOSFETs" }
+    "channelLengthModulation": { "value": 0.02, "unit": "1/V", "source": "estimated", "reference": "Typical for small-signal MOSFETs" },
+    "thermalResistance": { "value": 178, "unit": "K/W", "source": "estimated", "reference": "From the typical TO-92 dissipation of 0.7 W at 25 °C and a 150 °C junction limit" }
   },
   "ratings": {
     "maxVoltage": { "value": 45, "unit": "V", "source": "estimated", "reference": "Typical VDS rating for BS250-type parts" },
     "maxCurrent": { "value": 0.18, "unit": "A", "source": "estimated", "reference": "Typical continuous drain current for BS250-type parts" },
-    "maxPower": { "value": 0.7, "unit": "W", "source": "estimated", "reference": "Typical TO-92 dissipation at 25 °C ambient" }
+    "maxPower": { "value": 0.7, "unit": "W", "source": "estimated", "reference": "Typical TO-92 dissipation at 25 °C ambient" },
+    "maxTemperature": { "value": 423.15, "unit": "K", "source": "estimated", "reference": "Typical junction limit for TO-92 MOSFETs, 150 °C" }
   },
   "ratingPins": {
     "maxVoltage": ["d", "s"],

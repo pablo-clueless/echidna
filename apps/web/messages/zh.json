@@ -176,6 +176,15 @@
         "depth": "深度",
         "outOfRange": "请输入 {min} 到 {max} mm 之间的尺寸。"
       },
+      "environment": {
+        "title": "环境",
+        "ambient": "空气温度",
+        "outOfRange": "请输入 {min} 到 {max} °C 之间的温度。",
+        "hint": "各元件的温度根据其发出的热量估算，以此空气温度为起点。"
+      },
+      "switch": {
+        "hold": "按住"
+      },
       "title": "检查器",
       "emptyTitle": "未选择任何内容",
       "emptyDescription": "选择一个元件以查看其实时数值。",
@@ -185,6 +194,7 @@
       "pinVoltage": "{pin} 处电压",
       "current": "电流",
       "power": "耗散功率",
+      "temperature": "温度（估算）",
       "resetParam": "恢复为元件默认值",
       "invalidNumber": "请输入数字，例如 220 或 4.7k。",
       "verdict": {
@@ -285,6 +295,10 @@
         "name": "额定功率",
         "explain": "此元件将额定功率的 {percent} 转化为热量。超过 80% 会变热；超过 100% 可能烧毁。"
       },
+      "temperatureRating": {
+        "name": "温度",
+        "explain": "估计此元件已用掉其高于周围空气的可承受温升的 {percent}。超过 80% 会加速老化；超过 100% 可能损坏。减小通过元件的功率，或换用额定功率更高的元件，可以让它更凉。"
+      },
       "switchOnVoltage": {
         "name": "通电时的电压",
         "explain": "通电后不久，此元件两端的电压会短暂达到额定值的 {percent}，高于稳定后的数值。电感与电容之间的振荡可能导致这种情况；在回路中增加电阻可以抑制它。"
@@ -323,6 +337,15 @@
       "variants": {
         "closed": "开（闭合）",
         "open": "关（断开）"
+      }
+    },
+    "switch-push": {
+      "name": "按钮开关，SPST",
+      "summary": "按住时接通，50 mA",
+      "variantLabel": "按钮",
+      "variants": {
+        "open": "松开（断开）",
+        "closed": "按下（闭合）"
       }
     },
     "led-5mm": {

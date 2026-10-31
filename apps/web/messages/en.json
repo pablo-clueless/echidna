@@ -176,6 +176,15 @@
         "depth": "Depth",
         "outOfRange": "Enter a size from {min} to {max} mm."
       },
+      "environment": {
+        "title": "Surroundings",
+        "ambient": "Air temperature",
+        "outOfRange": "Enter a temperature from {min} to {max} °C.",
+        "hint": "Part temperatures are estimated from the heat each part gives off, starting from this air temperature."
+      },
+      "switch": {
+        "hold": "Hold to press"
+      },
       "title": "Inspector",
       "emptyTitle": "Nothing selected",
       "emptyDescription": "Select a component to see its live values.",
@@ -185,6 +194,7 @@
       "pinVoltage": "Voltage at {pin}",
       "current": "Current",
       "power": "Power dissipated",
+      "temperature": "Temperature (estimated)",
       "resetParam": "Reset to the part’s default",
       "invalidNumber": "Enter a number, such as 220 or 4.7k.",
       "verdict": {
@@ -285,6 +295,10 @@
         "name": "Power rating",
         "explain": "This part is turning {percent} of its rated power into heat. Above 80% it gets hot; above 100% it can burn out."
       },
+      "temperatureRating": {
+        "name": "Temperature",
+        "explain": "This part is estimated to use {percent} of the temperature rise it can take above the surrounding air. Above 80% it ages faster; above 100% it can be damaged. Less power through the part, or one with a higher power rating, keeps it cooler."
+      },
       "switchOnVoltage": {
         "name": "Voltage at switch-on",
         "explain": "Just after switch-on, the voltage across this part briefly reaches {percent} of its rating, more than it settles to. Ringing between an inductor and a capacitor can do this; more resistance in the loop calms it."
@@ -323,6 +337,15 @@
       "variants": {
         "closed": "On (closed)",
         "open": "Off (open)"
+      }
+    },
+    "switch-push": {
+      "name": "Push button, SPST",
+      "summary": "On while held, 50 mA",
+      "variantLabel": "Button",
+      "variants": {
+        "open": "Released (open)",
+        "closed": "Pressed (closed)"
       }
     },
     "led-5mm": {

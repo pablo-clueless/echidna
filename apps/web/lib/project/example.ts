@@ -1,3 +1,5 @@
+import { DEFAULT_AMBIENT } from "@echidna/rules";
+
 import type { ProjectData, Wire } from "./model";
 
 const wire = (id: string, a: string, b: string): Wire => {
@@ -47,5 +49,6 @@ export const regulatorExample = (): ProjectData => ({
     R1: { x: 0.01, z: 0, rotation: 0 },
     D1: { x: 0.03, z: 0, rotation: 0 },
   },
-  boardSize: { width: 100, depth: 70 },
+  boardSize: { width: 100, depth: 55 },
+  ambientTemperature: DEFAULT_AMBIENT,
 });

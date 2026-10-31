@@ -1,7 +1,15 @@
 import { partsById, toCircuit } from "@echidna/library";
 import { describe, expect, it } from "vitest";
 
-import { deriveNets, nextDesignator, toNetlist, type Wire } from "./model";
+import {
+  deriveNets,
+  nextDesignator,
+  releaseMomentary,
+  switchClosed,
+  switchPositions,
+  toNetlist,
+  type Wire,
+} from "./model";
 import { pinPositions, routeWire } from "../schematic/symbols";
 import { regulatorExample } from "./example";
 
@@ -63,5 +71,38 @@ describe("regulator example", () => {
       expect(a && b && routeWire(a, b).length).toBeGreaterThan(1);
       for (const p of [a, b]) expect(Number.isInteger(p?.x) && Number.isInteger(p?.y)).toBe(true);
     }
+  });
+});
+
+describe("switches", () => {
+  const slide = partsById.get("switch-spst");
+  const push = partsById.get("switch-push");
+  if (!slide || !push) throw new Error("missing part");
+
+  it("reads a switch's position from its closed parameter, defaulting to the first variant", () => {
+    expect(switchClosed(slide)).toBe(true);
+    expect(switchClosed(slide, "open")).toBe(false);
+    expect(switchClosed(push)).toBe(false);
+    expect(switchClosed(push, "closed")).toBe(true);
+  });
+
+  it("finds the closed and open positions whatever order they are listed in", () => {
+    expect(switchPositions(slide)).toEqual({ closed: "closed", open: "open" });
+    expect(switchPositions(push)).toEqual({ closed: "closed", open: "open" });
+    expect(switchPositions(partsById.get("resistor") ?? slide)).toBeUndefined();
+  });
+
+  it("lets go of push buttons but leaves latching switches where they were set", () => {
+    const components = [
+      { id: "SW1", specId: "switch-spst", variant: "open" },
+      { id: "SW2", specId: "switch-push", variant: "closed" },
+      { id: "SW3", specId: "switch-push" },
+    ];
+    const released = releaseMomentary(components, partsById);
+    expect(released).toEqual([components[0], { id: "SW2", specId: "switch-push" }, components[2]]);
+    expect(released[0]).toBe(components[0]);
+    expect(toCircuit(toNetlist({ components: released, wires: [] }), partsById).circuit.elements[1]).toMatchObject({
+      closed: 0,
+    });
   });
 });

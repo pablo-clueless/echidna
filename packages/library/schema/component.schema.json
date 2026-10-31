@@ -69,6 +69,7 @@
         }
       }
     },
+    "actuation": { "enum": ["latching", "momentary"] },
     "model": {
       "enum": ["ground", "resistor", "switch", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator", "npn", "pnp", "nmos", "pmos"]
     },

@@ -56,6 +56,12 @@ export type Attribution = {
   url?: string;
 };
 
+/**
+ * How a switch is operated: `latching` stays where it is set, like a slide or toggle switch; `momentary` changes
+ * only while it is held, like a push button, and returns to its first variant when let go.
+ */
+export type Actuation = "latching" | "momentary";
+
 /** A selectable version of a part, such as an LED's colour, that replaces some of its params and ratings. */
 export type Variant = {
   id: string;
@@ -76,6 +82,8 @@ export type ComponentSpec = {
   interfaces: Interface[];
   /** Versions the user can choose between. The first is the default. */
   variants?: Variant[];
+  /** For switches: how the user operates it. Defaults to `latching`. */
+  actuation?: Actuation;
   model: string;
   footprintId: string;
   meshUrl: string;

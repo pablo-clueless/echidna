@@ -35,11 +35,17 @@ export const SwapSuggestions = ({ component, param }: Props) => {
   const locale = useLocale();
   const components = useProjectStore((s) => s.components);
   const wires = useProjectStore((s) => s.wires);
+  const ambient = useProjectStore((s) => s.ambientTemperature);
   const setParam = useProjectStore((s) => s.setParam);
   const spec = partsById.get(component.specId);
   const current = spec ? paramValue(component, spec, param) : undefined;
   const unit = spec?.params[param]?.unit ?? "";
-  const [result, setResult] = useState<{ components: ProjectData["components"]; wires: ProjectData["wires"]; verdicts: SwapVerdict[] } | null>(null);
+  const [result, setResult] = useState<{
+    components: ProjectData["components"];
+    wires: ProjectData["wires"];
+    ambient: number;
+    verdicts: SwapVerdict[];
+  } | null>(null);
 
   const values = spec && current !== undefined ? neighbourValues(spec.kind, current) : [];
   const valuesKey = values.join(",");
@@ -51,15 +57,16 @@ export const SwapSuggestions = ({ component, param }: Props) => {
     void getSolver()
       .solveBatch(candidates.map((c) => c.build.circuit))
       .then((outcomes) => {
-        if (live && outcomes) setResult({ components, wires, verdicts: gradeSwaps(candidates, outcomes) });
+        if (live && outcomes) setResult({ components, wires, ambient, verdicts: gradeSwaps(candidates, outcomes, ambient) });
       });
     return () => {
       live = false;
     };
-  }, [components, wires, component.id, param, valuesKey]);
+  }, [components, wires, ambient, component.id, param, valuesKey]);
 
   if (values.length === 0) return null;
-  const verdicts = result?.components === components && result.wires === wires ? result.verdicts : null;
+  const verdicts =
+    result?.components === components && result.wires === wires && result.ambient === ambient ? result.verdicts : null;
   const candidates = values.map((value) => ({ value }));
 
   return (

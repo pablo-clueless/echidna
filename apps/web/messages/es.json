@@ -176,6 +176,15 @@
         "depth": "Fondo",
         "outOfRange": "Introduce un tamaño de {min} a {max} mm."
       },
+      "environment": {
+        "title": "Entorno",
+        "ambient": "Temperatura del aire",
+        "outOfRange": "Introduce una temperatura de {min} a {max} °C.",
+        "hint": "La temperatura de cada componente se estima a partir del calor que desprende, partiendo de esta temperatura del aire."
+      },
+      "switch": {
+        "hold": "Mantén pulsado"
+      },
       "title": "Inspector",
       "emptyTitle": "Nada seleccionado",
       "emptyDescription": "Selecciona un componente para ver sus valores en directo.",
@@ -185,6 +194,7 @@
       "pinVoltage": "Tensión en {pin}",
       "current": "Corriente",
       "power": "Potencia disipada",
+      "temperature": "Temperatura (estimada)",
       "resetParam": "Restablecer el valor predeterminado del componente",
       "invalidNumber": "Introduce un número, como 220 o 4,7k.",
       "verdict": {
@@ -285,6 +295,10 @@
         "name": "Potencia nominal",
         "explain": "Este componente convierte en calor el {percent} de su potencia nominal. Por encima del 80 % se calienta; por encima del 100 % puede quemarse."
       },
+      "temperatureRating": {
+        "name": "Temperatura",
+        "explain": "Se estima que este componente usa el {percent} del aumento de temperatura que soporta por encima del aire que lo rodea. Por encima del 80 % envejece más rápido; por encima del 100 % puede dañarse. Menos potencia en el componente, o uno de mayor potencia nominal, lo mantiene más frío."
+      },
       "switchOnVoltage": {
         "name": "Tensión al encender",
         "explain": "Justo después del encendido, la tensión en este componente llega brevemente al {percent} de su valor nominal, más de lo que alcanza al estabilizarse. Puede deberse a una oscilación entre una bobina y un condensador; más resistencia en el lazo la amortigua."
@@ -323,6 +337,15 @@
       "variants": {
         "closed": "Encendido (cerrado)",
         "open": "Apagado (abierto)"
+      }
+    },
+    "switch-push": {
+      "name": "Pulsador, SPST",
+      "summary": "Cerrado mientras se pulsa, 50 mA",
+      "variantLabel": "Botón",
+      "variants": {
+        "open": "Suelto (abierto)",
+        "closed": "Pulsado (cerrado)"
       }
     },
     "led-5mm": {

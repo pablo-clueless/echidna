@@ -111,6 +111,15 @@ export const footprints: Record<string, Footprint> = {
     silk: [{ kind: "rect", x: 0, z: 0, w: 8.6, h: 3.8 }],
     ref: { x: 0, z: -2.9 },
   },
+  "generic/switch-tactile": {
+    pads: [tht("1", -3.25, 1.8, 1.0, "rect"), tht("2", 3.25, 1.8, 1.0)],
+    courtyard: { w: 9, h: 7 },
+    silk: [
+      { kind: "rect", x: 0, z: 0, w: 6.4, h: 6.4 },
+      { kind: "circle", x: 0, z: 0, r: 1.9 },
+    ],
+    ref: { x: 0, z: -4.2 },
+  },
   "generic/to-92-ebc": to92(["e", "b", "c"]),
   "generic/to-92-sgd": to92(["s", "g", "d"]),
   "generic/to-92-dgs": to92(["d", "g", "s"]),

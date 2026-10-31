@@ -10,6 +10,20 @@ export type Violation = {
   unit: Unit;
   severity: Severity;
   estimated: boolean;
+  /** Where the rating's headroom starts, such as the surrounding air for a temperature. Defaults to zero. */
+  baseline?: number;
+};
+
+/**
+ * How much of a rating's headroom is used: the share of the way from `baseline` to `limit` that `actual` has come.
+ * @param v - The checked quantity, its rated limit and optional baseline.
+ * @returns `actual / limit` without a baseline. A limit at or below the baseline is exceeded by anything above it.
+ */
+export const ratingRatio = (v: { actual: number; limit: number; baseline?: number | undefined }): number => {
+  const base = v.baseline ?? 0;
+  const headroom = v.limit - base;
+  if (headroom <= 0) return v.actual > base ? Infinity : 0;
+  return (v.actual - base) / headroom;
 };
 
 const severityRank: Record<Severity, number> = { pass: 0, warn: 1, fail: 2 };

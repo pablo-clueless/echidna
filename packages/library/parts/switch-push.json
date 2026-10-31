@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "switch-push",
+  "name": "Push button, SPST, normally open",
+  "kind": "switch",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
+  "pins": [
+    { "id": "1", "name": "1" },
+    { "id": "2", "name": "2" }
+  ],
+  "params": {
+    "contactResistance": { "value": 0.1, "unit": "Ω", "source": "datasheet", "reference": "Contact resistance, 100 mΩ maximum, typical for 6 mm tactile switches" },
+    "closed": { "value": 0, "unit": "1", "source": "datasheet", "reference": "Switch position: 1 closed, 0 open" }
+  },
+  "ratings": {
+    "maxCurrent": { "value": 0.05, "unit": "A", "source": "datasheet", "reference": "Typical 6 mm tactile switch rating, 50 mA at 24 V DC" },
+    "maxVoltage": { "value": 24, "unit": "V", "source": "datasheet", "reference": "Typical 6 mm tactile switch rating, 50 mA at 24 V DC" }
+  },
+  "interfaces": [],
+  "variants": [
+    { "id": "open" },
+    {
+      "id": "closed",
+      "params": {
+        "closed": { "value": 1, "unit": "1", "source": "datasheet", "reference": "Switch position: 1 closed, 0 open" }
+      }
+    }
+  ],
+  "actuation": "momentary",
+  "model": "switch",
+  "footprintId": "generic/switch-tactile",
+  "meshUrl": "generic/switch-tactile"
+}

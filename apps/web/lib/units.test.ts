@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatQuantity, parseQuantity } from "./units";
+import { formatQuantity, fromCelsius, parseQuantity, toCelsius } from "./units";
 
 describe("parseQuantity", () => {
   it.each([
@@ -49,6 +49,13 @@ describe("formatQuantity", () => {
     expect(formatQuantity(-8.88e-20, "V", "en")).toBe("0 V");
     expect(formatQuantity(3e-13, "A", "en")).toBe("0 A");
     expect(formatQuantity(2e-12, "A", "en")).toBe("2 pA");
+  });
+
+  it("shows temperatures in degrees Celsius, never with a prefix", () => {
+    expect(formatQuantity(298.15, "K", "en")).toBe("25 °C");
+    expect(formatQuantity(332.15, "K", "fr")).toBe("59 °C");
+    expect(formatQuantity(268.05, "K", "en")).toBe("-5.1 °C");
+    expect(fromCelsius(toCelsius(373.15))).toBeCloseTo(373.15, 9);
   });
 
   it("gives dimensionless values no prefix", () => {

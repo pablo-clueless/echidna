@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight, Package, Search } from "lucide-react";
+import type { ComponentSpec } from "@echidna/core";
 import { useTranslations } from "next-intl";
 import { parts } from "@echidna/library";
 import { useState } from "react";
@@ -22,8 +23,8 @@ const categories = [
   { key: "semiconductors", kinds: ["led", "diode", "npn", "pnp", "nmos", "pmos"] },
 ] as const;
 
-const PartIcon = ({ kind }: { kind: string }) => {
-  const b = symbolBounds[kind] ?? { w: 2, h: 1 };
+const PartIcon = ({ spec }: { spec: ComponentSpec }) => {
+  const b = symbolBounds[spec.kind] ?? { w: 2, h: 1 };
   const span = Math.max(b.w, b.h) + 0.6;
   return (
     <svg
@@ -35,7 +36,7 @@ const PartIcon = ({ kind }: { kind: string }) => {
       strokeWidth={2.5}
       strokeLinecap="round"
     >
-      <SymbolGlyph kind={kind} />
+      <SymbolGlyph spec={spec} />
     </svg>
   );
 };
@@ -124,7 +125,7 @@ export const LibrarySidebar = () => {
                           title={t("addHint")}
                           className="flex w-full cursor-grab items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left text-sm outline-none hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"
                         >
-                          <PartIcon kind={p.kind} />
+                          <PartIcon spec={p} />
                           <span className="min-w-0 flex-1">
                             <span className="block truncate">{tParts(`${partKey(p.id)}.name`)}</span>
                             <span className="block truncate text-xs text-muted-foreground">

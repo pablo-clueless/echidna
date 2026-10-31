@@ -9,7 +9,7 @@ import { useProjectStore, type ProjectState } from "@/stores/project";
 import { useStudioStore } from "@/stores/studio";
 import { toNetlist } from "@/lib/project/model";
 
-type Electrical = Pick<ProjectState, "components" | "wires">;
+type Electrical = Pick<ProjectState, "components" | "wires" | "ambientTemperature">;
 
 /**
  * Keeps the solver and rule engine in step with the project: every electrical edit re-solves on the worker
@@ -32,7 +32,7 @@ export const useSimulation = () => {
       const outcome = await getSolver().solve(build.circuit);
       if (!outcome || !useStudioStore.getState().simulating) return;
       const solution = outcome.ok ? outcome.solution : null;
-      const violations = solution ? evaluate(build, solution) : [];
+      const violations = solution ? evaluate(build, solution, undefined, project.ambientTemperature) : [];
       useStudioStore.getState().setSimulation(
         { build, solution, error: outcome.ok ? null : outcome.error, latencyMs: performance.now() - editedAt },
         violations,
@@ -54,7 +54,8 @@ export const useSimulation = () => {
 
     void run(useProjectStore.getState());
     const unsubscribe = useProjectStore.subscribe((s, prev) => {
-      if (s.components !== prev.components || s.wires !== prev.wires) void run(s);
+      const electrical = s.components !== prev.components || s.wires !== prev.wires;
+      if (electrical || s.ambientTemperature !== prev.ambientTemperature) void run(s);
     });
     const unsubscribeStudio = useStudioStore.subscribe((s, prev) => {
       if (s.simulating && !prev.simulating) void run(useProjectStore.getState());

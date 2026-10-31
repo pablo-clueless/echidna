@@ -176,6 +176,15 @@
         "depth": "Profondeur",
         "outOfRange": "Saisissez une taille de {min} à {max} mm."
       },
+      "environment": {
+        "title": "Environnement",
+        "ambient": "Température de l’air",
+        "outOfRange": "Saisissez une température de {min} à {max} °C.",
+        "hint": "La température de chaque composant est estimée à partir de la chaleur qu’il dégage, en partant de cette température de l’air."
+      },
+      "switch": {
+        "hold": "Maintenir pour appuyer"
+      },
       "title": "Inspecteur",
       "emptyTitle": "Aucune sélection",
       "emptyDescription": "Sélectionnez un composant pour voir ses valeurs en direct.",
@@ -185,6 +194,7 @@
       "pinVoltage": "Tension sur {pin}",
       "current": "Courant",
       "power": "Puissance dissipée",
+      "temperature": "Température (estimée)",
       "resetParam": "Rétablir la valeur par défaut du composant",
       "invalidNumber": "Saisissez un nombre, par exemple 220 ou 4,7k.",
       "verdict": {
@@ -285,6 +295,10 @@
         "name": "Puissance nominale",
         "explain": "Ce composant transforme {percent} de sa puissance nominale en chaleur. Au-delà de 80 %, il chauffe ; au-delà de 100 %, il peut griller."
       },
+      "temperatureRating": {
+        "name": "Température",
+        "explain": "Ce composant utiliserait {percent} de l’échauffement qu’il supporte au-dessus de l’air ambiant. Au-delà de 80 %, il vieillit plus vite ; au-delà de 100 %, il peut être endommagé. Moins de puissance dans le composant, ou un modèle de puissance nominale plus élevée, le garde plus frais."
+      },
       "switchOnVoltage": {
         "name": "Tension à la mise sous tension",
         "explain": "Juste après la mise sous tension, la tension aux bornes de ce composant atteint brièvement {percent} de sa valeur nominale, plus que sa valeur finale. Une oscillation entre une bobine et un condensateur peut en être la cause ; plus de résistance dans la boucle l’amortit."
@@ -323,6 +337,15 @@
       "variants": {
         "closed": "Marche (fermé)",
         "open": "Arrêt (ouvert)"
+      }
+    },
+    "switch-push": {
+      "name": "Bouton-poussoir, SPST",
+      "summary": "Fermé tant qu’il est appuyé, 50 mA",
+      "variantLabel": "Bouton",
+      "variants": {
+        "open": "Relâché (ouvert)",
+        "closed": "Appuyé (fermé)"
       }
     },
     "led-5mm": {

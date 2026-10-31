@@ -3,6 +3,7 @@ import type { ComponentSpec } from "@echidna/core";
 import capacitorCeramic from "../parts/capacitor-ceramic.json";
 import nmos2n7000 from "../parts/nmos-2n7000.json";
 import switchSpst from "../parts/switch-spst.json";
+import switchPush from "../parts/switch-push.json";
 import npn2n3904 from "../parts/npn-2n3904.json";
 import pnp2n3906 from "../parts/pnp-2n3906.json";
 import pmosBs250 from "../parts/pmos-bs250.json";
@@ -19,6 +20,7 @@ export const parts = [
   resistor,
   capacitorCeramic,
   switchSpst,
+  switchPush,
   led5mm,
   ldo3v3,
   npn2n3904,

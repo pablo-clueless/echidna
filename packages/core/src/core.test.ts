@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { anyEstimated, compareViolations, type ComponentSpec, isDeviceType, type Violation, withVariant } from "./index";
+import {
+  anyEstimated,
+  compareViolations,
+  type ComponentSpec,
+  isDeviceType,
+  ratingRatio,
+  type Violation,
+  withVariant,
+} from "./index";
 
 const violation = (overrides: Partial<Violation>): Violation => ({
   componentId: "c1",
@@ -42,6 +50,22 @@ describe("compareViolations", () => {
       violation({ componentId: "fail", severity: "fail" }),
     ];
     expect(list.sort(compareViolations).map((v) => v.componentId)).toEqual(["fail", "fail-est", "warn", "pass"]);
+  });
+});
+
+describe("ratingRatio", () => {
+  it("divides by the rating without a baseline", () => {
+    expect(ratingRatio({ actual: 0.15, limit: 0.25 })).toBeCloseTo(0.6);
+  });
+
+  it("measures the headroom above a baseline", () => {
+    expect(ratingRatio({ actual: 373.15, limit: 423.15, baseline: 298.15 })).toBeCloseTo(0.6);
+    expect(ratingRatio({ actual: 298.15, limit: 423.15, baseline: 298.15 })).toBe(0);
+  });
+
+  it("treats a limit at or below the baseline as exceeded", () => {
+    expect(ratingRatio({ actual: 400, limit: 380, baseline: 390 })).toBe(Infinity);
+    expect(ratingRatio({ actual: 390, limit: 380, baseline: 390 })).toBe(0);
   });
 });
 

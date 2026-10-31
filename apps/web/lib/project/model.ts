@@ -20,6 +20,8 @@ export type ProjectData = {
   schematic: Record<string, SchematicPlacement>;
   board: Record<string, BoardPlacement>;
   boardSize: BoardSize;
+  /** Air temperature around the board, in kelvin, that part temperatures are estimated from. */
+  ambientTemperature: number;
 };
 
 const prefixes: Record<string, string> = {
@@ -122,6 +124,55 @@ export const netOfPin = (nets: readonly Net[], pin: PinRef): Net | undefined =>
 export const paramValue = (component: NetlistComponent, spec: ComponentSpec, key: string): number | undefined =>
   component.paramOverrides?.[key] ?? withVariant(spec, component.variant).params[key]?.value;
 
+/**
+ * Whether a switch conducts in a given position.
+ * @param spec - Switch part spec.
+ * @param variant - The chosen position; missing or unknown IDs mean the first.
+ * @returns `true` unless that position sets the `closed` parameter to 0.
+ */
+export const switchClosed = (spec: ComponentSpec, variant?: string): boolean =>
+  withVariant(spec, variant).params.closed?.value !== 0;
+
+/**
+ * The variant IDs of a switch's two positions.
+ * @param spec - Switch part spec.
+ * @returns The closed and open positions, or `undefined` for a part without both.
+ */
+export const switchPositions = (spec: ComponentSpec): { closed: string; open: string } | undefined => {
+  const variants = spec.variants ?? [];
+  const closed = variants.find((v) => switchClosed(spec, v.id))?.id;
+  const open = variants.find((v) => !switchClosed(spec, v.id))?.id;
+  return closed && open ? { closed, open } : undefined;
+};
+
+/**
+ * Lets go of every momentary switch, so a push button held while the project is saved is not still pressed when
+ * the project is opened again.
+ * @param components - The project's parts.
+ * @param specs - Part specs by ID.
+ * @returns The parts, with momentary switches back in their first position.
+ */
+export const releaseMomentary = (
+  components: readonly NetlistComponent[],
+  specs: ReadonlyMap<string, ComponentSpec>,
+): NetlistComponent[] =>
+  components.map((c) => {
+    if (c.variant === undefined || specs.get(c.specId)?.actuation !== "momentary") return c;
+    const { variant: _held, ...released } = c;
+    return released;
+  });
+
+/** Air temperatures a project can be checked at, in kelvin: −40 °C to 85 °C, the industrial range. */
+export const AMBIENT_LIMITS = { min: 233.15, max: 358.15 } as const;
+
+/**
+ * Keeps an ambient temperature within `AMBIENT_LIMITS`.
+ * @param kelvin - Requested temperature in kelvin.
+ * @returns The nearest allowed temperature.
+ */
+export const clampAmbient = (kelvin: number): number =>
+  Math.min(AMBIENT_LIMITS.max, Math.max(AMBIENT_LIMITS.min, kelvin));
+
 /** Device-model internals that are fitted from datasheets rather than chosen by the user, so not shown for editing. */
 export const MODEL_PARAMS: ReadonlySet<string> = new Set([
   "saturationCurrent",
@@ -132,6 +183,7 @@ export const MODEL_PARAMS: ReadonlySet<string> = new Set([
   "earlyVoltage",
   "transconductance",
   "channelLengthModulation",
+  "thermalResistance",
 ]);
 /**
  * The parameters the inspector offers for editing: not model internals, and not those a variant sets, such as a

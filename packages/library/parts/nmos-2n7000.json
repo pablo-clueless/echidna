@@ -12,12 +12,14 @@
   "params": {
     "thresholdVoltage": { "value": 2.1, "unit": "V", "source": "datasheet", "reference": "2N7000 datasheet: typical VGS(th)" },
     "transconductance": { "value": 0.1, "unit": "A/V²", "source": "estimated", "reference": "Fitted to the typical RDS(on) of about 1.2 Ω at VGS = 10 V" },
-    "channelLengthModulation": { "value": 0.01, "unit": "1/V", "source": "estimated", "reference": "Typical for small-signal MOSFETs" }
+    "channelLengthModulation": { "value": 0.01, "unit": "1/V", "source": "estimated", "reference": "Typical for small-signal MOSFETs" },
+    "thermalResistance": { "value": 312.5, "unit": "K/W", "source": "datasheet", "reference": "2N7000 datasheet: thermal resistance, junction to ambient" }
   },
   "ratings": {
     "maxVoltage": { "value": 60, "unit": "V", "source": "datasheet", "reference": "2N7000 datasheet: VDSS" },
     "maxCurrent": { "value": 0.2, "unit": "A", "source": "datasheet", "reference": "2N7000 datasheet: continuous drain current" },
-    "maxPower": { "value": 0.4, "unit": "W", "source": "datasheet", "reference": "2N7000 datasheet: total dissipation at 25 °C ambient" }
+    "maxPower": { "value": 0.4, "unit": "W", "source": "datasheet", "reference": "2N7000 datasheet: total dissipation at 25 °C ambient" },
+    "maxTemperature": { "value": 423.15, "unit": "K", "source": "datasheet", "reference": "2N7000 datasheet: operating junction temperature, 150 °C" }
   },
   "ratingPins": {
     "maxVoltage": ["d", "s"],

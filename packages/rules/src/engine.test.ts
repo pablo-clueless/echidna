@@ -169,3 +169,64 @@ describe("switch-on rules", () => {
     expect(peak?.severity).toBe("fail");
   });
 });
+
+describe("temperature", () => {
+  const heated = (resistance: number): CircuitBuild => {
+    const resistor = partsById.get("resistor");
+    const supply = partsById.get("dc-supply");
+    if (!resistor || !supply) throw new Error("missing part");
+    return {
+      circuit: {
+        ground: "0",
+        elements: [
+          { id: "V1", kind: "voltageSource", nodes: ["a", "0"], voltage: 10 },
+          { id: "R1", kind: "resistor", nodes: ["a", "0"], resistance },
+        ],
+      },
+      netNodes: {},
+      specs: { V1: supply, R1: resistor },
+    };
+  };
+
+  const temperature = (resistance: number, ambient?: number) => {
+    const build = heated(resistance);
+    const solution = solveDc(build.circuit) as DcSolution;
+    return evaluate(build, solution, undefined, ambient).filter((v) => v.ruleId === "temperatureRating");
+  };
+
+  it("estimates a part's temperature from its dissipation and thermal resistance", () => {
+    const [r1, ...rest] = temperature(1000);
+    expect(rest).toEqual([]);
+    // 0.1 W through 340 K/W is a 34 K rise above 25 °C.
+    expect(r1).toMatchObject({ componentId: "R1", unit: "K", limit: 428.15, baseline: 298.15, estimated: false });
+    expect(r1?.actual).toBeCloseTo(332.15, 6);
+    expect(r1?.severity).toBe("pass");
+  });
+
+  it("grades the rise above the air, not the temperature itself", () => {
+    // 0.33 W gives a 113 K rise, 87 % of the 130 K the part can take above 25 °C.
+    expect(temperature(300)[0]?.severity).toBe("warn");
+    expect(temperature(200)[0]?.severity).toBe("fail");
+  });
+
+  it("warns in hot air when the power rating alone would pass", () => {
+    const build = heated(1000);
+    const solution = solveDc(build.circuit) as DcSolution;
+    const hot = evaluate(build, solution, undefined, 393.15);
+    expect(hot.find((v) => v.ruleId === "powerRating")?.severity).toBe("pass");
+    expect(hot.find((v) => v.ruleId === "temperatureRating")).toMatchObject({ severity: "warn", baseline: 393.15 });
+  });
+
+  it("counts an estimated thermal resistance only towards the temperature verdict", () => {
+    const { violations } = run(150);
+    expect(violations.find((v) => v.componentId === "D1" && v.ruleId === "temperatureRating")?.estimated).toBe(true);
+    expect(violations.find((v) => v.componentId === "D1" && v.ruleId === "currentRating")?.estimated).toBe(false);
+  });
+
+  it("is never checked on a switch-on run", () => {
+    const build = heated(200);
+    const solution = { times: [1e-6, 2e-6], nodeVoltages: {}, pinCurrents: {}, componentPower: { R1: [0.5, 0.5] } };
+    const rules = [{ id: "hot", analysis: "switchOn", metric: "temperature", rating: "maxTemperature", warnAt: 0.8, failAbove: 1 }] as const;
+    expect(evaluateSwitchOn(build, solution as unknown as TransientSolution, rules)).toEqual([]);
+  });
+});

@@ -13,12 +13,14 @@
     "saturationCurrent": { "value": 1.41e-15, "unit": "A", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3906" },
     "forwardBeta": { "value": 180.7, "unit": "1", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3906" },
     "reverseBeta": { "value": 4.977, "unit": "1", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3906" },
-    "earlyVoltage": { "value": 18.7, "unit": "V", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3906" }
+    "earlyVoltage": { "value": 18.7, "unit": "V", "source": "datasheet", "reference": "Manufacturer SPICE model for the 2N3906" },
+    "thermalResistance": { "value": 200, "unit": "K/W", "source": "datasheet", "reference": "2N3906 datasheet: thermal resistance, junction to ambient" }
   },
   "ratings": {
     "maxVoltage": { "value": 40, "unit": "V", "source": "datasheet", "reference": "2N3906 datasheet: VCEO" },
     "maxCurrent": { "value": 0.2, "unit": "A", "source": "datasheet", "reference": "2N3906 datasheet: continuous collector current" },
-    "maxPower": { "value": 0.625, "unit": "W", "source": "datasheet", "reference": "2N3906 datasheet: total dissipation at 25 °C ambient" }
+    "maxPower": { "value": 0.625, "unit": "W", "source": "datasheet", "reference": "2N3906 datasheet: total dissipation at 25 °C ambient" },
+    "maxTemperature": { "value": 423.15, "unit": "K", "source": "datasheet", "reference": "2N3906 datasheet: operating junction temperature, 150 °C" }
   },
   "ratingPins": {
     "maxVoltage": ["c", "e"],

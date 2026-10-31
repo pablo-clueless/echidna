@@ -11,6 +11,22 @@ const prefixes: Record<string, number> = {
   G: 1e9,
 };
 
+const ZERO_CELSIUS = 273.15;
+
+/**
+ * Converts a temperature for display.
+ * @param kelvin - Temperature in kelvin.
+ * @returns The same temperature in degrees Celsius.
+ */
+export const toCelsius = (kelvin: number): number => kelvin - ZERO_CELSIUS;
+
+/**
+ * Converts a temperature typed in degrees Celsius to the kelvin used internally.
+ * @param celsius - Temperature in degrees Celsius.
+ * @returns The same temperature in kelvin.
+ */
+export const fromCelsius = (celsius: number): number => celsius + ZERO_CELSIUS;
+
 const formatters = new Map<string, Intl.NumberFormat>();
 
 /** `Intl.NumberFormat` is slow to construct and readouts format dozens of values per render, so reuse them. */
@@ -84,10 +100,12 @@ const engineering = [
  * @param locale - Active locale.
  * @param digits - Significant digits.
  * @returns Display text. Values too small for the smallest prefix, such as leakage left over from the solver, read
- * as zero, and dimensionless values (unit `""` or `"1"`) take no prefix.
+ * as zero, and dimensionless values (unit `""` or `"1"`) take no prefix. Temperatures (unit `K`) read in degrees
+ * Celsius.
  */
 export const formatQuantity = (value: number, unit: string, locale: string, digits = 3): string => {
   if (unit === "" || unit === "1") return numberFormat(locale, digits).format(value);
+  if (unit === "K") return `${numberFormat(locale, digits).format(toCelsius(value))} °C`;
   const magnitude = Math.abs(value) < 0.5e-12 ? 0 : Math.abs(value);
   if (magnitude === 0) return `${numberFormat(locale, digits).format(0)} ${unit}`;
   const step = engineering.find((e) => magnitude >= 10 ** e.exp * 0.9995) ?? engineering.at(-1);

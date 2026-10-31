@@ -338,6 +338,24 @@ const SlideSwitch = ({ closed }: { closed: boolean }) => (
   </group>
 );
 
+/** 6 mm tactile switch: a moulded base under a steel cover, with a round plunger that sinks while pressed. */
+const TactileSwitch = ({ closed }: { closed: boolean }) => (
+  <group>
+    <RoundedBox args={[6, 2.6, 6]} radius={0.2} smoothness={2} position={[0, 1.3, 0]} material={materials.epoxy} castShadow />
+    <mesh position={[0, 2.65, 0]} material={materials.lead} castShadow>
+      <boxGeometry args={[6.1, 0.3, 6.1]} />
+    </mesh>
+    <mesh position={[0, closed ? 3.05 : 3.6, 0]} material={materials.epoxy} castShadow>
+      <cylinderGeometry args={[1.75, 1.75, closed ? 0.8 : 1.9, 32]} />
+    </mesh>
+    {[-3.25, 3.25].map((x) => (
+      <mesh key={x} position={[x, -1, 0]} material={materials.lead}>
+        <boxGeometry args={[0.6, 2, 0.4]} />
+      </mesh>
+    ))}
+  </group>
+);
+
 const Terminal = () => (
   <group>
     <RoundedBox args={[10.2, 8.4, 7.6]} radius={0.35} smoothness={3} position={[0, 4.25, 0.2]} material={materials.terminal} castShadow />
@@ -377,6 +395,8 @@ export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed 
       return <Terminal />;
     case "generic/switch-slide":
       return <SlideSwitch closed={closed ?? true} />;
+    case "generic/switch-tactile":
+      return <TactileSwitch closed={closed ?? false} />;
     case "generic/to-92-ebc":
     case "generic/to-92-sgd":
     case "generic/to-92-dgs":

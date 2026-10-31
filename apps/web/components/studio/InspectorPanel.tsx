@@ -3,6 +3,7 @@
 import { compareViolations, type ComponentSpec, type NetlistComponent } from "@echidna/core";
 import { useLocale, useTranslations } from "next-intl";
 import { MousePointerClick } from "lucide-react";
+import { partTemperature } from "@echidna/rules";
 import { partsById } from "@echidna/library";
 import { useMemo } from "react";
 
@@ -11,6 +12,8 @@ import { SwitchOnResponse } from "./inspector/SwitchOnResponse";
 import { BoardSizeFields } from "./inspector/BoardSizeFields";
 import { SwapSuggestions } from "./inspector/SwapSuggestions";
 import { VariantPicker } from "./inspector/VariantPicker";
+import { SwitchControl } from "./inspector/SwitchControl";
+import { AmbientField } from "./inspector/AmbientField";
 import { RatingMeter } from "./inspector/RatingMeter";
 import { paramKey, partKey } from "@/lib/messageKeys";
 import { ledState } from "@/lib/simulation/ledState";
@@ -37,6 +40,7 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
   const setParam = useProjectStore((s) => s.setParam);
   const simulation = useStudioStore((s) => s.simulation);
   const violations = useStudioStore((s) => s.violations);
+  const ambient = useProjectStore((s) => s.ambientTemperature);
 
   const element = simulation?.build.circuit.elements.find((e) => e.id === component.id);
   const solution = simulation?.solution;
@@ -46,6 +50,9 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
   const params = Object.entries(spec.params).filter(([key]) => editable.has(key));
 
   const led = spec.kind === "led" && simulation && solution ? ledState(simulation.build, solution, component.id) : undefined;
+
+  const power = Math.max(0, solution?.componentPower[component.id] ?? 0);
+  const thermalResistance = spec.params.thermalResistance?.value;
 
   const readouts =
     element && solution
@@ -62,7 +69,15 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
               locale,
             ),
           },
-          { label: t("power"), value: formatQuantity(Math.max(0, solution.componentPower[component.id] ?? 0), "W", locale) },
+          { label: t("power"), value: formatQuantity(power, "W", locale) },
+          ...(thermalResistance
+            ? [
+                {
+                  label: t("temperature"),
+                  value: formatQuantity(partTemperature(power, { resistance: thermalResistance, ambient }), "K", locale),
+                },
+              ]
+            : []),
         ]
       : [];
 
@@ -74,7 +89,11 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
           <p className="text-sm text-muted-foreground">{tParts(`${partKey(spec.id)}.name`)}</p>
         </div>
 
-        <VariantPicker component={component} spec={spec} />
+        {spec.kind === "switch" ? (
+          <SwitchControl component={component} spec={spec} />
+        ) : (
+          <VariantPicker component={component} spec={spec} />
+        )}
 
         {led && (
           <div role="status" className="grid gap-0.5 rounded-md border px-2.5 py-2 text-xs">
@@ -90,17 +109,19 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
             <h3 id="params-heading" className="text-xs font-medium text-muted-foreground">
               {t("parameters")}
             </h3>
-            {params.map(([key, value]) => (
-              <ParamField
-                key={`${component.id}:${key}`}
-                name={key}
-                label={tParams(paramKey(key))}
-                spec={value}
-                value={paramValue(component, spec, key) ?? value.value}
-                overridden={component.paramOverrides?.[key] !== undefined}
-                onCommit={(v) => setParam(component.id, key, v)}
-              />
-            ))}
+            <div className="grid grid-cols-2 gap-4">
+              {params.map(([key, value]) => (
+                <ParamField
+                  key={`${component.id}:${key}`}
+                  name={key}
+                  label={tParams(paramKey(key))}
+                  spec={value}
+                  value={paramValue(component, spec, key) ?? value.value}
+                  overridden={component.paramOverrides?.[key] !== undefined}
+                  onCommit={(v) => setParam(component.id, key, v)}
+                />
+              ))}
+            </div>
           </section>
         )}
 
@@ -179,6 +200,7 @@ export const InspectorPanel = () => {
       ) : (
         <div className="flex flex-1 flex-col overflow-y-auto">
           <BoardSizeFields />
+          <AmbientField />
           <PanelEmpty icon={<MousePointerClick />} title={t("emptyTitle")} description={t("emptyDescription")} />
         </div>
       )}

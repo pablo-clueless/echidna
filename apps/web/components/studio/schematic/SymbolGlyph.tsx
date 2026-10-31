@@ -1,5 +1,7 @@
+import type { ComponentSpec } from "@echidna/core";
 import type { ReactNode } from "react";
 
+import { switchClosed } from "@/lib/project/model";
 import { GRID } from "@/lib/schematic/symbols";
 
 const g = (n: number) => n * GRID;
@@ -129,13 +131,29 @@ const toggle = (closed: boolean) => (
   </>
 );
 
+/** Push button: two contacts and a bar on a plunger, held clear of them until pressed. */
+const pushButton = (closed: boolean) => {
+  const bar = closed ? -0.15 : -0.5;
+  return (
+    <>
+      <path d={`${twoPinLeads(1)}${line(-1.1, bar, 1.1, bar)}${line(0, bar, 0, -0.85)}${line(-0.35, -0.85, 0.35, -0.85)}`} />
+      {[-1, 1].map((x) => (
+        <circle key={x} cx={g(x)} r={g(0.15)} className="fill-background" />
+      ))}
+    </>
+  );
+};
+
 /**
  * A part's schematic symbol.
  * @param kind - The spec's `kind`.
  * @param variant - The chosen variant, for symbols that show it, such as a switch's position. Defaults to the first.
  */
-export const SymbolGlyph = ({ kind, variant }: { kind: string; variant?: string | undefined }) =>
-  kind === "switch" ? toggle(variant !== "open") : (glyphs[kind] ?? glyphs.resistor);
+export const SymbolGlyph = ({ spec, variant }: { spec: ComponentSpec; variant?: string | undefined }) => {
+  if (spec.kind !== "switch") return glyphs[spec.kind] ?? glyphs.resistor;
+  const closed = switchClosed(spec, variant);
+  return spec.actuation === "momentary" ? pushButton(closed) : toggle(closed);
+};
 
 /** Half-extents of each symbol's body in grid units at rotation 0, for hit areas and selection outlines. */
 export const symbolBounds: Record<string, { w: number; h: number }> = {

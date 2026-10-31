@@ -1,9 +1,18 @@
 import { createJSONStorage, persist } from "zustand/middleware";
+import { DEFAULT_AMBIENT } from "@echidna/rules";
 import { partsById } from "@echidna/library";
 import type { PinRef } from "@echidna/core";
 import { create } from "zustand";
 
-import { type BoardSize, nextDesignator, type ProjectData, samePin, type SchematicPlacement } from "@/lib/project/model";
+import {
+  type BoardSize,
+  clampAmbient,
+  nextDesignator,
+  type ProjectData,
+  releaseMomentary,
+  samePin,
+  type SchematicPlacement,
+} from "@/lib/project/model";
 import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
 import { regulatorExample } from "@/lib/project/example";
 import { nextRotation } from "@/lib/schematic/symbols";
@@ -18,6 +27,9 @@ const migrateLegacyLed = (project: ProjectData): ProjectData => ({
     c.specId === "led-red-5mm" ? { ...c, specId: "led-5mm", variant: "red" } : c,
   ),
 });
+
+/** Projects before version 4 had no ambient temperature setting; checks assumed 25 °C. */
+const migrateAmbient = (project: ProjectData): ProjectData => ({ ...project, ambientTemperature: DEFAULT_AMBIENT });
 
 /** Projects before version 3 had a fixed board, the default size. */
 const migrateBoardSize = (project: ProjectData): ProjectData => ({
@@ -37,6 +49,7 @@ type ProjectActions = {
   swapSpec: (id: string, specId: string) => void;
   placeOnBoard: (id: string, x: number, z: number) => void;
   resizeBoard: (size: BoardSize) => void;
+  setAmbientTemperature: (kelvin: number) => void;
   loadExample: () => void;
   clear: () => void;
 };
@@ -50,6 +63,7 @@ const empty = (): ProjectData => ({
   schematic: {},
   board: {},
   boardSize: { width: BOARD.width, depth: BOARD.depth },
+  ambientTemperature: DEFAULT_AMBIENT,
 });
 
 /** Where a new part lands on the board: clear of every placed part's courtyard. */
@@ -166,27 +180,31 @@ export const useProjectStore = create<ProjectState>()(
           return { boardSize, board };
         }),
 
+      setAmbientTemperature: (kelvin) => set({ ambientTemperature: clampAmbient(kelvin) }),
+
       loadExample: () => set(regulatorExample()),
 
       clear: () => set(empty()),
     }),
     {
       name: PROJECT_STORAGE_KEY,
-      version: 3,
+      version: 4,
       migrate: (persisted, version) => {
         let project = persisted as ProjectData;
         if (version < 2) project = migrateLegacyLed(project);
         if (version < 3) project = migrateBoardSize(project);
+        if (version < 4) project = migrateAmbient(project);
         return project;
       },
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ name, components, wires, schematic, board, boardSize }) => ({
+      partialize: ({ name, components, wires, schematic, board, boardSize, ambientTemperature }) => ({
         name,
-        components,
+        components: releaseMomentary(components, partsById),
         wires,
         schematic,
         board,
         boardSize,
+        ambientTemperature,
       }),
       skipHydration: true,
     },

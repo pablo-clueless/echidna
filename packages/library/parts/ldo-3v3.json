@@ -12,12 +12,14 @@
   "params": {
     "outputVoltage": { "value": 3.3, "unit": "V", "source": "datasheet", "reference": "Fixed output version" },
     "dropoutVoltage": { "value": 1.1, "unit": "V", "source": "estimated", "reference": "Typical for 1117-type regulators" },
-    "quiescentCurrent": { "value": 0.005, "unit": "A", "source": "estimated", "reference": "Typical for 1117-type regulators" }
+    "quiescentCurrent": { "value": 0.005, "unit": "A", "source": "estimated", "reference": "Typical for 1117-type regulators" },
+    "thermalResistance": { "value": 90, "unit": "K/W", "source": "estimated", "reference": "Typical SOT-223 junction to ambient for 1117-type regulators on minimal copper" }
   },
   "ratings": {
     "maxVoltage": { "value": 15, "unit": "V", "source": "estimated", "reference": "Typical for 1117-type regulators" },
     "maxCurrent": { "value": 0.8, "unit": "A", "source": "estimated", "reference": "Typical for 1117-type regulators" },
-    "maxPower": { "value": 1, "unit": "W", "source": "estimated", "reference": "SOT-223 without heatsinking" }
+    "maxPower": { "value": 1, "unit": "W", "source": "estimated", "reference": "SOT-223 without heatsinking" },
+    "maxTemperature": { "value": 398.15, "unit": "K", "source": "estimated", "reference": "Typical junction limit for 1117-type regulators, 125 °C" }
   },
   "ratingPins": {
     "maxVoltage": ["in", "gnd"],

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormatter, useLocale, useTranslations } from "next-intl";
-import type { Violation } from "@echidna/core";
+import { ratingRatio, type Violation } from "@echidna/core";
 
 import { usePreferencesStore } from "@/stores/preferences";
 import { verdictKey } from "../validator/model";
@@ -31,7 +31,7 @@ export const RatingMeter = ({ violation }: { violation: Violation }) => {
   const format = useFormatter();
   const locale = useLocale();
   const learnMode = usePreferencesStore((s) => s.learnMode);
-  const ratio = violation.actual / violation.limit;
+  const ratio = ratingRatio(violation);
   const idle = violation.unit === "A" && violation.actual < NO_CURRENT;
   const verdict = violation.severity === "pass" ? "pass" : verdictKey(violation);
   const percent = format.number(ratio, { style: "percent", maximumFractionDigits: 0 });
@@ -49,7 +49,7 @@ export const RatingMeter = ({ violation }: { violation: Violation }) => {
       <div
         role="meter"
         aria-label={t(`rules.${ruleKey(violation.ruleId)}.name`)}
-        aria-valuemin={0}
+        aria-valuemin={violation.baseline ?? 0}
         aria-valuemax={violation.limit}
         aria-valuenow={violation.actual}
         aria-valuetext={t("inspector.ofRating", { percent, limit: formatQuantity(violation.limit, violation.unit, locale) })}

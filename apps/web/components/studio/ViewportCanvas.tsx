@@ -8,6 +8,7 @@ import type { Group } from "three";
 
 import { footprints, resistorBands } from "@/lib/board/footprints";
 import { LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
+import { paramValue, switchClosed } from "@/lib/project/model";
 import { BOARD, clampToBoard } from "@/lib/board/placement";
 import { pinCurrentsAt } from "@/lib/simulation/switchOn";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
@@ -15,7 +16,6 @@ import { applyMaskColour } from "./viewport/materials";
 import { projectCopper } from "@/lib/board/copper";
 import { useProjectStore } from "@/stores/project";
 import { useLayoutStore } from "@/stores/layout";
-import { paramValue } from "@/lib/project/model";
 import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
 import { CameraRig } from "./viewport/CameraRig";
@@ -219,7 +219,7 @@ export const ViewportCanvas = () => {
               marking={outputVoltage === undefined ? partNumber : outputVoltage.toFixed(1).replace(".", "V")}
               glow={current / LED_NOMINAL_CURRENT}
               ledColour={c.variant}
-              closed={spec.kind === "switch" ? c.variant !== "open" : undefined}
+              closed={spec.kind === "switch" ? switchClosed(spec, c.variant) : undefined}
             />
           </group>
         );

@@ -9,10 +9,12 @@
     { "id": "2", "name": "2" }
   ],
   "params": {
-    "resistance": { "value": 150, "unit": "Ω", "source": "datasheet", "reference": "Nominal value" }
+    "resistance": { "value": 150, "unit": "Ω", "source": "datasheet", "reference": "Nominal value" },
+    "thermalResistance": { "value": 340, "unit": "K/W", "source": "datasheet", "reference": "Standard ¼ W carbon film derating: full power at 70 °C falling to none at 155 °C" }
   },
   "ratings": {
-    "maxPower": { "value": 0.25, "unit": "W", "source": "datasheet", "reference": "Standard ¼ W carbon film rating at 70 °C" }
+    "maxPower": { "value": 0.25, "unit": "W", "source": "datasheet", "reference": "Standard ¼ W carbon film rating at 70 °C" },
+    "maxTemperature": { "value": 428.15, "unit": "K", "source": "datasheet", "reference": "Standard carbon film maximum hot-spot temperature, 155 °C" }
   },
   "interfaces": [],
   "model": "resistor",
