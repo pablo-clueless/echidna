@@ -64,6 +64,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
+- Verdicts appear about 40 ms sooner after editing a part’s value: the 3D board no longer re-routes its copper and re-cuts every drilled hole when only a value or variant changes, which held up the solver’s reply on the main thread.
+- The selected solder-mask colour and the overlays that are switched on are now highlighted in the 3D toolbar.
 - The "Try a swap" demo moved from the hero to its own section below it.
 - An unpowered linear regulator now turns off: its output disconnects and its bias current falls with the input, instead of forcing its full quiescent current through whatever feeds it (which drove the input of a regulator behind an open switch to about −500 kV).
 - A regulator whose supply sags under a heavy load now settles in dropout instead of failing to converge. The solver moves it one mode at a time (regulating, dropout, off), so it no longer flips between regulating and off; this happened when a capacitor across an LED's resistor drew a large current at switch-on.

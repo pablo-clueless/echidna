@@ -127,7 +127,7 @@ export const CameraToolbar = () => {
         {maskColours.map((colour) => (
           <Tooltip key={colour}>
             <TooltipTrigger asChild>
-              <ToggleGroupItem value={colour} aria-label={tMask(colour)} className="size-8">
+              <ToggleGroupItem value={colour} aria-label={tMask(colour)} className="size-8 aria-checked:bg-primary/15">
                 <span
                   aria-hidden
                   className="size-3.5 rounded-full ring-1 ring-foreground/25"

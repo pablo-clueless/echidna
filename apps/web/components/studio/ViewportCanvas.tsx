@@ -138,7 +138,20 @@ export const ViewportCanvas = () => {
     [playhead, switchOn, settledCurrents],
   );
   const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
-  const copper = useMemo(() => projectCopper({ components, wires, board }), [components, wires, board]);
+  // Copper depends only on which part sits where, so route from a key that ignores values and variants: editing a
+  // resistance must not re-route the board and re-cut every drilled hole while the verdict waits.
+  const footprintKey = useProjectStore((s) => s.components.map((c) => `${c.id}:${c.specId}`).join(","));
+  const placedParts = useMemo(
+    () =>
+      footprintKey
+        ? footprintKey.split(",").map((entry) => {
+            const [id = "", specId = ""] = entry.split(":");
+            return { id, specId };
+          })
+        : [],
+    [footprintKey],
+  );
+  const copper = useMemo(() => projectCopper({ components: placedParts, wires, board }), [placedParts, wires, board]);
   const showCurrent = overlays.includes("current");
   const showHeat = overlays.includes("heat") && settledPower !== undefined;
   // Follows the switch-on playhead like the LEDs do, so scrubbing shows current building up in the copper.

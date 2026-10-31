@@ -1,4 +1,4 @@
-import type { Net, PinRef } from "@echidna/core";
+import type { Net, NetlistComponent, PinRef } from "@echidna/core";
 import { partsById } from "@echidna/library";
 
 import { deriveNets, pinKey, type ProjectData } from "@/lib/project/model";
@@ -16,7 +16,7 @@ const POWER_KINDS = new Set(["ground", "supply"]);
  * @returns Plated holes and routed tracks.
  */
 export const projectCopper = (
-  project: Pick<ProjectData, "components" | "wires" | "board">,
+  project: Pick<ProjectData, "wires" | "board"> & { components: readonly Pick<NetlistComponent, "id" | "specId">[] },
 ): { drills: Drill[]; routing: Routing } => {
   const nets = deriveNets(project.wires);
   // Every ground symbol is the same node, as in the solver, so their nets share one copper net.
@@ -48,5 +48,5 @@ export const projectCopper = (
   return { drills, routing };
 };
 
-const specOf = (project: Pick<ProjectData, "components">, componentId: string) =>
+const specOf = (project: { components: readonly Pick<NetlistComponent, "id" | "specId">[] }, componentId: string) =>
   project.components.find((c) => c.id === componentId)?.specId ?? "";
