@@ -64,6 +64,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
+- The 3D board's copper is routed properly. Each connection is found by a path search on both layers that keeps 0.25 mm clear of every other net's pads, tracks and vias, of the mounting holes and fiducials, and of the board edge, so tracks no longer cross other nets, run between a regulator's pins or drop a via onto another net's pad. Pads of the same pin, such as a regulator's tab and middle lead, are no longer joined by a track. A connection with no clear path shows as a dashed yellow line instead of copper. While a part is dragged the copper waits, and re-routes when it is dropped.
+- Solder mask keeps its colour from every angle: a black board reads black and a green one green, where the studio lighting had washed them out to grey and sage.
+- Copper tracks are a darker shade of the board's colour, with a soft neon glow in a bright shade of it along their edges, on both faces. The glow follows the mask colour.
+- A faint dotted line no longer crosses the board: the key light's shadow map now reaches well past the board's edges.
+
 - Verdicts appear about 40 ms sooner after editing a part’s value: the 3D board no longer re-routes its copper and re-cuts every drilled hole when only a value or variant changes, which held up the solver’s reply on the main thread.
 - The selected solder-mask colour and the overlays that are switched on are now highlighted in the 3D toolbar.
 - The "Try a swap" demo moved from the hero to its own section below it.

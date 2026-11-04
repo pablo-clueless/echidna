@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { projectCopper, projectDrills, TRACK_WIDTH } from "./copper";
 import { regulatorExample } from "@/lib/project/example";
-import { projectCopper, TRACK_WIDTH } from "./copper";
+import { clearanceViolations } from "./clearance";
 
 describe("projectCopper", () => {
   const project = regulatorExample();
@@ -11,16 +12,22 @@ describe("projectCopper", () => {
     expect(drills).toHaveLength(8);
   });
 
-  it("routes each net on the board with one track fewer than its pads", () => {
-    const byNet = new Map<string, number>();
-    for (const trace of routing.traces) {
-      // A top-layer stub from a pad down to a via is part of the bottom-layer connection, not a connection of its own.
-      const [, end] = trace.points;
-      if (trace.layer === "top" && routing.vias.some((v) => v.x === end?.[0] && v.z === end?.[1])) continue;
-      byNet.set(trace.net, (byNet.get(trace.net) ?? 0) + 1);
-    }
-    // Supply → SW1; SW1 → U1 in; U1 out (pin and tab) → R1; R1 → D1 anode; and ground joins D1 cathode, V1− and U1 gnd.
-    expect([...byNet.values()].sort()).toEqual([1, 1, 1, 2, 2]);
+  it("places the same holes without routing, for dragging", () => {
+    expect(projectDrills(project)).toEqual(drills);
+  });
+
+  it("routes each net on the board with one connection fewer than its pins", () => {
+    const byNet = new Map<string, Set<string>>();
+    for (const trace of routing.traces) byNet.set(trace.net, (byNet.get(trace.net) ?? new Set()).add(String(trace.ends)));
+    // Supply → SW1; SW1 → U1 in; U1 out → R1 (the tab is the same pin, joined inside the part); R1 → D1 anode; and
+    // ground joins D1 cathode, V1− and U1 gnd.
+    expect([...byNet.values()].map((ends) => ends.size).sort()).toEqual([1, 1, 1, 1, 2]);
+  });
+
+  it("routes the example on its board without shorting nets", () => {
+    const onBoard = projectCopper(project);
+    expect(onBoard.routing.traces.filter((t) => t.unrouted)).toEqual([]);
+    expect(clearanceViolations(onBoard.routing, onBoard.pads)).toEqual([]);
   });
 
   it("uses wide tracks for the supply and ground nets", () => {

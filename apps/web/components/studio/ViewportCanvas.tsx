@@ -9,6 +9,7 @@ import type { Group } from "three";
 
 import { pinCurrentLookup, trackCurrents } from "@/lib/board/currents";
 import { footprints, resistorBands } from "@/lib/board/footprints";
+import { projectCopper, projectDrills } from "@/lib/board/copper";
 import { LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
 import { paramValue, switchClosed } from "@/lib/project/model";
 import { BOARD, clampToBoard } from "@/lib/board/placement";
@@ -16,12 +17,12 @@ import { pinCurrentsAt } from "@/lib/simulation/switchOn";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { applyMaskColour } from "./viewport/materials";
 import { CurrentFlow } from "./viewport/CurrentFlow";
-import { projectCopper } from "@/lib/board/copper";
 import { useProjectStore } from "@/stores/project";
 import { useLayoutStore } from "@/stores/layout";
 import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
 import { CameraRig } from "./viewport/CameraRig";
+import { TraceGlow } from "./viewport/TraceGlow";
 import { PartMesh } from "./viewport/PartMesh";
 import { HeatGlow } from "./viewport/HeatGlow";
 import { Traces } from "./viewport/Traces";
@@ -137,7 +138,7 @@ export const ViewportCanvas = () => {
     () => (playhead !== null && switchOn?.ok && switchOn.solution ? pinCurrentsAt(switchOn.solution, playhead) : settledCurrents),
     [playhead, switchOn, settledCurrents],
   );
-  const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number } | null>(null);
+  const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number; from: typeof board } | null>(null);
   // Copper depends only on which part sits where, so route from a key that ignores values and variants: editing a
   // resistance must not re-route the board and re-cut every drilled hole while the verdict waits.
   const footprintKey = useProjectStore((s) => s.components.map((c) => `${c.id}:${c.specId}`).join(","));
@@ -151,7 +152,14 @@ export const ViewportCanvas = () => {
         : [],
     [footprintKey],
   );
-  const copper = useMemo(() => projectCopper({ components: placedParts, wires, board }), [placedParts, wires, board]);
+  // Routing is too slow to redo on every pointer move, so while a part is dragged the copper keeps the routing for
+  // where parts stood when the drag began, and re-routes when it is dropped. The part's holes follow it throughout.
+  const routedBoard = dragging ? dragging.from : board;
+  const copper = useMemo(
+    () => projectCopper({ components: placedParts, wires, board: routedBoard, boardSize }),
+    [placedParts, wires, routedBoard, boardSize],
+  );
+  const drills = useMemo(() => projectDrills({ components: placedParts, board }), [placedParts, board]);
   const showCurrent = overlays.includes("current");
   const showHeat = overlays.includes("heat") && settledPower !== undefined;
   // Follows the switch-on playhead like the LEDs do, so scrubbing shows current building up in the copper.
@@ -185,7 +193,7 @@ export const ViewportCanvas = () => {
     e.stopPropagation();
     select({ kind: "component", id });
     const at = board[id];
-    if (at) setDragging({ id, dx: at.x - e.point.x, dz: at.z - e.point.z });
+    if (at) setDragging({ id, dx: at.x - e.point.x, dz: at.z - e.point.z, from: board });
   };
 
   const onPlaneMove = (e: ThreeEvent<PointerEvent>) => {
@@ -205,12 +213,15 @@ export const ViewportCanvas = () => {
       dpr={[1, 2]}
       className={dragging ? "cursor-grabbing" : undefined}
     >
-      <StudioLighting reach={halfDiagonal * 1.15} />
+      {/* The key light's shadow map covers well past the board: where the edge of its coverage crossed the board, it
+          drew a dotted line across it. */}
+      <StudioLighting reach={halfDiagonal * 2.3} />
       <DevHandle />
 
       <group scale={MM}>
-        <Board {...boardSize} thickness={BOARD.thickness} drills={copper.drills} legend={legend} fontFamily={fontFamily} />
+        <Board {...boardSize} thickness={BOARD.thickness} drills={drills} legend={legend} fontFamily={fontFamily} />
         <Traces routing={copper.routing} thickness={BOARD.thickness} />
+        <TraceGlow routing={copper.routing} thickness={BOARD.thickness} />
         {trackFlow && <CurrentFlow routing={copper.routing} thickness={BOARD.thickness} currents={trackFlow} />}
       </group>
 

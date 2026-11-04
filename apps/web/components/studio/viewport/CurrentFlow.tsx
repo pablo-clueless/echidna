@@ -54,7 +54,7 @@ const ribbonGeometry = (routing: Routing, thickness: number) => {
     const y = trace.layer === "top" ? thickness + LIFT : -LIFT;
     const half = (trace.width * RIBBON) / 2;
     let distance = 0;
-    for (let i = 1; trace.ends && i < trace.points.length; i++) {
+    for (let i = 1; trace.ends && !trace.unrouted && i < trace.points.length; i++) {
       const [ax, az] = trace.points[i - 1] ?? [0, 0];
       const [bx, bz] = trace.points[i] ?? [0, 0];
       const length = Math.hypot(bx - ax, bz - az);

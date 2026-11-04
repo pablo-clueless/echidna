@@ -1,5 +1,6 @@
 import type { BoardPlacement, BoardSize } from "@/lib/project/model";
 import type { Footprint } from "./footprints";
+import type { Keepout } from "./routing";
 
 /** Default board in millimetres: 100 × 70 mm, 1.6 mm FR-4. */
 export const BOARD = { width: 100, depth: 55, thickness: 1.6 } as const;
@@ -7,6 +8,50 @@ export const BOARD = { width: 100, depth: 55, thickness: 1.6 } as const;
 export const BOARD_LIMITS = { min: { width: 40, depth: 30 }, max: { width: 200, depth: 200 } } as const;
 /** Part centres stay this far inside the board edge, in millimetres. */
 const EDGE_MARGIN = 4;
+
+/** Plated M3 mounting holes, one per corner: centre inset from both edges, drill radius and copper ring radius. */
+export const MOUNTING_HOLE = { inset: 3.5, radius: 1.6, ring: 3 } as const;
+/** Fiducials: copper dots in a round mask opening, inset from three corners for assembly cameras. */
+export const FIDUCIAL = { inset: { x: 10, z: 3.5 }, opening: 1.5, dot: 0.5 } as const;
+
+/**
+ * Mounting hole centres for a board outline, in millimetres.
+ * @param size - Board outline in millimetres.
+ * @returns One centre per corner.
+ */
+export const mountingHoles = ({ width, depth }: BoardSize): [number, number][] => {
+  const [x, z] = [width / 2 - MOUNTING_HOLE.inset, depth / 2 - MOUNTING_HOLE.inset];
+  return [
+    [-x, -z],
+    [x, -z],
+    [x, z],
+    [-x, z],
+  ];
+};
+
+/**
+ * Fiducial centres for a board outline, in millimetres.
+ * @param size - Board outline in millimetres.
+ * @returns Three centres, leaving one corner free so the board's orientation reads unambiguously.
+ */
+export const fiducials = ({ width, depth }: BoardSize): [number, number][] => {
+  const [x, z] = [width / 2 - FIDUCIAL.inset.x, depth / 2 - FIDUCIAL.inset.z];
+  return [
+    [-x, -z],
+    [x, -z],
+    [x, z],
+  ];
+};
+
+/**
+ * Areas tracks must keep out of: mounting hole rings and fiducial openings, in millimetres.
+ * @param size - Board outline in millimetres.
+ * @returns Round keepouts.
+ */
+export const boardKeepouts = (size: BoardSize): Keepout[] => [
+  ...mountingHoles(size).map(([x, z]) => ({ x, z, radius: MOUNTING_HOLE.ring })),
+  ...fiducials(size).map(([x, z]) => ({ x, z, radius: FIDUCIAL.opening })),
+];
 
 /**
  * Rounds a board outline to whole millimetres within `BOARD_LIMITS`.

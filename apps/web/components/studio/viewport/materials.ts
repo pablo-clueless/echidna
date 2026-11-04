@@ -1,21 +1,34 @@
-import { DoubleSide, MeshPhysicalMaterial, MeshStandardMaterial } from "three";
+import { Color, DoubleSide, MeshPhysicalMaterial, MeshStandardMaterial } from "three";
 
 import type { MaskColour } from "@/stores/layout";
 
-/** Mask colour and the slightly lighter, glossier tone copper takes on under it. */
-const finishes: Record<MaskColour, { mask: string; copper: string }> = {
-  black: { mask: "#0C0D0F", copper: "#262930" },
-  green: { mask: "#0E4A28", copper: "#1C6B3B" },
-  blue: { mask: "#0E2C5E", copper: "#1D4688" },
-  red: { mask: "#6E1212", copper: "#972521" },
+/**
+ * Mask colour, the darker shade of it the copper under it takes, and the brighter shade of it for the neon edge
+ * `TraceGlow` draws round each track.
+ */
+const finishes: Record<MaskColour, { mask: string; copper: string; glow: string }> = {
+  black: { mask: "#0C0D0F", copper: "#050506", glow: "#8A909C" },
+  green: { mask: "#0E4A28", copper: "#072E18", glow: "#3DDC84" },
+  blue: { mask: "#0E2C5E", copper: "#081B3C", glow: "#4D8DFF" },
+  red: { mask: "#6E1212", copper: "#440A0A", glow: "#FF4D4D" },
 };
+
+/** The neon edge colour for the current mask, shared with the glow shader so a mask change recolours it at once. */
+export const glowColour = new Color(finishes.black.glow);
+
+/**
+ * Specular strength of the solder mask, as a fraction of a plain dielectric's. Mask is a thin satin lacquer: at full
+ * strength the studio's key light and overhead softbox wash a black board out to mid grey and a green one to sage,
+ * from any angle, so the mask reflects about a third as much and keeps its colour while still catching highlights.
+ */
+const MASK_SPECULAR = 0.3;
 
 /** Shared physical materials, created once so every part reuses the same shader programs. */
 export const materials = {
-  /** Satin black solder mask over FR-4. A clearcoat here washes the board out to grey. */
-  mask: new MeshStandardMaterial({ color: "#0C0D0F", roughness: 0.68 }),
-  /** Copper tracks and tented vias seen through the mask. */
-  maskedCopper: new MeshStandardMaterial({ color: "#1D1F23", roughness: 0.42 }),
+  /** Satin solder mask over FR-4. A clearcoat here washes the board out to grey. */
+  mask: new MeshPhysicalMaterial({ color: "#0C0D0F", roughness: 0.6, specularIntensity: MASK_SPECULAR }),
+  /** Copper tracks and tented vias seen through the mask: a darker shade of the mask, with the same satin sheen. */
+  maskedCopper: new MeshPhysicalMaterial({ color: "#050506", roughness: 0.6, specularIntensity: MASK_SPECULAR }),
   /** Exposed laminate on the board edge and hole walls. */
   laminate: new MeshStandardMaterial({ color: "#B7A77C", roughness: 0.85 }),
   /** ENIG pad finish. */
@@ -54,4 +67,5 @@ export const applyMaskColour = (colour: MaskColour) => {
   const finish = finishes[colour];
   materials.mask.color.set(finish.mask);
   materials.maskedCopper.color.set(finish.copper);
+  glowColour.set(finish.glow);
 };

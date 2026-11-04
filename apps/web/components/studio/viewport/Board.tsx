@@ -3,6 +3,7 @@
 import { CanvasTexture, ExtrudeGeometry, LinearMipmapLinearFilter, Path, SRGBColorSpace, Shape } from "three";
 import { useEffect, useMemo } from "react";
 
+import { FIDUCIAL, fiducials, MOUNTING_HOLE, mountingHoles } from "@/lib/board/placement";
 import type { Drill } from "@/lib/board/footprints";
 import { materials } from "./materials";
 
@@ -18,13 +19,9 @@ type Props = {
 };
 
 const CORNER = 2.5;
-const HOLE_INSET = 3.5;
-const HOLE_R = 1.6;
-const RING_R = 3;
+const { radius: HOLE_R, ring: RING_R } = MOUNTING_HOLE;
 /** Laminate kept between a hole and the board edge or a neighbouring hole. */
 const WEB = 0.3;
-/** Fiducial marks: 1 mm copper dots in a 3 mm mask opening, inset from three corners for assembly cameras. */
-const FIDUCIAL_INSET = { x: 10, z: 3.5 };
 /** The legend runs from `inset` off the left edge, up to 60 mm or until `clear` of the right edge's fiducial. */
 const LEGEND = { height: 2.2, length: 60, inset: 9, clear: 13 };
 const PX_PER_MM = 40;
@@ -55,24 +52,12 @@ export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: P
   const legendLength = Math.min(LEGEND.length, width - LEGEND.inset - LEGEND.clear);
   const legendMap = useMemo(() => legendTexture(legend, fontFamily, legendLength), [legend, fontFamily, legendLength]);
   useEffect(() => () => legendMap.dispose(), [legendMap]);
-  const fiducials = useMemo<[number, number][]>(() => {
-    const [fx, fz] = [width / 2 - FIDUCIAL_INSET.x, depth / 2 - FIDUCIAL_INSET.z];
-    return [
-      [-fx, -fz],
-      [fx, -fz],
-      [fx, fz],
-    ];
-  }, [width, depth]);
+  const marks = useMemo(() => fiducials({ width, depth }), [width, depth]);
 
-  const mounting = useMemo<Drill[]>(() => {
-    const [hx, hz] = [width / 2 - HOLE_INSET, depth / 2 - HOLE_INSET];
-    return [
-      { x: -hx, z: -hz, diameter: HOLE_R * 2 },
-      { x: hx, z: -hz, diameter: HOLE_R * 2 },
-      { x: hx, z: hz, diameter: HOLE_R * 2 },
-      { x: -hx, z: hz, diameter: HOLE_R * 2 },
-    ];
-  }, [width, depth]);
+  const mounting = useMemo<Drill[]>(
+    () => mountingHoles({ width, depth }).map(([x, z]) => ({ x, z, diameter: HOLE_R * 2 })),
+    [width, depth],
+  );
 
   const plated = useMemo(() => {
     const kept: Drill[] = [];
@@ -117,18 +102,18 @@ export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: P
           <Barrel radius={HOLE_R} thickness={thickness} />
         </group>
       ))}
-      {fiducials.map(([x, z]) => (
+      {marks.map(([x, z]) => (
         <group key={`${x},${z}`} position={[x, thickness, z]}>
           <mesh position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.laminate} receiveShadow>
-            <circleGeometry args={[1.5, 40]} />
+            <circleGeometry args={[FIDUCIAL.opening, 40]} />
           </mesh>
           <mesh position={[0, 0.025, 0]} material={materials.gold} receiveShadow>
-            <cylinderGeometry args={[0.5, 0.5, 0.05, 32]} />
+            <cylinderGeometry args={[FIDUCIAL.dot, FIDUCIAL.dot, 0.05, 32]} />
           </mesh>
         </group>
       ))}
       <mesh
-        position={[-width / 2 + LEGEND.inset + legendLength / 2, thickness + 0.045, depth / 2 - FIDUCIAL_INSET.z]}
+        position={[-width / 2 + LEGEND.inset + legendLength / 2, thickness + 0.045, depth / 2 - FIDUCIAL.inset.z]}
         rotation={[-Math.PI / 2, 0, 0]}
         raycast={() => null}
       >

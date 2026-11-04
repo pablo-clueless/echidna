@@ -3,19 +3,22 @@
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { BoxGeometry, type BufferGeometry, CylinderGeometry } from "three";
 import { useEffect, useMemo } from "react";
+import { Line } from "@react-three/drei";
 
 import { type Routing, VIA_SIZE } from "@/lib/board/routing";
 import { materials } from "./materials";
 
 /** 1 oz copper, which the mask drapes over as a slight ridge. */
 const COPPER_T = 0.035;
+/** Warning yellow from the status palette: an unrouted connection needs the parts moved apart. */
+const UNROUTED_COLOUR = "#EAB308";
 
 type Props = { routing: Routing; thickness: number };
 
 const layerGeometry = (routing: Routing, layer: "top" | "bottom", y: number) => {
   const parts: BufferGeometry[] = [];
   for (const trace of routing.traces) {
-    if (trace.layer !== layer) continue;
+    if (trace.layer !== layer || trace.unrouted) continue;
     trace.points.forEach(([x, z], i) => {
       const joint = new CylinderGeometry(trace.width / 2, trace.width / 2, COPPER_T, 16);
       parts.push(joint.translate(x, y, z));
@@ -42,9 +45,23 @@ export const Traces = ({ routing, thickness }: Props) => {
     [routing, thickness],
   );
   useEffect(() => () => layers.forEach((g) => g?.dispose()), [layers]);
+  const unrouted = routing.traces.filter((t) => t.unrouted);
 
   return (
     <group>
+      {/* Connections with no clear path: a dashed line over the mask, as an autorouter's ratsnest shows them. */}
+      {unrouted.map((trace, i) => (
+        <Line
+          key={`unrouted-${i}`}
+          points={trace.points.map(([x, z]) => [x, thickness + 0.3, z] as [number, number, number])}
+          color={UNROUTED_COLOUR}
+          lineWidth={1.5}
+          dashed
+          dashSize={0.8}
+          gapSize={0.5}
+          raycast={() => null}
+        />
+      ))}
       {layers.map((geometry, i) =>
         geometry ? (
           <mesh key={i} geometry={geometry} material={materials.maskedCopper} raycast={() => null} receiveShadow />
