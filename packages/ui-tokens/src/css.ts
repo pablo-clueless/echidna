@@ -9,7 +9,7 @@ const declarations = (prefix: string, values: Record<string | number, string>): 
 
 const colourDeclarations = (colours: ThemeColours): string[] => declarations("colour", colours);
 
-const locales: Locale[] = ["en", "fr", "es", "zh", "ja", "ru"];
+const locales: Locale[] = ["en", "fr", "es", "de", "zh", "ja", "ru"];
 
 /**
  * Renders every token as CSS custom properties. Light is the default; dark applies via

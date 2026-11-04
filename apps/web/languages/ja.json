@@ -1,0 +1,426 @@
+{
+  "Metadata": {
+    "description": "回路基板やデバイスを3Dで組み立ててシミュレーションし、すべての部品が動作するかをすぐに確認できます。"
+  },
+  "Home": {
+    "openStudio": "スタジオを開く",
+    "footer": "Echidna は開発の初期段階です。",
+    "hero": {
+      "eyebrow": "回路基板とデバイスのための 3D スタジオ",
+      "titleTop": "作る前に、",
+      "titleBottom": "<mark>動く</mark>とわかる。",
+      "lead": "部品を配置して入れ替えるだけで、すべての部品が定格内に収まっているかをすぐに確認できます。メイカー、学生、そしてデバイスの中身が気になるすべての人のために。",
+      "secondary": "判定のしくみ",
+      "tagline": "配置 · 交換 · 検証",
+      "slogan": "推測はやめて、組み立てよう。",
+      "verdict": "ライブ判定"
+    },
+    "demo": {
+      "title": "入れ替えてみる",
+      "caption": "5 V 電源、直列抵抗、赤色 LED。抵抗を小さくすると電流が上がっていく様子がわかります。",
+      "diagramLabel": "回路：5 V 電源、直列抵抗、LED の単一ループ",
+      "resistor": "直列抵抗",
+      "moreResistance": "抵抗を大きく",
+      "lessResistance": "抵抗を小さく",
+      "current": "LED 電流",
+      "rating": "定格 {rating} mA に対して",
+      "pass": "定格内",
+      "warn": "限界に近い",
+      "fail": "定格超過",
+      "explainPass": "LED の電流は {current} mA で、定格 {rating} mA を十分下回っています。",
+      "explainWarn": "LED は定格の {percent} に達しています。点灯はしますが、余裕はありません。",
+      "explainFail": "LED に {current} mA が流れます（定格 {rating} mA）。過熱して早期に故障します。",
+      "note": "ここでは LED の電圧降下を 2 V 固定で簡略化しています。スタジオでは回路全体を解析します。"
+    },
+    "checks": {
+      "heading": "すべての部品は 3 つのチェックを通過します",
+      "lead": "3 つすべてを満たしたときだけ、部品はスロットに収まります。1 つでも満たさなければ、どれがどれだけ足りないかを Echidna が示します。",
+      "connects": {
+        "title": "接続できる",
+        "body": "インターフェースが一致している：ソケット、コネクタ、レーン数が正しいこと。"
+      },
+      "powered": {
+        "title": "給電できる",
+        "body": "スロットの電源レールが、部品に必要な電圧と電流を供給できること。"
+      },
+      "cool": {
+        "title": "熱くなりすぎない",
+        "body": "発熱量がスロットの熱予算と周囲の冷却能力に収まること。"
+      }
+    },
+    "devices": {
+      "heading": "6 種類のデバイス、ひとつのルール",
+      "lead": "プリセットから実在のデバイスを再現するか、空の基板から始めましょう。種類ごとに入れ替え可能な部品のカタログがあります。",
+      "smartphone": {
+        "name": "スマートフォン",
+        "examples": "iPhone と Galaxy のプリセット"
+      },
+      "desktop": {
+        "name": "デスクトップ PC",
+        "examples": "エントリー、ゲーミング、ワークステーション構成"
+      },
+      "laptop": {
+        "name": "ノート PC",
+        "examples": "ウルトラブックとゲーミングのプリセット"
+      },
+      "drone": {
+        "name": "ドローン",
+        "examples": "DJI Mini シリーズと 5 インチ FPV"
+      },
+      "iot": {
+        "name": "開発ボード",
+        "examples": "Raspberry Pi、ESP32、Arduino"
+      },
+      "wearable": {
+        "name": "ウェアラブル",
+        "examples": "スマートウォッチとフィットネスバンド"
+      }
+    },
+    "provenance": {
+      "heading": "すべての数値に出典があります",
+      "lead": "数値にはデータシート、分解調査、推定のいずれかのラベルが付き、判定をどこまで信頼できるかがわかります。推定値だけに基づく失敗は、断定ではなく「失敗の可能性」と表示されます。",
+      "datasheet": "データシート",
+      "teardown": "分解調査",
+      "estimated": "推定",
+      "rows": {
+        "battery": "バッテリー容量",
+        "display": "ディスプレイ電流",
+        "soc": "プロセッサのピーク電力"
+      }
+    },
+    "cta": {
+      "heading": "空の基板から始めましょう",
+      "body": "スタジオを開き、ライブラリから部品を選んで配置すると、その場で判定が表示されます。",
+      "eyebrow": "組み立てを始める"
+    },
+    "assembly": {
+      "label": "すべての部品が実装済みの開発ボード。電源ボタンを押すと、電力が届いた部品から順に点灯する",
+      "board": "開発ボード",
+      "lit": "{total} 個中 {lit} 個が通電",
+      "off": "オフ · 電源を押す",
+      "booting": "起動中",
+      "powered": "通電中 · すべてのチェックに合格",
+      "powerOn": "電源オン",
+      "powerOff": "電源オフ",
+      "parts": {
+        "soc": "プロセッサ",
+        "memory": "フラッシュメモリ",
+        "capacitors": "デカップリングコンデンサ",
+        "resistors": "抵抗",
+        "usb": "USB-C コネクタ",
+        "inductor": "パワーインダクタ",
+        "crystal": "水晶発振器",
+        "led": "ステータス LED",
+        "header": "ピンヘッダ"
+      }
+    },
+    "swap": {
+      "heading": "部品を一つ替えて、判定を確かめる",
+      "lead": "交換するたびにすぐチェックします。ここでは最もシンプルな回路で試せます。"
+    },
+    "sections": {
+      "swap": "試す",
+      "checks": "判定",
+      "devices": "デバイス",
+      "provenance": "データ"
+    },
+    "stats": {
+      "devices": {
+        "label": "デバイスの種類",
+        "body": "スマートフォン、デスクトップ PC、ノート PC、ドローン、開発ボード、ウェアラブル。"
+      },
+      "checks": {
+        "label": "部品ごとのチェック",
+        "body": "部品を配置するたびに、接続・電源・発熱を確認します。"
+      },
+      "sources": {
+        "label": "データの出所",
+        "body": "すべての値に、データシート・分解調査・推定のいずれかを表示します。"
+      },
+      "languages": {
+        "label": "言語",
+        "body": "ライトとダークのテーマに対応。ブラウザーで動き、インストールは不要です。"
+      }
+    },
+    "languages": {
+      "heading": "あなたの言語で",
+      "lead": "ラベル、判定、説明のすべてを 7 つの言語で。"
+    }
+  },
+  "Preferences": {
+    "language": "言語",
+    "toggleTheme": "テーマを切り替え"
+  },
+  "Studio": {
+    "title": "スタジオ",
+    "untitledProject": "無題のプロジェクト",
+    "blankBoard": "空の基板",
+    "learnMode": "学習モード",
+    "simulate": "シミュレーション",
+    "toggleLibrary": "部品ライブラリの表示を切り替え",
+    "panels": "パネル",
+    "library": {
+      "title": "部品",
+      "search": "部品を検索",
+      "noMatchTitle": "一致する部品がありません",
+      "noMatchDescription": "抵抗や LED など、別の名前で試してください。",
+      "addHint": "選択して追加、または回路図へドラッグ",
+      "categories": {
+        "power": "電源",
+        "passives": "受動部品",
+        "semiconductors": "半導体"
+      }
+    },
+    "viewport": {
+      "label": "3D 基板ビュー",
+      "help": "ドラッグで回転、右ドラッグで移動、ホイールでズーム。ビューにフォーカスがあるときは矢印キーで移動できます。",
+      "controls": {
+        "label": "カメラ",
+        "zoomIn": "ズームイン",
+        "zoomOut": "ズームアウト",
+        "fit": "基板全体を表示",
+        "top": "上面図",
+        "angled": "3D ビュー",
+        "underside": "裏面ビュー"
+      },
+      "overlays": {
+        "label": "オーバーレイ",
+        "current": "電流の流れ",
+        "heat": "発熱",
+        "currentHint": "破線が電流の向きに銅箔の上を流れます。電流が大きいほど速く動きます。",
+        "heatTitle": "部品の推定温度",
+        "unsolved": "回路をシミュレーションするとオーバーレイが表示されます。"
+      },
+      "mask": {
+        "label": "ソルダーレジストの色",
+        "black": "黒",
+        "green": "緑",
+        "blue": "青",
+        "red": "赤"
+      }
+    },
+    "schematic": {
+      "title": "回路図",
+      "emptyTitle": "回路図は空です",
+      "emptyDescription": "「部品」から部品をドラッグするか、サンプル回路から始めてください。",
+      "openExample": "3.3 V レギュレーターのサンプルを開く",
+      "rotate": "回転 (R)",
+      "delete": "削除 (Del)",
+      "canvasLabel": "回路図エディター",
+      "canvasRole": "回路図",
+      "partLabel": "{id}、{name}",
+      "hint": "ピンからピンへドラッグして配線 · <key>R</key> 回転 · <key>Del</key> 削除 · ダブルクリックで全体表示"
+    },
+    "inspector": {
+      "board": {
+        "title": "基板",
+        "width": "幅",
+        "depth": "奥行き",
+        "outOfRange": "{min}〜{max} mm のサイズを入力してください。"
+      },
+      "environment": {
+        "title": "周囲環境",
+        "ambient": "周囲温度",
+        "outOfRange": "{min}〜{max} °C の温度を入力してください。",
+        "hint": "各部品の温度は、この周囲温度を起点に、部品が出す熱から推定します。"
+      },
+      "switch": {
+        "hold": "押し続ける"
+      },
+      "title": "インスペクター",
+      "emptyTitle": "何も選択されていません",
+      "emptyDescription": "部品を選択するとリアルタイムの値が表示されます。",
+      "parameters": "パラメーター",
+      "liveValues": "ライブ値",
+      "ratings": "定格",
+      "pinVoltage": "{pin} の電圧",
+      "current": "電流",
+      "power": "消費電力",
+      "temperature": "温度（推定）",
+      "resetParam": "部品の既定値に戻す",
+      "invalidNumber": "220 や 4.7k のように数値を入力してください。",
+      "verdict": {
+        "pass": "定格内",
+        "warn": "警告",
+        "fail": "不合格",
+        "likelyFail": "不合格の可能性",
+        "noCurrent": "電流なし"
+      },
+      "ofRating": "{limit} の {percent}",
+      "swapsTitle": "交換の候補",
+      "swapTo": "{value} を使用：{verdict}",
+      "swapVerdict": {
+        "pass": "適合",
+        "warn": "警告",
+        "fail": "不適合"
+      },
+      "checking": "確認中…",
+      "net": "ネット",
+      "netVoltage": "電圧",
+      "connections": "接続されたピン",
+      "led": {
+        "on": "点灯中、{current}",
+        "off": "消灯",
+        "reasons": {
+          "unwired": "リードの片方が配線されていないため、電流が流れません。",
+          "shorted": "両方のリードが同じネットにつながっているため、電流は LED を通らずに迂回します。",
+          "reversed": "逆向きに配線されています。カソードがアノードより高い電圧になっています。",
+          "open": "電流が流れていません。回路が閉じていないか、点灯させるには電圧が低すぎます。"
+        }
+      },
+      "switchOn": {
+        "title": "電源投入後",
+        "at": "{time} 時点",
+        "voltage": "電圧（{from} から {to}）",
+        "currentInto": "{pin} に流れ込む電流",
+        "currentOutOf": "{pin} から流れ出る電流",
+        "scrub": "電源投入後の時間",
+        "valueText": "{time}：{voltage}、{current}",
+        "span": "安定するまでの最初の {time} を表示しています。",
+        "unsettled": "{time} 後もまだ変化しています。安定するにはさらに時間がかかります。",
+        "hint": "グラフを指すか、選択して矢印キーを使うと、基板上で電源投入を再生できます。",
+        "instant": "この回路にはエネルギーを蓄える部品がないため、電源を入れた瞬間にこれらの値になります。",
+        "failed": "この回路の電源投入をシミュレーションできませんでした。想定よりはるかに大きいコンデンサなど、極端な値がないか確認してください。"
+      }
+    },
+    "validator": {
+      "label": "検証",
+      "allPassed": "すべてのチェックに合格しました",
+      "fails": "{count, plural, other {失敗 # 件}}",
+      "warns": "{count, plural, other {警告 # 件}}",
+      "expand": "すべての問題を表示",
+      "collapse": "折りたたむ",
+      "fail": "失敗",
+      "likelyFail": "失敗の可能性",
+      "warn": "警告",
+      "estimated": "推定",
+      "idle": "部品を追加するとチェックを開始します",
+      "solvedIn": "{ms} ms で計算",
+      "errors": {
+        "singular": "この回路は計算できません。電源同士が直接つながっていないか確認してください。",
+        "noConvergence": "この回路の安定した解が見つかりませんでした。",
+        "pinCount": "{id} の配線が正しくありません。",
+        "invalidValue": "{id} の値は計算に使用できません。",
+        "internal": "計算中に問題が発生しました。もう一度変更してください。"
+      }
+    },
+    "simulateOn": "ライブ：変更のたびに計算とチェックを行います。選択すると一時停止します。",
+    "simulateOff": "一時停止中。選択すると変更をライブで計算・チェックします。",
+    "params": {
+      "voltage": "電圧",
+      "current": "電流",
+      "resistance": "抵抗値",
+      "capacitance": "静電容量",
+      "inductance": "インダクタンス",
+      "outputVoltage": "出力電圧",
+      "dropoutVoltage": "ドロップアウト電圧",
+      "quiescentCurrent": "静止電流",
+      "forwardBeta": "電流増幅率 (β)",
+      "thresholdVoltage": "ゲートしきい値電圧"
+    },
+    "provenance": {
+      "datasheet": "データシート",
+      "teardown": "分解調査",
+      "estimated": "推定",
+      "user": "ユーザー設定"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "定格電圧",
+        "explain": "この部品にかかる電圧は定格の {percent} です。余裕を持たせるため 80% 未満に保ってください。100% を超えると破壊するおそれがあります。"
+      },
+      "currentRating": {
+        "name": "定格電流",
+        "explain": "この部品に流れる電流は最大定格の {percent} です。80% を超えると発熱して劣化が早まり、100% を超えると故障するおそれがあります。"
+      },
+      "powerRating": {
+        "name": "定格電力",
+        "explain": "この部品は定格電力の {percent} を熱に変えています。80% を超えると熱くなり、100% を超えると焼損するおそれがあります。"
+      },
+      "temperatureRating": {
+        "name": "温度",
+        "explain": "この部品は、周囲の空気より上げられる温度上昇の {percent} を使っていると推定されます。80% を超えると劣化が早まり、100% を超えると壊れるおそれがあります。部品に流す電力を減らすか、定格電力の大きい部品にすると温度が下がります。"
+      },
+      "switchOnVoltage": {
+        "name": "電源投入時の電圧",
+        "explain": "電源投入直後、この部品にかかる電圧が一時的に定格の {percent} に達し、安定後の値を上回ります。インダクタとコンデンサの間の振動が原因のことがあり、ループの抵抗を増やすと収まります。"
+      },
+      "switchOnCurrent": {
+        "name": "電源投入時の電流",
+        "explain": "回路の起動中、この部品には 1 ミリ秒以上にわたって定格電流の {percent} が流れます。多くは大きなコンデンサの充電中です。コンデンサを小さくするか直列抵抗を増やすと、突入電流が短くなります。"
+      },
+      "switchOnPower": {
+        "name": "電源投入時の発熱",
+        "explain": "回路の起動中、この部品は 1 ミリ秒以上にわたって定格電力の {percent} を熱に変えます。多くは大きなコンデンサの充電中です。コンデンサを小さくするか直列抵抗を増やすと、突入電流が短くなります。"
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "直流電源",
+      "summary": "固定電圧源"
+    },
+    "ground": {
+      "name": "グラウンド",
+      "summary": "0 V 基準"
+    },
+    "resistor": {
+      "name": "抵抗、¼ W",
+      "summary": "電流を制限"
+    },
+    "capacitor-ceramic": {
+      "name": "セラミックコンデンサー、16 V",
+      "summary": "直流では開放"
+    },
+    "switch-spst": {
+      "name": "スライドスイッチ（SPST）",
+      "summary": "オン／オフ、0.5 A",
+      "variantLabel": "位置",
+      "variants": {
+        "closed": "オン（閉）",
+        "open": "オフ（開）"
+      }
+    },
+    "switch-push": {
+      "name": "押しボタンスイッチ、SPST",
+      "summary": "押している間オン、50 mA",
+      "variantLabel": "ボタン",
+      "variants": {
+        "open": "離した状態（開）",
+        "closed": "押した状態（閉）"
+      }
+    },
+    "led-5mm": {
+      "name": "LED、5 mm",
+      "summary": "色を選択可、連続 20 mA",
+      "variantLabel": "色",
+      "variants": {
+        "red": "赤",
+        "yellow": "黄",
+        "green": "緑",
+        "blue": "青",
+        "white": "白"
+      }
+    },
+    "ldo-3v3": {
+      "name": "3.3 V レギュレーター (LDO)",
+      "summary": "1117 タイプ、最大 0.8 A"
+    },
+    "npn-2n3904": {
+      "name": "NPN トランジスタ、2N3904",
+      "summary": "スイッチまたは増幅、40 V、200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "PNP トランジスタ、2N3906",
+      "summary": "ハイサイドスイッチ、40 V、200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "N チャネル MOSFET、2N7000",
+      "summary": "ローサイドスイッチ、60 V、200 mA"
+    },
+    "pmos-bs250": {
+      "name": "P チャネル MOSFET、BS250 タイプ",
+      "summary": "ハイサイドスイッチ、約 45 V"
+    }
+  }
+}

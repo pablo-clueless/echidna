@@ -25,8 +25,8 @@ const vertexShader = /* glsl */ `
 
 // Each quad covers one track segment plus the glow's reach. `local` is the fragment's position along (x, from the
 // segment's start) and across (y) it, `shape` the segment's length and half-width, so the distance from the track's
-// edge is exact at ends and bends too. The track itself is left alone, so its dark shade of the board colour shows;
-// outside it a soft halo in a bright shade of the board colour fades out, brightest right at the edge.
+// edge is exact at ends and bends too. The track itself is left alone, so its copper shows; outside it a soft warm
+// copper halo fades out, brightest right at the edge.
 const fragmentShader = /* glsl */ `
   uniform vec3 uColour;
   uniform float uReach;
@@ -85,7 +85,7 @@ const glowGeometry = (routing: Routing, thickness: number) => {
 type Props = { routing: Routing; thickness: number };
 
 /**
- * Neon outline and glow around every copper track, on both faces. Blended by taking the brighter of glow and board
+ * Soft copper glow around every track, on both faces. Blended by taking the brighter of glow and board
  * per channel, so overlapping quads at bends and junctions never stack into hot spots. Board millimetres.
  */
 export const TraceGlow = ({ routing, thickness }: Props) => {
@@ -95,7 +95,7 @@ export const TraceGlow = ({ routing, thickness }: Props) => {
       new ShaderMaterial({
         vertexShader,
         fragmentShader,
-        // The shared colour follows the mask: a brighter shade of the board's own colour.
+        // A warm copper halo, the same on every mask colour.
         uniforms: { uColour: { value: glowColour }, uReach: { value: GLOW_REACH } },
         transparent: true,
         depthWrite: false,

@@ -102,31 +102,35 @@ const kinds: Record<Kind, () => Prim[]> = {
   header,
 };
 
+/**
+ * Parts in the order power reaches them. Positions are chosen so each part's pads land on the trace ends below:
+ * the QFP's pins sit on a 0.167 pitch around (-0.6, 0), and the SOIC's on a 0.24 pitch around (1.55, -0.85).
+ */
 const layout: { key: StepKey; designator: string; items: Placement[] }[] = [
-  { key: "soc", designator: "U1", items: [{ kind: "qfp", at: [-0.6, 0] }] },
-  { key: "memory", designator: "U2", items: [{ kind: "soic", at: [1.55, -0.85] }] },
+  { key: "usb", designator: "J1", items: [{ kind: "usb", at: [-2.62, 1.2] }] },
+  { key: "inductor", designator: "L1", items: [{ kind: "inductor", at: [-1.02, 1.45] }] },
   {
     key: "capacitors",
     designator: "C1–C4",
     items: [
-      { kind: "mlcc", at: [-1.72, -0.5], turn: true },
-      { kind: "mlcc", at: [-1.72, 0.5], turn: true },
-      { kind: "mlcc", at: [0.52, -0.5], turn: true },
-      { kind: "mlcc", at: [0.52, 0.5], turn: true },
+      { kind: "mlcc", at: [-1.75, -0.5], turn: true },
+      { kind: "mlcc", at: [-1.75, 0.5], turn: true },
+      { kind: "mlcc", at: [0.55, -0.5], turn: true },
+      { kind: "mlcc", at: [0.55, 0.5], turn: true },
     ],
   },
+  { key: "soc", designator: "U1", items: [{ kind: "qfp", at: [-0.6, 0] }] },
+  { key: "crystal", designator: "Y1", items: [{ kind: "crystal", at: [-0.6, -1.42] }] },
+  { key: "memory", designator: "U2", items: [{ kind: "soic", at: [1.55, -0.85] }] },
   {
     key: "resistors",
     designator: "R1–R3",
     items: [
-      { kind: "resistor", at: [1.15, 0.2] },
-      { kind: "resistor", at: [1.75, 0.2] },
+      { kind: "resistor", at: [1.15, 0.25] },
+      { kind: "resistor", at: [1.79, 0.25] },
       { kind: "resistor", at: [1.85, 1.5] },
     ],
   },
-  { key: "usb", designator: "J1", items: [{ kind: "usb", at: [-2.68, 1.1] }] },
-  { key: "inductor", designator: "L1", items: [{ kind: "inductor", at: [-1.35, 1.45] }] },
-  { key: "crystal", designator: "Y1", items: [{ kind: "crystal", at: [-0.6, -1.4] }] },
   { key: "led", designator: "D1", items: [{ kind: "led", at: [2.3, 1.5] }] },
   { key: "header", designator: "J2", items: [{ kind: "header", at: [1.55, -1.72] }] },
 ];
@@ -139,7 +143,7 @@ const turnPrim = (p: Prim): Prim => ({
 
 /**
  * Resolves the board layout into placement steps, each a group of primitives positioned relative to its centre.
- * @returns Steps in placement order.
+ * @returns Steps in the order power reaches them.
  */
 export const buildSteps = (): Step[] =>
   layout.map(({ key, designator, items }) => {
@@ -154,22 +158,46 @@ export const buildSteps = (): Step[] =>
     return { key, designator, centre: [cx, TOP, cz], prims };
   });
 
-export const traces: [number, number, number, number][] = [
-  [0.15, 0.2, 1.15, 0.2],
-  [1.75, 0.2, 1.75, -0.5],
-  [-0.6, -0.9, -0.6, -1.25],
-  [-1.35, 0.75, -1.35, 1.15],
-  [-1.65, 1.45, -2.25, 1.45],
-  [-2.25, 1.45, -2.25, 1.1],
-  [-0.3, 0.75, -0.3, 1.0],
-  [-0.3, 1.0, 1.85, 1.0],
-  [1.85, 1.0, 1.85, 1.5],
-  [2.01, 1.5, 2.13, 1.5],
-  [0.15, -0.5, 0.95, -0.85],
-  [1.55, -1.25, 1.55, -1.55],
-  [-2.2, -0.5, -2.2, 0.5],
-  [-1.95, -0.5, -2.2, -0.5],
-  [-1.95, 0.5, -2.2, 0.5],
+export type Trace = { from: [number, number]; to: [number, number]; step: StepKey };
+
+const trace = (step: StepKey, x1: number, z1: number, x2: number, z2: number): Trace => ({
+  from: [x1, z1],
+  to: [x2, z2],
+  step,
+});
+
+/** Copper runs between pads, each tagged with the part it feeds so it lights up when that part does. */
+export const traces: Trace[] = [
+  // USB-C to the inductor, then on into the processor's top pin row.
+  trace("usb", -2.23, 1.45, -1.33, 1.45),
+  trace("inductor", -1.018, 1.14, -1.018, 0.92),
+  // Decoupling capacitors: a ground rail on the left, and short stubs onto the processor's side pins.
+  trace("capacitors", -2.1, -0.63, -2.1, 0.63),
+  trace("capacitors", -2.1, -0.63, -1.75, -0.63),
+  trace("capacitors", -2.1, 0.63, -1.75, 0.63),
+  trace("capacitors", -1.75, -0.418, -1.52, -0.418),
+  trace("capacitors", -1.75, 0.418, -1.52, 0.418),
+  trace("capacitors", 0.32, -0.418, 0.55, -0.418),
+  trace("capacitors", 0.32, 0.418, 0.55, 0.418),
+  // Crystal onto the processor's bottom pin row.
+  trace("crystal", -0.683, -0.92, -0.683, -1.26),
+  trace("crystal", -0.517, -0.92, -0.517, -1.26),
+  // Processor to flash.
+  trace("memory", 0.32, -0.251, 1.07, -0.251),
+  trace("memory", 1.07, -0.251, 1.07, -0.35),
+  // Pull-ups between the processor and flash.
+  trace("resistors", 0.32, 0.251, 0.99, 0.251),
+  trace("resistors", 1.31, 0.251, 1.63, 0.251),
+  trace("resistors", 1.79, 0.251, 1.79, -0.35),
+  // Status LED: processor pin, through R3, into the LED.
+  trace("resistors", -0.35, 0.92, -0.35, 1.0),
+  trace("resistors", -0.35, 1.0, 1.4, 1.0),
+  trace("resistors", 1.4, 1.0, 1.4, 1.5),
+  trace("resistors", 1.4, 1.5, 1.69, 1.5),
+  trace("led", 2.01, 1.5, 2.13, 1.5),
+  // Flash out to the pin header.
+  trace("header", 1.31, -1.35, 1.31, -1.58),
+  trace("header", 1.55, -1.35, 1.55, -1.58),
 ];
 
 export const mountingHoles: [number, number][] = [

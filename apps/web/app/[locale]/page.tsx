@@ -1,24 +1,26 @@
-import { ArrowRight, Cpu, Drone, Laptop, PcCase, Plug, Smartphone, Thermometer, Watch, Zap } from "lucide-react";
+import { ArrowDownRight, Cpu, Drone, Laptop, PcCase, Smartphone, Watch } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AssemblyHero } from "@/components/home/assembly/AssemblyHero";
-import { SiteHeader } from "@/components/home/SiteHeader";
+import { LogoMark, SiteHeader } from "@/components/home/SiteHeader";
+import { VerdictTicker } from "@/components/home/VerdictTicker";
+import { SmoothScroll } from "@/components/home/SmoothScroll";
+import { TypeHeading } from "@/components/home/TypeHeading";
+import { PixelField } from "@/components/home/PixelField";
+import { ArrowLink } from "@/components/home/ArrowLink";
+import { LineIcon } from "@/components/home/LineIcon";
 import { SwapDemo } from "@/components/home/SwapDemo";
+import { localeNames, routing } from "@/i18n/routing";
+import { CountUp } from "@/components/home/CountUp";
 import { Reveal } from "@/components/home/Reveal";
-import { Button } from "@/components/ui/button";
+import { InView } from "@/components/home/InView";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-
-const checks = [
-  { key: "connects", icon: Plug },
-  { key: "powered", icon: Zap },
-  { key: "cool", icon: Thermometer },
-] as const;
+const checks = ["connects", "powered", "cool"] as const;
 
 const devices = [
   { key: "smartphone", icon: Smartphone },
@@ -29,6 +31,13 @@ const devices = [
   { key: "wearable", icon: Watch },
 ] as const;
 
+const stats = [
+  { key: "devices", value: devices.length },
+  { key: "checks", value: checks.length },
+  { key: "sources", value: 3 },
+  { key: "languages", value: routing.locales.length },
+] as const;
+
 const specRows = [
   { key: "battery", value: "12.4 Wh", source: "datasheet" },
   { key: "display", value: "0.42 A", source: "teardown" },
@@ -36,34 +45,47 @@ const specRows = [
 ] as const;
 
 const sourceBadge = {
-  datasheet: "border-foreground/25",
-  teardown: "border-foreground/25 bg-muted",
-  estimated: "border-dashed border-foreground/40 italic",
+  datasheet: "border-foreground/30",
+  teardown: "border-foreground/30 bg-muted",
+  estimated: "border-dashed border-foreground/45 italic",
 } as const;
+
+/** Content width shared by every band; rules and fills run full-bleed outside it. */
+const shell = "mx-auto w-full max-w-[88rem] px-4 sm:px-6 lg:px-8";
+const eyebrow = "font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase";
 
 const rise = (delay: number): CSSProperties => ({ animationDelay: `${delay}ms` });
 
-const markWorks = (chunks: ReactNode) => (
-  <span className="relative inline-block text-foreground">
-    {chunks}
-    <svg
-      aria-hidden
-      viewBox="0 0 100 12"
-      preserveAspectRatio="none"
-      className="absolute -bottom-1 left-0 h-[0.18em] w-full overflow-visible"
-    >
-      <path
-        d="M2 8 C 25 3, 55 3, 98 6"
-        pathLength={1}
-        fill="none"
-        strokeDasharray="1"
-        className="stroke-status-pass motion-safe:animate-draw"
-        strokeWidth={5}
-        strokeLinecap="round"
-        style={{ animationDelay: "700ms" }}
+const plain = (chunks: ReactNode) => chunks;
+
+const Caret = ({ className }: { className?: string }) => (
+  <span
+    aria-hidden
+    className={cn(
+      "ml-[0.08em] inline-block h-[0.8em] w-[0.1em] translate-y-[0.06em] bg-signal motion-safe:animate-caret",
+      className,
+    )}
+  />
+);
+
+type SectionHeadProps = { index: number; label: string; heading: string; lead: string };
+
+/** Big typed heading on the left, lead pinned to the right edge: the rhythm every band opens with. */
+const SectionHead = ({ index, label, heading, lead }: SectionHeadProps) => (
+  <div className="grid gap-6 pt-24 pb-12 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-16 lg:pt-36 lg:pb-16">
+    <div>
+      <p className={eyebrow}>
+        <span aria-hidden className="text-foreground">{`// 0${index}`}</span> · {label}
+      </p>
+      <TypeHeading
+        text={heading}
+        className="mt-5 text-4xl leading-[1.02] font-semibold tracking-[-0.035em] text-balance sm:text-5xl lg:text-6xl"
       />
-    </svg>
-  </span>
+    </div>
+    <Reveal delay={200} className="lg:max-w-md lg:justify-self-end">
+      <p className="text-lg leading-relaxed text-muted-foreground">{lead}</p>
+    </Reveal>
+  </div>
 );
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -73,82 +95,154 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const HomePage = async () => {
   const t = await getTranslations("Home");
+  const languages = routing.locales.map((l) => ({ code: l, name: localeNames[l] }));
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="home band-paper flex min-h-full flex-col">
+      <SmoothScroll />
       <SiteHeader />
 
       <main className="flex-1">
-        <section className="relative overflow-hidden">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(var(--border)_1.2px,transparent_1.2px)] mask-[radial-gradient(ellipse_70%_60%_at_30%_40%,black,transparent)] bg-size-[22px_22px]"
-          />
-          <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-24">
-            <div className="flex flex-col items-start">
-              <p className="font-mono text-xs text-muted-foreground motion-safe:animate-rise" style={rise(0)}>
-                {t("hero.eyebrow")}
-              </p>
-              <h1 className="mt-5 text-5xl leading-[0.98] font-semibold tracking-[-0.035em] text-balance sm:text-6xl lg:text-7xl">
-                <span className="block motion-safe:animate-rise" style={rise(80)}>
-                  {t.rich("hero.titleTop", { mark: markWorks })}
-                </span>
-                <span className="block text-muted-foreground motion-safe:animate-rise" style={rise(160)}>
-                  {t.rich("hero.titleBottom", { mark: markWorks })}
-                </span>
-              </h1>
-              <p
-                className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground motion-safe:animate-rise"
-                style={rise(260)}
+        {/* Hero: a hairline bento grid with the 3D board in it. */}
+        <section className="band-paper">
+          <div className={cn(shell, "py-8 lg:py-12")}>
+            <div className="grid grid-cols-2 border-t border-l lg:grid-cols-6 [&>*]:border-r [&>*]:border-b">
+              <div className="col-span-2 flex min-h-80 flex-col justify-between gap-10 p-6 sm:p-8 lg:col-span-3 lg:col-start-1 lg:row-span-2 lg:row-start-1">
+                <p className={cn(eyebrow, "motion-safe:animate-rise")} style={rise(0)}>
+                  {t("hero.tagline")}
+                </p>
+                <h1 className="text-[2.75rem] leading-[0.95] font-semibold tracking-[-0.045em] text-balance sm:text-6xl xl:text-7xl">
+                  <span className="block motion-safe:animate-rise" style={rise(80)}>
+                    {t.rich("hero.titleTop", { mark: plain })}
+                  </span>
+                  <span className="block text-muted-foreground motion-safe:animate-rise" style={rise(160)}>
+                    {t.rich("hero.titleBottom", { mark: plain })}
+                    <Caret />
+                  </span>
+                </h1>
+              </div>
+
+              <div className="col-span-2 motion-safe:animate-rise lg:col-span-3 lg:col-start-4 lg:row-span-3 lg:row-start-1" style={rise(240)}>
+                <AssemblyHero bare />
+              </div>
+
+              <div
+                className="col-span-2 flex items-end p-6 motion-safe:animate-rise sm:p-8 lg:col-span-2 lg:col-start-2 lg:row-start-3"
+                style={rise(300)}
               >
-                {t("hero.lead")}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3 motion-safe:animate-rise" style={rise(340)}>
-                <Button asChild size="lg" className="group/cta">
-                  <Link href="/studio">
-                    {t("openStudio")}
-                    <ArrowRight data-icon="inline-end" className="transition-transform group-hover/cta:translate-x-0.5" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                  <a href="#checks">{t("hero.secondary")}</a>
-                </Button>
+                <p className="max-w-md text-[15px] leading-relaxed text-muted-foreground">{t("hero.lead")}</p>
+              </div>
+
+              <div className="min-h-36 lg:col-start-1 lg:row-start-3">
+                <PixelField seed={3} />
+              </div>
+
+              <a
+                href="#checks"
+                className="group/down flex min-h-36 flex-col justify-between p-5 no-underline transition-colors hover:bg-muted lg:col-start-3 lg:row-start-4"
+              >
+                <ArrowDownRight className="size-6 transition-transform duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover/down:translate-x-1.5 group-hover/down:translate-y-1.5" />
+                <span className="text-sm font-medium">{t("hero.secondary")}</span>
+              </a>
+
+              <Link
+                href="/studio"
+                className="group/go relative col-span-2 flex min-h-44 flex-col justify-between overflow-hidden bg-signal p-5 text-signal-foreground! no-underline lg:col-span-2 lg:col-start-1 lg:row-start-4"
+              >
+                <span className="max-w-[14rem] text-lg leading-tight font-semibold tracking-tight">{t("hero.slogan")}</span>
+                <span className="flex items-center gap-2 text-sm font-medium">
+                  {t("openStudio")}
+                  <span aria-hidden className="transition-transform duration-300 group-hover/go:translate-x-1">
+                    →
+                  </span>
+                </span>
+                <span
+                  aria-hidden
+                  className="absolute right-5 bottom-5 size-3 bg-signal-foreground transition-all duration-500 ease-[cubic-bezier(0.6,0,0.2,1)] group-hover/go:size-9 group-hover/go:rotate-90"
+                />
+              </Link>
+
+              <div className="min-h-36 lg:col-start-4 lg:row-start-4">
+                <VerdictTicker />
+              </div>
+
+              <div className="grid min-h-36 place-items-center lg:col-start-5 lg:row-start-4">
+                <svg aria-hidden viewBox="0 0 16 16" className="w-2/5 overflow-visible" fill="none" strokeLinecap="round">
+                  <path
+                    d="M2 11 L5 5 L8 11 L11 5 L14 11"
+                    pathLength={1}
+                    strokeDasharray="1"
+                    strokeWidth={1.6}
+                    className="stroke-foreground motion-safe:animate-draw"
+                    style={{ animationDelay: "500ms", animationDuration: "1.6s" }}
+                  />
+                </svg>
+              </div>
+
+              <div className="hidden min-h-36 lg:col-start-6 lg:row-start-4 lg:block">
+                <PixelField seed={11} cols={5} />
               </div>
             </div>
+          </div>
+        </section>
 
-            <div className="motion-safe:animate-rise" style={rise(240)}>
-              <AssemblyHero />
+        {/* Numbers: columns whose accent rule draws down as they scroll in. */}
+        <section className="band-ink">
+          <div className={cn(shell, "grid sm:grid-cols-2 lg:grid-cols-4")}>
+            {stats.map(({ key, value }) => (
+              <InView
+                key={key}
+                className={cn(
+                  "relative flex min-h-64 flex-col justify-between gap-12 border-b py-8 pl-5 sm:min-h-80 lg:min-h-[26rem] lg:border-b-0",
+                  "border-l before:absolute before:inset-y-0 before:-left-px before:w-px before:origin-top before:bg-signal before:transition-transform before:duration-[1.6s] before:ease-[cubic-bezier(0.6,0,0.2,1)]",
+                  "data-[phase=hidden]:before:scale-y-0",
+                )}
+              >
+                <div>
+                  <CountUp value={value} className="block text-7xl font-semibold tracking-[-0.05em] tabular-nums lg:text-8xl" />
+                  <p className={cn(eyebrow, "mt-3")}>{t(`stats.${key}.label`)}</p>
+                </div>
+                <p className="max-w-[16rem] text-sm leading-relaxed text-muted-foreground">{t(`stats.${key}.body`)}</p>
+              </InView>
+            ))}
+          </div>
+        </section>
+
+        {/* Swap demo on a hatched bed. */}
+        <section id="swap" className="band-paper scroll-mt-14">
+          <div className={shell}>
+            <SectionHead index={1} label={t("sections.swap")} heading={t("swap.heading")} lead={t("swap.lead")} />
+          </div>
+          <div className="border-y">
+            <div className={cn(shell, "grid lg:grid-cols-[1fr_minmax(0,36rem)_1fr]")}>
+              <div aria-hidden className="hatch-v hidden border-r lg:block" />
+              <Reveal className="py-10 lg:px-10 lg:py-16">
+                <SwapDemo />
+              </Reveal>
+              <div aria-hidden className="hatch-h hidden border-l lg:block" />
             </div>
           </div>
         </section>
 
-        <section className="border-t">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-            <Reveal>
-              <h2 className="text-3xl font-semibold tracking-tight text-balance">{t("swap.heading")}</h2>
-              <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">{t("swap.lead")}</p>
-            </Reveal>
-            <Reveal delay={120}>
-              <SwapDemo />
-            </Reveal>
+        {/* Three checks with animated line art. */}
+        <section id="checks" className="band-ink scroll-mt-14">
+          <div className={shell}>
+            <SectionHead index={2} label={t("sections.checks")} heading={t("checks.heading")} lead={t("checks.lead")} />
           </div>
-        </section>
-
-        <section id="checks" className="scroll-mt-16 border-t">
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_2fr]">
-            <Reveal>
-              <h2 className="text-3xl font-semibold tracking-tight text-balance">{t("checks.heading")}</h2>
-              <p className="mt-3 text-muted-foreground">{t("checks.lead")}</p>
-            </Reveal>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {checks.map(({ key, icon: Icon }, i) => (
-                <Reveal key={key} delay={i * 90}>
-                  <div className="group h-full rounded-xl border p-5 transition-colors hover:border-foreground/25">
-                    <span className="grid size-9 place-items-center rounded-lg bg-muted transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
-                      <Icon className="size-4" />
-                    </span>
-                    <h3 className="mt-4 font-medium">{t(`checks.${key}.title`)}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{t(`checks.${key}.body`)}</p>
+          <div className="border-t">
+            <div className={cn(shell, "grid sm:grid-cols-3")}>
+              {checks.map((key, i) => (
+                <Reveal key={key} delay={i * 120} className="sm:first:*:pl-0 sm:last:*:border-r-0">
+                  <div className="group/check flex h-full min-h-[24rem] flex-col justify-between gap-8 border-b py-8 transition-colors duration-500 sm:border-r sm:border-b-0 sm:px-6 lg:min-h-[30rem] lg:px-8">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <h3 className="text-xl font-medium tracking-tight lg:text-2xl">{t(`checks.${key}.title`)}</h3>
+                      <span className="font-mono text-xs text-muted-foreground">{`0${i + 1}`}</span>
+                    </div>
+                    <LineIcon
+                      kind={key}
+                      className="mx-auto size-28 text-signal transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover/check:scale-110 lg:size-36"
+                    />
+                    <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">{t(`checks.${key}.body`)}</p>
                   </div>
                 </Reveal>
               ))}
@@ -156,77 +250,127 @@ const HomePage = async () => {
           </div>
         </section>
 
-        <section className="border-t bg-sidebar">
-          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-            <Reveal className="max-w-2xl">
-              <h2 className="text-3xl font-semibold tracking-tight text-balance">{t("devices.heading")}</h2>
-              <p className="mt-3 text-muted-foreground">{t("devices.lead")}</p>
-            </Reveal>
-            <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Devices as full-width rows. */}
+        <section id="devices" className="band-paper scroll-mt-14">
+          <div className={shell}>
+            <SectionHead index={3} label={t("sections.devices")} heading={t("devices.heading")} lead={t("devices.lead")} />
+            <ul className="mb-24 border-t lg:mb-36">
               {devices.map(({ key, icon: Icon }, i) => (
-                <Reveal key={key} delay={(i % 3) * 80}>
-                  <Card
-                    size="sm"
-                    className="group h-full transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-foreground/5"
-                  >
-                    <CardHeader className="flex-row items-center gap-3">
-                      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
-                        <Icon className="size-5" />
+                <li key={key} className="border-b">
+                  <Reveal delay={i * 60}>
+                    <div className="group/row relative grid grid-cols-[3.5rem_1fr] items-center gap-x-5 gap-y-1 py-4 before:absolute before:inset-0 before:origin-left before:scale-x-0 before:bg-muted before:transition-transform before:duration-500 before:ease-[cubic-bezier(0.6,0,0.2,1)] hover:before:scale-x-100 sm:grid-cols-[4.5rem_1.1fr_1fr_auto] sm:gap-x-8 sm:py-5">
+                      <span className="relative row-span-2 grid aspect-square place-items-center border bg-background transition-colors duration-300 group-hover/row:border-transparent group-hover/row:bg-signal group-hover/row:text-signal-foreground sm:row-span-1">
+                        <Icon className="size-6 transition-transform duration-500 group-hover/row:scale-110 group-hover/row:-rotate-6" />
                       </span>
-                      <div>
-                        <CardTitle>{t(`devices.${key}.name`)}</CardTitle>
-                        <CardDescription>{t(`devices.${key}.examples`)}</CardDescription>
-                      </div>
-                    </CardHeader>
-                  </Card>
-                </Reveal>
+                      <h3 className="relative text-2xl font-semibold tracking-[-0.03em] transition-transform duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover/row:translate-x-2 sm:text-4xl lg:text-5xl">
+                        {t(`devices.${key}.name`)}
+                      </h3>
+                      <p className="relative text-sm text-muted-foreground sm:text-base">{t(`devices.${key}.examples`)}</p>
+                      <span className="relative hidden pr-2 font-mono text-xs text-muted-foreground sm:block">{`0${i + 1}`}</span>
+                    </div>
+                  </Reveal>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
-        <section className="border-t">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2">
-            <Reveal>
-              <h2 className="text-3xl font-semibold tracking-tight text-balance">{t("provenance.heading")}</h2>
-              <p className="mt-3 leading-relaxed text-muted-foreground">{t("provenance.lead")}</p>
-            </Reveal>
-            <Reveal delay={120}>
-              <Card className="gap-0 py-0">
-                <ul className="divide-y">
-                  {specRows.map(({ key, value, source }) => (
-                    <li key={key} className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-muted/60">
-                      <span className="text-sm">{t(`provenance.rows.${key}`)}</span>
-                      <span className="ml-auto font-mono text-sm tabular-nums">{value}</span>
-                      <Badge variant="outline" className={cn("w-24 justify-center", sourceBadge[source])}>
+        {/* Provenance as a spec sheet. */}
+        <section id="provenance" className="band-ink scroll-mt-14">
+          <div className={shell}>
+            <SectionHead
+              index={4}
+              label={t("sections.provenance")}
+              heading={t("provenance.heading")}
+              lead={t("provenance.lead")}
+            />
+            <ul className="mb-24 border-t lg:mb-36">
+              {specRows.map(({ key, value, source }, i) => (
+                <li key={key} className="border-b">
+                  <Reveal delay={i * 90}>
+                    <div className="group/spec grid grid-cols-[auto_1fr_auto] items-center gap-x-4 gap-y-2 py-5 sm:grid-cols-[auto_1fr_auto_8rem] sm:gap-x-8 sm:py-7">
+                      <span aria-hidden className="h-5 w-[3px] bg-signal transition-[height] duration-300 group-hover/spec:h-9" />
+                      <span className="text-base sm:text-xl">{t(`provenance.rows.${key}`)}</span>
+                      <span className="font-mono text-2xl tabular-nums sm:text-4xl">{value}</span>
+                      <Badge
+                        variant="outline"
+                        className={cn("col-start-2 w-24 justify-center sm:col-start-auto sm:justify-self-end", sourceBadge[source])}
+                      >
                         {t(`provenance.${source}`)}
                       </Badge>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            </Reveal>
+                    </div>
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
-        <section className="border-t">
-          <Reveal className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 py-24 text-center sm:px-6">
-            <h2 className="text-4xl font-semibold tracking-tight text-balance">{t("cta.heading")}</h2>
-            <p className="max-w-md text-muted-foreground">{t("cta.body")}</p>
-            <Button asChild size="lg" className="group/cta mt-2">
-              <Link href="/studio">
-                {t("openStudio")}
-                <ArrowRight data-icon="inline-end" className="transition-transform group-hover/cta:translate-x-0.5" />
-              </Link>
-            </Button>
-          </Reveal>
+        {/* Languages marquee. */}
+        <section className="band-paper overflow-hidden py-24 lg:py-32">
+          <div className={cn(shell, "flex flex-col items-center text-center")}>
+            <TypeHeading
+              text={t("languages.heading")}
+              className="text-4xl font-semibold tracking-[-0.035em] text-balance sm:text-5xl lg:text-6xl"
+            />
+            <Reveal delay={200}>
+              <p className="mt-4 max-w-md text-lg text-muted-foreground">{t("languages.lead")}</p>
+            </Reveal>
+          </div>
+          <div className="group/marquee mt-14 mask-[linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+            <ul
+              aria-hidden
+              className="flex w-max gap-3 motion-safe:animate-marquee group-hover/marquee:[animation-play-state:paused]"
+            >
+              {[0, 1, 2, 3].flatMap((round) =>
+                languages.map(({ code, name }) => (
+                  <li
+                    key={`${round}-${code}`}
+                    lang={code}
+                    className="flex h-20 min-w-48 items-center justify-center gap-3 border bg-card px-8 text-lg font-medium transition-colors duration-300 hover:bg-signal hover:text-signal-foreground"
+                  >
+                    <span className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-60">{code}</span>
+                    {name}
+                  </li>
+                )),
+              )}
+            </ul>
+          </div>
+        </section>
+
+        {/* Closing call to action, split signal / ink. */}
+        <section className="grid lg:grid-cols-2">
+          <div className="flex min-h-80 flex-col justify-between gap-12 bg-signal px-4 py-14 text-signal-foreground sm:px-6 lg:py-20 lg:pr-12 lg:pl-[max(2rem,calc((100vw-88rem)/2+2rem))]">
+            <p className="font-mono text-[11px] tracking-[0.18em] uppercase">{`// ${t("cta.eyebrow")}`}</p>
+            <TypeHeading
+              text={t("cta.heading")}
+              block="var(--home-signal-foreground)"
+              className="max-w-xl text-5xl leading-[0.98] font-semibold tracking-[-0.04em] text-balance lg:text-7xl"
+            />
+          </div>
+          <div className="band-ink flex flex-col items-start justify-end gap-8 px-4 py-14 sm:px-6 lg:px-12 lg:py-20">
+            <p className="max-w-md text-lg leading-relaxed text-muted-foreground">{t("cta.body")}</p>
+            <ArrowLink href="/studio">{t("openStudio")}</ArrowLink>
+          </div>
         </section>
       </main>
 
-      <footer className="border-t">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-xs text-muted-foreground sm:px-6">
-          <span className="font-medium text-foreground">Echidna</span>
-          <span>{t("footer")}</span>
+      <footer className="band-ink border-t">
+        <div className={cn(shell, "flex flex-col gap-16 py-14 lg:py-20")}>
+          <p className="max-w-4xl text-4xl leading-[0.98] font-semibold tracking-[-0.045em] text-balance sm:text-6xl lg:text-7xl">
+            {t.rich("hero.titleTop", { mark: plain })}{" "}
+            <span className="text-muted-foreground">{t.rich("hero.titleBottom", { mark: plain })}</span>
+            <Caret />
+          </p>
+          <div className="flex flex-wrap items-end justify-between gap-6 border-t pt-6 text-xs text-muted-foreground">
+            <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <span className="grid size-6 place-items-center bg-signal text-signal-foreground">
+                <LogoMark className="size-3.5" />
+              </span>
+              Echidna
+            </span>
+            <span>{t("footer")}</span>
+          </div>
         </div>
       </footer>
     </div>

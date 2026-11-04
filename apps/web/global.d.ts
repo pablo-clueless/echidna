@@ -1,5 +1,5 @@
 import type { routing } from "./i18n/routing";
-import type en from "./messages/en.json";
+import type en from "./languages/en.json";
 
 declare module "next-intl" {
   interface AppConfig {

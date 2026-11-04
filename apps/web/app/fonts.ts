@@ -3,32 +3,42 @@ import localFont from "next/font/local";
 
 import type { AppLocale } from "@/i18n/routing";
 
-const dmSans = localFont({
-  src: "../node_modules/@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2",
-  weight: "100 1000",
-  style: "normal",
-  variable: "--font-dm-sans",
+const firaSans = localFont({
+  src: [
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-latin-400-italic.woff2", weight: "400", style: "italic" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-latin-500-italic.woff2", weight: "500", style: "italic" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-fira-sans",
   display: "swap",
   fallback: ["system-ui", "sans-serif"],
 });
 
-const dmMono = localFont({
+/** Fira Sans' Cyrillic glyphs, attached only for Russian so other locales never download them. */
+const firaSansCyrillic = localFont({
   src: [
-    { path: "../node_modules/@fontsource/dm-mono/files/dm-mono-latin-400-normal.woff2", weight: "400", style: "normal" },
-    { path: "../node_modules/@fontsource/dm-mono/files/dm-mono-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-cyrillic-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-cyrillic-400-italic.woff2", weight: "400", style: "italic" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-cyrillic-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-cyrillic-500-italic.woff2", weight: "500", style: "italic" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-cyrillic-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../node_modules/@fontsource/fira-sans/files/fira-sans-cyrillic-700-normal.woff2", weight: "700", style: "normal" },
   ],
-  variable: "--font-dm-mono",
-  display: "swap",
-  fallback: ["ui-monospace", "monospace"],
-});
-
-const notoSans = localFont({
-  src: "../node_modules/@fontsource-variable/noto-sans/files/noto-sans-cyrillic-wght-normal.woff2",
-  weight: "100 900",
-  style: "normal",
-  variable: "--font-noto-sans",
+  variable: "--font-fira-sans-cyrillic",
   display: "swap",
   preload: false,
+});
+
+const firaCode = localFont({
+  src: "../node_modules/@fontsource-variable/fira-code/files/fira-code-latin-wght-normal.woff2",
+  weight: "300 700",
+  style: "normal",
+  variable: "--font-fira-code",
+  display: "swap",
+  fallback: ["ui-monospace", "monospace"],
 });
 
 const notoSansSc = Noto_Sans_SC({
@@ -44,7 +54,7 @@ const notoSansJp = Noto_Sans_JP({
 });
 
 const scriptFonts: Partial<Record<AppLocale, string>> = {
-  ru: notoSans.variable,
+  ru: firaSansCyrillic.variable,
   zh: notoSansSc.variable,
   ja: notoSansJp.variable,
 };
@@ -56,4 +66,4 @@ const scriptFonts: Partial<Record<AppLocale, string>> = {
  * @returns Space-separated class names for the `<html>` element.
  */
 export const fontClassNames = (locale: AppLocale): string =>
-  [dmSans.variable, dmMono.variable, scriptFonts[locale]].filter(Boolean).join(" ");
+  [firaSans.variable, firaCode.variable, scriptFonts[locale]].filter(Boolean).join(" ");

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { missingKeys, withFallback } from "./messages";
-import en from "../messages/en.json";
+import en from "../languages/en.json";
 import { locales } from "./routing";
 
 describe("withFallback", () => {
@@ -26,7 +26,7 @@ describe("missingKeys", () => {
 
 describe.each(locales.filter((l) => l !== "en"))("%s messages", (locale) => {
   it("contain no keys that English lacks", async () => {
-    const messages = (await import(`../messages/${locale}.json`)).default;
+    const messages = (await import(`../languages/${locale}.json`)).default;
     expect(missingKeys(messages, en)).toEqual([]);
   });
 });

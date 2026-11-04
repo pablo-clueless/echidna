@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { parts } from "@echidna/library";
 
 import { editableParams } from "@/lib/project/model";
-import en from "@/messages/en.json";
+import en from "@/languages/en.json";
 
 describe("data-driven message keys", () => {
   it.each(parts.map((p) => [p.id, p] as const))("part %s has a name and summary", (id) => {

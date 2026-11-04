@@ -41,7 +41,7 @@ export const VariantPicker = ({ component, spec }: { component: NetlistComponent
           return (
             <ToggleGroupItem key={v.id} value={v.id} className="h-8 gap-1.5 px-2.5 text-xs">
               {swatch && (
-                <span aria-hidden className="size-3 rounded-full ring-1 ring-foreground/25" style={{ backgroundColor: swatch }} />
+                <span aria-hidden className="size-3 ring-1 ring-foreground/25" style={{ backgroundColor: swatch }} />
               )}
               {tParts(`${key}.variants.${v.id}` as never)}
             </ToggleGroupItem>

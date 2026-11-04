@@ -1,0 +1,426 @@
+{
+  "Metadata": {
+    "description": "Compose circuit boards and devices in 3D, simulate them and see instantly whether every component will work."
+  },
+  "Home": {
+    "openStudio": "Open the studio",
+    "footer": "Echidna is in early development.",
+    "hero": {
+      "eyebrow": "A 3D studio for circuit boards and devices",
+      "titleTop": "Know it <mark>works</mark>",
+      "titleBottom": "before you build it.",
+      "lead": "Place parts, swap them and see straight away whether every component stays within its limits. Built for makers, students and anyone curious about what is inside their devices.",
+      "secondary": "How verdicts work",
+      "tagline": "Place · Swap · Verify",
+      "slogan": "Stop guessing. Start building.",
+      "verdict": "Live verdict"
+    },
+    "demo": {
+      "title": "Try a swap",
+      "caption": "A 5 V supply, a series resistor and a red LED. Choose a smaller resistor and watch the current climb.",
+      "diagramLabel": "Circuit: 5 V supply, series resistor and LED in a single loop",
+      "resistor": "Series resistor",
+      "moreResistance": "More resistance",
+      "lessResistance": "Less resistance",
+      "current": "LED current",
+      "rating": "Of its {rating} mA rating",
+      "pass": "Within limits",
+      "warn": "Close to its limit",
+      "fail": "Over its rating",
+      "explainPass": "The LED draws {current} mA, comfortably under its {rating} mA rating.",
+      "explainWarn": "The LED is at {percent} of its rating. It will light, but there is no headroom left.",
+      "explainFail": "The LED would draw {current} mA against a {rating} mA rating. It will overheat and fail early.",
+      "note": "Simplified here with a fixed 2 V LED drop. The studio solves the full circuit."
+    },
+    "checks": {
+      "heading": "Every part passes three checks",
+      "lead": "A component only fits a slot when all three agree. If one fails, Echidna tells you which and by how much.",
+      "connects": {
+        "title": "It connects",
+        "body": "The interface matches: the right socket, connector and number of lanes."
+      },
+      "powered": {
+        "title": "It is powered",
+        "body": "The slot’s rails can supply the voltage and current the part needs."
+      },
+      "cool": {
+        "title": "It stays cool",
+        "body": "The heat it gives off fits the slot’s thermal budget and the cooling around it."
+      }
+    },
+    "devices": {
+      "heading": "Six kinds of device, one set of rules",
+      "lead": "Recreate a real device from a preset or start from a blank board. Each type has its own catalogue of swappable parts.",
+      "smartphone": {
+        "name": "Smartphones",
+        "examples": "iPhone and Galaxy presets"
+      },
+      "desktop": {
+        "name": "Desktop PCs",
+        "examples": "Budget, gaming and workstation builds"
+      },
+      "laptop": {
+        "name": "Laptops",
+        "examples": "Ultrabook and gaming presets"
+      },
+      "drone": {
+        "name": "Drones",
+        "examples": "DJI Mini series and 5-inch FPV"
+      },
+      "iot": {
+        "name": "Dev boards",
+        "examples": "Raspberry Pi, ESP32 and Arduino"
+      },
+      "wearable": {
+        "name": "Wearables",
+        "examples": "Smartwatch and fitness band"
+      }
+    },
+    "provenance": {
+      "heading": "Every number shows where it came from",
+      "lead": "Values are labelled as datasheet, teardown or estimate, so you know how far to trust a verdict. When a fail rests only on estimates, Echidna says it is likely to fail rather than certain.",
+      "datasheet": "Datasheet",
+      "teardown": "Teardown",
+      "estimated": "Estimate",
+      "rows": {
+        "battery": "Battery energy",
+        "display": "Display current",
+        "soc": "Processor peak power"
+      }
+    },
+    "cta": {
+      "heading": "Start with a blank board",
+      "body": "Open the studio, pick a part from the library and see its verdict as you place it.",
+      "eyebrow": "Start building"
+    },
+    "assembly": {
+      "label": "Development board with every part in place; pressing the power button lights each part in turn as power reaches it",
+      "board": "Dev board",
+      "lit": "{lit} of {total} live",
+      "off": "Off · press power",
+      "booting": "Powering up",
+      "powered": "Powered · all checks passed",
+      "powerOn": "Power on",
+      "powerOff": "Power off",
+      "parts": {
+        "soc": "Processor",
+        "memory": "Flash memory",
+        "capacitors": "Decoupling capacitors",
+        "resistors": "Resistors",
+        "usb": "USB-C connector",
+        "inductor": "Power inductor",
+        "crystal": "Crystal oscillator",
+        "led": "Status LED",
+        "header": "Pin header"
+      }
+    },
+    "swap": {
+      "heading": "Change one part, see the verdict",
+      "lead": "Every swap is checked the moment you make it. Try it here with the simplest circuit there is."
+    },
+    "sections": {
+      "swap": "Try it",
+      "checks": "Verdicts",
+      "devices": "Devices",
+      "provenance": "Data"
+    },
+    "stats": {
+      "devices": {
+        "label": "Device types",
+        "body": "Phones, PCs, laptops, drones, dev boards and wearables."
+      },
+      "checks": {
+        "label": "Checks per part",
+        "body": "Connection, power and heat, every time you place a part."
+      },
+      "sources": {
+        "label": "Data sources",
+        "body": "Every value is labelled datasheet, teardown or estimate."
+      },
+      "languages": {
+        "label": "Languages",
+        "body": "In light and dark themes, in the browser, with nothing to install."
+      }
+    },
+    "languages": {
+      "heading": "Speaks your language",
+      "lead": "Every label, verdict and explanation, in seven languages."
+    }
+  },
+  "Preferences": {
+    "language": "Language",
+    "toggleTheme": "Toggle theme"
+  },
+  "Studio": {
+    "title": "Studio",
+    "untitledProject": "Untitled project",
+    "blankBoard": "Blank board",
+    "learnMode": "Learn mode",
+    "simulate": "Simulate",
+    "toggleLibrary": "Show or hide the component library",
+    "panels": "Panels",
+    "library": {
+      "title": "Components",
+      "search": "Search components",
+      "noMatchTitle": "No parts match",
+      "noMatchDescription": "Try another name, such as resistor or LED.",
+      "addHint": "Select to add, or drag onto the schematic",
+      "categories": {
+        "power": "Power",
+        "passives": "Passives",
+        "semiconductors": "Semiconductors"
+      }
+    },
+    "viewport": {
+      "label": "3D board view",
+      "help": "Drag to orbit, right-drag to pan, scroll to zoom. With the view focused, arrow keys pan.",
+      "controls": {
+        "label": "Camera",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "fit": "Fit board",
+        "top": "Top view",
+        "angled": "3D view",
+        "underside": "Underside view"
+      },
+      "overlays": {
+        "label": "Overlays",
+        "current": "Current flow",
+        "heat": "Heat",
+        "currentHint": "Dashes run along the copper the way current flows, faster for more current.",
+        "heatTitle": "Estimated part temperature",
+        "unsolved": "Overlays appear once the circuit is simulated."
+      },
+      "mask": {
+        "label": "Solder mask colour",
+        "black": "Black",
+        "green": "Green",
+        "blue": "Blue",
+        "red": "Red"
+      }
+    },
+    "schematic": {
+      "title": "Schematic",
+      "emptyTitle": "The schematic is empty",
+      "emptyDescription": "Drag a part from Components, or start from the example circuit.",
+      "openExample": "Open the 3.3 V regulator example",
+      "rotate": "Rotate (R)",
+      "delete": "Delete (Del)",
+      "canvasLabel": "Schematic editor",
+      "canvasRole": "schematic",
+      "partLabel": "{id}, {name}",
+      "hint": "Drag pin to pin to wire · <key>R</key> rotate · <key>Del</key> delete · double-click to fit"
+    },
+    "inspector": {
+      "board": {
+        "title": "Board",
+        "width": "Width",
+        "depth": "Depth",
+        "outOfRange": "Enter a size from {min} to {max} mm."
+      },
+      "environment": {
+        "title": "Surroundings",
+        "ambient": "Air temperature",
+        "outOfRange": "Enter a temperature from {min} to {max} °C.",
+        "hint": "Part temperatures are estimated from the heat each part gives off, starting from this air temperature."
+      },
+      "switch": {
+        "hold": "Hold to press"
+      },
+      "title": "Inspector",
+      "emptyTitle": "Nothing selected",
+      "emptyDescription": "Select a component to see its live values.",
+      "parameters": "Parameters",
+      "liveValues": "Live values",
+      "ratings": "Ratings",
+      "pinVoltage": "Voltage at {pin}",
+      "current": "Current",
+      "power": "Power dissipated",
+      "temperature": "Temperature (estimated)",
+      "resetParam": "Reset to the part’s default",
+      "invalidNumber": "Enter a number, such as 220 or 4.7k.",
+      "verdict": {
+        "pass": "Within rating",
+        "warn": "Warning",
+        "fail": "Fail",
+        "likelyFail": "Likely to fail",
+        "noCurrent": "No current flowing"
+      },
+      "ofRating": "{percent} of {limit}",
+      "swapsTitle": "Swap suggestions",
+      "swapTo": "Use {value}: {verdict}",
+      "swapVerdict": {
+        "pass": "Fits",
+        "warn": "Warning",
+        "fail": "Fails"
+      },
+      "checking": "Checking…",
+      "net": "Net",
+      "netVoltage": "Voltage",
+      "connections": "Connected pins",
+      "led": {
+        "on": "Lit, drawing {current}",
+        "off": "Off",
+        "reasons": {
+          "unwired": "One of its leads isn’t wired, so no current can flow through it.",
+          "shorted": "Both leads are wired to the same net, so current goes around the LED instead of through it.",
+          "reversed": "It’s wired backwards: the cathode sits at a higher voltage than the anode.",
+          "open": "No current flows through it: the circuit isn’t a closed loop, or the voltage is too low to light it."
+        }
+      },
+      "switchOn": {
+        "title": "After switch-on",
+        "at": "At {time}",
+        "voltage": "Voltage, {from} to {to}",
+        "currentInto": "Current into {pin}",
+        "currentOutOf": "Current out of {pin}",
+        "scrub": "Time after switch-on",
+        "valueText": "{time}: {voltage}, {current}",
+        "span": "Shown over the first {time}, by when it has settled.",
+        "unsettled": "Still changing after {time}; it takes longer than that to settle.",
+        "hint": "Point at the plots, or focus them and use the arrow keys, to replay switch-on on the board.",
+        "instant": "Nothing in this circuit stores energy, so it reaches these values the moment it is switched on.",
+        "failed": "Couldn’t simulate switch-on for this circuit. Check for parts with extreme values, such as a capacitor far larger than intended."
+      }
+    },
+    "validator": {
+      "label": "Validator",
+      "allPassed": "All checks passed",
+      "fails": "{count, plural, one {# fail} other {# fails}}",
+      "warns": "{count, plural, one {# warning} other {# warnings}}",
+      "expand": "Show all issues",
+      "collapse": "Show fewer",
+      "fail": "Fail",
+      "likelyFail": "Likely to fail",
+      "warn": "Warning",
+      "estimated": "estimated",
+      "idle": "Add parts to start checking",
+      "solvedIn": "Solved in {ms} ms",
+      "errors": {
+        "singular": "This circuit can’t be solved. Check for supplies wired directly across each other.",
+        "noConvergence": "The solver couldn’t settle on an answer for this circuit.",
+        "pinCount": "{id} isn’t wired correctly.",
+        "invalidValue": "{id} has a value the solver can’t use.",
+        "internal": "Something went wrong while solving. Try the change again."
+      }
+    },
+    "simulateOn": "Live: every change is solved and checked. Select to pause.",
+    "simulateOff": "Paused. Select to solve and check changes live.",
+    "params": {
+      "voltage": "Voltage",
+      "current": "Current",
+      "resistance": "Resistance",
+      "capacitance": "Capacitance",
+      "inductance": "Inductance",
+      "outputVoltage": "Output voltage",
+      "dropoutVoltage": "Dropout voltage",
+      "quiescentCurrent": "Quiescent current",
+      "forwardBeta": "Current gain (β)",
+      "thresholdVoltage": "Gate threshold voltage"
+    },
+    "provenance": {
+      "datasheet": "Datasheet",
+      "teardown": "Teardown",
+      "estimated": "Estimate",
+      "user": "Set by you"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "Voltage rating",
+        "explain": "The voltage across this part is {percent} of its rating. Keep it below 80% for a safety margin; above 100% the part can break down."
+      },
+      "currentRating": {
+        "name": "Current rating",
+        "explain": "This part is carrying {percent} of the most current it is rated for. Above 80% it runs hot and wears out sooner; above 100% it can fail."
+      },
+      "powerRating": {
+        "name": "Power rating",
+        "explain": "This part is turning {percent} of its rated power into heat. Above 80% it gets hot; above 100% it can burn out."
+      },
+      "temperatureRating": {
+        "name": "Temperature",
+        "explain": "This part is estimated to use {percent} of the temperature rise it can take above the surrounding air. Above 80% it ages faster; above 100% it can be damaged. Less power through the part, or one with a higher power rating, keeps it cooler."
+      },
+      "switchOnVoltage": {
+        "name": "Voltage at switch-on",
+        "explain": "Just after switch-on, the voltage across this part briefly reaches {percent} of its rating, more than it settles to. Ringing between an inductor and a capacitor can do this; more resistance in the loop calms it."
+      },
+      "switchOnCurrent": {
+        "name": "Current at switch-on",
+        "explain": "While the circuit starts up, this part carries {percent} of its rated current for a millisecond or more, usually while a large capacitor charges. A smaller capacitor or more series resistance shortens the surge."
+      },
+      "switchOnPower": {
+        "name": "Heat at switch-on",
+        "explain": "While the circuit starts up, this part turns {percent} of its rated power into heat for a millisecond or more, usually while a large capacitor charges. A smaller capacitor or more series resistance shortens the surge."
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "DC supply",
+      "summary": "Fixed voltage source"
+    },
+    "ground": {
+      "name": "Ground",
+      "summary": "0 V reference"
+    },
+    "resistor": {
+      "name": "Resistor, ¼ W",
+      "summary": "Limits current"
+    },
+    "capacitor-ceramic": {
+      "name": "Ceramic capacitor, 16 V",
+      "summary": "Open circuit at DC"
+    },
+    "switch-spst": {
+      "name": "Slide switch, SPST",
+      "summary": "On or off, 0.5 A",
+      "variantLabel": "Position",
+      "variants": {
+        "closed": "On (closed)",
+        "open": "Off (open)"
+      }
+    },
+    "switch-push": {
+      "name": "Push button, SPST",
+      "summary": "On while held, 50 mA",
+      "variantLabel": "Button",
+      "variants": {
+        "open": "Released (open)",
+        "closed": "Pressed (closed)"
+      }
+    },
+    "led-5mm": {
+      "name": "LED, 5 mm",
+      "summary": "Choose a colour, 20 mA continuous",
+      "variantLabel": "Colour",
+      "variants": {
+        "red": "Red",
+        "yellow": "Yellow",
+        "green": "Green",
+        "blue": "Blue",
+        "white": "White"
+      }
+    },
+    "ldo-3v3": {
+      "name": "3.3 V regulator (LDO)",
+      "summary": "1117 type, up to 0.8 A"
+    },
+    "npn-2n3904": {
+      "name": "NPN transistor, 2N3904",
+      "summary": "Switch or amplifier, 40 V, 200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "PNP transistor, 2N3906",
+      "summary": "High-side switch, 40 V, 200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "N-channel MOSFET, 2N7000",
+      "summary": "Low-side switch, 60 V, 200 mA"
+    },
+    "pmos-bs250": {
+      "name": "P-channel MOSFET, BS250 type",
+      "summary": "High-side switch, about 45 V"
+    }
+  }
+}

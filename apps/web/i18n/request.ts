@@ -3,7 +3,7 @@ import * as rootParams from "next/root-params";
 import { hasLocale } from "next-intl";
 
 import { withFallback, type Messages } from "./messages";
-import en from "../messages/en.json";
+import en from "../languages/en.json";
 import { routing } from "./routing";
 
 export default getRequestConfig(async ({ locale: override }) => {
@@ -12,7 +12,7 @@ export default getRequestConfig(async ({ locale: override }) => {
   const messages: Messages =
     locale === routing.defaultLocale
       ? en
-      : withFallback(en, (await import(`../messages/${locale}.json`)).default as Messages);
+      : withFallback(en, (await import(`../languages/${locale}.json`)).default as Messages);
 
   return { locale, messages };
 });

@@ -1,0 +1,426 @@
+{
+  "Metadata": {
+    "description": "在 3D 中组装电路板和设备，进行仿真，即时了解每个元件能否正常工作。"
+  },
+  "Home": {
+    "openStudio": "打开工作室",
+    "footer": "Echidna 仍处于早期开发阶段。",
+    "hero": {
+      "eyebrow": "面向电路板和设备的 3D 工作室",
+      "titleTop": "动手之前，",
+      "titleBottom": "先确认它<mark>能用</mark>。",
+      "lead": "放置元件、更换元件，立即看到每个元件是否都在其额定范围内。专为创客、学生以及所有对设备内部充满好奇的人打造。",
+      "secondary": "了解判定原理",
+      "tagline": "放置 · 替换 · 验证",
+      "slogan": "别再猜了，动手搭建吧。",
+      "verdict": "实时判定"
+    },
+    "demo": {
+      "title": "试着换一个",
+      "caption": "5 V 电源、一个串联电阻和一个红色 LED。选择更小的电阻，看看电流如何上升。",
+      "diagramLabel": "电路：5 V 电源、串联电阻和 LED 组成单回路",
+      "resistor": "串联电阻",
+      "moreResistance": "电阻更大",
+      "lessResistance": "电阻更小",
+      "current": "LED 电流",
+      "rating": "占 {rating} mA 额定值",
+      "pass": "在额定范围内",
+      "warn": "接近极限",
+      "fail": "超出额定值",
+      "explainPass": "LED 电流为 {current} mA，远低于 {rating} mA 的额定值。",
+      "explainWarn": "LED 已达到额定值的 {percent}。它能点亮，但已没有余量。",
+      "explainFail": "LED 电流将达到 {current} mA，而额定值为 {rating} mA。它会过热并过早损坏。",
+      "note": "此处简化为固定 2 V 的 LED 压降。工作室会求解完整电路。"
+    },
+    "checks": {
+      "heading": "每个元件都要通过三项检查",
+      "lead": "只有三项全部满足，元件才能装入插槽。如果有一项未通过，Echidna 会告诉你是哪一项、差多少。",
+      "connects": {
+        "title": "能接上",
+        "body": "接口匹配：插座、连接器和通道数都正确。"
+      },
+      "powered": {
+        "title": "能供上电",
+        "body": "插槽的供电轨能提供元件所需的电压和电流。"
+      },
+      "cool": {
+        "title": "不会过热",
+        "body": "元件的发热量在插槽的散热预算和冷却能力之内。"
+      }
+    },
+    "devices": {
+      "heading": "六类设备，一套规则",
+      "lead": "从预设复刻真实设备，或从空白电路板开始。每类设备都有自己的可替换元件目录。",
+      "smartphone": {
+        "name": "智能手机",
+        "examples": "iPhone 和 Galaxy 预设"
+      },
+      "desktop": {
+        "name": "台式电脑",
+        "examples": "入门、游戏和工作站配置"
+      },
+      "laptop": {
+        "name": "笔记本电脑",
+        "examples": "超极本和游戏本预设"
+      },
+      "drone": {
+        "name": "无人机",
+        "examples": "DJI Mini 系列和 5 英寸 FPV"
+      },
+      "iot": {
+        "name": "开发板",
+        "examples": "Raspberry Pi、ESP32 和 Arduino"
+      },
+      "wearable": {
+        "name": "可穿戴设备",
+        "examples": "智能手表和健身手环"
+      }
+    },
+    "provenance": {
+      "heading": "每个数值都标明来源",
+      "lead": "数值会标注为数据手册、拆解或估算，让你知道判定结果有多可信。如果失败判定只基于估算，Echidna 会说“可能失败”，而不是断定失败。",
+      "datasheet": "数据手册",
+      "teardown": "拆解",
+      "estimated": "估算",
+      "rows": {
+        "battery": "电池能量",
+        "display": "屏幕电流",
+        "soc": "处理器峰值功率"
+      }
+    },
+    "cta": {
+      "heading": "从空白电路板开始",
+      "body": "打开工作室，从元件库中选一个元件，放置时即可看到判定结果。",
+      "eyebrow": "开始搭建"
+    },
+    "assembly": {
+      "label": "所有元件均已就位的开发板；按下电源按钮后，元件会随着电流到达依次点亮",
+      "board": "开发板",
+      "lit": "已通电 {lit}/{total}",
+      "off": "已关闭 · 按下电源",
+      "booting": "正在上电",
+      "powered": "已通电 · 全部检查通过",
+      "powerOn": "开机",
+      "powerOff": "关机",
+      "parts": {
+        "soc": "处理器",
+        "memory": "闪存",
+        "capacitors": "去耦电容",
+        "resistors": "电阻",
+        "usb": "USB-C 接口",
+        "inductor": "功率电感",
+        "crystal": "晶体振荡器",
+        "led": "状态指示灯",
+        "header": "排针"
+      }
+    },
+    "swap": {
+      "heading": "换一个元件，立即看到结论",
+      "lead": "每次替换都会立即检查。在这里用最简单的电路试一试。"
+    },
+    "sections": {
+      "swap": "试一试",
+      "checks": "判定",
+      "devices": "设备",
+      "provenance": "数据"
+    },
+    "stats": {
+      "devices": {
+        "label": "设备类型",
+        "body": "手机、台式机、笔记本、无人机、开发板和可穿戴设备。"
+      },
+      "checks": {
+        "label": "每个元件的检查",
+        "body": "每次放置元件时，检查连接、供电和散热。"
+      },
+      "sources": {
+        "label": "数据来源",
+        "body": "每个数值都标明来自数据手册、拆解还是估算。"
+      },
+      "languages": {
+        "label": "语言",
+        "body": "支持浅色和深色主题，在浏览器中运行，无需安装。"
+      }
+    },
+    "languages": {
+      "heading": "说你的语言",
+      "lead": "每个标签、判定和解释，都有七种语言。"
+    }
+  },
+  "Preferences": {
+    "language": "语言",
+    "toggleTheme": "切换主题"
+  },
+  "Studio": {
+    "title": "工作室",
+    "untitledProject": "未命名项目",
+    "blankBoard": "空白电路板",
+    "learnMode": "学习模式",
+    "simulate": "仿真",
+    "toggleLibrary": "显示或隐藏元件库",
+    "panels": "面板",
+    "library": {
+      "title": "元件",
+      "search": "搜索元件",
+      "noMatchTitle": "没有匹配的元件",
+      "noMatchDescription": "试试其他名称，例如电阻或 LED。",
+      "addHint": "选择以添加，或拖到原理图上",
+      "categories": {
+        "power": "电源",
+        "passives": "无源元件",
+        "semiconductors": "半导体"
+      }
+    },
+    "viewport": {
+      "label": "3D 电路板视图",
+      "help": "拖动以旋转，右键拖动以平移，滚轮缩放。视图获得焦点时，可用方向键平移。",
+      "controls": {
+        "label": "相机",
+        "zoomIn": "放大",
+        "zoomOut": "缩小",
+        "fit": "显示整块电路板",
+        "top": "俯视图",
+        "angled": "3D 视图",
+        "underside": "底面视图"
+      },
+      "overlays": {
+        "label": "叠加显示",
+        "current": "电流流向",
+        "heat": "热量",
+        "currentHint": "虚线沿铜线按电流方向移动，电流越大移动越快。",
+        "heatTitle": "元件估算温度",
+        "unsolved": "电路仿真后才会显示叠加内容。"
+      },
+      "mask": {
+        "label": "阻焊层颜色",
+        "black": "黑色",
+        "green": "绿色",
+        "blue": "蓝色",
+        "red": "红色"
+      }
+    },
+    "schematic": {
+      "title": "原理图",
+      "emptyTitle": "原理图为空",
+      "emptyDescription": "从“元件”中拖入一个元件，或从示例电路开始。",
+      "openExample": "打开 3.3 V 稳压器示例",
+      "rotate": "旋转 (R)",
+      "delete": "删除 (Del)",
+      "canvasLabel": "原理图编辑器",
+      "canvasRole": "原理图",
+      "partLabel": "{id}，{name}",
+      "hint": "从一个引脚拖到另一个引脚以连线 · <key>R</key> 旋转 · <key>Del</key> 删除 · 双击适应视图"
+    },
+    "inspector": {
+      "board": {
+        "title": "电路板",
+        "width": "宽度",
+        "depth": "深度",
+        "outOfRange": "请输入 {min} 到 {max} mm 之间的尺寸。"
+      },
+      "environment": {
+        "title": "环境",
+        "ambient": "空气温度",
+        "outOfRange": "请输入 {min} 到 {max} °C 之间的温度。",
+        "hint": "各元件的温度根据其发出的热量估算，以此空气温度为起点。"
+      },
+      "switch": {
+        "hold": "按住"
+      },
+      "title": "检查器",
+      "emptyTitle": "未选择任何内容",
+      "emptyDescription": "选择一个元件以查看其实时数值。",
+      "parameters": "参数",
+      "liveValues": "实时数值",
+      "ratings": "额定值",
+      "pinVoltage": "{pin} 处电压",
+      "current": "电流",
+      "power": "耗散功率",
+      "temperature": "温度（估算）",
+      "resetParam": "恢复为元件默认值",
+      "invalidNumber": "请输入数字，例如 220 或 4.7k。",
+      "verdict": {
+        "pass": "在额定范围内",
+        "warn": "警告",
+        "fail": "不通过",
+        "likelyFail": "可能不通过",
+        "noCurrent": "无电流"
+      },
+      "ofRating": "{limit} 的 {percent}",
+      "swapsTitle": "替换建议",
+      "swapTo": "使用 {value}：{verdict}",
+      "swapVerdict": {
+        "pass": "合适",
+        "warn": "警告",
+        "fail": "不通过"
+      },
+      "checking": "正在检查…",
+      "net": "网络",
+      "netVoltage": "电压",
+      "connections": "已连接引脚",
+      "led": {
+        "on": "已点亮，电流 {current}",
+        "off": "未点亮",
+        "reasons": {
+          "unwired": "有一根引脚没有连线，因此没有电流流过。",
+          "shorted": "两根引脚连在同一网络上，电流绕过了 LED，而不是流过它。",
+          "reversed": "接反了：阴极电压高于阳极。",
+          "open": "没有电流流过：电路没有形成闭合回路，或电压太低无法点亮。"
+        }
+      },
+      "switchOn": {
+        "title": "通电之后",
+        "at": "{time} 时",
+        "voltage": "电压，{from} 至 {to}",
+        "currentInto": "流入 {pin} 的电流",
+        "currentOutOf": "流出 {pin} 的电流",
+        "scrub": "通电后的时间",
+        "valueText": "{time}：{voltage}，{current}",
+        "span": "显示前 {time}，此时已趋于稳定。",
+        "unsettled": "{time} 后仍在变化，需要更长时间才能稳定。",
+        "hint": "指向曲线，或选中后使用方向键，即可在电路板上回放通电过程。",
+        "instant": "此电路中没有储能元件，因此通电瞬间即达到这些数值。",
+        "failed": "无法模拟此电路的通电过程。请检查是否有极端数值，例如电容远大于预期。"
+      }
+    },
+    "validator": {
+      "label": "验证",
+      "allPassed": "所有检查均已通过",
+      "fails": "{count, plural, other {# 项失败}}",
+      "warns": "{count, plural, other {# 项警告}}",
+      "expand": "显示所有问题",
+      "collapse": "收起",
+      "fail": "失败",
+      "likelyFail": "可能失败",
+      "warn": "警告",
+      "estimated": "估算",
+      "idle": "添加元件即可开始检查",
+      "solvedIn": "用时 {ms} ms",
+      "errors": {
+        "singular": "无法求解此电路。请检查是否有电源直接并接在一起。",
+        "noConvergence": "求解器未能为此电路找到稳定解。",
+        "pinCount": "{id} 的连线不正确。",
+        "invalidValue": "{id} 的数值无法用于求解。",
+        "internal": "求解时出错。请重试此修改。"
+      }
+    },
+    "simulateOn": "实时：每次修改都会计算并检查。选择即可暂停。",
+    "simulateOff": "已暂停。选择即可实时计算并检查修改。",
+    "params": {
+      "voltage": "电压",
+      "current": "电流",
+      "resistance": "电阻",
+      "capacitance": "电容",
+      "inductance": "电感",
+      "outputVoltage": "输出电压",
+      "dropoutVoltage": "压差",
+      "quiescentCurrent": "静态电流",
+      "forwardBeta": "电流增益 (β)",
+      "thresholdVoltage": "栅极阈值电压"
+    },
+    "provenance": {
+      "datasheet": "数据手册",
+      "teardown": "拆解",
+      "estimated": "估算",
+      "user": "由你设置"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "额定电压",
+        "explain": "此元件两端电压为额定值的 {percent}。保持在 80% 以下以留出余量；超过 100% 可能被击穿。"
+      },
+      "currentRating": {
+        "name": "额定电流",
+        "explain": "此元件的电流为额定最大值的 {percent}。超过 80% 会发热并加速老化；超过 100% 可能损坏。"
+      },
+      "powerRating": {
+        "name": "额定功率",
+        "explain": "此元件将额定功率的 {percent} 转化为热量。超过 80% 会变热；超过 100% 可能烧毁。"
+      },
+      "temperatureRating": {
+        "name": "温度",
+        "explain": "估计此元件已用掉其高于周围空气的可承受温升的 {percent}。超过 80% 会加速老化；超过 100% 可能损坏。减小通过元件的功率，或换用额定功率更高的元件，可以让它更凉。"
+      },
+      "switchOnVoltage": {
+        "name": "通电时的电压",
+        "explain": "通电后不久，此元件两端的电压会短暂达到额定值的 {percent}，高于稳定后的数值。电感与电容之间的振荡可能导致这种情况；在回路中增加电阻可以抑制它。"
+      },
+      "switchOnCurrent": {
+        "name": "通电时的电流",
+        "explain": "电路启动期间，此元件在一毫秒或更长时间内承载额定电流的 {percent}，通常是因为大电容正在充电。减小电容或增加串联电阻可以缩短这一冲击。"
+      },
+      "switchOnPower": {
+        "name": "通电时的发热",
+        "explain": "电路启动期间，此元件在一毫秒或更长时间内将额定功率的 {percent} 转化为热量，通常是因为大电容正在充电。减小电容或增加串联电阻可以缩短这一冲击。"
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "直流电源",
+      "summary": "固定电压源"
+    },
+    "ground": {
+      "name": "地",
+      "summary": "0 V 参考"
+    },
+    "resistor": {
+      "name": "电阻，¼ W",
+      "summary": "限制电流"
+    },
+    "capacitor-ceramic": {
+      "name": "陶瓷电容，16 V",
+      "summary": "直流下开路"
+    },
+    "switch-spst": {
+      "name": "拨动开关，SPST",
+      "summary": "开或关，0.5 A",
+      "variantLabel": "位置",
+      "variants": {
+        "closed": "开（闭合）",
+        "open": "关（断开）"
+      }
+    },
+    "switch-push": {
+      "name": "按钮开关，SPST",
+      "summary": "按住时接通，50 mA",
+      "variantLabel": "按钮",
+      "variants": {
+        "open": "松开（断开）",
+        "closed": "按下（闭合）"
+      }
+    },
+    "led-5mm": {
+      "name": "LED，5 mm",
+      "summary": "可选颜色，持续 20 mA",
+      "variantLabel": "颜色",
+      "variants": {
+        "red": "红色",
+        "yellow": "黄色",
+        "green": "绿色",
+        "blue": "蓝色",
+        "white": "白色"
+      }
+    },
+    "ldo-3v3": {
+      "name": "3.3 V 稳压器 (LDO)",
+      "summary": "1117 型，最高 0.8 A"
+    },
+    "npn-2n3904": {
+      "name": "NPN 晶体管，2N3904",
+      "summary": "开关或放大，40 V，200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "PNP 晶体管，2N3906",
+      "summary": "高边开关，40 V，200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "N 沟道 MOSFET，2N7000",
+      "summary": "低边开关，60 V，200 mA"
+    },
+    "pmos-bs250": {
+      "name": "P 沟道 MOSFET，BS250 型",
+      "summary": "高边开关，约 45 V"
+    }
+  }
+}

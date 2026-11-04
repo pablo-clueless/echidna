@@ -1,0 +1,426 @@
+{
+  "Metadata": {
+    "description": "Stelle Platinen und Geräte in 3D zusammen, simuliere sie und sieh sofort, ob jedes Bauteil funktionieren wird."
+  },
+  "Home": {
+    "openStudio": "Studio öffnen",
+    "footer": "Echidna befindet sich in einer frühen Entwicklungsphase.",
+    "hero": {
+      "eyebrow": "Ein 3D-Studio für Platinen und Geräte",
+      "titleTop": "Wisse, dass es <mark>funktioniert</mark>,",
+      "titleBottom": "bevor du es baust.",
+      "lead": "Platziere Bauteile, tausche sie aus und sieh sofort, ob jedes Bauteil innerhalb seiner Grenzwerte bleibt. Gemacht für Maker, Lernende und alle, die wissen wollen, was in ihren Geräten steckt.",
+      "secondary": "So funktionieren Urteile",
+      "tagline": "Platzieren · Tauschen · Prüfen",
+      "slogan": "Schluss mit Raten. Fang an zu bauen.",
+      "verdict": "Live-Urteil"
+    },
+    "demo": {
+      "title": "Probier einen Tausch",
+      "caption": "Eine 5-V-Versorgung, ein Vorwiderstand und eine rote LED. Wähle einen kleineren Widerstand und sieh zu, wie der Strom steigt.",
+      "diagramLabel": "Schaltung: 5-V-Versorgung, Vorwiderstand und LED in einer einzigen Schleife",
+      "resistor": "Vorwiderstand",
+      "moreResistance": "Mehr Widerstand",
+      "lessResistance": "Weniger Widerstand",
+      "current": "LED-Strom",
+      "rating": "Von ihren {rating} mA Nennstrom",
+      "pass": "Innerhalb der Grenzwerte",
+      "warn": "Nahe am Grenzwert",
+      "fail": "Über dem Nennwert",
+      "explainPass": "Die LED zieht {current} mA, deutlich unter ihrem Nennstrom von {rating} mA.",
+      "explainWarn": "Die LED liegt bei {percent} ihres Nennwerts. Sie leuchtet, hat aber keine Reserve mehr.",
+      "explainFail": "Die LED würde {current} mA ziehen, bei einem Nennstrom von {rating} mA. Sie überhitzt und fällt vorzeitig aus.",
+      "note": "Hier vereinfacht mit einem festen LED-Spannungsabfall von 2 V. Das Studio berechnet die vollständige Schaltung."
+    },
+    "checks": {
+      "heading": "Jedes Bauteil besteht drei Prüfungen",
+      "lead": "Ein Bauteil passt nur dann in einen Steckplatz, wenn alle drei übereinstimmen. Scheitert eine, sagt dir Echidna, welche und um wie viel.",
+      "connects": {
+        "title": "Es lässt sich anschließen",
+        "body": "Die Schnittstelle passt: der richtige Sockel, Stecker und die richtige Anzahl an Lanes."
+      },
+      "powered": {
+        "title": "Es wird versorgt",
+        "body": "Die Versorgungsschienen des Steckplatzes liefern die Spannung und den Strom, die das Bauteil braucht."
+      },
+      "cool": {
+        "title": "Es bleibt kühl",
+        "body": "Die abgegebene Wärme passt zum thermischen Budget des Steckplatzes und zur Kühlung drumherum."
+      }
+    },
+    "devices": {
+      "heading": "Sechs Gerätearten, ein Regelwerk",
+      "lead": "Bilde ein echtes Gerät aus einer Vorlage nach oder beginne mit einer leeren Platine. Jede Art hat ihren eigenen Katalog austauschbarer Bauteile.",
+      "smartphone": {
+        "name": "Smartphones",
+        "examples": "Vorlagen für iPhone und Galaxy"
+      },
+      "desktop": {
+        "name": "Desktop-PCs",
+        "examples": "Einsteiger-, Gaming- und Workstation-Builds"
+      },
+      "laptop": {
+        "name": "Laptops",
+        "examples": "Vorlagen für Ultrabook und Gaming"
+      },
+      "drone": {
+        "name": "Drohnen",
+        "examples": "DJI-Mini-Serie und 5-Zoll-FPV"
+      },
+      "iot": {
+        "name": "Entwicklungsboards",
+        "examples": "Raspberry Pi, ESP32 und Arduino"
+      },
+      "wearable": {
+        "name": "Wearables",
+        "examples": "Smartwatch und Fitnessarmband"
+      }
+    },
+    "provenance": {
+      "heading": "Jede Zahl zeigt, woher sie stammt",
+      "lead": "Werte sind als Datenblatt, Teardown oder Schätzung gekennzeichnet, damit du weißt, wie sehr du einem Urteil trauen kannst. Beruht ein Fehlschlag nur auf Schätzungen, sagt Echidna, dass ein Ausfall wahrscheinlich ist, nicht sicher.",
+      "datasheet": "Datenblatt",
+      "teardown": "Teardown",
+      "estimated": "Schätzung",
+      "rows": {
+        "battery": "Akkuenergie",
+        "display": "Displaystrom",
+        "soc": "Spitzenleistung des Prozessors"
+      }
+    },
+    "cta": {
+      "heading": "Beginne mit einer leeren Platine",
+      "body": "Öffne das Studio, wähle ein Bauteil aus der Bibliothek und sieh sein Urteil, während du es platzierst.",
+      "eyebrow": "Fang an zu bauen"
+    },
+    "assembly": {
+      "label": "Entwicklungsboard mit allen Bauteilen an ihrem Platz; ein Druck auf den Einschaltknopf lässt jedes Bauteil nacheinander aufleuchten, sobald der Strom es erreicht",
+      "board": "Entwicklungsboard",
+      "lit": "{lit} von {total} aktiv",
+      "off": "Aus · Einschalten drücken",
+      "booting": "Fährt hoch",
+      "powered": "Eingeschaltet · alle Prüfungen bestanden",
+      "powerOn": "Einschalten",
+      "powerOff": "Ausschalten",
+      "parts": {
+        "soc": "Prozessor",
+        "memory": "Flash-Speicher",
+        "capacitors": "Entkopplungskondensatoren",
+        "resistors": "Widerstände",
+        "usb": "USB-C-Buchse",
+        "inductor": "Leistungsinduktivität",
+        "crystal": "Quarzoszillator",
+        "led": "Status-LED",
+        "header": "Stiftleiste"
+      }
+    },
+    "swap": {
+      "heading": "Tausche ein Bauteil, sieh das Urteil",
+      "lead": "Jeder Tausch wird in dem Moment geprüft, in dem du ihn machst. Probier es hier mit der einfachsten Schaltung, die es gibt."
+    },
+    "sections": {
+      "swap": "Ausprobieren",
+      "checks": "Urteile",
+      "devices": "Geräte",
+      "provenance": "Daten"
+    },
+    "stats": {
+      "devices": {
+        "label": "Gerätearten",
+        "body": "Smartphones, PCs, Laptops, Drohnen, Entwicklungsboards und Wearables."
+      },
+      "checks": {
+        "label": "Prüfungen pro Bauteil",
+        "body": "Anschluss, Versorgung und Wärme, jedes Mal, wenn du ein Bauteil platzierst."
+      },
+      "sources": {
+        "label": "Datenquellen",
+        "body": "Jeder Wert ist als Datenblatt, Teardown oder Schätzung gekennzeichnet."
+      },
+      "languages": {
+        "label": "Sprachen",
+        "body": "Im hellen und dunklen Design, im Browser, ohne Installation."
+      }
+    },
+    "languages": {
+      "heading": "Spricht deine Sprache",
+      "lead": "Jede Beschriftung, jedes Urteil und jede Erklärung, in sieben Sprachen."
+    }
+  },
+  "Preferences": {
+    "language": "Sprache",
+    "toggleTheme": "Design wechseln"
+  },
+  "Studio": {
+    "title": "Studio",
+    "untitledProject": "Unbenanntes Projekt",
+    "blankBoard": "Leere Platine",
+    "learnMode": "Lernmodus",
+    "simulate": "Simulieren",
+    "toggleLibrary": "Bauteilbibliothek ein- oder ausblenden",
+    "panels": "Bereiche",
+    "library": {
+      "title": "Bauteile",
+      "search": "Bauteile suchen",
+      "noMatchTitle": "Keine passenden Bauteile",
+      "noMatchDescription": "Versuch einen anderen Namen, etwa Widerstand oder LED.",
+      "addHint": "Zum Hinzufügen auswählen oder in den Schaltplan ziehen",
+      "categories": {
+        "power": "Stromversorgung",
+        "passives": "Passive Bauteile",
+        "semiconductors": "Halbleiter"
+      }
+    },
+    "viewport": {
+      "label": "3D-Ansicht der Platine",
+      "help": "Ziehen zum Drehen, mit rechter Maustaste ziehen zum Verschieben, scrollen zum Zoomen. Ist die Ansicht fokussiert, verschieben die Pfeiltasten.",
+      "controls": {
+        "label": "Kamera",
+        "zoomIn": "Vergrößern",
+        "zoomOut": "Verkleinern",
+        "fit": "Platine einpassen",
+        "top": "Draufsicht",
+        "angled": "3D-Ansicht",
+        "underside": "Unteransicht"
+      },
+      "overlays": {
+        "label": "Überlagerungen",
+        "current": "Stromfluss",
+        "heat": "Wärme",
+        "currentHint": "Striche laufen in Stromrichtung über das Kupfer, schneller bei mehr Strom.",
+        "heatTitle": "Geschätzte Bauteiltemperatur",
+        "unsolved": "Überlagerungen erscheinen, sobald die Schaltung simuliert ist."
+      },
+      "mask": {
+        "label": "Lötstopplackfarbe",
+        "black": "Schwarz",
+        "green": "Grün",
+        "blue": "Blau",
+        "red": "Rot"
+      }
+    },
+    "schematic": {
+      "title": "Schaltplan",
+      "emptyTitle": "Der Schaltplan ist leer",
+      "emptyDescription": "Ziehe ein Bauteil aus „Bauteile“ hierher oder beginne mit der Beispielschaltung.",
+      "openExample": "Beispiel mit 3,3-V-Spannungsregler öffnen",
+      "rotate": "Drehen (R)",
+      "delete": "Löschen (Entf)",
+      "canvasLabel": "Schaltplan-Editor",
+      "canvasRole": "Schaltplan",
+      "partLabel": "{id}, {name}",
+      "hint": "Von Pin zu Pin ziehen zum Verdrahten · <key>R</key> drehen · <key>Entf</key> löschen · Doppelklick zum Einpassen"
+    },
+    "inspector": {
+      "board": {
+        "title": "Platine",
+        "width": "Breite",
+        "depth": "Tiefe",
+        "outOfRange": "Gib eine Größe von {min} bis {max} mm ein."
+      },
+      "environment": {
+        "title": "Umgebung",
+        "ambient": "Lufttemperatur",
+        "outOfRange": "Gib eine Temperatur von {min} bis {max} °C ein.",
+        "hint": "Bauteiltemperaturen werden aus der Wärme geschätzt, die jedes Bauteil abgibt, ausgehend von dieser Lufttemperatur."
+      },
+      "switch": {
+        "hold": "Zum Drücken gedrückt halten"
+      },
+      "title": "Inspektor",
+      "emptyTitle": "Nichts ausgewählt",
+      "emptyDescription": "Wähle ein Bauteil aus, um seine Live-Werte zu sehen.",
+      "parameters": "Parameter",
+      "liveValues": "Live-Werte",
+      "ratings": "Nennwerte",
+      "pinVoltage": "Spannung an {pin}",
+      "current": "Strom",
+      "power": "Verlustleistung",
+      "temperature": "Temperatur (geschätzt)",
+      "resetParam": "Auf den Standardwert des Bauteils zurücksetzen",
+      "invalidNumber": "Gib eine Zahl ein, etwa 220 oder 4,7k.",
+      "verdict": {
+        "pass": "Innerhalb des Nennwerts",
+        "warn": "Warnung",
+        "fail": "Fehlschlag",
+        "likelyFail": "Ausfall wahrscheinlich",
+        "noCurrent": "Es fließt kein Strom"
+      },
+      "ofRating": "{percent} von {limit}",
+      "swapsTitle": "Tauschvorschläge",
+      "swapTo": "{value} verwenden: {verdict}",
+      "swapVerdict": {
+        "pass": "Passt",
+        "warn": "Warnung",
+        "fail": "Scheitert"
+      },
+      "checking": "Wird geprüft …",
+      "net": "Netz",
+      "netVoltage": "Spannung",
+      "connections": "Verbundene Pins",
+      "led": {
+        "on": "Leuchtet, zieht {current}",
+        "off": "Aus",
+        "reasons": {
+          "unwired": "Einer ihrer Anschlüsse ist nicht verdrahtet, daher kann kein Strom durch sie fließen.",
+          "shorted": "Beide Anschlüsse liegen am selben Netz, daher fließt der Strom an der LED vorbei statt durch sie hindurch.",
+          "reversed": "Sie ist verkehrt herum verdrahtet: Die Kathode liegt auf einer höheren Spannung als die Anode.",
+          "open": "Es fließt kein Strom durch sie: Die Schaltung ist kein geschlossener Kreis, oder die Spannung reicht nicht, um sie leuchten zu lassen."
+        }
+      },
+      "switchOn": {
+        "title": "Nach dem Einschalten",
+        "at": "Bei {time}",
+        "voltage": "Spannung, {from} bis {to}",
+        "currentInto": "Strom in {pin}",
+        "currentOutOf": "Strom aus {pin}",
+        "scrub": "Zeit nach dem Einschalten",
+        "valueText": "{time}: {voltage}, {current}",
+        "span": "Dargestellt über die ersten {time}, bis sich die Werte eingependelt haben.",
+        "unsettled": "Nach {time} noch nicht stabil; das Einpendeln dauert länger.",
+        "hint": "Zeige auf die Diagramme oder fokussiere sie und nutze die Pfeiltasten, um das Einschalten auf der Platine nachzuspielen.",
+        "instant": "Nichts in dieser Schaltung speichert Energie, daher erreicht sie diese Werte sofort beim Einschalten.",
+        "failed": "Das Einschalten dieser Schaltung konnte nicht simuliert werden. Prüfe, ob Bauteile extreme Werte haben, etwa ein Kondensator, der viel größer ist als beabsichtigt."
+      }
+    },
+    "validator": {
+      "label": "Prüfung",
+      "allPassed": "Alle Prüfungen bestanden",
+      "fails": "{count, plural, one {# Fehlschlag} other {# Fehlschläge}}",
+      "warns": "{count, plural, one {# Warnung} other {# Warnungen}}",
+      "expand": "Alle Probleme anzeigen",
+      "collapse": "Weniger anzeigen",
+      "fail": "Fehlschlag",
+      "likelyFail": "Ausfall wahrscheinlich",
+      "warn": "Warnung",
+      "estimated": "geschätzt",
+      "idle": "Füge Bauteile hinzu, um mit der Prüfung zu beginnen",
+      "solvedIn": "Gelöst in {ms} ms",
+      "errors": {
+        "singular": "Diese Schaltung lässt sich nicht lösen. Prüfe, ob Versorgungen direkt gegeneinander geschaltet sind.",
+        "noConvergence": "Der Solver konnte für diese Schaltung keine stabile Lösung finden.",
+        "pinCount": "{id} ist nicht richtig verdrahtet.",
+        "invalidValue": "{id} hat einen Wert, den der Solver nicht verwenden kann.",
+        "internal": "Beim Lösen ist etwas schiefgelaufen. Versuch die Änderung erneut."
+      }
+    },
+    "simulateOn": "Live: Jede Änderung wird gelöst und geprüft. Zum Pausieren auswählen.",
+    "simulateOff": "Pausiert. Auswählen, um Änderungen live zu lösen und zu prüfen.",
+    "params": {
+      "voltage": "Spannung",
+      "current": "Strom",
+      "resistance": "Widerstand",
+      "capacitance": "Kapazität",
+      "inductance": "Induktivität",
+      "outputVoltage": "Ausgangsspannung",
+      "dropoutVoltage": "Dropout-Spannung",
+      "quiescentCurrent": "Ruhestrom",
+      "forwardBeta": "Stromverstärkung (β)",
+      "thresholdVoltage": "Gate-Schwellenspannung"
+    },
+    "provenance": {
+      "datasheet": "Datenblatt",
+      "teardown": "Teardown",
+      "estimated": "Schätzung",
+      "user": "Von dir festgelegt"
+    },
+    "rules": {
+      "voltageRating": {
+        "name": "Nennspannung",
+        "explain": "Die Spannung an diesem Bauteil beträgt {percent} seiner Nennspannung. Bleib für eine Sicherheitsreserve unter 80 %; über 100 % kann das Bauteil durchschlagen."
+      },
+      "currentRating": {
+        "name": "Nennstrom",
+        "explain": "Dieses Bauteil führt {percent} des höchsten Stroms, für den es ausgelegt ist. Über 80 % wird es heiß und verschleißt schneller; über 100 % kann es ausfallen."
+      },
+      "powerRating": {
+        "name": "Nennleistung",
+        "explain": "Dieses Bauteil wandelt {percent} seiner Nennleistung in Wärme um. Über 80 % wird es heiß; über 100 % kann es durchbrennen."
+      },
+      "temperatureRating": {
+        "name": "Temperatur",
+        "explain": "Dieses Bauteil nutzt schätzungsweise {percent} des Temperaturanstiegs über der Umgebungsluft, den es verträgt. Über 80 % altert es schneller; über 100 % kann es beschädigt werden. Weniger Leistung durch das Bauteil oder eines mit höherer Nennleistung hält es kühler."
+      },
+      "switchOnVoltage": {
+        "name": "Spannung beim Einschalten",
+        "explain": "Kurz nach dem Einschalten erreicht die Spannung an diesem Bauteil kurzzeitig {percent} seiner Nennspannung, mehr als der Wert, auf den sie sich einpendelt. Schwingungen zwischen einer Induktivität und einem Kondensator können das verursachen; mehr Widerstand in der Schleife beruhigt sie."
+      },
+      "switchOnCurrent": {
+        "name": "Strom beim Einschalten",
+        "explain": "Während die Schaltung anläuft, führt dieses Bauteil für eine Millisekunde oder länger {percent} seines Nennstroms, meist während sich ein großer Kondensator auflädt. Ein kleinerer Kondensator oder mehr Vorwiderstand verkürzt den Stromstoß."
+      },
+      "switchOnPower": {
+        "name": "Wärme beim Einschalten",
+        "explain": "Während die Schaltung anläuft, wandelt dieses Bauteil für eine Millisekunde oder länger {percent} seiner Nennleistung in Wärme um, meist während sich ein großer Kondensator auflädt. Ein kleinerer Kondensator oder mehr Vorwiderstand verkürzt den Stromstoß."
+      }
+    }
+  },
+  "Parts": {
+    "dc-supply": {
+      "name": "Gleichspannungsquelle",
+      "summary": "Feste Spannungsquelle"
+    },
+    "ground": {
+      "name": "Masse",
+      "summary": "0-V-Bezug"
+    },
+    "resistor": {
+      "name": "Widerstand, ¼ W",
+      "summary": "Begrenzt den Strom"
+    },
+    "capacitor-ceramic": {
+      "name": "Keramikkondensator, 16 V",
+      "summary": "Bei Gleichstrom offen"
+    },
+    "switch-spst": {
+      "name": "Schiebeschalter, einpolig",
+      "summary": "Ein oder aus, 0,5 A",
+      "variantLabel": "Stellung",
+      "variants": {
+        "closed": "Ein (geschlossen)",
+        "open": "Aus (offen)"
+      }
+    },
+    "switch-push": {
+      "name": "Taster, einpolig",
+      "summary": "Ein, solange gedrückt, 50 mA",
+      "variantLabel": "Taster",
+      "variants": {
+        "open": "Losgelassen (offen)",
+        "closed": "Gedrückt (geschlossen)"
+      }
+    },
+    "led-5mm": {
+      "name": "LED, 5 mm",
+      "summary": "Farbe wählbar, 20 mA Dauerstrom",
+      "variantLabel": "Farbe",
+      "variants": {
+        "red": "Rot",
+        "yellow": "Gelb",
+        "green": "Grün",
+        "blue": "Blau",
+        "white": "Weiß"
+      }
+    },
+    "ldo-3v3": {
+      "name": "3,3-V-Spannungsregler (LDO)",
+      "summary": "Typ 1117, bis 0,8 A"
+    },
+    "npn-2n3904": {
+      "name": "NPN-Transistor, 2N3904",
+      "summary": "Schalter oder Verstärker, 40 V, 200 mA"
+    },
+    "pnp-2n3906": {
+      "name": "PNP-Transistor, 2N3906",
+      "summary": "High-Side-Schalter, 40 V, 200 mA"
+    },
+    "nmos-2n7000": {
+      "name": "N-Kanal-MOSFET, 2N7000",
+      "summary": "Low-Side-Schalter, 60 V, 200 mA"
+    },
+    "pmos-bs250": {
+      "name": "P-Kanal-MOSFET, Typ BS250",
+      "summary": "High-Side-Schalter, etwa 45 V"
+    }
+  }
+}

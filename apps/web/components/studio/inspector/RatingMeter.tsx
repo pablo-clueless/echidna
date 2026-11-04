@@ -53,10 +53,10 @@ export const RatingMeter = ({ violation }: { violation: Violation }) => {
         aria-valuemax={violation.limit}
         aria-valuenow={violation.actual}
         aria-valuetext={t("inspector.ofRating", { percent, limit: formatQuantity(violation.limit, violation.unit, locale) })}
-        className="relative h-1.5 overflow-hidden rounded-full bg-muted"
+        className="relative h-1.5 overflow-hidden bg-muted"
       >
         <div
-          className={cn("h-full rounded-full transition-[width]", fillClass[violation.severity])}
+          className={cn("h-full transition-[width]", fillClass[violation.severity])}
           style={{ width: `${Math.min(100, ratio * 100)}%` }}
         />
         <div aria-hidden className="absolute inset-y-0 left-[80%] w-px bg-foreground/30" />

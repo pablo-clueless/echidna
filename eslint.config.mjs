@@ -64,7 +64,7 @@ export default defineConfig(
     rules: { "func-style": "off", "perfectionist/sort-imports": "off" },
   },
   {
-    files: ["apps/web/messages/en.json"],
+    files: ["apps/web/languages/en.json"],
     language: "json/json",
     plugins: { json, echidna },
     rules: { "echidna/british-english": "error" },

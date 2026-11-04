@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { type Messages, missingKeys } from "../i18n/messages";
 import { defaultLocale, locales } from "../i18n/routing";
 
-const dir = fileURLToPath(new URL("../messages", import.meta.url));
+const dir = fileURLToPath(new URL("../languages", import.meta.url));
 const strict = process.argv.includes("--strict");
 
 const load = (locale: string): Messages => JSON.parse(readFileSync(join(dir, `${locale}.json`), "utf8"));
