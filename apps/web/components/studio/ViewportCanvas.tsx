@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, invalidate, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Environment, Grid, Lightformer } from "@react-three/drei";
 import { partTemperature } from "@echidna/rules";
@@ -172,7 +172,10 @@ export const ViewportCanvas = () => {
   );
   const legend = [projectName.trim().toUpperCase(), "REV A"].filter(Boolean).join("  ·  ");
 
-  useEffect(() => applyMaskColour(maskColour), [maskColour]);
+  useEffect(() => {
+    applyMaskColour(maskColour);
+    invalidate();
+  }, [maskColour]);
 
   useEffect(() => {
     if (!dragging) return;
@@ -208,6 +211,9 @@ export const ViewportCanvas = () => {
   return (
     <Canvas
       shadows="percentage"
+      // Redraws only when something changes, so an idle board costs no GPU time. Only the flowing-current animation
+      // needs every frame.
+      frameloop={trackFlow ? "always" : "demand"}
       camera={{ position: [0.06, 0.08, 0.115], fov: 35, near: 0.0005, far: 5 }}
       gl={{ alpha: true }}
       dpr={[1, 2]}

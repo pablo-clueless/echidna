@@ -76,7 +76,7 @@ describe("toCss", () => {
   const css = toCss();
 
   it("emits both themes and honours the system preference", () => {
-    expect(css).toContain(`--colour-surface: ${palette.cream};`);
+    expect(css).toContain(`--colour-surface: ${palette.white};`);
     expect(css).toContain(':root[data-theme="dark"]');
     expect(css).toContain('@media (prefers-color-scheme: dark)');
   });

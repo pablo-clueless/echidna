@@ -35,10 +35,10 @@ const shared = {
 export const themes: Record<ThemeName, ThemeColours> = {
   light: {
     ...shared,
-    surface: palette.cream,
+    surface: palette.white,
     text: palette.ink,
     primaryText: palette.orange700,
-    viewport: palette.cream,
+    viewport: palette.white,
     statusFailText: palette.red700,
     statusWarnText: palette.yellow800,
     statusWarnBorder: palette.yellow700,

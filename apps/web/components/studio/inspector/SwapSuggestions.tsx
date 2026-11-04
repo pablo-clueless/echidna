@@ -93,7 +93,7 @@ export const SwapSuggestions = ({ component, param }: Props) => {
                 <span className="flex items-center gap-1.5">
                   <span
                     aria-hidden
-                    className={cn("size-1.5 rounded-full", severity ? dotClass[severity] : "bg-muted-foreground/40")}
+                    className={cn("size-1.5", severity ? dotClass[severity] : "bg-muted-foreground/40")}
                   />
                   <span className={cn("text-[11px]", severity ? textClass[severity] : "text-muted-foreground")}>
                     {severity ? t(`swapVerdict.${severity}`) : t("checking")}

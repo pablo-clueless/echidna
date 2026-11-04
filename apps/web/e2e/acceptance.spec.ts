@@ -1,7 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 
-import en from "../messages/en.json" with { type: "json" };
-import fr from "../messages/fr.json" with { type: "json" };
+import en from "../languages/en.json" with { type: "json" };
+import fr from "../languages/fr.json" with { type: "json" };
 
 /** The Phase 1 acceptance budget: verdicts on screen within 100 ms of the edit. */
 const BUDGET_MS = 100;
@@ -13,6 +13,11 @@ const locales = [
   { locale: "en", messages: en, smaller: "68", smallest: "47" },
   { locale: "fr", messages: fr, smaller: "0,068k", smallest: "47" },
 ] as const;
+
+/** Tells the studio not to load the 3D board, so the page never creates a WebGL context. */
+const skipViewport = () => {
+  window.__echidna = { ...window.__echidna, skip3d: true };
+};
 
 /**
  * Commits a new resistance and measures, inside the page, the time from the Enter key to the validator
@@ -54,6 +59,11 @@ for (const { locale, messages, smaller, smallest } of locales) {
 
   test.describe(`acceptance (${locale})`, () => {
     test.beforeEach(async ({ page }) => {
+      // Without a GPU, Chromium draws WebGL in software: a single board redraw blocks the page for seconds, which
+      // would swamp the budget, and starting the renderer has frozen CI runners for half a minute. Skip the 3D view
+      // there, so the timing covers the solver, the rules and the validator. Set E2E_GPU=1 to time the full studio
+      // on real graphics.
+      if (!process.env.E2E_GPU) await page.addInitScript(skipViewport);
       await page.goto(`/${locale}/studio`);
       await page.evaluate(() => localStorage.clear());
       await page.reload();

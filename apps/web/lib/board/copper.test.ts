@@ -30,6 +30,13 @@ describe("projectCopper", () => {
     expect(clearanceViolations(onBoard.routing, onBoard.pads)).toEqual([]);
   });
 
+  it("keeps every track of the example on the top layer, where it can be seen, with no vias", () => {
+    const onBoard = projectCopper(project);
+    expect(onBoard.routing.traces.filter((t) => t.layer === "bottom")).toEqual([]);
+    expect(onBoard.routing.vias).toEqual([]);
+    expect(onBoard.routing.traces.some((t) => String(t.ends) === "SW1/2,U1/in")).toBe(true);
+  });
+
   it("uses wide tracks for the supply and ground nets", () => {
     expect(new Set(routing.traces.map((t) => t.width))).toEqual(new Set([TRACK_WIDTH.power, TRACK_WIDTH.signal]));
   });

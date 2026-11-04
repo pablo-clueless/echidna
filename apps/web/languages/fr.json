@@ -10,7 +10,10 @@
       "titleTop": "Sachez que ça <mark>marche</mark>",
       "titleBottom": "avant de le fabriquer.",
       "lead": "Placez des composants, échangez-les et voyez immédiatement si chacun reste dans ses limites. Conçu pour les makers, les étudiants et tous les curieux de ce qui se cache dans leurs appareils.",
-      "secondary": "Comment fonctionnent les verdicts"
+      "secondary": "Comment fonctionnent les verdicts",
+      "tagline": "Placer · Échanger · Vérifier",
+      "slogan": "Moins de suppositions. Plus de montages.",
+      "verdict": "Verdict en direct"
     },
     "demo": {
       "title": "Essayez un échange",
@@ -87,15 +90,18 @@
     },
     "cta": {
       "heading": "Commencez avec une carte vierge",
-      "body": "Ouvrez le studio, choisissez un composant dans la bibliothèque et voyez son verdict dès que vous le placez."
+      "body": "Ouvrez le studio, choisissez un composant dans la bibliothèque et voyez son verdict dès que vous le placez.",
+      "eyebrow": "Commencer"
     },
     "assembly": {
-      "label": "Animation : des composants placés un à un sur une carte de développement, qui se met ensuite sous tension",
+      "label": "Carte de développement avec tous ses composants en place ; le bouton d’alimentation allume chaque composant à mesure que le courant l’atteint",
       "board": "Carte de développement",
-      "placed": "{placed} sur {total} placés",
-      "placing": "Placement des composants",
+      "lit": "{lit} sur {total} actifs",
+      "off": "Éteinte · appuyez sur marche",
+      "booting": "Mise sous tension",
       "powered": "Sous tension · tous les contrôles réussis",
-      "resetting": "Nouveau départ",
+      "powerOn": "Allumer",
+      "powerOff": "Éteindre",
       "parts": {
         "soc": "Processeur",
         "memory": "Mémoire flash",
@@ -111,6 +117,34 @@
     "swap": {
       "heading": "Changez une pièce, voyez le verdict",
       "lead": "Chaque échange est vérifié dès que vous le faites. Essayez ici avec le circuit le plus simple qui soit."
+    },
+    "sections": {
+      "swap": "Essayer",
+      "checks": "Verdicts",
+      "devices": "Appareils",
+      "provenance": "Données"
+    },
+    "stats": {
+      "devices": {
+        "label": "Types d’appareils",
+        "body": "Téléphones, PC, portables, drones, cartes de développement et objets connectés à porter."
+      },
+      "checks": {
+        "label": "Contrôles par composant",
+        "body": "Connexion, alimentation et chaleur, à chaque placement."
+      },
+      "sources": {
+        "label": "Sources de données",
+        "body": "Chaque valeur est marquée fiche technique, démontage ou estimation."
+      },
+      "languages": {
+        "label": "Langues",
+        "body": "En thème clair ou sombre, dans le navigateur, sans rien installer."
+      }
+    },
+    "languages": {
+      "heading": "Parle votre langue",
+      "lead": "Chaque libellé, verdict et explication, en sept langues."
     }
   },
   "Preferences": {

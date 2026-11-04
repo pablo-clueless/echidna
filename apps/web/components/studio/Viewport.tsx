@@ -8,7 +8,17 @@ import { cameraShortcuts, CameraToolbar } from "./viewport/CameraToolbar";
 import { OverlayLegend } from "./viewport/OverlayLegend";
 import { useViewportStore } from "@/stores/viewport";
 
-const ViewportCanvas = dynamic(() => import("./ViewportCanvas").then((m) => m.ViewportCanvas), { ssr: false });
+/**
+ * The 3D board, loaded in the browser only. End-to-end runs without a GPU set `window.__echidna.skip3d` before the
+ * page loads, so no WebGL context is ever created: in software rendering, starting one can freeze the page.
+ */
+const ViewportCanvas = dynamic(
+  () =>
+    window.__echidna?.skip3d
+      ? Promise.resolve(() => null)
+      : import("./ViewportCanvas").then((m) => m.ViewportCanvas),
+  { ssr: false },
+);
 
 const PAN_STEP = 0.08;
 const panKeys: Record<string, [number, number]> = {

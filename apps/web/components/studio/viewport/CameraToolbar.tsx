@@ -130,7 +130,7 @@ export const CameraToolbar = () => {
               <ToggleGroupItem value={colour} aria-label={tMask(colour)} className="size-8 aria-checked:bg-primary/15">
                 <span
                   aria-hidden
-                  className="size-3.5 rounded-full ring-1 ring-foreground/25"
+                  className="size-3.5 ring-1 ring-foreground/25"
                   style={{ backgroundColor: swatches[colour] }}
                 />
               </ToggleGroupItem>

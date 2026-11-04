@@ -38,7 +38,7 @@ const IssueRow = ({ issue }: { issue: Violation }) => {
     <Item asChild size="xs" className="w-full text-left hover:bg-muted">
       <button type="button" onClick={() => selectComponent(issue.componentId)}>
         <ItemMedia>
-          <span aria-hidden className={cn("size-2 rounded-full", dotClass[verdict])} />
+          <span aria-hidden className={cn("size-2", dotClass[verdict])} />
         </ItemMedia>
         <ItemContent className="min-w-0">
           <ItemTitle>

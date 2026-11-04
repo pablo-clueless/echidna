@@ -65,7 +65,7 @@ const Plot = ({ label, value, series, playhead }: PlotProps) => {
         {marker !== undefined && playhead !== null && (
           <span
             aria-hidden
-            className="absolute size-2 -translate-1/2 rounded-full bg-foreground ring-2 ring-background"
+            className="absolute size-2 -translate-1/2 bg-foreground ring-2 ring-background"
             style={{ left: `${(playhead / last) * 100}%`, top: `${(y(marker) / PLOT_HEIGHT) * 100}%` }}
           />
         )}
