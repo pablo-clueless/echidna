@@ -19,7 +19,7 @@ export const PersistedStores = () => {
     void useLayoutStore.persist.rehydrate();
     void useProjectStore.persist.rehydrate();
     if (process.env.NODE_ENV === "development") {
-      window.__echidna = { preferences: usePreferencesStore, layout: useLayoutStore, studio: useStudioStore, project: useProjectStore };
+      window.__echidna = { ...window.__echidna, preferences: usePreferencesStore, layout: useLayoutStore, studio: useStudioStore, project: useProjectStore };
     }
   }, []);
 
