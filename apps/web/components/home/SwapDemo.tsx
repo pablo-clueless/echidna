@@ -85,9 +85,9 @@ export const SwapDemo = () => {
             <div className="text-xs text-muted-foreground">{t("rating", { rating })}</div>
             <div className="font-mono text-2xl font-medium tabular-nums">{percent(shownRatio)}</div>
           </div>
-          <div className="relative col-span-2 h-1.5 rounded-full bg-foreground/10" aria-hidden>
+          <div className="relative col-span-2 h-1.5 bg-foreground/10" aria-hidden>
             <div
-              className={cn("absolute inset-y-0 left-0 rounded-full transition-colors duration-300", styles.bar)}
+              className={cn("absolute inset-y-0 left-0 transition-colors duration-300", styles.bar)}
               style={{ width: `${Math.min(shownRatio / 1.5, 1) * 100}%` }}
             />
             <span className="absolute -top-1 -bottom-1 w-px bg-foreground/40" style={{ left: `${(WARN_RATIO / 1.5) * 100}%` }} />
@@ -99,7 +99,7 @@ export const SwapDemo = () => {
           <span
             key={severity}
             aria-hidden
-            className={cn("mt-1.5 size-2.5 shrink-0 rounded-full motion-safe:animate-pop", styles.dot)}
+            className={cn("mt-1.5 size-2.5 shrink-0 motion-safe:animate-pop", styles.dot)}
           />
           <p className="text-sm leading-relaxed">
             <span key={`${severity}-label`} className={cn("inline-block font-medium motion-safe:animate-pop", styles.text)}>

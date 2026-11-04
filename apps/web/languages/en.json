@@ -10,7 +10,10 @@
       "titleTop": "Know it <mark>works</mark>",
       "titleBottom": "before you build it.",
       "lead": "Place parts, swap them and see straight away whether every component stays within its limits. Built for makers, students and anyone curious about what is inside their devices.",
-      "secondary": "How verdicts work"
+      "secondary": "How verdicts work",
+      "tagline": "Place · Swap · Verify",
+      "slogan": "Stop guessing. Start building.",
+      "verdict": "Live verdict"
     },
     "demo": {
       "title": "Try a swap",
@@ -87,15 +90,18 @@
     },
     "cta": {
       "heading": "Start with a blank board",
-      "body": "Open the studio, pick a part from the library and see its verdict as you place it."
+      "body": "Open the studio, pick a part from the library and see its verdict as you place it.",
+      "eyebrow": "Start building"
     },
     "assembly": {
-      "label": "Animation: parts being placed one by one onto a development board, which then powers up",
+      "label": "Development board with every part in place; pressing the power button lights each part in turn as power reaches it",
       "board": "Dev board",
-      "placed": "{placed} of {total} placed",
-      "placing": "Placing parts",
+      "lit": "{lit} of {total} live",
+      "off": "Off · press power",
+      "booting": "Powering up",
       "powered": "Powered · all checks passed",
-      "resetting": "Starting again",
+      "powerOn": "Power on",
+      "powerOff": "Power off",
       "parts": {
         "soc": "Processor",
         "memory": "Flash memory",
@@ -111,6 +117,34 @@
     "swap": {
       "heading": "Change one part, see the verdict",
       "lead": "Every swap is checked the moment you make it. Try it here with the simplest circuit there is."
+    },
+    "sections": {
+      "swap": "Try it",
+      "checks": "Verdicts",
+      "devices": "Devices",
+      "provenance": "Data"
+    },
+    "stats": {
+      "devices": {
+        "label": "Device types",
+        "body": "Phones, PCs, laptops, drones, dev boards and wearables."
+      },
+      "checks": {
+        "label": "Checks per part",
+        "body": "Connection, power and heat, every time you place a part."
+      },
+      "sources": {
+        "label": "Data sources",
+        "body": "Every value is labelled datasheet, teardown or estimate."
+      },
+      "languages": {
+        "label": "Languages",
+        "body": "In light and dark themes, in the browser, with nothing to install."
+      }
+    },
+    "languages": {
+      "heading": "Speaks your language",
+      "lead": "Every label, verdict and explanation, in seven languages."
     }
   },
   "Preferences": {

@@ -1,7 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 
-import en from "../messages/en.json" with { type: "json" };
-import fr from "../messages/fr.json" with { type: "json" };
+import en from "../languages/en.json" with { type: "json" };
+import fr from "../languages/fr.json" with { type: "json" };
 
 /** The Phase 1 acceptance budget: verdicts on screen within 100 ms of the edit. */
 const BUDGET_MS = 100;

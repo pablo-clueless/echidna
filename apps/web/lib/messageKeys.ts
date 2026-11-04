@@ -1,4 +1,4 @@
-import type en from "@/messages/en.json";
+import type en from "@/languages/en.json";
 
 /** Message keys driven by data. `messageKeys.test.ts` checks every part, rule and parameter has messages. */
 export type PartMessageId = keyof typeof en.Parts;

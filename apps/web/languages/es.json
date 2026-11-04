@@ -10,7 +10,10 @@
       "titleTop": "Comprueba que <mark>funciona</mark>",
       "titleBottom": "antes de construirlo.",
       "lead": "Coloca piezas, cámbialas y comprueba al instante si cada componente se mantiene dentro de sus límites. Pensado para makers, estudiantes y cualquiera con curiosidad por lo que hay dentro de sus dispositivos.",
-      "secondary": "Cómo funcionan los veredictos"
+      "secondary": "Cómo funcionan los veredictos",
+      "tagline": "Colocar · Cambiar · Verificar",
+      "slogan": "Menos suposiciones. Más montajes.",
+      "verdict": "Veredicto en vivo"
     },
     "demo": {
       "title": "Prueba un cambio",
@@ -87,15 +90,18 @@
     },
     "cta": {
       "heading": "Empieza con una placa en blanco",
-      "body": "Abre el estudio, elige una pieza de la biblioteca y mira su veredicto al colocarla."
+      "body": "Abre el estudio, elige una pieza de la biblioteca y mira su veredicto al colocarla.",
+      "eyebrow": "Empieza a construir"
     },
     "assembly": {
-      "label": "Animación: piezas colocadas una a una sobre una placa de desarrollo, que después se enciende",
+      "label": "Placa de desarrollo con todas las piezas montadas; al pulsar el botón de encendido, cada pieza se ilumina a medida que le llega la corriente",
       "board": "Placa de desarrollo",
-      "placed": "{placed} de {total} colocadas",
-      "placing": "Colocando piezas",
+      "lit": "{lit} de {total} activas",
+      "off": "Apagada · pulsa encender",
+      "booting": "Encendiendo",
       "powered": "Encendida · todas las comprobaciones superadas",
-      "resetting": "Empezando de nuevo",
+      "powerOn": "Encender",
+      "powerOff": "Apagar",
       "parts": {
         "soc": "Procesador",
         "memory": "Memoria flash",
@@ -111,6 +117,34 @@
     "swap": {
       "heading": "Cambia una pieza y mira el veredicto",
       "lead": "Cada cambio se comprueba en cuanto lo haces. Pruébalo aquí con el circuito más sencillo posible."
+    },
+    "sections": {
+      "swap": "Pruébalo",
+      "checks": "Veredictos",
+      "devices": "Dispositivos",
+      "provenance": "Datos"
+    },
+    "stats": {
+      "devices": {
+        "label": "Tipos de dispositivo",
+        "body": "Teléfonos, PC, portátiles, drones, placas de desarrollo y wearables."
+      },
+      "checks": {
+        "label": "Comprobaciones por pieza",
+        "body": "Conexión, alimentación y calor, cada vez que colocas una pieza."
+      },
+      "sources": {
+        "label": "Fuentes de datos",
+        "body": "Cada valor indica si viene de la hoja de datos, de un desmontaje o de una estimación."
+      },
+      "languages": {
+        "label": "Idiomas",
+        "body": "En tema claro u oscuro, en el navegador, sin instalar nada."
+      }
+    },
+    "languages": {
+      "heading": "Habla tu idioma",
+      "lead": "Cada etiqueta, veredicto y explicación, en siete idiomas."
     }
   },
   "Preferences": {

@@ -31,7 +31,7 @@ export const OverlayLegend = () => {
           {overlays.includes("heat") && (
             <div className="grid gap-1">
               <p className="font-medium">{t("heatTitle")}</p>
-              <div aria-hidden className="h-2 rounded-full" style={{ backgroundImage: heatGradient() }} />
+              <div aria-hidden className="h-2" style={{ backgroundImage: heatGradient() }} />
               <div className="relative h-4 font-mono text-[11px] whitespace-nowrap text-muted-foreground tabular-nums">
                 {HEAT_STOPS.map((s) => {
                   // Each label sits under its stop, shifted by the same share of its width so the ends stay inside.

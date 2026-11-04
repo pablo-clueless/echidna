@@ -75,6 +75,29 @@ describe("route", () => {
     expect(traces[0]?.ends).toEqual(["U1/out", "R1/1"]);
   });
 
+  it("leaves a pin from whichever of its pads gives the clearer path", () => {
+    // Both pads of U1/out are as close to R1/1, but a keepout sits across the lead's way.
+    const lead = { ...pad("out", 0, 5, false), pin: "U1/out" };
+    const tab = { ...pad("out", 0, -5, false), pin: "U1/out" };
+    const load = { ...pad("out", 10, 0), pin: "R1/1" };
+    const { traces, vias } = route([lead, tab, load], width, { keepouts: [{ x: 5, z: 2.5, radius: 2.5 }] });
+    expect(vias).toEqual([]);
+    expect(traces).toHaveLength(1);
+    expect(traces[0]?.points[0]).toEqual([0, -5]);
+  });
+
+  it("routes short connections first, so a long run goes round them rather than under the board", () => {
+    // A short link across the middle, and a long same-width link whose straight path crosses it.
+    const { traces, vias } = route(
+      [pad("short", -2, -3), pad("short", -2, 3), pad("long", -12, 0), pad("long", 12, 0)],
+      width,
+      { bounds: { width: 40, depth: 30 } },
+    );
+    expect(vias).toEqual([]);
+    expect(traces.every((t) => t.layer === "top")).toBe(true);
+    expect(traces.find((t) => t.net === "short")?.points).toHaveLength(2);
+  });
+
   it("stays inside the board and out of keepouts", () => {
     const keepout = { x: 0, z: 0, radius: 3 };
     const { traces } = route([pad("a", -8, 0), pad("a", 8, 0)], width, { bounds: { width: 30, depth: 20 }, keepouts: [keepout] });
