@@ -1,6 +1,6 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
 
 const root = fileURLToPath(new URL("../../../", import.meta.url));
 const out = fileURLToPath(new URL("../wasm/", import.meta.url));
