@@ -70,6 +70,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - A faint dotted line no longer crosses the board: the key light's shadow map now reaches well past the board's edges.
 
 - Verdicts appear about 40 ms sooner after editing a part’s value: the 3D board no longer re-routes its copper and re-cuts every drilled hole when only a value or variant changes, which held up the solver’s reply on the main thread.
+- The 3D board redraws only when something changes, instead of 60 times a second, so an idle studio uses no GPU time. It still animates every frame while the current overlay is on.
 - The selected solder-mask colour and the overlays that are switched on are now highlighted in the 3D toolbar.
 - The "Try a swap" demo moved from the hero to its own section below it.
 - An unpowered linear regulator now turns off: its output disconnects and its bias current falls with the input, instead of forcing its full quiescent current through whatever feeds it (which drove the input of a regulator behind an open switch to about −500 kV).
