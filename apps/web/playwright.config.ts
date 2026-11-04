@@ -11,6 +11,8 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: "retain-on-failure",
+    // E2E_GPU=1 renders WebGL on the real GPU instead of in software, for timing the full studio.
+    ...(process.env.E2E_GPU && { launchOptions: { args: ["--enable-gpu", "--ignore-gpu-blocklist"] } }),
   },
   projects: [
     {

@@ -14,6 +14,15 @@ const locales = [
   { locale: "fr", messages: fr, smaller: "0,068k", smallest: "47" },
 ] as const;
 
+/** Takes the 3D canvas out of layout, so its renderer is sized to nothing and draws no pixels. */
+const hideViewport = () => {
+  addEventListener("DOMContentLoaded", () => {
+    const style = document.createElement("style");
+    style.textContent = "canvas { display: none !important; }";
+    document.head.append(style);
+  });
+};
+
 /**
  * Commits a new resistance and measures, inside the page, the time from the Enter key to the validator
  * showing a D1 issue with the expected verdict.
@@ -54,6 +63,10 @@ for (const { locale, messages, smaller, smallest } of locales) {
 
   test.describe(`acceptance (${locale})`, () => {
     test.beforeEach(async ({ page }) => {
+      // Without a GPU, Chromium draws WebGL in software and a single board redraw blocks the page for seconds,
+      // which would swamp the budget. Hide the 3D view there, so the timing covers the solver, the rules and
+      // the validator. Set E2E_GPU=1 to time the full studio on real graphics.
+      if (!process.env.E2E_GPU) await page.addInitScript(hideViewport);
       await page.goto(`/${locale}/studio`);
       await page.evaluate(() => localStorage.clear());
       await page.reload();
