@@ -9,7 +9,9 @@ import type { Progress } from "./AssemblyScene";
 import { buildSteps } from "./parts";
 import { cn } from "@/lib/utils";
 
-const AssemblyScene = dynamic(() => import("./AssemblyScene").then((m) => m.AssemblyScene), { ssr: false });
+const AssemblyScene = dynamic(() => import("./AssemblyScene").then((m) => m.AssemblyScene), {
+  ssr: false,
+});
 
 const steps = buildSteps();
 
@@ -19,7 +21,9 @@ const useOnScreen = <T extends Element>() => {
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry?.isIntersecting ?? true));
+    const observer = new IntersectionObserver(([entry]) =>
+      setOnScreen(entry?.isIntersecting ?? true),
+    );
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
@@ -27,7 +31,15 @@ const useOnScreen = <T extends Element>() => {
 };
 
 const PowerGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="square" className={className} aria-hidden>
+  <svg
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    strokeLinecap="square"
+    className={className}
+    aria-hidden
+  >
     <path d="M8 1.75v6" />
     <path d="M4.4 4.1a5 5 0 1 0 7.2 0" />
   </svg>
@@ -61,12 +73,18 @@ export const AssemblyHero = ({ bare = false }: Props) => {
       ref={ref}
       className={cn(
         "flex flex-col overflow-hidden",
-        bare ? "h-full" : "rounded-2xl border bg-card shadow-xl shadow-foreground/5",
+        bare ? "h-full" : "bg-card shadow-foreground/5 rounded-2xl border shadow-xl",
       )}
     >
       <div className="relative aspect-4/3 w-full grow overflow-hidden">
         <div role="img" aria-label={t("label")} className="absolute inset-0">
-          <AssemblyScene callout={callout} on={on} reduced={reduced} running={onScreen} onProgress={onProgress} />
+          <AssemblyScene
+            callout={callout}
+            on={on}
+            reduced={reduced}
+            running={onScreen}
+            onProgress={onProgress}
+          />
         </div>
 
         <div
@@ -77,9 +95,9 @@ export const AssemblyHero = ({ bare = false }: Props) => {
           {active && (
             <div
               key={active.key}
-              className="flex items-stretch border border-foreground bg-background text-[11px] whitespace-nowrap motion-safe:animate-pop"
+              className="border-foreground bg-background motion-safe:animate-pop flex items-stretch border text-[11px] whitespace-nowrap"
             >
-              <span className="bg-primary px-1.5 py-0.5 font-mono text-[10px] font-medium text-primary-foreground">
+              <span className="bg-primary text-primary-foreground px-1.5 py-0.5 font-mono text-[10px] font-medium">
                 {active.designator}
               </span>
               <span className="px-2 py-0.5 font-medium">{labels[shown.active]}</span>
@@ -89,13 +107,17 @@ export const AssemblyHero = ({ bare = false }: Props) => {
 
         <div
           aria-live="polite"
-          className="pointer-events-none absolute top-3 left-3 flex items-center gap-2 border bg-background px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase"
+          className="bg-background text-muted-foreground pointer-events-none absolute top-3 left-3 flex items-center gap-2 border px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] uppercase"
         >
           <span
             aria-hidden
             className={cn(
               "size-1.5 transition-colors duration-500",
-              powered ? "bg-primary motion-safe:animate-pulse" : on ? "bg-primary/60" : "bg-muted-foreground/40",
+              powered
+                ? "bg-primary motion-safe:animate-pulse"
+                : on
+                  ? "bg-primary/60"
+                  : "bg-muted-foreground/40",
             )}
           />
           {powered ? t("powered") : on ? t("booting") : t("off")}
@@ -107,7 +129,7 @@ export const AssemblyHero = ({ bare = false }: Props) => {
           onClick={() => setOn((v) => !v)}
           className={cn(
             "absolute right-3 bottom-3 flex items-center gap-2 border px-3 py-1.5 font-mono text-[11px] tracking-[0.12em] uppercase transition-colors duration-300",
-            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+            "focus-visible:outline-primary focus-visible:outline-2 focus-visible:outline-offset-2",
             on
               ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
               : "border-foreground bg-background text-foreground hover:bg-foreground hover:text-background",
@@ -120,8 +142,10 @@ export const AssemblyHero = ({ bare = false }: Props) => {
 
       <div className="border-t px-4 py-3">
         <div className="flex items-baseline justify-between gap-2">
-          <span className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">{t("board")}</span>
-          <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
+          <span className="text-muted-foreground font-mono text-[10px] tracking-[0.18em] uppercase">
+            {t("board")}
+          </span>
+          <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
             {t("lit", { lit: shown.lit, total: steps.length })}
           </span>
         </div>

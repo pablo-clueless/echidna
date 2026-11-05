@@ -3,9 +3,7 @@
   "id": "ryzen-5-7600",
   "name": "AMD Ryzen 5 7600",
   "kind": "cpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

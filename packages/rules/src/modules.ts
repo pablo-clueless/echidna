@@ -6,7 +6,10 @@ import { grade } from "./engine";
 
 type Thresholds = { warnAt: number; failAbove: number };
 
-export const moduleThresholds = defaults.modules as Record<"psuBudget" | "chargerBudget" | "cooling", Thresholds>;
+export const moduleThresholds = defaults.modules as Record<
+  "psuBudget" | "chargerBudget" | "cooling",
+  Thresholds
+>;
 
 const roleOf = (spec: ComponentSpec) => spec.module?.role;
 
@@ -19,7 +22,8 @@ const isSupply = (spec: ComponentSpec) => roleOf(spec) === "psu" || roleOf(spec)
  * @returns The heat, or undefined when nothing in the build gives one.
  */
 const heatOf = (build: readonly ComponentSpec[]) =>
-  build.find((m) => roleOf(m) === "cpu")?.module?.power ?? build.find((m) => m.module?.heat)?.module?.heat;
+  build.find((m) => roleOf(m) === "cpu")?.module?.power ??
+  build.find((m) => m.module?.heat)?.module?.heat;
 
 /**
  * The device-level checks of a desktop or laptop build: the PSU's or charger's output against everything it powers
@@ -55,13 +59,22 @@ export const checkBuild = (host: ComponentSpec, modules: readonly ComponentSpec[
   if (psu) {
     const needed: Partial<Record<PowerConnector, number>> = {};
     for (const m of loads) {
-      for (const [connector, n] of Object.entries(m.module?.needs ?? {}) as [PowerConnector, number][]) {
+      for (const [connector, n] of Object.entries(m.module?.needs ?? {}) as [
+        PowerConnector,
+        number,
+      ][]) {
         needed[connector] = (needed[connector] ?? 0) + n;
       }
     }
     for (const [connector, n] of Object.entries(needed) as [PowerConnector, number][]) {
       const offered = psu.provides?.[connector] ?? 0;
-      checks.push(check("powerConnectors", n > offered ? "fail" : "pass", [], { actual: n, limit: offered, connector }));
+      checks.push(
+        check("powerConnectors", n > offered ? "fail" : "pass", [], {
+          actual: n,
+          limit: offered,
+          connector,
+        }),
+      );
     }
   }
 
@@ -69,11 +82,16 @@ export const checkBuild = (host: ComponentSpec, modules: readonly ComponentSpec[
   const cooler = build.find((m) => roleOf(m) === "cooler")?.module?.cooling;
   if (heat && cooler) {
     checks.push(
-      check("cooling", grade(heat.value / cooler.value, moduleThresholds.cooling), [heat, cooler] as SpecValue[], {
-        actual: heat.value,
-        limit: cooler.value,
-        unit: "W",
-      }),
+      check(
+        "cooling",
+        grade(heat.value / cooler.value, moduleThresholds.cooling),
+        [heat, cooler] as SpecValue[],
+        {
+          actual: heat.value,
+          limit: cooler.value,
+          unit: "W",
+        },
+      ),
     );
   }
   return checks;
@@ -100,7 +118,9 @@ export const checkModuleFit = (
   const accepts = slot?.accepts.map((i) => i.protocol) ?? [];
   const protocols = part.interfaces.map((i) => i.protocol);
   const shared = protocols.some((p) => accepts.includes(p));
-  const checks: FitCheck[] = [check("interface", slot && role && shared ? "pass" : "fail", [], { protocols, accepts })];
+  const checks: FitCheck[] = [
+    check("interface", slot && role && shared ? "pass" : "fail", [], { protocols, accepts }),
+  ];
 
   if (slot && role && shared) {
     const build = checkBuild(host, [...others, part]);
@@ -109,7 +129,8 @@ export const checkModuleFit = (
     if (budget && (isSupply(part) || part.module?.power)) checks.push(budget);
 
     const connectors = build.filter(
-      (c) => c.id === "powerConnectors" && c.connector && (isPsu || part.module?.needs?.[c.connector]),
+      (c) =>
+        c.id === "powerConnectors" && c.connector && (isPsu || part.module?.needs?.[c.connector]),
     );
     const worst = connectors.find((c) => c.severity === "fail") ?? connectors[0];
     if (worst) checks.push(worst);
@@ -139,7 +160,10 @@ export type BatteryRuntime = {
  * @param modules - Everything plugged into it.
  * @returns The estimate, or null without a battery or anything drawing from it.
  */
-export const batteryRuntime = (host: ComponentSpec, modules: readonly ComponentSpec[]): BatteryRuntime | null => {
+export const batteryRuntime = (
+  host: ComponentSpec,
+  modules: readonly ComponentSpec[],
+): BatteryRuntime | null => {
   const build = [host, ...modules];
   const energy = build.find((m) => roleOf(m) === "battery")?.module?.energy;
   const draws = build.flatMap((m) => m.module?.typical ?? []);

@@ -21,19 +21,33 @@ const build = (gpu: string) => ({
 
 describe("buildViolations", () => {
   it("puts power checks on the PSU and the cooling check on the cooler", () => {
-    const byRule = Object.fromEntries(buildViolations(build("rtx-4060"), partsById).map((v) => [v.ruleId, v]));
+    const byRule = Object.fromEntries(
+      buildViolations(build("rtx-4060"), partsById).map((v) => [v.ruleId, v]),
+    );
     // 50 W board + 117 W CPU + 2 W cooler + 115 W card.
-    expect(byRule.psuBudget).toMatchObject({ componentId: "PSU1", actual: 284, limit: 550, unit: "W", severity: "pass" });
+    expect(byRule.psuBudget).toMatchObject({
+      componentId: "PSU1",
+      actual: 284,
+      limit: 550,
+      unit: "W",
+      severity: "pass",
+    });
     expect(byRule.powerConnectors).toMatchObject({ componentId: "PSU1", severity: "pass" });
     expect(byRule.cooling).toMatchObject({ componentId: "FAN1", actual: 117, limit: 150 });
   });
 
   it("reports the worst connector once, as a fail", () => {
-    const connectors = buildViolations(build("rtx-4090"), partsById).filter((v) => v.ruleId === "powerConnectors");
-    expect(connectors).toEqual([expect.objectContaining({ severity: "fail", actual: 1, limit: 0, unit: "1" })]);
+    const connectors = buildViolations(build("rtx-4090"), partsById).filter(
+      (v) => v.ruleId === "powerConnectors",
+    );
+    expect(connectors).toEqual([
+      expect.objectContaining({ severity: "fail", actual: 1, limit: 0, unit: "1" }),
+    ]);
   });
 
   it("has nothing to say about a project with no motherboard", () => {
-    expect(buildViolations({ components: [{ id: "R1", specId: "resistor" }], slots: {} }, partsById)).toEqual([]);
+    expect(
+      buildViolations({ components: [{ id: "R1", specId: "resistor" }], slots: {} }, partsById),
+    ).toEqual([]);
   });
 });

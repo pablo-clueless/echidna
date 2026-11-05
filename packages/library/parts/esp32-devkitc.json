@@ -3,9 +3,7 @@
   "id": "esp32-devkitc",
   "name": "ESP32-DevKitC",
   "kind": "devBoard",
-  "deviceTypes": [
-    "iot"
-  ],
+  "deviceTypes": ["iot"],
   "pins": [
     {
       "id": "3v3",
@@ -83,10 +81,7 @@
             "protocol": "i2c"
           }
         ],
-        "railIds": [
-          "3v3",
-          "5v"
-        ],
+        "railIds": ["3v3", "5v"],
         "signals": {
           "SDA": "sda",
           "SCL": "scl"
@@ -114,10 +109,7 @@
             "protocol": "1-wire"
           }
         ],
-        "railIds": [
-          "3v3",
-          "5v"
-        ],
+        "railIds": ["3v3", "5v"],
         "signals": {
           "IO1": "gpio4",
           "IO2": "gpio5"

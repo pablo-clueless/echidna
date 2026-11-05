@@ -27,7 +27,13 @@ export type Footprint = {
   ref: { x: number; z: number };
 };
 
-const tht = (pin: string, x: number, size: number, drill: number, shape: Pad["shape"] = "round"): Pad => ({
+const tht = (
+  pin: string,
+  x: number,
+  size: number,
+  drill: number,
+  shape: Pad["shape"] = "round",
+): Pad => ({
   pin,
   x,
   z: 0,
@@ -68,7 +74,9 @@ const to92 = (pins: [string, string, string]): Footprint => ({
 const pinHeader = (pins: string[], label: string): Footprint => {
   const width = pins.length * 2.54;
   return {
-    pads: pins.map((pin, i) => tht(pin, (i - (pins.length - 1) / 2) * 2.54, 1.7, 1.0, i === 0 ? "rect" : "round")),
+    pads: pins.map((pin, i) =>
+      tht(pin, (i - (pins.length - 1) / 2) * 2.54, 1.7, 1.0, i === 0 ? "rect" : "round"),
+    ),
     courtyard: { w: width + 0.6, h: 3.2 },
     silk: [
       { kind: "rect", x: 0, z: 0, w: width, h: 2.54 },
@@ -120,8 +128,20 @@ export const footprints: Record<string, Footprint> = {
     courtyard: { w: 12.6, h: 3.4 },
     silk: [
       { kind: "rect", x: 0, z: 0, w: 6.8, h: 2.9 },
-      { kind: "line", points: [[-3.4, 0], [-4.05, 0]] },
-      { kind: "line", points: [[3.4, 0], [4.05, 0]] },
+      {
+        kind: "line",
+        points: [
+          [-3.4, 0],
+          [-4.05, 0],
+        ],
+      },
+      {
+        kind: "line",
+        points: [
+          [3.4, 0],
+          [4.05, 0],
+        ],
+      },
     ],
     ref: { x: 0, z: -2.4 },
   },
@@ -132,8 +152,20 @@ export const footprints: Record<string, Footprint> = {
     ],
     courtyard: { w: 3.4, h: 1.9 },
     silk: [
-      { kind: "line", points: [[-0.25, -0.95], [0.25, -0.95]] },
-      { kind: "line", points: [[-0.25, 0.95], [0.25, 0.95]] },
+      {
+        kind: "line",
+        points: [
+          [-0.25, -0.95],
+          [0.25, -0.95],
+        ],
+      },
+      {
+        kind: "line",
+        points: [
+          [-0.25, 0.95],
+          [0.25, 0.95],
+        ],
+      },
     ],
     ref: { x: 0, z: -1.75 },
   },
@@ -146,10 +178,36 @@ export const footprints: Record<string, Footprint> = {
     ],
     courtyard: { w: 7.4, h: 8.6 },
     silk: [
-      { kind: "line", points: [[-3.4, -1.9], [-3.4, 1.9], [-2.95, 1.9]] },
-      { kind: "line", points: [[3.4, -1.9], [3.4, 1.9], [2.95, 1.9]] },
-      { kind: "line", points: [[-3.4, -1.9], [-1.85, -1.9]] },
-      { kind: "line", points: [[3.4, -1.9], [1.85, -1.9]] },
+      {
+        kind: "line",
+        points: [
+          [-3.4, -1.9],
+          [-3.4, 1.9],
+          [-2.95, 1.9],
+        ],
+      },
+      {
+        kind: "line",
+        points: [
+          [3.4, -1.9],
+          [3.4, 1.9],
+          [2.95, 1.9],
+        ],
+      },
+      {
+        kind: "line",
+        points: [
+          [-3.4, -1.9],
+          [-1.85, -1.9],
+        ],
+      },
+      {
+        kind: "line",
+        points: [
+          [3.4, -1.9],
+          [1.85, -1.9],
+        ],
+      },
       { kind: "dot", x: -3.9, z: 3.6, r: 0.22 },
     ],
     ref: { x: 0, z: -4.9 },
@@ -246,7 +304,12 @@ export type PlacedPad = {
  * @param rotation - Part rotation in degrees, clockwise seen from above, as stored on the board.
  * @returns Each pad's centre, covering radius and drill.
  */
-export const placePads = (footprint: Footprint, x: number, z: number, rotation: number): PlacedPad[] => {
+export const placePads = (
+  footprint: Footprint,
+  x: number,
+  z: number,
+  rotation: number,
+): PlacedPad[] => {
   const angle = (-rotation * Math.PI) / 180;
   const [cos, sin] = [Math.cos(angle), Math.sin(angle)];
   return footprint.pads.map((pad) => ({

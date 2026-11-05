@@ -3,9 +3,7 @@
   "id": "display-14-fhd",
   "name": "14-inch 1920 × 1200 IPS display, 60 Hz",
   "kind": "display",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

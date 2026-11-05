@@ -3,9 +3,7 @@
   "id": "psu-550w",
   "name": "550 W ATX PSU (80 Plus Bronze)",
   "kind": "psu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

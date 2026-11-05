@@ -46,7 +46,10 @@ export type CircuitBuild = {
  * @param specs - Part lookup by spec ID.
  * @returns The circuit plus the mappings needed to read results back.
  */
-export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, ComponentSpec>): CircuitBuild => {
+export const toCircuit = (
+  netlist: Netlist,
+  specs: ReadonlyMap<string, ComponentSpec>,
+): CircuitBuild => {
   const used: Record<string, ComponentSpec> = {};
   for (const c of netlist.components) {
     const spec = specs.get(c.specId);
@@ -59,7 +62,9 @@ export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, Component
     return spec?.model === "ground" || spec?.host?.groundPinId === p.pinId;
   };
   const groundNets = new Set(
-    netlist.nets.filter((n) => n.id === netlist.groundNetId || n.pins.some(isGroundPin)).map((n) => n.id),
+    netlist.nets
+      .filter((n) => n.id === netlist.groundNetId || n.pins.some(isGroundPin))
+      .map((n) => n.id),
   );
   const netNodes: Record<string, string> = Object.fromEntries(
     netlist.nets.map((n) => [n.id, groundNets.has(n.id) ? GROUND_NODE : `n:${n.id}`]),
@@ -83,7 +88,12 @@ export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, Component
       // Each rail is an ideal source from the host's ground; the rule engine never sees these, as their IDs are
       // not components.
       for (const rail of spec.host.rails) {
-        elements.push({ id: `${c.id}:${rail.id}`, nodes: [node(rail.pinId), GROUND_NODE], kind: "voltageSource", voltage: rail.voltage.value });
+        elements.push({
+          id: `${c.id}:${rail.id}`,
+          nodes: [node(rail.pinId), GROUND_NODE],
+          kind: "voltageSource",
+          voltage: rail.voltage.value,
+        });
       }
       continue;
     }

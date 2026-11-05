@@ -33,13 +33,25 @@ for (const { locale, messages } of locales) {
       await page.reload();
     });
 
-    test("a charger short of the gaming laptop's draw fails with the numbers, and the board estimates battery life", async ({ page }) => {
-      await page.getByRole("button", { name: fill(s.schematic.startFromBoard, { board: messages.Builds["laptop-gaming"].name }) }).click();
+    test("a charger short of the gaming laptop's draw fails with the numbers, and the board estimates battery life", async ({
+      page,
+    }) => {
+      await page
+        .getByRole("button", {
+          name: fill(s.schematic.startFromBoard, { board: messages.Builds["laptop-gaming"].name }),
+        })
+        .click();
       const inspector = page.getByRole("region", { name: s.inspector.title });
-      await expect(page.getByRole("region", { name: s.validator.label })).toContainText(s.validator.allPassed);
+      await expect(page.getByRole("region", { name: s.validator.label })).toContainText(
+        s.validator.allPassed,
+      );
 
       // 227 W at full load on a 240 W charger, and about 4.9 hours from 80 Wh in light use.
-      await page.getByRole("button", { name: fill(s.schematic.partLabel, { id: "MB1", name: partName("gaming-laptop-board") }) }).click();
+      await page
+        .getByRole("button", {
+          name: fill(s.schematic.partLabel, { id: "MB1", name: partName("gaming-laptop-board") }),
+        })
+        .click();
       const build = inspector.getByRole("region", { name: slots.buildTitle });
       await expect(build).toContainText(template(slots.checks.chargerBudget));
       await expect(build).toContainText(/227/);
@@ -48,7 +60,11 @@ for (const { locale, messages } of locales) {
       await expect(build).toContainText(/4[.,]9/);
       await expect(build).toContainText(/80/);
 
-      await page.getByRole("button", { name: fill(s.schematic.partLabel, { id: "CHG1", name: partName("charger-barrel-240w") }) }).click();
+      await page
+        .getByRole("button", {
+          name: fill(s.schematic.partLabel, { id: "CHG1", name: partName("charger-barrel-240w") }),
+        })
+        .click();
       const swaps = inspector.getByRole("region", { name: slots.swapTitle });
 
       // A desktop PSU is never offered, and a 100 W USB-C charger is refused with both figures.

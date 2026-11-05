@@ -18,7 +18,10 @@ const getServerSnapshot = () => false;
  * @returns `true` once persisted state has been applied.
  */
 export const useHydrated = (store: PersistedStore): boolean => {
-  const subscribe = useCallback((listener: () => void) => store.persist?.onFinishHydration(listener) ?? noop, [store]);
+  const subscribe = useCallback(
+    (listener: () => void) => store.persist?.onFinishHydration(listener) ?? noop,
+    [store],
+  );
   const getSnapshot = useCallback(() => store.persist?.hasHydrated() ?? false, [store]);
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 };

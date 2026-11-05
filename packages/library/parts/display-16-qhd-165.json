@@ -3,9 +3,7 @@
   "id": "display-16-qhd-165",
   "name": "16-inch 2560 × 1600 IPS display, 165 Hz",
   "kind": "display",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

@@ -3,10 +3,7 @@
   "id": "nvme-ssd-1tb",
   "name": "NVMe PCIe 4.0 SSD, 1 TB",
   "kind": "storage",
-  "deviceTypes": [
-    "desktop",
-    "laptop"
-  ],
+  "deviceTypes": ["desktop", "laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

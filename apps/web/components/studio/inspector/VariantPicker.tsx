@@ -9,7 +9,13 @@ import { useProjectStore } from "@/stores/project";
 import { partKey } from "@/lib/messageKeys";
 
 /** Chooses between a part's variants, such as an LED's colour. Shown only for parts that have variants. */
-export const VariantPicker = ({ component, spec }: { component: NetlistComponent; spec: ComponentSpec }) => {
+export const VariantPicker = ({
+  component,
+  spec,
+}: {
+  component: NetlistComponent;
+  spec: ComponentSpec;
+}) => {
   const tParts = useTranslations("Parts");
   const setVariant = useProjectStore((s) => s.setVariant);
   const variants = spec.variants ?? [];
@@ -41,7 +47,11 @@ export const VariantPicker = ({ component, spec }: { component: NetlistComponent
           return (
             <ToggleGroupItem key={v.id} value={v.id} className="h-8 gap-1.5 px-2.5 text-xs">
               {swatch && (
-                <span aria-hidden className="size-3 ring-1 ring-foreground/25" style={{ backgroundColor: swatch }} />
+                <span
+                  aria-hidden
+                  className="ring-foreground/25 size-3 ring-1"
+                  style={{ backgroundColor: swatch }}
+                />
               )}
               {tParts(`${key}.variants.${v.id}` as never)}
             </ToggleGroupItem>

@@ -63,14 +63,7 @@
     "deviceTypes": {
       "type": "array",
       "items": {
-        "enum": [
-          "smartphone",
-          "desktop",
-          "laptop",
-          "drone",
-          "iot",
-          "wearable"
-        ]
+        "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"]
       },
       "uniqueItems": true
     },
@@ -80,10 +73,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "properties": {
           "id": {
             "type": "string",
@@ -137,9 +127,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "protocol"
-        ],
+        "required": ["protocol"],
         "properties": {
           "protocol": {
             "type": "string"
@@ -160,9 +148,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "properties": {
           "id": {
             "type": "string",
@@ -181,10 +167,7 @@
       }
     },
     "actuation": {
-      "enum": [
-        "latching",
-        "momentary"
-      ]
+      "enum": ["latching", "momentary"]
     },
     "model": {
       "enum": [
@@ -209,10 +192,7 @@
     "host": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "rails",
-        "slots"
-      ],
+      "required": ["rails", "slots"],
       "properties": {
         "groundPinId": {
           "type": "string"
@@ -222,12 +202,7 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "id",
-              "pinId",
-              "voltage",
-              "maxCurrent"
-            ],
+            "required": ["id", "pinId", "voltage", "maxCurrent"],
             "properties": {
               "id": {
                 "type": "string"
@@ -249,10 +224,7 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "id",
-              "accepts"
-            ],
+            "required": ["id", "accepts"],
             "properties": {
               "id": {
                 "type": "string",
@@ -338,10 +310,7 @@
     },
     "attribution": {
       "type": "object",
-      "required": [
-        "source",
-        "licence"
-      ],
+      "required": ["source", "licence"],
       "properties": {
         "source": {
           "type": "string"
@@ -357,9 +326,7 @@
     "module": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "role"
-      ],
+      "required": ["role"],
       "properties": {
         "role": {
           "enum": [
@@ -421,11 +388,7 @@
     "specValue": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "value",
-        "unit",
-        "source"
-      ],
+      "required": ["value", "unit", "source"],
       "properties": {
         "value": {
           "type": "number"
@@ -454,11 +417,7 @@
           ]
         },
         "source": {
-          "enum": [
-            "datasheet",
-            "teardown",
-            "estimated"
-          ]
+          "enum": ["datasheet", "teardown", "estimated"]
         },
         "reference": {
           "type": "string"

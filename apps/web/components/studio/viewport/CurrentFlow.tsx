@@ -1,8 +1,15 @@
 "use client";
 
-import { BufferAttribute, BufferGeometry, Color, DoubleSide, type Mesh, ShaderMaterial } from "three";
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  DoubleSide,
+  type Mesh,
+  ShaderMaterial,
+} from "three";
 
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import type { Routing } from "@/lib/board/routing";
@@ -93,7 +100,10 @@ type Props = {
 export const CurrentFlow = ({ routing, thickness, currents }: Props) => {
   const reducedMotion = usePrefersReducedMotion();
   const mesh = useRef<Mesh>(null);
-  const { geometry, spans } = useMemo(() => ribbonGeometry(routing, thickness), [routing, thickness]);
+  const { geometry, spans } = useMemo(
+    () => ribbonGeometry(routing, thickness),
+    [routing, thickness],
+  );
   const material = useMemo(
     () =>
       new ShaderMaterial({
@@ -124,5 +134,7 @@ export const CurrentFlow = ({ routing, thickness, currents }: Props) => {
     if (time && !reducedMotion) time.value += delta;
   });
 
-  return <mesh ref={mesh} geometry={geometry} material={material} raycast={() => null} renderOrder={2} />;
+  return (
+    <mesh ref={mesh} geometry={geometry} material={material} raycast={() => null} renderOrder={2} />
+  );
 };

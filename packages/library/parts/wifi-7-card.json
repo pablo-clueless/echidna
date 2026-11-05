@@ -3,9 +3,7 @@
   "id": "wifi-7-card",
   "name": "Wi-Fi 7 and Bluetooth card (M.2 2230)",
   "kind": "wifi",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

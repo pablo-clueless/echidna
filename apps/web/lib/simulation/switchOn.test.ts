@@ -19,7 +19,17 @@ const build = {
 const solution: TransientSolution = {
   times: [1e-6, 2e-6],
   nodeVoltages: { in: [5, 5], out: [3.3, 3.3], "0": [0, 0] },
-  pinCurrents: { U1: [[0.02, 0.01], [-0.019, -0.009], [0.001, 0.001]], C1: [[0.019, 0.009], [-0.019, -0.009]] },
+  pinCurrents: {
+    U1: [
+      [0.02, 0.01],
+      [-0.019, -0.009],
+      [0.001, 0.001],
+    ],
+    C1: [
+      [0.019, 0.009],
+      [-0.019, -0.009],
+    ],
+  },
   componentPower: { U1: [0, 0], C1: [0, 0] },
   iterations: 4,
 };

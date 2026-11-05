@@ -3,9 +3,7 @@
   "id": "charger-usbc-65w",
   "name": "65 W USB-C charger",
   "kind": "charger",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

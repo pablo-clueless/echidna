@@ -40,7 +40,15 @@ const Plot = ({ label, value, series, playhead }: PlotProps) => {
           preserveAspectRatio="none"
           className="absolute inset-0 size-full overflow-visible"
         >
-          <line x1={0} x2={last} y1={y(0)} y2={y(0)} className="stroke-border" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+          <line
+            x1={0}
+            x2={last}
+            y1={y(0)}
+            y2={y(0)}
+            className="stroke-border"
+            strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
+          />
           {playhead !== null && (
             <line
               x1={playhead}
@@ -65,8 +73,11 @@ const Plot = ({ label, value, series, playhead }: PlotProps) => {
         {marker !== undefined && playhead !== null && (
           <span
             aria-hidden
-            className="absolute size-2 -translate-1/2 bg-foreground ring-2 ring-background"
-            style={{ left: `${(playhead / last) * 100}%`, top: `${(y(marker) / PLOT_HEIGHT) * 100}%` }}
+            className="bg-foreground ring-background absolute size-2 -translate-1/2 ring-2"
+            style={{
+              left: `${(playhead / last) * 100}%`,
+              top: `${(y(marker) / PLOT_HEIGHT) * 100}%`,
+            }}
           />
         )}
       </div>
@@ -78,7 +89,13 @@ const Plot = ({ label, value, series, playhead }: PlotProps) => {
  * How the selected part behaves in the moments after the circuit is switched on, from the live switch-on run.
  * Pointing at the plots, or focusing them and using the arrow keys, scrubs the run and plays it back on the board.
  */
-export const SwitchOnResponse = ({ component, spec }: { component: NetlistComponent; spec: ComponentSpec }) => {
+export const SwitchOnResponse = ({
+  component,
+  spec,
+}: {
+  component: NetlistComponent;
+  spec: ComponentSpec;
+}) => {
   const t = useTranslations("Studio.inspector.switchOn");
   const locale = useLocale();
   const headingId = useId();
@@ -98,10 +115,10 @@ export const SwitchOnResponse = ({ component, spec }: { component: NetlistCompon
   if (!outcome.ok || !solution) {
     return (
       <section aria-labelledby={headingId} className="grid gap-1">
-        <h3 id={headingId} className="text-xs font-medium text-muted-foreground">
+        <h3 id={headingId} className="text-muted-foreground text-xs font-medium">
           {t("title")}
         </h3>
-        <p className="text-xs text-muted-foreground">{t(outcome.ok ? "instant" : "failed")}</p>
+        <p className="text-muted-foreground text-xs">{t(outcome.ok ? "instant" : "failed")}</p>
       </section>
     );
   }
@@ -146,7 +163,7 @@ export const SwitchOnResponse = ({ component, spec }: { component: NetlistCompon
   return (
     <section aria-labelledby={headingId} className="grid gap-2">
       <div className="flex items-baseline justify-between gap-2">
-        <h3 id={headingId} className="text-xs font-medium text-muted-foreground">
+        <h3 id={headingId} className="text-muted-foreground text-xs font-medium">
           {t("title")}
         </h3>
         <p aria-hidden className="font-mono text-xs tabular-nums">
@@ -167,7 +184,7 @@ export const SwitchOnResponse = ({ component, spec }: { component: NetlistCompon
         onPointerLeave={() => setPlayhead(null)}
         onBlur={() => setPlayhead(null)}
         onKeyDown={onKeyDown}
-        className="grid cursor-crosshair touch-none gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+        className="focus-visible:ring-ring focus-visible:ring-offset-background grid cursor-crosshair touch-none gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-offset-4"
       >
         <Plot
           label={t("voltage", { from: pinName(response.pins[0]), to: pinName(response.pins[1]) })}
@@ -176,17 +193,22 @@ export const SwitchOnResponse = ({ component, spec }: { component: NetlistCompon
           playhead={playhead}
         />
         <Plot
-          label={t(response.outward ? "currentOutOf" : "currentInto", { pin: pinName(response.currentPin) })}
+          label={t(response.outward ? "currentOutOf" : "currentInto", {
+            pin: pinName(response.currentPin),
+          })}
           value={readout.current}
           series={response.current}
           playhead={playhead}
         />
-        <div aria-hidden className="flex justify-between font-mono text-xs text-muted-foreground tabular-nums">
+        <div
+          aria-hidden
+          className="text-muted-foreground flex justify-between font-mono text-xs tabular-nums"
+        >
           <span>{formatQuantity(0, "s", locale)}</span>
           <span>{stop}</span>
         </div>
       </div>
-      <p id={hintId} className="text-xs text-muted-foreground">
+      <p id={hintId} className="text-muted-foreground text-xs">
         {outcome.settled ? t("span", { time: stop }) : t("unsettled", { time: stop })} {t("hint")}
       </p>
     </section>

@@ -60,7 +60,12 @@ type Thresholds = { warnAt: number; failAbove: number };
 
 export const slotThresholds = defaults.slots as Record<"railCurrent" | "thermal", Thresholds>;
 
-export const check = (id: FitCheckId, severity: Severity, values: ReadonlyArray<SpecValue | undefined>, extra: Partial<FitCheck> = {}): FitCheck => ({
+export const check = (
+  id: FitCheckId,
+  severity: Severity,
+  values: ReadonlyArray<SpecValue | undefined>,
+  extra: Partial<FitCheck> = {},
+): FitCheck => ({
   id,
   severity,
   estimated: anyEstimated(values),
@@ -93,52 +98,82 @@ export const checkSlotFit = (
   ];
   if (!slot || !supply) return { fits: false, checks };
 
-  const rails = (slot.railIds ?? []).flatMap((id) => host.host?.rails.find((r) => r.id === id) ?? []);
+  const rails = (slot.railIds ?? []).flatMap(
+    (id) => host.host?.rails.find((r) => r.id === id) ?? [],
+  );
   const rail = rails.find(
-    (r) => r.voltage.value >= supply.minVoltage.value - 1e-9 && r.voltage.value <= supply.maxVoltage.value + 1e-9,
+    (r) =>
+      r.voltage.value >= supply.minVoltage.value - 1e-9 &&
+      r.voltage.value <= supply.maxVoltage.value + 1e-9,
   );
   checks.push(
-    check("supply", rail ? "pass" : "fail", [supply.minVoltage, supply.maxVoltage, ...rails.map((r) => r.voltage)], {
-      min: supply.minVoltage.value,
-      limit: supply.maxVoltage.value,
-      unit: "V",
-      offered: rails.map((r) => r.voltage.value),
-      ...(rail ? { actual: rail.voltage.value, railId: rail.id } : {}),
-    }),
+    check(
+      "supply",
+      rail ? "pass" : "fail",
+      [supply.minVoltage, supply.maxVoltage, ...rails.map((r) => r.voltage)],
+      {
+        min: supply.minVoltage.value,
+        limit: supply.maxVoltage.value,
+        unit: "V",
+        offered: rails.map((r) => r.voltage.value),
+        ...(rail ? { actual: rail.voltage.value, railId: rail.id } : {}),
+      },
+    ),
   );
 
   if (rail) {
     const load = (railLoads[rail.id] ?? 0) + supply.current.value;
     checks.push(
-      check("railCurrent", grade(load / rail.maxCurrent.value, slotThresholds.railCurrent), [supply.current, rail.maxCurrent], {
-        actual: load,
-        limit: rail.maxCurrent.value,
-        unit: "A",
-        railId: rail.id,
-      }),
+      check(
+        "railCurrent",
+        grade(load / rail.maxCurrent.value, slotThresholds.railCurrent),
+        [supply.current, rail.maxCurrent],
+        {
+          actual: load,
+          limit: rail.maxCurrent.value,
+          unit: "A",
+          railId: rail.id,
+        },
+      ),
     );
     const partHigh = supply.logicHigh?.value ?? rail.voltage.value;
     const { logicHigh, maxInput } = slot;
-    if (logicHigh && maxInput) checks.push(
-      check("logicIntoHost", partHigh > maxInput.value + 1e-9 ? "fail" : "pass", [supply.logicHigh, maxInput], {
-        actual: partHigh,
-        limit: maxInput.value,
-        unit: "V",
-      }),
-      check("logicIntoPart", logicHigh.value > supply.maxInput.value + 1e-9 ? "fail" : "pass", [logicHigh, supply.maxInput], {
-        actual: logicHigh.value,
-        limit: supply.maxInput.value,
-        unit: "V",
-      }),
-    );
+    if (logicHigh && maxInput)
+      checks.push(
+        check(
+          "logicIntoHost",
+          partHigh > maxInput.value + 1e-9 ? "fail" : "pass",
+          [supply.logicHigh, maxInput],
+          {
+            actual: partHigh,
+            limit: maxInput.value,
+            unit: "V",
+          },
+        ),
+        check(
+          "logicIntoPart",
+          logicHigh.value > supply.maxInput.value + 1e-9 ? "fail" : "pass",
+          [logicHigh, supply.maxInput],
+          {
+            actual: logicHigh.value,
+            limit: supply.maxInput.value,
+            unit: "V",
+          },
+        ),
+      );
     if (slot.thermalBudget) {
       const heat = rail.voltage.value * supply.current.value;
       checks.push(
-        check("thermal", grade(heat / slot.thermalBudget.value, slotThresholds.thermal), [supply.current, slot.thermalBudget], {
-          actual: heat,
-          limit: slot.thermalBudget.value,
-          unit: "W",
-        }),
+        check(
+          "thermal",
+          grade(heat / slot.thermalBudget.value, slotThresholds.thermal),
+          [supply.current, slot.thermalBudget],
+          {
+            actual: heat,
+            limit: slot.thermalBudget.value,
+            unit: "W",
+          },
+        ),
       );
     }
   }

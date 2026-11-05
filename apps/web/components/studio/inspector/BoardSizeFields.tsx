@@ -14,7 +14,7 @@ export const BoardSizeFields = () => {
 
   return (
     <section aria-labelledby="board-heading" className="grid gap-3 p-3">
-      <h3 id="board-heading" className="text-xs font-medium text-muted-foreground">
+      <h3 id="board-heading" className="text-muted-foreground text-xs font-medium">
         {t("title")}
       </h3>
       <div className="grid grid-cols-2 gap-2">

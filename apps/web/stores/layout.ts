@@ -41,7 +41,8 @@ export const useLayoutStore = create<LayoutState>()(
       collapsedCategories: [],
       maskColour: "black",
       overlays: [],
-      saveLayout: (groupId, layout) => set((s) => ({ layouts: { ...s.layouts, [groupId]: layout } })),
+      saveLayout: (groupId, layout) =>
+        set((s) => ({ layouts: { ...s.layouts, [groupId]: layout } })),
       setValidatorExpanded: (validatorExpanded) => set({ validatorExpanded }),
       setCategoryOpen: (category, open) =>
         set((s) => ({

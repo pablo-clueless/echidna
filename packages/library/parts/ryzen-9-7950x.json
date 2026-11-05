@@ -3,9 +3,7 @@
   "id": "ryzen-9-7950x",
   "name": "AMD Ryzen 9 7950X",
   "kind": "cpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

@@ -3,9 +3,7 @@
   "id": "x670e-atx",
   "name": "X670E ATX motherboard (AM5)",
   "kind": "motherboard",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

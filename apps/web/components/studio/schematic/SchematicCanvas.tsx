@@ -1,5 +1,8 @@
 "use client";
 
+import { compareViolations, type PinRef, type Severity } from "@echidna/core";
+import { useLocale, useTranslations } from "next-intl";
+import { partsById } from "@echidna/library";
 import {
   type DragEvent,
   type KeyboardEvent,
@@ -11,11 +14,7 @@ import {
   useState,
   type WheelEvent,
 } from "react";
-import { compareViolations, type PinRef, type Severity } from "@echidna/core";
-import { useLocale, useTranslations } from "next-intl";
-import { partsById } from "@echidna/library";
 
-import { boxBounds, GRID, PART_MIME, pinPositions, type Point, routeWire, valueParam } from "@/lib/schematic/symbols";
 import { deriveNets, paramValue, pinKey, samePin } from "@/lib/project/model";
 import { boundsOf, innerLabels, SymbolGlyph } from "./SymbolGlyph";
 import { useProjectStore } from "@/stores/project";
@@ -23,6 +22,15 @@ import { useStudioStore } from "@/stores/studio";
 import { formatQuantity } from "@/lib/units";
 import { partKey } from "@/lib/messageKeys";
 import { cn } from "@/lib/utils";
+import {
+  boxBounds,
+  GRID,
+  PART_MIME,
+  pinPositions,
+  type Point,
+  routeWire,
+  valueParam,
+} from "@/lib/schematic/symbols";
 
 type View = { x: number; y: number; scale: number };
 
@@ -130,7 +138,12 @@ export const SchematicCanvas = () => {
     const { width, height } = svg.getBoundingClientRect();
     const xs = extent.map((p) => p.x);
     const ys = extent.map((p) => p.y);
-    const [minX, maxX, minY, maxY] = [Math.min(...xs) - 3, Math.max(...xs) + 3, Math.min(...ys) - 2, Math.max(...ys) + 2];
+    const [minX, maxX, minY, maxY] = [
+      Math.min(...xs) - 3,
+      Math.max(...xs) + 3,
+      Math.min(...ys) - 2,
+      Math.max(...ys) + 2,
+    ];
     const scale = Math.max(
       MIN_SCALE,
       Math.min(FIT_MAX_SCALE, width / ((maxX - minX) * GRID), height / ((maxY - minY) * GRID)),
@@ -188,7 +201,10 @@ export const SchematicCanvas = () => {
   };
 
   const nearestPin = (p: Point, except?: PinRef) =>
-    pins.find((h) => (!except || !samePin(h.ref, except)) && Math.hypot(h.at.x - p.x, h.at.y - p.y) < PIN_HIT);
+    pins.find(
+      (h) =>
+        (!except || !samePin(h.ref, except)) && Math.hypot(h.at.x - p.x, h.at.y - p.y) < PIN_HIT,
+    );
 
   const capture = (e: PointerEvent) => svgRef.current?.setPointerCapture(e.pointerId);
 
@@ -210,7 +226,12 @@ export const SchematicCanvas = () => {
     svgRef.current?.focus({ preventScroll: true });
     const p = toGrid(e);
     capture(e);
-    setDrag({ kind: "move", id, offset: { x: p.x - placement.x, y: p.y - placement.y }, moved: false });
+    setDrag({
+      kind: "move",
+      id,
+      offset: { x: p.x - placement.x, y: p.y - placement.y },
+      moved: false,
+    });
   };
 
   const onPinDown = (e: PointerEvent, hit: PinHit) => {
@@ -239,7 +260,11 @@ export const SchematicCanvas = () => {
     if (!drag) return;
     if (drag.kind === "pan") {
       fitted.current = false;
-      setView({ ...drag.origin, x: drag.origin.x + e.clientX - drag.start.x, y: drag.origin.y + e.clientY - drag.start.y });
+      setView({
+        ...drag.origin,
+        x: drag.origin.x + e.clientX - drag.start.x,
+        y: drag.origin.y + e.clientY - drag.start.y,
+      });
     } else if (drag.kind === "move") {
       const at = { x: Math.round(p.x - drag.offset.x), y: Math.round(p.y - drag.offset.y) };
       const current = schematic[drag.id];
@@ -273,11 +298,18 @@ export const SchematicCanvas = () => {
   const onWheel = (e: WheelEvent<SVGSVGElement>) => {
     const rect = svgRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, view.scale * Math.exp(-e.deltaY * 0.0015)));
+    const scale = Math.min(
+      MAX_SCALE,
+      Math.max(MIN_SCALE, view.scale * Math.exp(-e.deltaY * 0.0015)),
+    );
     const cx = e.clientX - rect.left;
     const cy = e.clientY - rect.top;
     fitted.current = false;
-    setView({ scale, x: cx - ((cx - view.x) * scale) / view.scale, y: cy - ((cy - view.y) * scale) / view.scale });
+    setView({
+      scale,
+      x: cx - ((cx - view.x) * scale) / view.scale,
+      y: cy - ((cy - view.y) * scale) / view.scale,
+    });
   };
 
   const onKeyDown = (e: KeyboardEvent<SVGSVGElement>) => {
@@ -326,7 +358,8 @@ export const SchematicCanvas = () => {
 
   const wireCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const w of wires) for (const p of [w.a, w.b]) counts.set(pinKey(p), (counts.get(pinKey(p)) ?? 0) + 1);
+    for (const w of wires)
+      for (const p of [w.a, w.b]) counts.set(pinKey(p), (counts.get(pinKey(p)) ?? 0) + 1);
     return counts;
   }, [wires]);
 
@@ -341,7 +374,7 @@ export const SchematicCanvas = () => {
       aria-roledescription={t("canvasRole")}
       tabIndex={0}
       className={cn(
-        "size-full touch-none select-none outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+        "focus-visible:ring-ring size-full touch-none outline-none select-none focus-visible:ring-2 focus-visible:ring-inset",
         drag?.kind === "pan" && "cursor-grabbing",
         wiring && "cursor-crosshair",
       )}
@@ -372,7 +405,12 @@ export const SchematicCanvas = () => {
       </defs>
       <rect width="100%" height="100%" fill="url(#schematic-grid)" />
 
-      <g transform={transform} className="text-foreground" strokeLinecap="round" strokeLinejoin="round">
+      <g
+        transform={transform}
+        className="text-foreground"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         {wires.map((w) => {
           const a = pinAt.get(pinKey(w.a));
           const b = pinAt.get(pinKey(w.b));
@@ -417,7 +455,10 @@ export const SchematicCanvas = () => {
               aria-label={t("partLabel", { id: c.id, name: tParts(`${partKey(spec.id)}.name`) })}
               aria-pressed={selected}
               onPointerDown={(e) => onComponentDown(e, c.id)}
-              className={cn("cursor-grab", drag?.kind === "move" && drag.id === c.id && "cursor-grabbing")}
+              className={cn(
+                "cursor-grab",
+                drag?.kind === "move" && drag.id === c.id && "cursor-grabbing",
+              )}
             >
               {(selected || verdict) && (
                 <rect
@@ -429,7 +470,13 @@ export const SchematicCanvas = () => {
                   fill="none"
                   strokeWidth={selected ? 2 : 1.5}
                   strokeDasharray={verdict?.estimated && !selected ? "4 3" : undefined}
-                  className={selected ? "stroke-primary" : verdict ? severityClass[verdict.severity] : undefined}
+                  className={
+                    selected
+                      ? "stroke-primary"
+                      : verdict
+                        ? severityClass[verdict.severity]
+                        : undefined
+                  }
                 />
               )}
               <rect
@@ -488,7 +535,13 @@ export const SchematicCanvas = () => {
               onPointerDown={(e) => onPinDown(e, p)}
               className={cn(
                 "cursor-crosshair",
-                active ? "fill-primary" : count >= 2 ? "fill-foreground/70" : count === 0 ? "fill-background stroke-muted-foreground" : "fill-foreground/70",
+                active
+                  ? "fill-primary"
+                  : count >= 2
+                    ? "fill-foreground/70"
+                    : count === 0
+                      ? "fill-background stroke-muted-foreground"
+                      : "fill-foreground/70",
               )}
               strokeWidth={count === 0 && !active ? 1 : 0}
             />
@@ -501,7 +554,7 @@ export const SchematicCanvas = () => {
             fill="none"
             strokeWidth={1.5}
             strokeDasharray="4 3"
-            className="pointer-events-none stroke-primary"
+            className="stroke-primary pointer-events-none"
           />
         )}
       </g>

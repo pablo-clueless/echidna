@@ -3,11 +3,7 @@
   "id": "hc-sr04",
   "name": "HC-SR04 ultrasonic distance sensor",
   "kind": "sensor",
-  "deviceTypes": [
-    "iot",
-    "wearable",
-    "drone"
-  ],
+  "deviceTypes": ["iot", "wearable", "drone"],
   "pins": [
     {
       "id": "vcc",

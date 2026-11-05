@@ -33,19 +33,35 @@ for (const { locale, messages } of locales) {
       await page.reload();
     });
 
-    test("a graphics card beyond the PSU's headroom fails with the numbers shown, and one within it swaps in", async ({ page }) => {
-      await page.getByRole("button", { name: fill(s.schematic.startFromBoard, { board: messages.Builds["desktop-budget"].name }) }).click();
+    test("a graphics card beyond the PSU's headroom fails with the numbers shown, and one within it swaps in", async ({
+      page,
+    }) => {
+      await page
+        .getByRole("button", {
+          name: fill(s.schematic.startFromBoard, { board: messages.Builds["desktop-budget"].name }),
+        })
+        .click();
       const inspector = page.getByRole("region", { name: s.inspector.title });
-      await expect(page.getByRole("region", { name: s.validator.label })).toContainText(s.validator.allPassed);
+      await expect(page.getByRole("region", { name: s.validator.label })).toContainText(
+        s.validator.allPassed,
+      );
 
       // The motherboard sums the build: a 299 W load on a 550 W PSU passes.
-      await page.getByRole("button", { name: fill(s.schematic.partLabel, { id: "MB1", name: partName("b760-atx") }) }).click();
+      await page
+        .getByRole("button", {
+          name: fill(s.schematic.partLabel, { id: "MB1", name: partName("b760-atx") }),
+        })
+        .click();
       const budget = inspector.getByRole("region", { name: slots.buildTitle });
       await expect(budget).toContainText(template(slots.checks.psuBudget));
       await expect(budget).toContainText(/299/);
       await expect(budget).toContainText(/550/);
 
-      await page.getByRole("button", { name: fill(s.schematic.partLabel, { id: "GPU1", name: partName("rtx-4060") }) }).click();
+      await page
+        .getByRole("button", {
+          name: fill(s.schematic.partLabel, { id: "GPU1", name: partName("rtx-4060") }),
+        })
+        .click();
       const swaps = inspector.getByRole("region", { name: slots.swapTitle });
 
       // 634 W of 550 W, and no 12V-2x6 connector for it: refused, with both reasons.
@@ -58,8 +74,16 @@ for (const { locale, messages } of locales) {
       const rx7800 = swaps.getByRole("listitem", { name: partName("rx-7800-xt") });
       await expect(rx7800).toContainText(slots.swapFits);
       await rx7800.getByRole("button", { name: slots.swap }).click();
-      await expect(page.getByRole("button", { name: fill(s.schematic.partLabel, { id: "GPU1", name: partName("rx-7800-xt") }) })).toBeVisible();
-      await expect(inspector.getByRole("listitem", { name: fill(slots.slotLabel, { slot: slots.names["pcie-x16"], host: "MB1" }) })).toContainText(slots.pluggedInModule);
+      await expect(
+        page.getByRole("button", {
+          name: fill(s.schematic.partLabel, { id: "GPU1", name: partName("rx-7800-xt") }),
+        }),
+      ).toBeVisible();
+      await expect(
+        inspector.getByRole("listitem", {
+          name: fill(slots.slotLabel, { slot: slots.names["pcie-x16"], host: "MB1" }),
+        }),
+      ).toContainText(slots.pluggedInModule);
     });
   });
 }

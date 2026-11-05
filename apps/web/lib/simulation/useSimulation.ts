@@ -35,9 +35,17 @@ export const useSimulation = () => {
       const outcome = await getSolver().solve(build.circuit);
       if (!outcome || !useStudioStore.getState().simulating) return;
       const solution = outcome.ok ? outcome.solution : null;
-      const violations = [...(solution ? evaluate(build, solution, undefined, project.ambientTemperature) : []), ...modules];
+      const violations = [
+        ...(solution ? evaluate(build, solution, undefined, project.ambientTemperature) : []),
+        ...modules,
+      ];
       useStudioStore.getState().setSimulation(
-        { build, solution, error: outcome.ok ? null : outcome.error, latencyMs: performance.now() - editedAt },
+        {
+          build,
+          solution,
+          error: outcome.ok ? null : outcome.error,
+          latencyMs: performance.now() - editedAt,
+        },
         violations,
       );
 
@@ -57,7 +65,8 @@ export const useSimulation = () => {
 
     void run(useProjectStore.getState());
     const unsubscribe = useProjectStore.subscribe((s, prev) => {
-      const electrical = s.components !== prev.components || s.wires !== prev.wires || s.slots !== prev.slots;
+      const electrical =
+        s.components !== prev.components || s.wires !== prev.wires || s.slots !== prev.slots;
       if (electrical || s.ambientTemperature !== prev.ambientTemperature) void run(s);
     });
     const unsubscribeStudio = useStudioStore.subscribe((s, prev) => {

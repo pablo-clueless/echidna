@@ -16,13 +16,16 @@ const CURRENT_FLOOR = 1e-9;
 
 const required = process.env.REQUIRE_NGSPICE === "1";
 const available = ngspiceAvailable();
-if (required && !available) throw new Error("REQUIRE_NGSPICE is set but ngspice could not be started");
+if (required && !available)
+  throw new Error("REQUIRE_NGSPICE is set but ngspice could not be started");
 
 const close = (ours: number, reference: number, floor: number) =>
   Math.abs(ours - reference) <= DC_TOLERANCE * Math.max(Math.abs(reference), floor);
 
 beforeAll(() => {
-  const wasm = createRequire(import.meta.url).resolve("@echidna/solver/wasm").replace(/solver\.js$/, "solver_bg.wasm");
+  const wasm = createRequire(import.meta.url)
+    .resolve("@echidna/solver/wasm")
+    .replace(/solver\.js$/, "solver_bg.wasm");
   initSync({ module: readFileSync(wasm) });
 });
 
@@ -60,13 +63,15 @@ describe.skipIf(!available)("golden DC circuits against ngspice", () => {
       const expected = reference.get(spice);
       const actual = outcome.solution.nodeVoltages[ours];
       if (expected === undefined || actual === undefined) mismatches.push(`V(${ours}): missing`);
-      else if (!close(actual, expected, VOLTAGE_FLOOR)) mismatches.push(`V(${ours}): ${actual} vs ngspice ${expected}`);
+      else if (!close(actual, expected, VOLTAGE_FLOOR))
+        mismatches.push(`V(${ours}): ${actual} vs ngspice ${expected}`);
     }
     for (const [id, vector] of deck.sourceCurrents) {
       const expected = reference.get(vector);
       const actual = outcome.solution.branchCurrents[id];
       if (expected === undefined || actual === undefined) mismatches.push(`I(${id}): missing`);
-      else if (!close(actual, expected, CURRENT_FLOOR)) mismatches.push(`I(${id}): ${actual} vs ngspice ${expected}`);
+      else if (!close(actual, expected, CURRENT_FLOOR))
+        mismatches.push(`I(${id}): ${actual} vs ngspice ${expected}`);
     }
     expect(mismatches, deck.netlist).toEqual([]);
   });
@@ -116,9 +121,17 @@ describe.skipIf(!available)("golden transient circuits against ngspice", () => {
       const [label, actual, floor] =
         "node" in m
           ? [`V(${m.node})`, sample(solution.nodeVoltages[m.node], m.time), TRANSIENT_VOLTAGE_FLOOR]
-          : [`I(${m.source})`, sample(solution.pinCurrents[m.source]?.[0], m.time), TRANSIENT_CURRENT_FLOOR];
-      if (expected === undefined || actual === undefined) mismatches.push(`${label} at ${m.time} s: missing`);
-      else if (Math.abs(actual - expected) > TRANSIENT_TOLERANCE * Math.max(Math.abs(expected), floor))
+          : [
+              `I(${m.source})`,
+              sample(solution.pinCurrents[m.source]?.[0], m.time),
+              TRANSIENT_CURRENT_FLOOR,
+            ];
+      if (expected === undefined || actual === undefined)
+        mismatches.push(`${label} at ${m.time} s: missing`);
+      else if (
+        Math.abs(actual - expected) >
+        TRANSIENT_TOLERANCE * Math.max(Math.abs(expected), floor)
+      )
         mismatches.push(`${label} at ${m.time} s: ${actual} vs ngspice ${expected}`);
     }
     expect(mismatches, deck.netlist).toEqual([]);

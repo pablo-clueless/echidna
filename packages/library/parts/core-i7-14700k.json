@@ -3,9 +3,7 @@
   "id": "core-i7-14700k",
   "name": "Intel Core i7-14700K",
   "kind": "cpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

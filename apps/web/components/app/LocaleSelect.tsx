@@ -3,9 +3,15 @@
 import { hasLocale, useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { localeNames, routing } from "@/i18n/routing";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const LocaleSelect = () => {
   const t = useTranslations("Preferences");
@@ -21,7 +27,11 @@ export const LocaleSelect = () => {
 
   return (
     <Select value={locale} onValueChange={change} disabled={pending}>
-      <SelectTrigger size="sm" aria-label={t("language")} className="h-7 min-w-37.5 gap-1 px-2 text-xs">
+      <SelectTrigger
+        size="sm"
+        aria-label={t("language")}
+        className="h-7 min-w-37.5 gap-1 px-2 text-xs"
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectContent align="end" className="w-37.5">

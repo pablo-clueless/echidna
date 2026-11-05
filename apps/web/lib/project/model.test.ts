@@ -1,6 +1,8 @@
 import { partsById, toCircuit } from "@echidna/library";
 import { describe, expect, it } from "vitest";
 
+import { pinPositions, routeWire } from "../schematic/symbols";
+import { regulatorExample } from "./example";
 import {
   deriveNets,
   nextDesignator,
@@ -10,8 +12,6 @@ import {
   toNetlist,
   type Wire,
 } from "./model";
-import { pinPositions, routeWire } from "../schematic/symbols";
-import { regulatorExample } from "./example";
 
 const pin = (componentId: string, pinId: string) => ({ componentId, pinId });
 
@@ -39,8 +39,8 @@ describe("deriveNets", () => {
   it("keeps net IDs stable when unrelated wires change", () => {
     const base: Wire[] = [{ id: "W1", a: pin("R1", "1"), b: pin("R2", "1") }];
     const before = deriveNets(base)[0]?.id;
-    const after = deriveNets([...base, { id: "W2", a: pin("C1", "1"), b: pin("C2", "1") }]).find((n) =>
-      n.pins.some((p) => p.componentId === "R1"),
+    const after = deriveNets([...base, { id: "W2", a: pin("C1", "1"), b: pin("C2", "1") }]).find(
+      (n) => n.pins.some((p) => p.componentId === "R1"),
     )?.id;
     expect(after).toBe(before);
   });
@@ -101,7 +101,9 @@ describe("switches", () => {
     const released = releaseMomentary(components, partsById);
     expect(released).toEqual([components[0], { id: "SW2", specId: "switch-push" }, components[2]]);
     expect(released[0]).toBe(components[0]);
-    expect(toCircuit(toNetlist({ components: released, wires: [] }), partsById).circuit.elements[1]).toMatchObject({
+    expect(
+      toCircuit(toNetlist({ components: released, wires: [] }), partsById).circuit.elements[1],
+    ).toMatchObject({
       closed: 0,
     });
   });

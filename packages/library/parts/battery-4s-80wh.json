@@ -3,9 +3,7 @@
   "id": "battery-4s-80wh",
   "name": "4-cell laptop battery, 80 Wh",
   "kind": "battery",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

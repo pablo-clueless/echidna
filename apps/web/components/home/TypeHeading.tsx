@@ -26,10 +26,12 @@ const STEP_MS = 24;
  */
 const segment = (text: string, locale: string): { segments: Segment[]; count: number } => {
   let i = 0;
-  const segments = [...new Intl.Segmenter(locale, { granularity: "word" }).segment(text)].map(({ segment: s }) => ({
-    text: s,
-    chars: /^\s+$/.test(s) ? null : [...s].map((ch) => ({ ch, i: i++ })),
-  }));
+  const segments = [...new Intl.Segmenter(locale, { granularity: "word" }).segment(text)].map(
+    ({ segment: s }) => ({
+      text: s,
+      chars: /^\s+$/.test(s) ? null : [...s].map((ch) => ({ ch, i: i++ })),
+    }),
+  );
   return { segments, count: i };
 };
 
@@ -37,7 +39,12 @@ const segment = (text: string, locale: string): { segments: Segment[]; count: nu
  * A heading that types itself in when it scrolls into view: a solid block sweeps across the line, leaving the text
  * behind, and finishes as a blinking caret. Screen readers get the plain text.
  */
-export const TypeHeading = ({ text, as: Tag = "h2", className, block = "var(--home-signal)" }: Props) => {
+export const TypeHeading = ({
+  text,
+  as: Tag = "h2",
+  className,
+  block = "var(--home-signal)",
+}: Props) => {
   const locale = useLocale();
   const [ref, phase] = useInView<HTMLHeadingElement>();
   const { segments, count } = useMemo(() => segment(text, locale), [text, locale]);

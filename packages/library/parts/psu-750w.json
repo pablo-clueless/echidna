@@ -3,9 +3,7 @@
   "id": "psu-750w",
   "name": "750 W ATX 3.1 PSU (80 Plus Gold)",
   "kind": "psu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

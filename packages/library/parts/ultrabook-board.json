@@ -3,9 +3,7 @@
   "id": "ultrabook-board",
   "name": "Ultrabook mainboard (28 W processor, 16 GB LPDDR5X soldered)",
   "kind": "laptopBoard",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

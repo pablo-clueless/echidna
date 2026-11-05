@@ -63,7 +63,10 @@ describe("drillsFor", () => {
   it("follows the part's rotation as the 3D view applies it", () => {
     for (const rotation of [90, 180, 270, 37]) {
       const [first] = drillsFor(axial, 3, 4, rotation);
-      const expected = new Vector3(-5.08, 0, 0).applyAxisAngle(new Vector3(0, 1, 0), (-rotation * Math.PI) / 180);
+      const expected = new Vector3(-5.08, 0, 0).applyAxisAngle(
+        new Vector3(0, 1, 0),
+        (-rotation * Math.PI) / 180,
+      );
       expect(first?.x).toBeCloseTo(3 + expected.x, 9);
       expect(first?.z).toBeCloseTo(4 + expected.z, 9);
     }

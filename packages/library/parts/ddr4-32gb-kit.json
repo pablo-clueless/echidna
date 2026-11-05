@@ -3,9 +3,7 @@
   "id": "ddr4-32gb-kit",
   "name": "DDR4-3200 32 GB kit (2 × 16 GB)",
   "kind": "memory",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

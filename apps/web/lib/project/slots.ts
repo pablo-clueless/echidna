@@ -23,7 +23,13 @@ export const railLoads = (
   for (const c of project.components) {
     const placed = project.slots[c.id];
     const current = specs.get(c.specId)?.supply?.current.value;
-    if (c.id === except || placed?.hostId !== hostId || placed.railId === undefined || current === undefined) continue;
+    if (
+      c.id === except ||
+      placed?.hostId !== hostId ||
+      placed.railId === undefined ||
+      current === undefined
+    )
+      continue;
     loads[placed.railId] = (loads[placed.railId] ?? 0) + current;
   }
   return loads;
@@ -45,7 +51,9 @@ export const modulesIn = (
 ): ComponentSpec[] =>
   project.components.flatMap((c) => {
     const spec = specs.get(c.specId);
-    return project.slots[c.id]?.hostId === hostId && !except.includes(c.id) && spec?.module ? [spec] : [];
+    return project.slots[c.id]?.hostId === hostId && !except.includes(c.id) && spec?.module
+      ? [spec]
+      : [];
   });
 
 /** Whether a part plugs into a host's slots: a sensor module, or any desktop module but the motherboard itself. */
@@ -92,7 +100,11 @@ export type SlotOption = {
  * @param partId - The part to plug in.
  * @returns One option per slot on every host board, in project order.
  */
-export const slotOptions = (project: Project, specs: ReadonlyMap<string, ComponentSpec>, partId: string): SlotOption[] => {
+export const slotOptions = (
+  project: Project,
+  specs: ReadonlyMap<string, ComponentSpec>,
+  partId: string,
+): SlotOption[] => {
   const part = specs.get(project.components.find((c) => c.id === partId)?.specId ?? "");
   if (!part || !isPluggable(part)) return [];
   const placed = project.slots[partId];
@@ -102,7 +114,15 @@ export const slotOptions = (project: Project, specs: ReadonlyMap<string, Compone
       const occupant = Object.entries(project.slots).find(
         ([id, at]) => id !== partId && at.hostId === host.id && at.slotId === slot.id,
       )?.[0];
-      const fit = fitInSlot(project, specs, hostSpec as ComponentSpec, host.id, slot.id, part, partId);
+      const fit = fitInSlot(
+        project,
+        specs,
+        hostSpec as ComponentSpec,
+        host.id,
+        slot.id,
+        part,
+        partId,
+      );
       return { hostId: host.id, slot, fit, ...(occupant ? { occupant } : {}) };
     });
   });
@@ -110,7 +130,8 @@ export const slotOptions = (project: Project, specs: ReadonlyMap<string, Compone
   return part.module
     ? options.filter(
         (o) =>
-          o.fit.checks[0]?.severity === "pass" || (placed?.hostId === o.hostId && placed.slotId === o.slot.id),
+          o.fit.checks[0]?.severity === "pass" ||
+          (placed?.hostId === o.hostId && placed.slotId === o.slot.id),
       )
     : options;
 };
@@ -177,7 +198,8 @@ export const slotSwaps = (
   candidates: readonly ComponentSpec[],
   id: string,
 ): SlotSwap[] => {
-  const specOf = (componentId: string) => specs.get(project.components.find((c) => c.id === componentId)?.specId ?? "");
+  const specOf = (componentId: string) =>
+    specs.get(project.components.find((c) => c.id === componentId)?.specId ?? "");
   const current = specOf(id);
   if (!current) return [];
 
@@ -189,7 +211,8 @@ export const slotSwaps = (
     // one graphics card for another, or a laptop cooler for another laptop cooler.
     const sameFamily = (c: ComponentSpec) =>
       current.module
-        ? c.module?.role === current.module.role && c.deviceTypes.some((d) => current.deviceTypes.includes(d))
+        ? c.module?.role === current.module.role &&
+          c.deviceTypes.some((d) => current.deviceTypes.includes(d))
         : Boolean(c.supply);
     return candidates
       .filter((c) => sameFamily(c) && c.id !== current.id)
@@ -215,9 +238,12 @@ export const slotSwaps = (
           const spec = specOf(other);
           return other !== partId && spec?.module ? [spec] : [];
         });
-        const fit = part.module ? checkModuleFit(c, at.slotId, part, others) : checkSlotFit(c, at.slotId, part, loads);
+        const fit = part.module
+          ? checkModuleFit(c, at.slotId, part, others)
+          : checkSlotFit(c, at.slotId, part, loads);
         byPart[partId] = fit;
-        if (fit.railId) loads[fit.railId] = (loads[fit.railId] ?? 0) + (part.supply?.current.value ?? 0);
+        if (fit.railId)
+          loads[fit.railId] = (loads[fit.railId] ?? 0) + (part.supply?.current.value ?? 0);
       }
       return { specId: c.id, fits: Object.values(byPart).every((f) => f.fits), byPart };
     });

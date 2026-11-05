@@ -30,7 +30,12 @@ describe("checkSlotFit", () => {
     const fit = verdicts("raspberry-pi-4", "gpio", "hc-sr04");
     expect(fit.fits).toBe(false);
     expect(fit.railId).toBe("5v");
-    expect(fit.by.logicIntoHost).toMatchObject({ severity: "fail", actual: 5, limit: 3.3, unit: "V" });
+    expect(fit.by.logicIntoHost).toMatchObject({
+      severity: "fail",
+      actual: 5,
+      limit: 3.3,
+      unit: "V",
+    });
     expect(fit.by.supply?.severity).toBe("pass");
   });
 
@@ -48,21 +53,36 @@ describe("checkSlotFit", () => {
   it("blocks a part whose protocol the slot does not carry, and says what it accepts", () => {
     const fit = verdicts("esp32-devkitc", "i2c", "ds18b20");
     expect(fit.fits).toBe(false);
-    expect(fit.by.interface).toMatchObject({ severity: "fail", protocols: ["1-wire"], accepts: ["i2c"] });
+    expect(fit.by.interface).toMatchObject({
+      severity: "fail",
+      protocols: ["1-wire"],
+      accepts: ["i2c"],
+    });
   });
 
   it("fails the supply check when no rail is in the part's range", () => {
     const narrow: ComponentSpec = {
       ...part("bme280"),
-      supply: { ...part("bme280").supply!, minVoltage: { value: 1.8, unit: "V", source: "datasheet" }, maxVoltage: { value: 2, unit: "V", source: "datasheet" } },
+      supply: {
+        ...part("bme280").supply!,
+        minVoltage: { value: 1.8, unit: "V", source: "datasheet" },
+        maxVoltage: { value: 2, unit: "V", source: "datasheet" },
+      },
     };
     const fit = checkSlotFit(part("raspberry-pi-4"), "i2c", narrow);
     expect(fit.fits).toBe(false);
-    expect(fit.checks.find((c) => c.id === "supply")).toMatchObject({ severity: "fail", min: 1.8, limit: 2, offered: [3.3, 5] });
+    expect(fit.checks.find((c) => c.id === "supply")).toMatchObject({
+      severity: "fail",
+      min: 1.8,
+      limit: 2,
+      offered: [3.3, 5],
+    });
   });
 
   it("warns as a rail nears its limit and fails past it, counting what is already plugged in", () => {
-    expect(verdicts("arduino-uno-r4", "gpio", "ds18b20", { "5v": 0.4 }).by.railCurrent?.severity).toBe("warn");
+    expect(
+      verdicts("arduino-uno-r4", "gpio", "ds18b20", { "5v": 0.4 }).by.railCurrent?.severity,
+    ).toBe("warn");
     const over = verdicts("arduino-uno-r4", "gpio", "ds18b20", { "5v": 0.5 });
     expect(over.fits).toBe(false);
     expect(over.by.railCurrent).toMatchObject({ severity: "fail", limit: 0.5 });
@@ -81,7 +101,9 @@ describe("checkSlotFit", () => {
 
 describe("solving a host board with a sensor plugged in", () => {
   beforeAll(() => {
-    initSync({ module: readFileSync(new URL("../../solver/wasm/solver_bg.wasm", import.meta.url)) });
+    initSync({
+      module: readFileSync(new URL("../../solver/wasm/solver_bg.wasm", import.meta.url)),
+    });
   });
 
   it("supplies the sensor's current from the rail it is wired to", () => {
@@ -93,8 +115,20 @@ describe("solving a host board with a sensor plugged in", () => {
           { id: "S1", specId: "bme280" },
         ],
         nets: [
-          { id: "vdd", pins: [{ componentId: "B1", pinId: "3v3" }, { componentId: "S1", pinId: "vdd" }] },
-          { id: "gnd", pins: [{ componentId: "B1", pinId: "gnd" }, { componentId: "S1", pinId: "gnd" }] },
+          {
+            id: "vdd",
+            pins: [
+              { componentId: "B1", pinId: "3v3" },
+              { componentId: "S1", pinId: "vdd" },
+            ],
+          },
+          {
+            id: "gnd",
+            pins: [
+              { componentId: "B1", pinId: "gnd" },
+              { componentId: "S1", pinId: "gnd" },
+            ],
+          },
         ],
       },
       partsById,

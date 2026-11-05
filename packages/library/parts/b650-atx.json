@@ -3,9 +3,7 @@
   "id": "b650-atx",
   "name": "B650 ATX motherboard (AM5)",
   "kind": "motherboard",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

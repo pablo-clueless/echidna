@@ -1,5 +1,7 @@
 "use client";
 
+import { RoundedBox } from "@react-three/drei";
+import { useEffect, useMemo } from "react";
 import {
   AdditiveBlending,
   CanvasTexture,
@@ -16,8 +18,6 @@ import {
   Vector2,
   Vector3,
 } from "three";
-import { RoundedBox } from "@react-three/drei";
-import { useEffect, useMemo } from "react";
 
 import { LED_LIT_CURRENT, LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
 import { DEFAULT_LED_COLOUR, ledColours } from "@/lib/parts/ledColours";
@@ -63,7 +63,13 @@ const axialBody = new LatheGeometry(
 const axialLead = (side: 1 | -1) => {
   const path = new CurvePath<Vector3>();
   path.add(new LineCurve3(v3(3.1 * side, AXIAL_Y), v3(4.45 * side, AXIAL_Y)));
-  path.add(new QuadraticBezierCurve3(v3(4.45 * side, AXIAL_Y), v3(5.08 * side, AXIAL_Y), v3(5.08 * side, AXIAL_Y - 0.63)));
+  path.add(
+    new QuadraticBezierCurve3(
+      v3(4.45 * side, AXIAL_Y),
+      v3(5.08 * side, AXIAL_Y),
+      v3(5.08 * side, AXIAL_Y - 0.63),
+    ),
+  );
   path.add(new LineCurve3(v3(5.08 * side, AXIAL_Y - 0.63), v3(5.08 * side, -2.2)));
   return new TubeGeometry(path, 48, 0.3, 10);
 };
@@ -180,21 +186,41 @@ const Marking = ({ text, y, w, h, front }: MarkingProps) => {
   const texture = useMemo(() => markingTexture(text), [text]);
   useEffect(() => () => texture.dispose(), [texture]);
   return (
-    <mesh position={[0, y, front ?? 0]} rotation={front === undefined ? [-Math.PI / 2, 0, 0] : [0, 0, 0]}>
+    <mesh
+      position={[0, y, front ?? 0]}
+      rotation={front === undefined ? [-Math.PI / 2, 0, 0] : [0, 0, 0]}
+    >
       <planeGeometry args={[w, h]} />
-      <meshStandardMaterial color="#8E9196" alphaMap={texture} transparent depthWrite={false} roughness={0.9} />
+      <meshStandardMaterial
+        color="#8E9196"
+        alphaMap={texture}
+        transparent
+        depthWrite={false}
+        roughness={0.9}
+      />
     </mesh>
   );
 };
 
 const Resistor = ({ bands }: { bands?: string[] | null | undefined }) => (
   <group>
-    <mesh geometry={axialBody} material={materials.resistorBody} position={[0, AXIAL_Y, 0]} rotation={[0, 0, Math.PI / 2]} castShadow />
+    <mesh
+      geometry={axialBody}
+      material={materials.resistorBody}
+      position={[0, AXIAL_Y, 0]}
+      rotation={[0, 0, Math.PI / 2]}
+      castShadow
+    />
     {bands?.map((colour, i) => {
       const spot = bandSpots[i];
       if (!spot) return null;
       return (
-        <mesh key={i} position={[spot.x, AXIAL_Y, 0]} rotation={[0, 0, Math.PI / 2]} material={bandMaterial(colour)}>
+        <mesh
+          key={i}
+          position={[spot.x, AXIAL_Y, 0]}
+          rotation={[0, 0, Math.PI / 2]}
+          material={bandMaterial(colour)}
+        >
           <cylinderGeometry args={[spot.r, spot.r, 0.42, 32, 1, true]} />
         </mesh>
       );
@@ -207,33 +233,90 @@ const Resistor = ({ bands }: { bands?: string[] | null | undefined }) => (
 
 const ChipCapacitor = () => (
   <group>
-    <RoundedBox args={[1.2, 1.2, 1.2]} radius={0.06} smoothness={3} position={[0, 0.66, 0]} material={materials.ceramic} castShadow />
+    <RoundedBox
+      args={[1.2, 1.2, 1.2]}
+      radius={0.06}
+      smoothness={3}
+      position={[0, 0.66, 0]}
+      material={materials.ceramic}
+      castShadow
+    />
     {[-0.78, 0.78].map((x) => (
-      <RoundedBox key={x} args={[0.44, 1.26, 1.28]} radius={0.1} smoothness={3} position={[x, 0.68, 0]} material={materials.solder} castShadow />
+      <RoundedBox
+        key={x}
+        args={[0.44, 1.26, 1.28]}
+        radius={0.1}
+        smoothness={3}
+        position={[x, 0.68, 0]}
+        material={materials.solder}
+        castShadow
+      />
     ))}
     <mesh geometry={chipFillet} material={materials.solder} position={[1.0, 0.05, -0.575]} />
-    <mesh geometry={chipFillet} material={materials.solder} position={[-1.0, 0.05, 0.575]} rotation={[0, Math.PI, 0]} />
+    <mesh
+      geometry={chipFillet}
+      material={materials.solder}
+      position={[-1.0, 0.05, 0.575]}
+      rotation={[0, Math.PI, 0]}
+    />
   </group>
 );
 
 const Sot223 = ({ marking }: { marking?: string | undefined }) => (
   <group>
-    <RoundedBox args={[6.5, 1.6, 3.5]} radius={0.18} smoothness={3} position={[0, 0.9, 0]} material={materials.epoxy} castShadow />
+    <RoundedBox
+      args={[6.5, 1.6, 3.5]}
+      radius={0.18}
+      smoothness={3}
+      position={[0, 0.9, 0]}
+      material={materials.epoxy}
+      castShadow
+    />
     {marking && <Marking text={marking} y={1.705} w={3.2} h={1.6} />}
-    <mesh position={[-2.65, 1.705, 1.05]} rotation={[-Math.PI / 2, 0, 0]} material={materials.cavity}>
+    <mesh
+      position={[-2.65, 1.705, 1.05]}
+      rotation={[-Math.PI / 2, 0, 0]}
+      material={materials.cavity}
+    >
       <circleGeometry args={[0.28, 24]} />
     </mesh>
     {[-2.3, 0, 2.3].map((x) => (
-      <mesh key={x} geometry={smallWing} material={materials.solder} position={[x + 0.35, 0.05, 1.75]} rotation={[0, -Math.PI / 2, 0]} castShadow />
+      <mesh
+        key={x}
+        geometry={smallWing}
+        material={materials.solder}
+        position={[x + 0.35, 0.05, 1.75]}
+        rotation={[0, -Math.PI / 2, 0]}
+        castShadow
+      />
     ))}
-    <mesh geometry={tabWing} material={materials.solder} position={[-1.5, 0.05, -1.75]} rotation={[0, Math.PI / 2, 0]} castShadow />
+    <mesh
+      geometry={tabWing}
+      material={materials.solder}
+      position={[-1.5, 0.05, -1.75]}
+      rotation={[0, Math.PI / 2, 0]}
+      castShadow
+    />
   </group>
 );
 
 const To92 = ({ marking }: { marking?: string | undefined }) => (
   <group>
-    <mesh geometry={to92Body} material={materials.epoxy} position={[0, TO92_STANDOFF, 0]} castShadow />
-    {marking && <Marking text={marking} y={TO92_STANDOFF + TO92_HEIGHT * 0.62} w={3.6} h={1.8} front={TO92_FLAT + 0.16} />}
+    <mesh
+      geometry={to92Body}
+      material={materials.epoxy}
+      position={[0, TO92_STANDOFF, 0]}
+      castShadow
+    />
+    {marking && (
+      <Marking
+        text={marking}
+        y={TO92_STANDOFF + TO92_HEIGHT * 0.62}
+        w={3.6}
+        h={1.8}
+        front={TO92_FLAT + 0.16}
+      />
+    )}
     {to92Leads.map((geometry, i) => (
       <mesh key={i} geometry={geometry} material={materials.lead} castShadow />
     ))}
@@ -262,8 +345,15 @@ const halo = () => {
 /** Below this level the LED reads as off: the same current the inspector reports as dark. */
 const LIT = Math.sqrt(LED_LIT_CURRENT / LED_NOMINAL_CURRENT);
 
-const Led = ({ glow = 0, colour = DEFAULT_LED_COLOUR }: { glow?: number | undefined; colour?: string | undefined }) => {
-  const look = ledColours[colour] ?? ledColours[DEFAULT_LED_COLOUR] ?? { body: "#5A0A0F", light: "#FF3A2A" };
+const Led = ({
+  glow = 0,
+  colour = DEFAULT_LED_COLOUR,
+}: {
+  glow?: number | undefined;
+  colour?: string | undefined;
+}) => {
+  const look = ledColours[colour] ??
+    ledColours[DEFAULT_LED_COLOUR] ?? { body: "#5A0A0F", light: "#FF3A2A" };
   // Perceived brightness grows roughly with the square root of current, so a dim LED still visibly lights.
   const level = Math.min(1.3, Math.sqrt(Math.max(0, glow)));
   const lit = level >= LIT;
@@ -272,7 +362,13 @@ const Led = ({ glow = 0, colour = DEFAULT_LED_COLOUR }: { glow?: number | undefi
   return (
     <group>
       {[-1.27, 1.27].map((x) => (
-        <mesh key={x} geometry={ledLead} material={materials.lead} position={[x, 0, 0]} castShadow />
+        <mesh
+          key={x}
+          geometry={ledLead}
+          material={materials.lead}
+          position={[x, 0, 0]}
+          castShadow
+        />
       ))}
       <mesh position={[1.0, LED_STANDOFF + 4.7, 0]} material={materials.lead}>
         <boxGeometry args={[1.3, 0.5, 0.6]} />
@@ -282,7 +378,12 @@ const Led = ({ glow = 0, colour = DEFAULT_LED_COLOUR }: { glow?: number | undefi
           {/* The die: a bright core seen through the epoxy, outside tone mapping so it reads as a light source. */}
           <mesh position={[0, die, 0]}>
             <sphereGeometry args={[0.4 + level * 0.45, 16, 12]} />
-            <meshBasicMaterial color={look.light} toneMapped={false} transparent opacity={Math.min(1, 0.45 + level)} />
+            <meshBasicMaterial
+              color={look.light}
+              toneMapped={false}
+              transparent
+              opacity={Math.min(1, 0.45 + level)}
+            />
           </mesh>
           <sprite position={[0, die + 1, 0]} scale={6 + level * 12} raycast={() => null}>
             <spriteMaterial
@@ -295,7 +396,13 @@ const Led = ({ glow = 0, colour = DEFAULT_LED_COLOUR }: { glow?: number | undefi
               toneMapped={false}
             />
           </sprite>
-          <pointLight position={[0, die, 0]} color={look.light} intensity={level * 0.004} distance={0.06} decay={2} />
+          <pointLight
+            position={[0, die, 0]}
+            color={look.light}
+            intensity={level * 0.004}
+            distance={0.06}
+            decay={2}
+          />
         </>
       )}
       <mesh geometry={ledBody} position={[0, LED_STANDOFF, 0]} castShadow>
@@ -318,8 +425,22 @@ const Led = ({ glow = 0, colour = DEFAULT_LED_COLOUR }: { glow?: number | undefi
 /** Miniature slide switch: a steel shell on a black base, with the actuator slid towards pin 2 when closed. */
 const SlideSwitch = ({ closed }: { closed: boolean }) => (
   <group>
-    <RoundedBox args={[8.6, 1.2, 3.8]} radius={0.2} smoothness={2} position={[0, 0.6, 0]} material={materials.epoxy} castShadow />
-    <RoundedBox args={[8.6, 2.6, 3.8]} radius={0.15} smoothness={2} position={[0, 2.5, 0]} material={materials.lead} castShadow />
+    <RoundedBox
+      args={[8.6, 1.2, 3.8]}
+      radius={0.2}
+      smoothness={2}
+      position={[0, 0.6, 0]}
+      material={materials.epoxy}
+      castShadow
+    />
+    <RoundedBox
+      args={[8.6, 2.6, 3.8]}
+      radius={0.15}
+      smoothness={2}
+      position={[0, 2.5, 0]}
+      material={materials.lead}
+      castShadow
+    />
     <mesh position={[0, 3.82, 0]} material={materials.cavity}>
       <boxGeometry args={[4.4, 0.06, 1.6]} />
     </mesh>
@@ -342,7 +463,14 @@ const SlideSwitch = ({ closed }: { closed: boolean }) => (
 /** 6 mm tactile switch: a moulded base under a steel cover, with a round plunger that sinks while pressed. */
 const TactileSwitch = ({ closed }: { closed: boolean }) => (
   <group>
-    <RoundedBox args={[6, 2.6, 6]} radius={0.2} smoothness={2} position={[0, 1.3, 0]} material={materials.epoxy} castShadow />
+    <RoundedBox
+      args={[6, 2.6, 6]}
+      radius={0.2}
+      smoothness={2}
+      position={[0, 1.3, 0]}
+      material={materials.epoxy}
+      castShadow
+    />
     <mesh position={[0, 2.65, 0]} material={materials.lead} castShadow>
       <boxGeometry args={[6.1, 0.3, 6.1]} />
     </mesh>
@@ -359,10 +487,21 @@ const TactileSwitch = ({ closed }: { closed: boolean }) => (
 
 const Terminal = () => (
   <group>
-    <RoundedBox args={[10.2, 8.4, 7.6]} radius={0.35} smoothness={3} position={[0, 4.25, 0.2]} material={materials.terminal} castShadow />
+    <RoundedBox
+      args={[10.2, 8.4, 7.6]}
+      radius={0.35}
+      smoothness={3}
+      position={[0, 4.25, 0.2]}
+      material={materials.terminal}
+      castShadow
+    />
     {[-2.54, 2.54].map((x) => (
       <group key={x} position={[x, 0, 0]}>
-        <mesh position={[0, 8.46, -0.9]} rotation={[-Math.PI / 2, 0, 0]} material={materials.cavity}>
+        <mesh
+          position={[0, 8.46, -0.9]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          material={materials.cavity}
+        >
           <ringGeometry args={[1.35, 1.75, 32]} />
         </mesh>
         <mesh position={[0, 8.35, -0.9]} material={materials.lead} castShadow>
@@ -417,9 +556,21 @@ const ModuleBlock = ({ footprintId }: { footprintId: string }) => {
 
 const PinHeader = ({ count }: { count: number }) => (
   <group>
-    <RoundedBox args={[count * 2.54, 2.5, 2.54]} radius={0.15} smoothness={2} position={[0, 1.25, 0]} material={materials.epoxy} castShadow />
+    <RoundedBox
+      args={[count * 2.54, 2.5, 2.54]}
+      radius={0.15}
+      smoothness={2}
+      position={[0, 1.25, 0]}
+      material={materials.epoxy}
+      castShadow
+    />
     {Array.from({ length: count }, (_, i) => (
-      <mesh key={i} position={[(i - (count - 1) / 2) * 2.54, 4.2, 0]} material={materials.gold} castShadow>
+      <mesh
+        key={i}
+        position={[(i - (count - 1) / 2) * 2.54, 4.2, 0]}
+        material={materials.gold}
+        castShadow
+      >
         <boxGeometry args={[0.64, 6, 0.64]} />
       </mesh>
     ))}
@@ -427,7 +578,8 @@ const PinHeader = ({ count }: { count: number }) => (
 );
 
 export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed }: Props) => {
-  if (footprintId.startsWith("header/")) return <PinHeader count={footprints[footprintId]?.pads.length ?? 1} />;
+  if (footprintId.startsWith("header/"))
+    return <PinHeader count={footprints[footprintId]?.pads.length ?? 1} />;
   if (footprintId.startsWith("module/")) return <ModuleBlock footprintId={footprintId} />;
   switch (footprintId) {
     case "generic/axial-0.4in":
@@ -449,6 +601,14 @@ export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed 
     case "generic/to-92-dgs":
       return <To92 marking={marking} />;
     default:
-      return <RoundedBox args={[4, 2, 4]} radius={0.2} position={[0, 1, 0]} material={materials.fallback} castShadow />;
+      return (
+        <RoundedBox
+          args={[4, 2, 4]}
+          radius={0.2}
+          position={[0, 1, 0]}
+          material={materials.fallback}
+          castShadow
+        />
+      );
   }
 };

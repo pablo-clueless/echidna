@@ -41,9 +41,13 @@ export const RatingMeter = ({ violation }: { violation: Violation }) => {
       <div className="flex items-baseline justify-between gap-2 text-xs">
         <span className="font-medium">{t(`rules.${ruleKey(violation.ruleId)}.name`)}</span>
         {idle ? (
-          <span className="font-medium text-muted-foreground">{t("inspector.verdict.noCurrent")}</span>
+          <span className="text-muted-foreground font-medium">
+            {t("inspector.verdict.noCurrent")}
+          </span>
         ) : (
-          <span className={cn("font-medium", textClass[verdict])}>{t(`inspector.verdict.${verdict}`)}</span>
+          <span className={cn("font-medium", textClass[verdict])}>
+            {t(`inspector.verdict.${verdict}`)}
+          </span>
         )}
       </div>
       <div
@@ -52,23 +56,29 @@ export const RatingMeter = ({ violation }: { violation: Violation }) => {
         aria-valuemin={violation.baseline ?? 0}
         aria-valuemax={violation.limit}
         aria-valuenow={violation.actual}
-        aria-valuetext={t("inspector.ofRating", { percent, limit: formatQuantity(violation.limit, violation.unit, locale) })}
-        className="relative h-1.5 overflow-hidden bg-muted"
+        aria-valuetext={t("inspector.ofRating", {
+          percent,
+          limit: formatQuantity(violation.limit, violation.unit, locale),
+        })}
+        className="bg-muted relative h-1.5 overflow-hidden"
       >
         <div
           className={cn("h-full transition-[width]", fillClass[violation.severity])}
           style={{ width: `${Math.min(100, ratio * 100)}%` }}
         />
-        <div aria-hidden className="absolute inset-y-0 left-[80%] w-px bg-foreground/30" />
+        <div aria-hidden className="bg-foreground/30 absolute inset-y-0 left-[80%] w-px" />
       </div>
-      <div className="flex justify-between gap-2 font-mono text-xs text-muted-foreground tabular-nums">
+      <div className="text-muted-foreground flex justify-between gap-2 font-mono text-xs tabular-nums">
         <span>
-          {formatQuantity(violation.actual, violation.unit, locale)} / {formatQuantity(violation.limit, violation.unit, locale)}
+          {formatQuantity(violation.actual, violation.unit, locale)} /{" "}
+          {formatQuantity(violation.limit, violation.unit, locale)}
         </span>
         <span>{percent}</span>
       </div>
       {learnMode && violation.severity !== "pass" && (
-        <p className="text-xs text-muted-foreground">{t(`rules.${ruleKey(violation.ruleId)}.explain`, { percent })}</p>
+        <p className="text-muted-foreground text-xs">
+          {t(`rules.${ruleKey(violation.ruleId)}.explain`, { percent })}
+        </p>
       )}
     </div>
   );

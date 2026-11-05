@@ -3,8 +3,13 @@
 import { useId, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { parseQuantity } from "@/lib/units";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 
 type Props = {
   label: string;
@@ -22,7 +27,16 @@ type Props = {
  * A number typed in the user's locale, committed on Enter or blur when it is within range. Escape discards the edit.
  * `value`, `min` and `max` are in the units shown, not SI.
  */
-export const NumberField = ({ label, name, value, unit, min, max, outOfRange, onCommit }: Props) => {
+export const NumberField = ({
+  label,
+  name,
+  value,
+  unit,
+  min,
+  max,
+  outOfRange,
+  onCommit,
+}: Props) => {
   const locale = useLocale();
   const id = useId();
   const [draft, setDraft] = useState<string | null>(null);
@@ -77,7 +91,7 @@ export const NumberField = ({ label, name, value, unit, min, max, outOfRange, on
         </InputGroupAddon>
       </InputGroup>
       {invalid && (
-        <p id={`${id}-error`} className="text-xs text-status-fail-text">
+        <p id={`${id}-error`} className="text-status-fail-text text-xs">
           {outOfRange}
         </p>
       )}

@@ -48,12 +48,18 @@ export const useCheckReason = () => {
     const reason = (() => {
       switch (check.id) {
         case "interface":
-          return t("checks.interface", { protocols: protocols(check.protocols), accepts: protocols(check.accepts) });
+          return t("checks.interface", {
+            protocols: protocols(check.protocols),
+            accepts: protocols(check.accepts),
+          });
         case "supply":
           return t("checks.supply", {
             min: q(check.min, "V"),
             max: q(check.limit, "V"),
-            offered: format.list((check.offered ?? []).map((v) => q(v, "V")), { type: "conjunction" }),
+            offered: format.list(
+              (check.offered ?? []).map((v) => q(v, "V")),
+              { type: "conjunction" },
+            ),
           });
         case "railCurrent":
           return t("checks.railCurrent", {
@@ -68,7 +74,10 @@ export const useCheckReason = () => {
             limit: check.limit ?? 0,
           });
         default:
-          return t(`checks.${check.id}`, { actual: q(check.actual, unit), limit: q(check.limit, unit) });
+          return t(`checks.${check.id}`, {
+            actual: q(check.actual, unit),
+            limit: q(check.limit, unit),
+          });
       }
     })();
     return check.estimated ? `${reason} ${t("estimated")}` : reason;
@@ -102,11 +111,11 @@ export const SlotPicker = ({ component }: { component: NetlistComponent }) => {
 
   return (
     <section aria-labelledby="slots-heading" className="grid gap-2">
-      <h3 id="slots-heading" className="text-xs font-medium text-muted-foreground">
+      <h3 id="slots-heading" className="text-muted-foreground text-xs font-medium">
         {t("title")}
       </h3>
       {options.length === 0 ? (
-        <p className="text-xs text-muted-foreground">{t("noHost")}</p>
+        <p className="text-muted-foreground text-xs">{t("noHost")}</p>
       ) : (
         <ul className="grid gap-1.5">
           {options.map((option) => {
@@ -156,13 +165,24 @@ export const SlotPicker = ({ component }: { component: NetlistComponent }) => {
                   )}
                 </div>
                 <p className="flex items-center gap-1.5">
-                  <span aria-hidden className={cn("size-1.5 shrink-0", option.occupant && !here ? "bg-muted-foreground/40" : dotClass[severity])} />
-                  <span className={cn("font-medium", option.occupant && !here ? "text-muted-foreground" : textClass[severity])}>
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "size-1.5 shrink-0",
+                      option.occupant && !here ? "bg-muted-foreground/40" : dotClass[severity],
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "font-medium",
+                      option.occupant && !here ? "text-muted-foreground" : textClass[severity],
+                    )}
+                  >
                     {status}
                   </span>
                 </p>
                 {problems.length > 0 && (
-                  <ul className="grid gap-0.5 pl-3 text-muted-foreground">
+                  <ul className="text-muted-foreground grid gap-0.5 pl-3">
                     {problems.map((c) => (
                       <li key={c.id} className={cn(c.severity === "fail" && "text-foreground")}>
                         {reasonFor(c, host)}

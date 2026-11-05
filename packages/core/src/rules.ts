@@ -19,7 +19,11 @@ export type Violation = {
  * @param v - The checked quantity, its rated limit and optional baseline.
  * @returns `actual / limit` without a baseline. A limit at or below the baseline is exceeded by anything above it.
  */
-export const ratingRatio = (v: { actual: number; limit: number; baseline?: number | undefined }): number => {
+export const ratingRatio = (v: {
+  actual: number;
+  limit: number;
+  baseline?: number | undefined;
+}): number => {
   const base = v.baseline ?? 0;
   const headroom = v.limit - base;
   if (headroom <= 0) return v.actual > base ? Infinity : 0;

@@ -9,8 +9,18 @@ export type ElementKind =
   | { kind: "inductor"; inductance: number }
   | { kind: "voltageSource"; voltage: number }
   | { kind: "currentSource"; current: number }
-  | { kind: "diode"; saturationCurrent: number; emissionCoefficient?: number; seriesResistance?: number }
-  | { kind: "linearRegulator"; outputVoltage: number; dropoutVoltage?: number; quiescentCurrent?: number }
+  | {
+      kind: "diode";
+      saturationCurrent: number;
+      emissionCoefficient?: number;
+      seriesResistance?: number;
+    }
+  | {
+      kind: "linearRegulator";
+      outputVoltage: number;
+      dropoutVoltage?: number;
+      quiescentCurrent?: number;
+    }
   | {
       kind: "bjt";
       polarity: "npn" | "pnp";

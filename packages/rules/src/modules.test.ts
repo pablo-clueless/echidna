@@ -14,7 +14,9 @@ const part = (id: string): ComponentSpec => {
 const build = (id: string, without?: string) => {
   const preset = builds.find((b) => b.id === id);
   if (!preset) throw new Error(`no build ${id}`);
-  const modules = Object.entries(preset.modules).flatMap(([slot, spec]) => (slot === without ? [] : [part(spec)]));
+  const modules = Object.entries(preset.modules).flatMap(([slot, spec]) =>
+    slot === without ? [] : [part(spec)],
+  );
   return { host: part(preset.hostId), modules };
 };
 
@@ -25,14 +27,17 @@ const fit = (buildId: string, slot: string, specId: string) => {
 };
 
 describe("reference builds", () => {
-  it.each(builds.map((b) => b.id))("%s passes every check, and every part in it fits its slot", (id) => {
-    const { host, modules } = build(id);
-    expect(checkBuild(host, modules).filter((c) => c.severity !== "pass")).toEqual([]);
-    for (const slot of Object.keys(builds.find((b) => b.id === id)?.modules ?? {})) {
-      const preset = builds.find((b) => b.id === id);
-      expect(fit(id, slot, preset?.modules[slot] ?? "").fits).toBe(true);
-    }
-  });
+  it.each(builds.map((b) => b.id))(
+    "%s passes every check, and every part in it fits its slot",
+    (id) => {
+      const { host, modules } = build(id);
+      expect(checkBuild(host, modules).filter((c) => c.severity !== "pass")).toEqual([]);
+      for (const slot of Object.keys(builds.find((b) => b.id === id)?.modules ?? {})) {
+        const preset = builds.find((b) => b.id === id);
+        expect(fit(id, slot, preset?.modules[slot] ?? "").fits).toBe(true);
+      }
+    },
+  );
 });
 
 describe("checkModuleFit", () => {
@@ -40,8 +45,18 @@ describe("checkModuleFit", () => {
     const result = fit("desktop-budget", "pcie-x16", "rtx-4090");
     expect(result.fits).toBe(false);
     // 50 W board + 117 W CPU + 2 W cooler + 8 W memory + 7 W SSD + 450 W card, on a 550 W PSU.
-    expect(result.by.psuBudget).toMatchObject({ severity: "fail", actual: 634, limit: 550, unit: "W" });
-    expect(result.by.powerConnectors).toMatchObject({ severity: "fail", connector: "12v-2x6", actual: 1, limit: 0 });
+    expect(result.by.psuBudget).toMatchObject({
+      severity: "fail",
+      actual: 634,
+      limit: 550,
+      unit: "W",
+    });
+    expect(result.by.powerConnectors).toMatchObject({
+      severity: "fail",
+      connector: "12v-2x6",
+      actual: 1,
+      limit: 0,
+    });
   });
 
   it("warns when a card fits but leaves little headroom", () => {
@@ -64,9 +79,17 @@ describe("checkModuleFit", () => {
   });
 
   it("checks a CPU against the cooler, and a cooler against the CPU", () => {
-    expect(fit("desktop-budget", "cpu", "core-i7-14700k").by.cooling).toMatchObject({ severity: "fail", actual: 253, limit: 150 });
-    expect(fit("desktop-workstation", "cooler", "tower-cooler-single").by.cooling?.severity).toBe("fail");
-    expect(fit("desktop-workstation", "cooler", "tower-cooler-dual").by.cooling?.severity).toBe("warn");
+    expect(fit("desktop-budget", "cpu", "core-i7-14700k").by.cooling).toMatchObject({
+      severity: "fail",
+      actual: 253,
+      limit: 150,
+    });
+    expect(fit("desktop-workstation", "cooler", "tower-cooler-single").by.cooling?.severity).toBe(
+      "fail",
+    );
+    expect(fit("desktop-workstation", "cooler", "tower-cooler-dual").by.cooling?.severity).toBe(
+      "warn",
+    );
   });
 
   it("refuses the wrong socket or memory type, and says what the slot takes", () => {
@@ -97,20 +120,28 @@ describe("laptops", () => {
   });
 
   it("fails a 100 W USB-C charger on the gaming laptop, and only warns about a 45 W one on the ultrabook", () => {
-    expect(fit("laptop-gaming", "dc-in", "charger-usbc-100w").by.chargerBudget).toMatchObject({ severity: "fail", actual: 227, limit: 100 });
+    expect(fit("laptop-gaming", "dc-in", "charger-usbc-100w").by.chargerBudget).toMatchObject({
+      severity: "fail",
+      actual: 227,
+      limit: 100,
+    });
     const ultrabook = fit("laptop-ultrabook", "dc-in", "charger-usbc-45w");
     expect(ultrabook.fits).toBe(true);
     expect(ultrabook.by.chargerBudget).toMatchObject({ severity: "warn", actual: 60, limit: 45 });
   });
 
   it("refuses a barrel-plug charger in the ultrabook's USB-C port", () => {
-    expect(fit("laptop-ultrabook", "dc-in", "charger-barrel-240w").by.interface?.severity).toBe("fail");
+    expect(fit("laptop-ultrabook", "dc-in", "charger-barrel-240w").by.interface?.severity).toBe(
+      "fail",
+    );
   });
 
   it("cools the processors soldered onto the board", () => {
     const vapour = fit("laptop-gaming", "cooler", "laptop-cooler-vapour-chamber").by.cooling;
     expect(vapour).toMatchObject({ severity: "pass", actual: 170, limit: 200, estimated: true });
-    expect(fit("laptop-gaming", "cooler", "laptop-cooler-heatpipe").by.cooling?.severity).toBe("fail");
+    expect(fit("laptop-gaming", "cooler", "laptop-cooler-heatpipe").by.cooling?.severity).toBe(
+      "fail",
+    );
   });
 
   it("only takes a battery with the cell count the board charges", () => {
@@ -125,7 +156,12 @@ describe("laptops", () => {
     expect(estimate?.energy).toBe(54 * 3600);
     expect((estimate?.runtime ?? 0) / 3600).toBeCloseTo(54 / 7.1);
     expect(estimate?.estimated).toBe(true);
-    expect(batteryRuntime(host, modules.filter((m) => m.module?.role !== "battery"))).toBeNull();
+    expect(
+      batteryRuntime(
+        host,
+        modules.filter((m) => m.module?.role !== "battery"),
+      ),
+    ).toBeNull();
   });
 
   it("gives desktops no battery runtime", () => {

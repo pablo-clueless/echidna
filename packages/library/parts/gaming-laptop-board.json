@@ -3,9 +3,7 @@
   "id": "gaming-laptop-board",
   "name": "Gaming laptop mainboard (55 W CPU, 115 W GPU)",
   "kind": "laptopBoard",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

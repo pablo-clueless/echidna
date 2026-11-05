@@ -3,9 +3,7 @@
   "id": "charger-usbc-100w",
   "name": "100 W USB-C charger",
   "kind": "charger",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

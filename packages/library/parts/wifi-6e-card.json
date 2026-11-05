@@ -3,9 +3,7 @@
   "id": "wifi-6e-card",
   "name": "Wi-Fi 6E and Bluetooth card (M.2 2230)",
   "kind": "wifi",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

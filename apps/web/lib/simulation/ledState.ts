@@ -23,7 +23,11 @@ export type LedState =
  * @param id - The LED's component ID.
  * @returns The LED's state, or `undefined` when it was not part of the solve.
  */
-export const ledState = (build: CircuitBuild, solution: DcSolution, id: string): LedState | undefined => {
+export const ledState = (
+  build: CircuitBuild,
+  solution: DcSolution,
+  id: string,
+): LedState | undefined => {
   const element = build.circuit.elements.find((e) => e.id === id);
   if (!element) return undefined;
   const [anode = "", cathode = ""] = element.nodes;

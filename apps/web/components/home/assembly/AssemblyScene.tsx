@@ -46,7 +46,15 @@ const solid = new Set<Role>(["top"]);
  * Every primitive is drawn as a crisp polyhedron: rounded parts become plain boxes and cylinders get a few facets,
  * so the edge lines alone describe each shape, as in a technical pen drawing.
  */
-const PrimMesh = ({ prim, material, ink }: { prim: Prim; material: MeshBasicMaterial; ink: string }) => (
+const PrimMesh = ({
+  prim,
+  material,
+  ink,
+}: {
+  prim: Prim;
+  material: MeshBasicMaterial;
+  ink: string;
+}) => (
   <mesh position={prim.pos} material={material}>
     {prim.shape === "cyl" ? (
       <cylinderGeometry args={[prim.size[0] / 2, prim.size[0] / 2, prim.size[1], 10]} />
@@ -59,7 +67,13 @@ const PrimMesh = ({ prim, material, ink }: { prim: Prim; material: MeshBasicMate
 
 /** Unlit paper fill, pushed back slightly so the ink edges never z-fight with it. */
 const paperMaterial = (color: string) =>
-  new MeshBasicMaterial({ color, toneMapped: false, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+  new MeshBasicMaterial({
+    color,
+    toneMapped: false,
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1,
+  });
 
 const useMaterials = (palette: Palette) => {
   const shared = useMemo(() => {
@@ -86,14 +100,27 @@ const useMaterials = (palette: Palette) => {
       hole: paperMaterial(palette.paper),
       /** One trace material per part, so each run of copper lights with the part it feeds. */
       traces: steps.map(() => paperMaterial(palette.paper)),
-      halo: new MeshBasicMaterial({ color: ACCENT, toneMapped: false, transparent: true, opacity: 0, depthWrite: false }),
+      halo: new MeshBasicMaterial({
+        color: ACCENT,
+        toneMapped: false,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+      }),
     }),
     [palette],
   );
 
   useEffect(
     () => () => {
-      for (const m of [...Object.values(shared), ...accents, board.board, board.hole, board.halo, ...board.traces])
+      for (const m of [
+        ...Object.values(shared),
+        ...accents,
+        board.board,
+        board.hole,
+        board.halo,
+        ...board.traces,
+      ])
         m.dispose();
     },
     [shared, accents, board],
@@ -179,7 +206,12 @@ const Rig = ({ callout, on, reduced, onProgress }: Omit<Props, "running">) => {
       ? { active, lit: sequence.litAt(t), phase: sequence.phaseAt(t) }
       : { active: -1, lit: 0, phase: "off" };
     const prev = last.current;
-    if (!prev || prev.active !== progress.active || prev.lit !== progress.lit || prev.phase !== progress.phase) {
+    if (
+      !prev ||
+      prev.active !== progress.active ||
+      prev.lit !== progress.lit ||
+      prev.phase !== progress.phase
+    ) {
       last.current = progress;
       onProgress(progress);
     }

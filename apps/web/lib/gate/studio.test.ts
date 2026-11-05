@@ -4,8 +4,10 @@ import { hostnameOf, isLocalHost, studioBounce } from "./studio";
 
 describe("studio gate", () => {
   it("treats only loopback hostnames as local", () => {
-    for (const host of ["localhost", "127.0.0.1", "::1", "[::1]", "echidna.localhost"]) expect(isLocalHost(host)).toBe(true);
-    for (const host of ["echidna.app", "localhost.evil.com", "192.168.1.10", "echidna.vercel.app"]) expect(isLocalHost(host)).toBe(false);
+    for (const host of ["localhost", "127.0.0.1", "::1", "[::1]", "echidna.localhost"])
+      expect(isLocalHost(host)).toBe(true);
+    for (const host of ["echidna.app", "localhost.evil.com", "192.168.1.10", "echidna.vercel.app"])
+      expect(isLocalHost(host)).toBe(false);
   });
 
   it("drops the port from a Host header", () => {
@@ -31,6 +33,7 @@ describe("studio gate", () => {
   });
 
   it("leaves every other page alone", () => {
-    for (const path of ["/", "/en", "/en/studios", "/en/about/studio", "/studio-notes"]) expect(studioBounce(path, "echidna.app")).toBeNull();
+    for (const path of ["/", "/en", "/en/studios", "/en/about/studio", "/studio-notes"])
+      expect(studioBounce(path, "echidna.app")).toBeNull();
   });
 });

@@ -3,9 +3,7 @@
   "id": "tower-cooler-single",
   "name": "Single-tower air cooler",
   "kind": "cooler",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

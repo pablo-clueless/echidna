@@ -3,9 +3,7 @@
   "id": "rtx-4060",
   "name": "NVIDIA GeForce RTX 4060",
   "kind": "gpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

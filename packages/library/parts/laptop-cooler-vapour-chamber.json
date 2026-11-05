@@ -3,9 +3,7 @@
   "id": "laptop-cooler-vapour-chamber",
   "name": "Gaming laptop cooler (vapour chamber, three fans)",
   "kind": "cooler",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

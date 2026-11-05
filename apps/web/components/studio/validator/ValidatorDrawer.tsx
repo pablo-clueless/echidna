@@ -5,7 +5,6 @@ import { useFormatter, useLocale, useTranslations } from "next-intl";
 import type { Violation } from "@echidna/core";
 import { useMemo } from "react";
 
-import { Item, ItemActions, ItemContent, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { countIssues, drawerMode, PEEK_COUNT, toIssues, verdictKey } from "./model";
 import { useLayoutStore } from "@/stores/layout";
 import { useStudioStore } from "@/stores/studio";
@@ -14,6 +13,14 @@ import { Badge } from "@/components/ui/badge";
 import { formatQuantity } from "@/lib/units";
 import { ruleKey } from "@/lib/messageKeys";
 import { cn } from "@/lib/utils";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
 
 const dotClass = {
   fail: "bg-status-fail",
@@ -35,7 +42,7 @@ const IssueRow = ({ issue }: { issue: Violation }) => {
   const locale = useLocale();
 
   return (
-    <Item asChild size="xs" className="w-full text-left hover:bg-muted">
+    <Item asChild size="xs" className="hover:bg-muted w-full text-left">
       <button type="button" onClick={() => selectComponent(issue.componentId)}>
         <ItemMedia>
           <span aria-hidden className={cn("size-2", dotClass[verdict])} />
@@ -43,15 +50,25 @@ const IssueRow = ({ issue }: { issue: Violation }) => {
         <ItemContent className="min-w-0">
           <ItemTitle>
             <span className="font-mono">{issue.componentId}</span>
-            <span className="truncate font-normal text-muted-foreground">{tRules(`${ruleKey(issue.ruleId)}.name`)}</span>
+            <span className="text-muted-foreground truncate font-normal">
+              {tRules(`${ruleKey(issue.ruleId)}.name`)}
+            </span>
           </ItemTitle>
         </ItemContent>
         <ItemActions className="gap-3">
-          {issue.estimated && <span className="text-xs text-muted-foreground italic">{t("estimated")}</span>}
+          {issue.estimated && (
+            <span className="text-muted-foreground text-xs italic">{t("estimated")}</span>
+          )}
           <span className="font-mono text-sm tabular-nums">
-            {formatQuantity(issue.actual, issue.unit, locale)} / {formatQuantity(issue.limit, issue.unit, locale)}
+            {formatQuantity(issue.actual, issue.unit, locale)} /{" "}
+            {formatQuantity(issue.limit, issue.unit, locale)}
           </span>
-          <span className={cn("min-w-24 text-right text-xs font-medium whitespace-nowrap", textClass[verdict])}>
+          <span
+            className={cn(
+              "min-w-24 text-right text-xs font-medium whitespace-nowrap",
+              textClass[verdict],
+            )}
+          >
             {t(verdict)}
           </span>
         </ItemActions>
@@ -74,7 +91,7 @@ export const ValidatorDrawer = () => {
   const mode = drawerMode(issues.length, expanded);
   const { fails, warns } = countIssues(issues);
   const timing = simulation && (
-    <span className="ml-auto font-mono text-xs text-muted-foreground tabular-nums">
+    <span className="text-muted-foreground ml-auto font-mono text-xs tabular-nums">
       {t("solvedIn", { ms: format.number(simulation.latencyMs, { maximumFractionDigits: 0 }) })}
     </span>
   );
@@ -87,16 +104,21 @@ export const ValidatorDrawer = () => {
         role="status"
         className="flex min-h-9 shrink-0 items-center gap-2 border-t px-3 py-1.5 text-sm"
       >
-        <CircleAlert className="size-4 shrink-0 text-status-fail-text" aria-hidden />
-        <span>{t(`errors.${error.code}`, { id: "elementId" in error ? error.elementId : "" })}</span>
+        <CircleAlert className="text-status-fail-text size-4 shrink-0" aria-hidden />
+        <span>
+          {t(`errors.${error.code}`, { id: "elementId" in error ? error.elementId : "" })}
+        </span>
       </section>
     );
   }
 
   if (mode === "clean") {
     return (
-      <section aria-label={t("label")} className="flex h-9 shrink-0 items-center gap-2 border-t px-3 text-sm">
-        <CircleCheck className="size-4 text-status-pass-text" aria-hidden />
+      <section
+        aria-label={t("label")}
+        className="flex h-9 shrink-0 items-center gap-2 border-t px-3 text-sm"
+      >
+        <CircleCheck className="text-status-pass-text size-4" aria-hidden />
         <span className="text-muted-foreground">{checked ? t("allPassed") : t("idle")}</span>
         {timing}
       </section>
@@ -110,7 +132,9 @@ export const ValidatorDrawer = () => {
       <div className="flex h-9 items-center gap-2 px-3">
         <h2 className="text-sm font-medium">{t("label")}</h2>
         {fails > 0 && (
-          <Badge className="bg-status-fail text-status-fail-foreground">{t("fails", { count: fails })}</Badge>
+          <Badge className="bg-status-fail text-status-fail-foreground">
+            {t("fails", { count: fails })}
+          </Badge>
         )}
         {warns > 0 && (
           <Badge className="border-status-warn-border bg-status-warn text-status-warn-foreground">
@@ -125,11 +149,20 @@ export const ValidatorDrawer = () => {
           onClick={() => setExpanded(!expanded)}
           aria-expanded={mode === "expanded"}
         >
-          {mode === "expanded" ? <ChevronDown data-icon="inline-start" /> : <ChevronUp data-icon="inline-start" />}
+          {mode === "expanded" ? (
+            <ChevronDown data-icon="inline-start" />
+          ) : (
+            <ChevronUp data-icon="inline-start" />
+          )}
           {mode === "expanded" ? t("collapse") : t("expand")}
         </Button>
       </div>
-      <ItemGroup className={cn("gap-0 px-1 pb-1", mode === "expanded" && "max-h-[min(40vh,20rem)] overflow-y-auto")}>
+      <ItemGroup
+        className={cn(
+          "gap-0 px-1 pb-1",
+          mode === "expanded" && "max-h-[min(40vh,20rem)] overflow-y-auto",
+        )}
+      >
         {shown.map((issue) => (
           <IssueRow key={`${issue.componentId}:${issue.ruleId}`} issue={issue} />
         ))}

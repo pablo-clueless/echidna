@@ -1,9 +1,15 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
-import { settleTime, solveNow, solveSwitchOnNow, solveTransientNow, SWITCH_ON_STEPS } from "./solve";
 import { initSync, solverVersion } from "../wasm/solver.js";
 import type { Circuit } from "./types";
+import {
+  settleTime,
+  solveNow,
+  solveSwitchOnNow,
+  solveTransientNow,
+  SWITCH_ON_STEPS,
+} from "./solve";
 
 beforeAll(() => {
   initSync({ module: readFileSync(new URL("../wasm/solver_bg.wasm", import.meta.url)) });
@@ -46,9 +52,21 @@ describe("WASM solver", () => {
       ground: "gnd",
       elements: [
         { id: "V1", kind: "voltageSource", nodes: ["vin", "gnd"], voltage: 5 },
-        { id: "U1", kind: "linearRegulator", nodes: ["vin", "vout", "gnd"], outputVoltage: 3.3, dropoutVoltage: 1.1 },
+        {
+          id: "U1",
+          kind: "linearRegulator",
+          nodes: ["vin", "vout", "gnd"],
+          outputVoltage: 3.3,
+          dropoutVoltage: 1.1,
+        },
         { id: "R1", kind: "resistor", nodes: ["vout", "a"], resistance: 68 },
-        { id: "D1", kind: "diode", nodes: ["a", "gnd"], saturationCurrent: 1e-19, emissionCoefficient: 2 },
+        {
+          id: "D1",
+          kind: "diode",
+          nodes: ["a", "gnd"],
+          saturationCurrent: 1e-19,
+          emissionCoefficient: 2,
+        },
       ],
     };
     const outcome = solveNow(circuit);

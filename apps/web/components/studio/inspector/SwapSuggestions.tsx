@@ -5,12 +5,17 @@ import type { NetlistComponent } from "@echidna/core";
 import { partsById } from "@echidna/library";
 import { useEffect, useState } from "react";
 
-import { gradeSwaps, neighbourValues, swapCandidates, type SwapVerdict } from "@/lib/simulation/swaps";
 import { paramValue, type ProjectData } from "@/lib/project/model";
 import { getSolver } from "@/lib/simulation/solver";
 import { useProjectStore } from "@/stores/project";
 import { formatQuantity } from "@/lib/units";
 import { cn } from "@/lib/utils";
+import {
+  gradeSwaps,
+  neighbourValues,
+  swapCandidates,
+  type SwapVerdict,
+} from "@/lib/simulation/swaps";
 
 const dotClass = {
   pass: "bg-status-pass",
@@ -52,12 +57,23 @@ export const SwapSuggestions = ({ component, param }: Props) => {
 
   useEffect(() => {
     if (!valuesKey) return;
-    const candidates = swapCandidates({ components, wires }, component.id, param, valuesKey.split(",").map(Number));
+    const candidates = swapCandidates(
+      { components, wires },
+      component.id,
+      param,
+      valuesKey.split(",").map(Number),
+    );
     let live = true;
     void getSolver()
       .solveBatch(candidates.map((c) => c.build.circuit))
       .then((outcomes) => {
-        if (live && outcomes) setResult({ components, wires, ambient, verdicts: gradeSwaps(candidates, outcomes, ambient) });
+        if (live && outcomes)
+          setResult({
+            components,
+            wires,
+            ambient,
+            verdicts: gradeSwaps(candidates, outcomes, ambient),
+          });
       });
     return () => {
       live = false;
@@ -66,12 +82,14 @@ export const SwapSuggestions = ({ component, param }: Props) => {
 
   if (values.length === 0) return null;
   const verdicts =
-    result?.components === components && result.wires === wires && result.ambient === ambient ? result.verdicts : null;
+    result?.components === components && result.wires === wires && result.ambient === ambient
+      ? result.verdicts
+      : null;
   const candidates = values.map((value) => ({ value }));
 
   return (
     <section aria-labelledby="swap-heading" className="grid gap-2">
-      <h3 id="swap-heading" className="text-xs font-medium text-muted-foreground">
+      <h3 id="swap-heading" className="text-muted-foreground text-xs font-medium">
         {t("swapsTitle")}
       </h3>
       <ul className="grid grid-cols-2 gap-1.5 @xs:grid-cols-3" aria-busy={!verdicts}>
@@ -83,19 +101,29 @@ export const SwapSuggestions = ({ component, param }: Props) => {
               <button
                 type="button"
                 onClick={() => setParam(component.id, param, c.value)}
-                className="flex w-full items-center justify-between gap-2 rounded-md border px-2 py-1.5 text-left outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                className="hover:bg-muted focus-visible:ring-ring flex w-full items-center justify-between gap-2 rounded-md border px-2 py-1.5 text-left outline-none focus-visible:ring-2"
                 aria-label={t("swapTo", {
                   value: formatQuantity(c.value, unit, locale),
                   verdict: severity ? t(`swapVerdict.${severity}`) : t("checking"),
                 })}
               >
-                <span className="font-mono text-xs tabular-nums">{formatQuantity(c.value, unit, locale)}</span>
+                <span className="font-mono text-xs tabular-nums">
+                  {formatQuantity(c.value, unit, locale)}
+                </span>
                 <span className="flex items-center gap-1.5">
                   <span
                     aria-hidden
-                    className={cn("size-1.5", severity ? dotClass[severity] : "bg-muted-foreground/40")}
+                    className={cn(
+                      "size-1.5",
+                      severity ? dotClass[severity] : "bg-muted-foreground/40",
+                    )}
                   />
-                  <span className={cn("text-[11px]", severity ? textClass[severity] : "text-muted-foreground")}>
+                  <span
+                    className={cn(
+                      "text-[11px]",
+                      severity ? textClass[severity] : "text-muted-foreground",
+                    )}
+                  >
                     {severity ? t(`swapVerdict.${severity}`) : t("checking")}
                   </span>
                 </span>

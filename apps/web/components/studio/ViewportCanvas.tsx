@@ -69,7 +69,8 @@ const useMonoFont = () => {
 const DevHandle = () => {
   const get = useThree((s) => s.get);
   useEffect(() => {
-    if (process.env.NODE_ENV === "development") window.__echidna = { ...window.__echidna, three: get };
+    if (process.env.NODE_ENV === "development")
+      window.__echidna = { ...window.__echidna, three: get };
   }, [get]);
   return null;
 };
@@ -79,13 +80,43 @@ const StudioLighting = ({ reach }: { reach: number }) => (
   <>
     <Environment resolution={256} frames={1} environmentIntensity={0.9}>
       <color attach="background" args={["#303136"]} />
-      <Lightformer form="rect" intensity={3} position={[0, 2, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[3, 3, 1]} />
+      <Lightformer
+        form="rect"
+        intensity={3}
+        position={[0, 2, 0]}
+        rotation={[Math.PI / 2, 0, 0]}
+        scale={[3, 3, 1]}
+      />
       <Lightformer form="rect" intensity={1.4} position={[0, 1.1, -2]} scale={[5, 1.6, 1]} />
-      <Lightformer form="rect" intensity={0.7} position={[0, 1.1, 2]} rotation={[0, Math.PI, 0]} scale={[5, 1.2, 1]} />
-      <Lightformer form="rect" intensity={1.6} position={[-2, 0.6, 0.5]} rotation={[0, Math.PI / 2, 0]} scale={[4, 0.5, 1]} />
-      <Lightformer form="rect" intensity={1.2} position={[2, 0.8, -0.5]} rotation={[0, -Math.PI / 2, 0]} scale={[4, 0.4, 1]} />
+      <Lightformer
+        form="rect"
+        intensity={0.7}
+        position={[0, 1.1, 2]}
+        rotation={[0, Math.PI, 0]}
+        scale={[5, 1.2, 1]}
+      />
+      <Lightformer
+        form="rect"
+        intensity={1.6}
+        position={[-2, 0.6, 0.5]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={[4, 0.5, 1]}
+      />
+      <Lightformer
+        form="rect"
+        intensity={1.2}
+        position={[2, 0.8, -0.5]}
+        rotation={[0, -Math.PI / 2, 0]}
+        scale={[4, 0.4, 1]}
+      />
       {/* Soft fill from below, so the solder side reads in the underside view. */}
-      <Lightformer form="rect" intensity={0.9} position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3, 3, 1]} />
+      <Lightformer
+        form="rect"
+        intensity={0.9}
+        position={[0, -2, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={[3, 3, 1]}
+      />
     </Environment>
     <ambientLight intensity={0.15} />
     <directionalLight position={[-0.05, -0.12, -0.04]} intensity={0.5} />
@@ -135,13 +166,23 @@ export const ViewportCanvas = () => {
   const switchOn = useStudioStore((s) => s.switchOn?.outcome);
   const playhead = useStudioStore((s) => s.playhead);
   const pinCurrents = useMemo(
-    () => (playhead !== null && switchOn?.ok && switchOn.solution ? pinCurrentsAt(switchOn.solution, playhead) : settledCurrents),
+    () =>
+      playhead !== null && switchOn?.ok && switchOn.solution
+        ? pinCurrentsAt(switchOn.solution, playhead)
+        : settledCurrents,
     [playhead, switchOn, settledCurrents],
   );
-  const [dragging, setDragging] = useState<{ id: string; dx: number; dz: number; from: typeof board } | null>(null);
+  const [dragging, setDragging] = useState<{
+    id: string;
+    dx: number;
+    dz: number;
+    from: typeof board;
+  } | null>(null);
   // Copper depends only on which part sits where, so route from a key that ignores values and variants: editing a
   // resistance must not re-route the board and re-cut every drilled hole while the verdict waits.
-  const footprintKey = useProjectStore((s) => s.components.map((c) => `${c.id}:${c.specId}`).join(","));
+  const footprintKey = useProjectStore((s) =>
+    s.components.map((c) => `${c.id}:${c.specId}`).join(","),
+  );
   const placedParts = useMemo(
     () =>
       footprintKey
@@ -159,7 +200,10 @@ export const ViewportCanvas = () => {
     () => projectCopper({ components: placedParts, wires, board: routedBoard, boardSize }),
     [placedParts, wires, routedBoard, boardSize],
   );
-  const drills = useMemo(() => projectDrills({ components: placedParts, board }), [placedParts, board]);
+  const drills = useMemo(
+    () => projectDrills({ components: placedParts, board }),
+    [placedParts, board],
+  );
   const showCurrent = overlays.includes("current");
   const showHeat = overlays.includes("heat") && settledPower !== undefined;
   // Follows the switch-on playhead like the LEDs do, so scrubbing shows current building up in the copper.
@@ -201,7 +245,11 @@ export const ViewportCanvas = () => {
 
   const onPlaneMove = (e: ThreeEvent<PointerEvent>) => {
     if (!dragging) return;
-    const { x, z } = clampToBoard(snap(e.point.x + dragging.dx), snap(e.point.z + dragging.dz), boardSize);
+    const { x, z } = clampToBoard(
+      snap(e.point.x + dragging.dx),
+      snap(e.point.z + dragging.dz),
+      boardSize,
+    );
     placeOnBoard(dragging.id, x, z);
   };
 
@@ -225,10 +273,18 @@ export const ViewportCanvas = () => {
       <DevHandle />
 
       <group scale={MM}>
-        <Board {...boardSize} thickness={BOARD.thickness} drills={drills} legend={legend} fontFamily={fontFamily} />
+        <Board
+          {...boardSize}
+          thickness={BOARD.thickness}
+          drills={drills}
+          legend={legend}
+          fontFamily={fontFamily}
+        />
         <Traces routing={copper.routing} thickness={BOARD.thickness} />
         <TraceGlow routing={copper.routing} thickness={BOARD.thickness} />
-        {trackFlow && <CurrentFlow routing={copper.routing} thickness={BOARD.thickness} currents={trackFlow} />}
+        {trackFlow && (
+          <CurrentFlow routing={copper.routing} thickness={BOARD.thickness} currents={trackFlow} />
+        )}
       </group>
 
       {components.map((c) => {
@@ -238,8 +294,11 @@ export const ViewportCanvas = () => {
         const footprint = footprints[spec.footprintId];
         const selected = selection?.kind === "component" && selection.id === c.id;
         const resistance = spec.kind === "resistor" ? paramValue(c, spec, "resistance") : undefined;
-        const outputVoltage = spec.kind === "regulator" ? paramValue(c, spec, "outputVoltage") : undefined;
-        const partNumber = TRANSISTOR_KINDS.has(spec.kind) ? spec.id.split("-").at(-1)?.toUpperCase() : undefined;
+        const outputVoltage =
+          spec.kind === "regulator" ? paramValue(c, spec, "outputVoltage") : undefined;
+        const partNumber = TRANSISTOR_KINDS.has(spec.kind)
+          ? spec.id.split("-").at(-1)?.toUpperCase()
+          : undefined;
         const current = spec.kind === "led" ? (pinCurrents?.[c.id]?.[0] ?? 0) : 0;
         // Heat is the settled estimate: parts take seconds to warm, far longer than a switch-on run.
         const thermalResistance = spec.params.thermalResistance?.value;
@@ -268,12 +327,20 @@ export const ViewportCanvas = () => {
               />
             )}
             {footprint && temperature !== undefined && (
-              <HeatGlow courtyard={footprint.courtyard} temperature={temperature} ambient={ambient} />
+              <HeatGlow
+                courtyard={footprint.courtyard}
+                temperature={temperature}
+                ambient={ambient}
+              />
             )}
             <PartMesh
               footprintId={spec.footprintId}
               bands={resistance === undefined ? undefined : resistorBands(resistance)}
-              marking={outputVoltage === undefined ? partNumber : outputVoltage.toFixed(1).replace(".", "V")}
+              marking={
+                outputVoltage === undefined
+                  ? partNumber
+                  : outputVoltage.toFixed(1).replace(".", "V")
+              }
               glow={current / LED_NOMINAL_CURRENT}
               ledColour={c.variant}
               closed={spec.kind === "switch" ? switchClosed(spec, c.variant) : undefined}

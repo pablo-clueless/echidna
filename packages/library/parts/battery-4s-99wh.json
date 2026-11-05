@@ -3,9 +3,7 @@
   "id": "battery-4s-99wh",
   "name": "4-cell laptop battery, 99.9 Wh",
   "kind": "battery",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

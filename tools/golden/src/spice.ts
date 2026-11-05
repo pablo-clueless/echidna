@@ -53,7 +53,8 @@ export const toSpice = (circuit: Circuit, title: string, transient?: TransientCh
         break;
       case "switch":
         // A closed switch is its contact resistance; an open one is left out, as the solver leaves it unstamped.
-        if ((element.closed ?? 1) === 1) lines.push(`R${name} ${a} ${b} ${value(element.contactResistance)}`);
+        if ((element.closed ?? 1) === 1)
+          lines.push(`R${name} ${a} ${b} ${value(element.contactResistance)}`);
         break;
       case "capacitor":
         lines.push(`C${name} ${a} ${b} ${value(element.capacitance)}`);
@@ -115,11 +116,15 @@ export const toSpice = (circuit: Circuit, title: string, transient?: TransientCh
       for (const [ours, spice] of nodes) {
         if (spice !== "0") measures.push({ time, name: `m${i}_${spice}`, node: ours });
       }
-      for (const [id, vector] of sourceCurrents) measures.push({ time, name: `m${i}_${vector.replace("#", "_")}`, source: id });
+      for (const [id, vector] of sourceCurrents)
+        measures.push({ time, name: `m${i}_${vector.replace("#", "_")}`, source: id });
     });
     lines.push(".control", `tran ${step} ${value(transient.stopTime)} 0 ${step} uic`);
     for (const m of measures) {
-      const quantity = "node" in m ? `v(${nodes.get(m.node)})` : `i(${sourceCurrents.get(m.source)?.replace("#branch", "")})`;
+      const quantity =
+        "node" in m
+          ? `v(${nodes.get(m.node)})`
+          : `i(${sourceCurrents.get(m.source)?.replace("#branch", "")})`;
       lines.push(`meas tran ${m.name} find ${quantity} at=${value(m.time)}`);
     }
     lines.push(".endc", ".end", "");
@@ -129,7 +134,8 @@ export const toSpice = (circuit: Circuit, title: string, transient?: TransientCh
   return { netlist: lines.join("\n"), nodes, sourceCurrents, measures };
 };
 
-const assignment = /^\s*(?:v\(([^)]+)\)|([\w#.]+))\s*=\s*([-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?)\s*$/i;
+const assignment =
+  /^\s*(?:v\(([^)]+)\)|([\w#.]+))\s*=\s*([-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?)\s*$/i;
 
 /**
  * Reads `name = value` lines printed by ngspice's `print all`, accepting both `v(n1)` and bare `n1` forms.

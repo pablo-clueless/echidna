@@ -17,7 +17,7 @@ export const OverlayLegend = () => {
   const { low, high } = HEAT_RANGE;
 
   return (
-    <div className="pointer-events-none absolute bottom-2 left-2 grid max-w-64 gap-2 rounded-lg border bg-background/85 px-2.5 py-2 text-xs shadow-xs backdrop-blur-sm">
+    <div className="bg-background/85 pointer-events-none absolute bottom-2 left-2 grid max-w-64 gap-2 rounded-lg border px-2.5 py-2 text-xs shadow-xs backdrop-blur-sm">
       {!solved ? (
         <p className="text-muted-foreground">{t("unsolved")}</p>
       ) : (
@@ -32,12 +32,16 @@ export const OverlayLegend = () => {
             <div className="grid gap-1">
               <p className="font-medium">{t("heatTitle")}</p>
               <div aria-hidden className="h-2" style={{ backgroundImage: heatGradient() }} />
-              <div className="relative h-4 font-mono text-[11px] whitespace-nowrap text-muted-foreground tabular-nums">
+              <div className="text-muted-foreground relative h-4 font-mono text-[11px] whitespace-nowrap tabular-nums">
                 {HEAT_STOPS.map((s) => {
                   // Each label sits under its stop, shifted by the same share of its width so the ends stay inside.
                   const at = ((s.celsius - low) / (high - low)) * 100;
                   return (
-                    <span key={s.celsius} className="absolute top-0" style={{ left: `${at}%`, translate: `-${at}% 0` }}>
+                    <span
+                      key={s.celsius}
+                      className="absolute top-0"
+                      style={{ left: `${at}%`, translate: `-${at}% 0` }}
+                    >
                       {formatQuantity(fromCelsius(s.celsius), "K", locale)}
                     </span>
                   );

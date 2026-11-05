@@ -34,7 +34,10 @@ const numberFormat = (locale: string, digits?: number): Intl.NumberFormat => {
   const key = `${locale}|${digits ?? ""}`;
   let format = formatters.get(key);
   if (!format) {
-    format = new Intl.NumberFormat(locale, digits === undefined ? undefined : { maximumSignificantDigits: digits });
+    format = new Intl.NumberFormat(
+      locale,
+      digits === undefined ? undefined : { maximumSignificantDigits: digits },
+    );
     formatters.set(key, format);
   }
   return format;

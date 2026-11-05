@@ -3,9 +3,7 @@
   "id": "laptop-cooler-dual-fan",
   "name": "Dual-fan ultrabook cooler",
   "kind": "cooler",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

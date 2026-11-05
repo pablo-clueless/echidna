@@ -3,9 +3,7 @@
   "id": "ryzen-7-7800x3d",
   "name": "AMD Ryzen 7 7800X3D",
   "kind": "cpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

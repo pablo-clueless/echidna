@@ -3,9 +3,7 @@
   "id": "charger-barrel-240w",
   "name": "240 W barrel-plug charger",
   "kind": "charger",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

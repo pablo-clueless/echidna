@@ -3,9 +3,7 @@
   "id": "battery-3s-54wh",
   "name": "3-cell laptop battery, 54 Wh",
   "kind": "battery",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

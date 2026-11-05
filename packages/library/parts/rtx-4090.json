@@ -3,9 +3,7 @@
   "id": "rtx-4090",
   "name": "NVIDIA GeForce RTX 4090",
   "kind": "gpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

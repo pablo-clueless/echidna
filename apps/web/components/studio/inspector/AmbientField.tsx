@@ -12,11 +12,14 @@ export const AmbientField = () => {
   const t = useTranslations("Studio.inspector.environment");
   const ambient = useProjectStore((s) => s.ambientTemperature);
   const setAmbientTemperature = useProjectStore((s) => s.setAmbientTemperature);
-  const [min, max] = [Math.round(toCelsius(AMBIENT_LIMITS.min)), Math.round(toCelsius(AMBIENT_LIMITS.max))];
+  const [min, max] = [
+    Math.round(toCelsius(AMBIENT_LIMITS.min)),
+    Math.round(toCelsius(AMBIENT_LIMITS.max)),
+  ];
 
   return (
     <section aria-labelledby="environment-heading" className="grid gap-3 p-3 pt-0">
-      <h3 id="environment-heading" className="text-xs font-medium text-muted-foreground">
+      <h3 id="environment-heading" className="text-muted-foreground text-xs font-medium">
         {t("title")}
       </h3>
       <NumberField
@@ -29,7 +32,7 @@ export const AmbientField = () => {
         outOfRange={t("outOfRange", { min, max })}
         onCommit={(celsius) => setAmbientTemperature(fromCelsius(celsius))}
       />
-      <p className="text-xs text-muted-foreground">{t("hint")}</p>
+      <p className="text-muted-foreground text-xs">{t("hint")}</p>
     </section>
   );
 };

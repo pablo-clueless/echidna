@@ -1,6 +1,13 @@
-import { anyEstimated, type Ratings, ratingRatio, type Severity, type Unit, type Violation } from "@echidna/core";
 import type { DcSolution, TransientSolution } from "@echidna/solver/types";
 import type { CircuitBuild } from "@echidna/library";
+import {
+  anyEstimated,
+  type Ratings,
+  ratingRatio,
+  type Severity,
+  type Unit,
+  type Violation,
+} from "@echidna/core";
 
 import defaults from "../rules.json";
 
@@ -56,7 +63,13 @@ type Heat = { resistance: number; ambient: number };
 export const partTemperature = (power: number, heat: Heat): number =>
   heat.ambient + Math.max(0, power) * heat.resistance;
 
-const measure = (metric: Metric, voltages: number[], currents: number[], power: number, heat: Heat): number => {
+const measure = (
+  metric: Metric,
+  voltages: number[],
+  currents: number[],
+  power: number,
+  heat: Heat,
+): number => {
   switch (metric) {
     case "voltage":
       return voltages.length < 2 ? 0 : Math.max(...voltages) - Math.min(...voltages);
@@ -97,7 +110,12 @@ type Reading = (
   heat: Heat,
 ) => number;
 
-const check = (build: CircuitBuild, rules: readonly RatingRule[], ambient: number, read: Reading): Violation[] => {
+const check = (
+  build: CircuitBuild,
+  rules: readonly RatingRule[],
+  ambient: number,
+  read: Reading,
+): Violation[] => {
   const violations: Violation[] = [];
   for (const element of build.circuit.elements) {
     const spec = build.specs[element.id];
@@ -108,7 +126,9 @@ const check = (build: CircuitBuild, rules: readonly RatingRule[], ambient: numbe
       if (!rating || rating.value <= 0) continue;
       if (rule.metric === "temperature" && resistance <= 0) continue;
       const pinIds = spec.ratingPins?.[rule.rating] ?? spec.pins.map((p) => p.id);
-      const indexes = pinIds.map((id) => spec.pins.findIndex((p) => p.id === id)).filter((i) => i >= 0);
+      const indexes = pinIds
+        .map((id) => spec.pins.findIndex((p) => p.id === id))
+        .filter((i) => i >= 0);
       const actual = read(element, rule, indexes, { resistance, ambient });
       const baseline = rule.metric === "temperature" ? ambient : undefined;
       const inputs = Object.entries(spec.params)
@@ -186,7 +206,9 @@ export const evaluateSwitchOn = (
           heat,
         ),
       );
-      return rule.window && step > 0 ? worstAverage(series, rule.window / step) : Math.max(0, ...series);
+      return rule.window && step > 0
+        ? worstAverage(series, rule.window / step)
+        : Math.max(0, ...series);
     },
   );
 };

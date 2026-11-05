@@ -18,7 +18,10 @@ type Props = {
 };
 
 /** Three-quarter view from the front right, as azimuth and polar angles. */
-const ANGLED = { azimuth: Math.atan2(0.06, 0.115), polar: Math.acos(0.08 / Math.hypot(0.06, 0.08, 0.115)) };
+const ANGLED = {
+  azimuth: Math.atan2(0.06, 0.115),
+  polar: Math.acos(0.08 / Math.hypot(0.06, 0.08, 0.115)),
+};
 const ZOOM_STEP = 0.3;
 
 /**

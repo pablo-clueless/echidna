@@ -3,9 +3,7 @@
   "id": "aio-cooler-360",
   "name": "360 mm all-in-one liquid cooler",
   "kind": "cooler",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

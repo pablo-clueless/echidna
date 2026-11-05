@@ -10,7 +10,8 @@ export const ThemeToggle = () => {
   const t = useTranslations("Preferences");
   const setTheme = usePreferencesStore((s) => s.setTheme);
 
-  const toggle = () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+  const toggle = () =>
+    setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
 
   return (
     <IconButton label={t("toggleTheme")} onClick={toggle}>

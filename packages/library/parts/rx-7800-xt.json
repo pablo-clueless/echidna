@@ -3,9 +3,7 @@
   "id": "rx-7800-xt",
   "name": "AMD Radeon RX 7800 XT",
   "kind": "gpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

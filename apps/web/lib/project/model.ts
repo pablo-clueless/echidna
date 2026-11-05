@@ -1,4 +1,11 @@
-import { type ComponentSpec, type Net, type Netlist, type NetlistComponent, type PinRef, withVariant } from "@echidna/core";
+import {
+  type ComponentSpec,
+  type Net,
+  type Netlist,
+  type NetlistComponent,
+  type PinRef,
+  withVariant,
+} from "@echidna/core";
 
 export type Rotation = 0 | 90 | 180 | 270;
 
@@ -78,7 +85,8 @@ export const nextDesignator = (kind: string, taken: Iterable<string>): string =>
 
 export const pinKey = (pin: PinRef): string => `${pin.componentId}/${pin.pinId}`;
 
-export const samePin = (a: PinRef, b: PinRef): boolean => a.componentId === b.componentId && a.pinId === b.pinId;
+export const samePin = (a: PinRef, b: PinRef): boolean =>
+  a.componentId === b.componentId && a.pinId === b.pinId;
 
 /**
  * Groups wired pins into nets. Each net's ID is derived from its alphabetically first pin, so it stays
@@ -143,7 +151,11 @@ export const netOfPin = (nets: readonly Net[], pin: PinRef): Net | undefined =>
  * @param key - Parameter name.
  * @returns The value in SI units, or `undefined` when the part has no such parameter.
  */
-export const paramValue = (component: NetlistComponent, spec: ComponentSpec, key: string): number | undefined =>
+export const paramValue = (
+  component: NetlistComponent,
+  spec: ComponentSpec,
+  key: string,
+): number | undefined =>
   component.paramOverrides?.[key] ?? withVariant(spec, component.variant).params[key]?.value;
 
 /**
@@ -160,7 +172,9 @@ export const switchClosed = (spec: ComponentSpec, variant?: string): boolean =>
  * @param spec - Switch part spec.
  * @returns The closed and open positions, or `undefined` for a part without both.
  */
-export const switchPositions = (spec: ComponentSpec): { closed: string; open: string } | undefined => {
+export const switchPositions = (
+  spec: ComponentSpec,
+): { closed: string; open: string } | undefined => {
   const variants = spec.variants ?? [];
   const closed = variants.find((v) => switchClosed(spec, v.id))?.id;
   const open = variants.find((v) => !switchClosed(spec, v.id))?.id;
@@ -214,4 +228,6 @@ export const MODEL_PARAMS: ReadonlySet<string> = new Set([
  * @returns Parameter names in spec order.
  */
 export const editableParams = (spec: ComponentSpec): string[] =>
-  Object.keys(spec.params).filter((key) => !MODEL_PARAMS.has(key) && !spec.variants?.some((v) => v.params?.[key]));
+  Object.keys(spec.params).filter(
+    (key) => !MODEL_PARAMS.has(key) && !spec.variants?.some((v) => v.params?.[key]),
+  );

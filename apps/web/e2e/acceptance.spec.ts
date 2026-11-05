@@ -23,7 +23,12 @@ const skipViewport = () => {
  * Commits a new resistance and measures, inside the page, the time from the Enter key to the validator
  * showing a D1 issue with the expected verdict.
  */
-const commitAndTime = async (page: Page, value: string, validatorLabel: string, verdict: string) => {
+const commitAndTime = async (
+  page: Page,
+  value: string,
+  validatorLabel: string,
+  verdict: string,
+) => {
   const field = page.locator('input[name="resistance"]');
   await field.click();
   await field.fill(value);
@@ -33,7 +38,10 @@ const commitAndTime = async (page: Page, value: string, validatorLabel: string, 
       w.__timing = new Promise((resolve) => {
         let start = 0;
         const input = document.querySelector('input[name="resistance"]');
-        input?.addEventListener("keydown", () => (start = performance.now()), { capture: true, once: true });
+        input?.addEventListener("keydown", () => (start = performance.now()), {
+          capture: true,
+          once: true,
+        });
         const check = () => {
           const drawer = document.querySelector(`section[aria-label="${label}"]`);
           const row = [...(drawer?.querySelectorAll("button") ?? [])].find(
@@ -75,7 +83,11 @@ for (const { locale, messages, smaller, smallest } of locales) {
       await expect(validator).toContainText(s.validator.allPassed);
 
       const resistorName = messages.Parts.resistor.name;
-      await page.getByRole("button", { name: s.schematic.partLabel.replace("{id}", "R1").replace("{name}", resistorName) }).click();
+      await page
+        .getByRole("button", {
+          name: s.schematic.partLabel.replace("{id}", "R1").replace("{name}", resistorName),
+        })
+        .click();
       await expect(page.locator('input[name="resistance"]')).toBeVisible();
 
       const warnMs = await commitAndTime(page, smaller, s.validator.label, s.validator.warn);
@@ -85,7 +97,9 @@ for (const { locale, messages, smaller, smallest } of locales) {
       const failMs = await commitAndTime(page, smallest, s.validator.label, s.validator.fail);
       expect(failMs, `fail shown in ${failMs.toFixed(1)} ms`).toBeLessThan(BUDGET_MS);
 
-      console.log(`[${locale}] warning in ${warnMs.toFixed(1)} ms, fail in ${failMs.toFixed(1)} ms`);
+      console.log(
+        `[${locale}] warning in ${warnMs.toFixed(1)} ms, fail in ${failMs.toFixed(1)} ms`,
+      );
     });
   });
 }

@@ -7,7 +7,10 @@ import { ResizablePanelGroup } from "@/components/ui/resizable";
 import { useLayoutStore } from "@/stores/layout";
 import { useHydrated } from "@/lib/persist";
 
-type Props = Omit<ComponentProps<typeof ResizablePanelGroup>, "id" | "groupRef" | "onLayoutChanged"> & {
+type Props = Omit<
+  ComponentProps<typeof ResizablePanelGroup>,
+  "id" | "groupRef" | "onLayoutChanged"
+> & {
   id: string;
 };
 
@@ -30,5 +33,7 @@ export const PersistedPanelGroup = ({ id, ...props }: Props) => {
     if (useLayoutStore.persist?.hasHydrated()) useLayoutStore.getState().saveLayout(id, layout);
   };
 
-  return <ResizablePanelGroup id={id} groupRef={groupRef} onLayoutChanged={onLayoutChanged} {...props} />;
+  return (
+    <ResizablePanelGroup id={id} groupRef={groupRef} onLayoutChanged={onLayoutChanged} {...props} />
+  );
 };

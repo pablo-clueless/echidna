@@ -1,8 +1,15 @@
 "use client";
 
-import { CanvasTexture, ExtrudeGeometry, LinearMipmapLinearFilter, Path, SRGBColorSpace, Shape } from "three";
 import { useEffect, useMemo } from "react";
 import { Line } from "@react-three/drei";
+import {
+  CanvasTexture,
+  ExtrudeGeometry,
+  LinearMipmapLinearFilter,
+  Path,
+  SRGBColorSpace,
+  Shape,
+} from "three";
 
 import type { Footprint as FootprintData, Pad } from "@/lib/board/footprints";
 import { materials } from "./materials";
@@ -50,7 +57,9 @@ const silkTexture = (footprint: FootprintData, designator: string, fontFamily: s
         if (shape.flatX !== undefined) ctx.closePath();
         ctx.stroke();
       } else if (shape.kind === "line") {
-        shape.points.forEach(([x, z], i) => (i === 0 ? ctx.moveTo(px(x), px(z)) : ctx.lineTo(px(x), px(z))));
+        shape.points.forEach(([x, z], i) =>
+          i === 0 ? ctx.moveTo(px(x), px(z)) : ctx.lineTo(px(x), px(z)),
+        );
         ctx.stroke();
       } else if (shape.kind === "dot") {
         ctx.arc(px(shape.x), px(shape.z), shape.r * PX_PER_MM, 0, Math.PI * 2);
@@ -122,7 +131,10 @@ const PadMesh = ({ pad, thickness }: { pad: Pad; thickness: number }) => {
 
 /** Pads (with both faces of copper for through-hole pins), solder joints, silkscreen and courtyard for one placed part, in millimetres from its origin. */
 export const Footprint = ({ footprint, designator, fontFamily, thickness, outline }: Props) => {
-  const silk = useMemo(() => silkTexture(footprint, designator, fontFamily), [footprint, designator, fontFamily]);
+  const silk = useMemo(
+    () => silkTexture(footprint, designator, fontFamily),
+    [footprint, designator, fontFamily],
+  );
   useEffect(() => () => silk.texture.dispose(), [silk]);
 
   const { w, h } = footprint.courtyard;
@@ -142,7 +154,13 @@ export const Footprint = ({ footprint, designator, fontFamily, thickness, outlin
       {footprint.pads.map((pad, i) => (
         <PadMesh key={i} pad={pad} thickness={thickness} />
       ))}
-      <mesh position={[0, SILK_Y, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1} raycast={() => null} receiveShadow>
+      <mesh
+        position={[0, SILK_Y, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        renderOrder={1}
+        raycast={() => null}
+        receiveShadow
+      >
         <planeGeometry args={[silk.span, silk.span]} />
         <meshStandardMaterial
           color="#F3F1EC"

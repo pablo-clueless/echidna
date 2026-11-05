@@ -7,7 +7,9 @@ import { GROUND_NODE, requiredParams, toCircuit } from "./circuit";
 import { parts, partsById } from "./parts";
 
 const partsDir = new URL("../parts/", import.meta.url);
-const schema = JSON.parse(readFileSync(new URL("../schema/component.schema.json", import.meta.url), "utf8"));
+const schema = JSON.parse(
+  readFileSync(new URL("../schema/component.schema.json", import.meta.url), "utf8"),
+);
 const validate = new Ajv2020({ allErrors: true }).compile(schema);
 
 describe("part data", () => {
@@ -24,7 +26,8 @@ describe("part data", () => {
   });
 
   it.each(parts)("$id has the parameters its model needs and valid rating pins", (part) => {
-    for (const key of requiredParams[part.model] ?? ["unknown model"]) expect(part.params).toHaveProperty(key);
+    for (const key of requiredParams[part.model] ?? ["unknown model"])
+      expect(part.params).toHaveProperty(key);
     const pinIds = part.pins.map((p) => p.id);
     for (const pins of Object.values(part.ratingPins ?? {})) {
       for (const pin of pins) expect(pinIds).toContain(pin);
@@ -43,10 +46,34 @@ describe("toCircuit", () => {
       { id: "G2", specId: "ground" },
     ],
     nets: [
-      { id: "vcc", pins: [{ componentId: "V1", pinId: "pos" }, { componentId: "R1", pinId: "1" }] },
-      { id: "a", pins: [{ componentId: "R1", pinId: "2" }, { componentId: "D1", pinId: "a" }] },
-      { id: "gnd", pins: [{ componentId: "V1", pinId: "neg" }, { componentId: "G1", pinId: "gnd" }] },
-      { id: "k", pins: [{ componentId: "D1", pinId: "k" }, { componentId: "G2", pinId: "gnd" }] },
+      {
+        id: "vcc",
+        pins: [
+          { componentId: "V1", pinId: "pos" },
+          { componentId: "R1", pinId: "1" },
+        ],
+      },
+      {
+        id: "a",
+        pins: [
+          { componentId: "R1", pinId: "2" },
+          { componentId: "D1", pinId: "a" },
+        ],
+      },
+      {
+        id: "gnd",
+        pins: [
+          { componentId: "V1", pinId: "neg" },
+          { componentId: "G1", pinId: "gnd" },
+        ],
+      },
+      {
+        id: "k",
+        pins: [
+          { componentId: "D1", pinId: "k" },
+          { componentId: "G2", pinId: "gnd" },
+        ],
+      },
     ],
   };
 
@@ -82,7 +109,10 @@ describe("toCircuit", () => {
     ["nmos-2n7000", { kind: "mosfet", channel: "n" }],
     ["pmos-bs250", { kind: "mosfet", channel: "p" }],
   ])("gives %s's solver element its device kind and polarity", (specId, expected) => {
-    const { circuit } = toCircuit({ components: [{ id: "Q1", specId }], nets: [], groundNetId: "" }, partsById);
+    const { circuit } = toCircuit(
+      { components: [{ id: "Q1", specId }], nets: [], groundNetId: "" },
+      partsById,
+    );
     expect(circuit.elements[0]).toMatchObject(expected);
   });
 });

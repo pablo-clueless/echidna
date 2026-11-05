@@ -3,9 +3,7 @@
   "id": "core-i5-12400",
   "name": "Intel Core i5-12400",
   "kind": "cpu",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

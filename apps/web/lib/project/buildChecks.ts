@@ -24,13 +24,18 @@ const ownerRole: Record<string, ModuleRole> = {
  * @param specs - Part specs by ID.
  * @returns One violation per build check.
  */
-export const buildViolations = (project: Project, specs: ReadonlyMap<string, ComponentSpec>): Violation[] =>
+export const buildViolations = (
+  project: Project,
+  specs: ReadonlyMap<string, ComponentSpec>,
+): Violation[] =>
   project.components.flatMap((host) => {
     const spec = specs.get(host.specId);
     if (spec?.module?.role !== "motherboard") return [];
     const ownerOf = (check: FitCheck) =>
       project.components.find(
-        (c) => project.slots[c.id]?.hostId === host.id && specs.get(c.specId)?.module?.role === ownerRole[check.id],
+        (c) =>
+          project.slots[c.id]?.hostId === host.id &&
+          specs.get(c.specId)?.module?.role === ownerRole[check.id],
       )?.id ?? host.id;
     const checks = checkBuild(spec, modulesIn(project, specs, host.id));
     // One connector verdict per build, the worst, as each rule gives one verdict per part.
@@ -38,8 +43,7 @@ export const buildViolations = (project: Project, specs: ReadonlyMap<string, Com
     const worstConnector = connectors.find((c) => c.severity === "fail") ?? connectors[0];
     return checks
       .filter((c) => c.id !== "powerConnectors" || c === worstConnector)
-      .map(
-      (check): Violation => ({
+      .map((check): Violation => ({
         componentId: ownerOf(check),
         ruleId: check.id,
         actual: check.actual ?? 0,
@@ -47,6 +51,5 @@ export const buildViolations = (project: Project, specs: ReadonlyMap<string, Com
         unit: check.unit ?? "1",
         severity: check.severity,
         estimated: check.estimated,
-      }),
-    );
+      }));
   });

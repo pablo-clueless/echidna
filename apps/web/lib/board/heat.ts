@@ -15,7 +15,8 @@ export const HEAT_RANGE = { low: FIRST.celsius, high: LAST.celsius } as const;
 const FULL_GLOW_RISE = 20;
 const MAX_OPACITY = 0.85;
 
-const hex = (channels: readonly number[]) => `#${channels.map((c) => Math.round(c).toString(16).padStart(2, "0")).join("")}`;
+const hex = (channels: readonly number[]) =>
+  `#${channels.map((c) => Math.round(c).toString(16).padStart(2, "0")).join("")}`;
 
 /**
  * The heat overlay's colour for a temperature, on a fixed scale so the same colour always means the same heat.
@@ -39,7 +40,8 @@ export const heatColour = (celsius: number): string => {
  * @param rise - Temperature above the surrounding air, in kelvin.
  * @returns Opacity from 0 to `MAX_OPACITY`.
  */
-export const heatOpacity = (rise: number): number => Math.min(1, Math.max(0, rise / FULL_GLOW_RISE)) * MAX_OPACITY;
+export const heatOpacity = (rise: number): number =>
+  Math.min(1, Math.max(0, rise / FULL_GLOW_RISE)) * MAX_OPACITY;
 
 /**
  * The scale as a CSS gradient, for the legend.
@@ -47,6 +49,8 @@ export const heatOpacity = (rise: number): number => Math.min(1, Math.max(0, ris
  */
 export const heatGradient = (): string => {
   const { low, high } = HEAT_RANGE;
-  const stops = HEAT_STOPS.map((s) => `${hex(s.colour)} ${((s.celsius - low) / (high - low)) * 100}%`);
+  const stops = HEAT_STOPS.map(
+    (s) => `${hex(s.colour)} ${((s.celsius - low) / (high - low)) * 100}%`,
+  );
   return `linear-gradient(to right, ${stops.join(", ")})`;
 };

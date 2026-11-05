@@ -5,16 +5,42 @@ import type { TransientCheck } from "./spice";
 /** Red 5 mm LED model from `packages/library/parts/led-5mm.json`. */
 const RED_LED = { saturationCurrent: 3.23e-19, emissionCoefficient: 2 } as const;
 /** A 1N4148-class signal diode, with series resistance. */
-const SIGNAL_DIODE = { saturationCurrent: 2.52e-9, emissionCoefficient: 1.752, seriesResistance: 0.568 } as const;
+const SIGNAL_DIODE = {
+  saturationCurrent: 2.52e-9,
+  emissionCoefficient: 1.752,
+  seriesResistance: 0.568,
+} as const;
 /** The 3.3 V LDO from `packages/library/parts/ldo-3v3.json`. */
 const LDO_3V3 = { outputVoltage: 3.3, dropoutVoltage: 1.1, quiescentCurrent: 0.005 } as const;
 /** 2N3904-class NPN, from the widely circulated SPICE model. */
-const NPN = { polarity: "npn", saturationCurrent: 6.734e-15, forwardBeta: 416.4, reverseBeta: 0.7371, earlyVoltage: 74.03 } as const;
+const NPN = {
+  polarity: "npn",
+  saturationCurrent: 6.734e-15,
+  forwardBeta: 416.4,
+  reverseBeta: 0.7371,
+  earlyVoltage: 74.03,
+} as const;
 /** 2N3906-class PNP, from the widely circulated SPICE model. */
-const PNP = { polarity: "pnp", saturationCurrent: 1.41e-15, forwardBeta: 180.7, reverseBeta: 4.977, earlyVoltage: 18.7 } as const;
+const PNP = {
+  polarity: "pnp",
+  saturationCurrent: 1.41e-15,
+  forwardBeta: 180.7,
+  reverseBeta: 4.977,
+  earlyVoltage: 18.7,
+} as const;
 /** Generic small-signal enhancement-mode MOSFETs. */
-const NMOS = { channel: "n", thresholdVoltage: 2, transconductance: 0.1, channelLengthModulation: 0.01 } as const;
-const PMOS = { channel: "p", thresholdVoltage: -2, transconductance: 0.05, channelLengthModulation: 0.02 } as const;
+const NMOS = {
+  channel: "n",
+  thresholdVoltage: 2,
+  transconductance: 0.1,
+  channelLengthModulation: 0.01,
+} as const;
+const PMOS = {
+  channel: "p",
+  thresholdVoltage: -2,
+  transconductance: 0.05,
+  channelLengthModulation: 0.02,
+} as const;
 
 /** Golden DC circuits. Each must have no floating nodes, so ngspice and our solver both have one answer. */
 export const goldenDc: { name: string; circuit: Circuit }[] = [

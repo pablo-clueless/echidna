@@ -5,7 +5,10 @@ import type { Keepout } from "./routing";
 /** Default board in millimetres: 100 × 70 mm, 1.6 mm FR-4. */
 export const BOARD = { width: 100, depth: 55, thickness: 1.6 } as const;
 /** Smallest and largest board outline the studio offers, in millimetres. */
-export const BOARD_LIMITS = { min: { width: 40, depth: 30 }, max: { width: 200, depth: 200 } } as const;
+export const BOARD_LIMITS = {
+  min: { width: 40, depth: 30 },
+  max: { width: 200, depth: 200 },
+} as const;
 /** Part centres stay this far inside the board edge, in millimetres. */
 const EDGE_MARGIN = 4;
 
@@ -59,7 +62,8 @@ export const boardKeepouts = (size: BoardSize): Keepout[] => [
  * @returns The outline the board takes.
  */
 export const clampBoardSize = ({ width, depth }: BoardSize): BoardSize => {
-  const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, Math.round(v)));
+  const clamp = (v: number, min: number, max: number) =>
+    Math.min(max, Math.max(min, Math.round(v)));
   return {
     width: clamp(width, BOARD_LIMITS.min.width, BOARD_LIMITS.max.width),
     depth: clamp(depth, BOARD_LIMITS.min.depth, BOARD_LIMITS.max.depth),
@@ -108,7 +112,9 @@ export const freeBoardSpot = (
   placed: { at: BoardPlacement; footprint: Footprint }[],
   size: BoardSize = BOARD,
 ): { x: number; z: number } => {
-  const taken = placed.map(({ at, footprint: f }) => courtyardAt(f, at.x * 1000, at.z * 1000, at.rotation));
+  const taken = placed.map(({ at, footprint: f }) =>
+    courtyardAt(f, at.x * 1000, at.z * 1000, at.rotation),
+  );
   const [halfW, halfH] = [footprint.courtyard.w / 2 + GAP, footprint.courtyard.h / 2 + GAP];
   const [limitX, limitZ] = [size.width / 2 - halfW, size.depth / 2 - halfH];
 
@@ -116,12 +122,15 @@ export const freeBoardSpot = (
   for (let x = -Math.floor(limitX / STEP) * STEP; x <= limitX; x += STEP) {
     for (let z = -Math.floor(limitZ / STEP) * STEP; z <= limitZ; z += STEP) candidates.push([x, z]);
   }
-  candidates.sort(([ax, az], [bx, bz]) => Math.hypot(ax, az) - Math.hypot(bx, bz) || az - bz || ax - bx);
+  candidates.sort(
+    ([ax, az], [bx, bz]) => Math.hypot(ax, az) - Math.hypot(bx, bz) || az - bz || ax - bx,
+  );
 
   for (const [x, z] of candidates) {
     const rect = courtyardAt(footprint, x, z, 0);
     const inCorner =
-      Math.abs(x) + halfW > size.width / 2 - CORNER_KEEPOUT && Math.abs(z) + halfH > size.depth / 2 - CORNER_KEEPOUT;
+      Math.abs(x) + halfW > size.width / 2 - CORNER_KEEPOUT &&
+      Math.abs(z) + halfH > size.depth / 2 - CORNER_KEEPOUT;
     if (!inCorner && !taken.some((t) => overlaps(rect, t))) return { x: x / 1000, z: z / 1000 };
   }
   return { x: 0, z: 0 };

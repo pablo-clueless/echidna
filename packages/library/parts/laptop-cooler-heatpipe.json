@@ -3,9 +3,7 @@
   "id": "laptop-cooler-heatpipe",
   "name": "Gaming laptop cooler (two fans, four heat pipes)",
   "kind": "cooler",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

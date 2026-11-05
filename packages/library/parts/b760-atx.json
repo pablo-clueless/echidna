@@ -3,9 +3,7 @@
   "id": "b760-atx",
   "name": "B760 ATX motherboard (LGA1700)",
   "kind": "motherboard",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

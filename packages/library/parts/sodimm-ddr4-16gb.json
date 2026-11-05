@@ -3,9 +3,7 @@
   "id": "sodimm-ddr4-16gb",
   "name": "DDR4-3200 SO-DIMM 16 GB kit (2 × 8 GB)",
   "kind": "memory",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

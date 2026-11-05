@@ -3,9 +3,7 @@
   "id": "battery-3s-72wh",
   "name": "3-cell laptop battery, 72 Wh",
   "kind": "battery",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

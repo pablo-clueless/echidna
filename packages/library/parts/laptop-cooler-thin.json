@@ -3,9 +3,7 @@
   "id": "laptop-cooler-thin",
   "name": "Thin laptop cooler (one fan, one heat pipe)",
   "kind": "cooler",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

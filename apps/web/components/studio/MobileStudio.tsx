@@ -36,7 +36,10 @@ export const MobileStudio = () => {
       </div>
       <ValidatorDrawer />
 
-      <nav aria-label={t("panels")} className="grid shrink-0 grid-cols-3 border-t bg-background pb-[env(safe-area-inset-bottom)]">
+      <nav
+        aria-label={t("panels")}
+        className="bg-background grid shrink-0 grid-cols-3 border-t pb-[env(safe-area-inset-bottom)]"
+      >
         {sheets.map(({ key, icon }) => (
           <button
             key={key}
@@ -47,7 +50,7 @@ export const MobileStudio = () => {
               setOpen(true);
             }}
             className={cn(
-              "flex h-14 flex-col items-center justify-center gap-1 text-[11px] text-muted-foreground transition-colors outline-none focus-visible:bg-muted [&_svg]:size-5",
+              "text-muted-foreground focus-visible:bg-muted flex h-14 flex-col items-center justify-center gap-1 text-[11px] transition-colors outline-none [&_svg]:size-5",
               open && sheet === key && "text-foreground",
             )}
           >

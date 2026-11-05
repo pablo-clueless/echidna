@@ -3,9 +3,7 @@
   "id": "sodimm-ddr5-16gb",
   "name": "DDR5-5600 SO-DIMM 16 GB kit (2 × 8 GB)",
   "kind": "memory",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

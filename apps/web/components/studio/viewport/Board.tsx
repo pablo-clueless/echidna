@@ -1,7 +1,14 @@
 "use client";
 
-import { CanvasTexture, ExtrudeGeometry, LinearMipmapLinearFilter, Path, SRGBColorSpace, Shape } from "three";
 import { useEffect, useMemo } from "react";
+import {
+  CanvasTexture,
+  ExtrudeGeometry,
+  LinearMipmapLinearFilter,
+  Path,
+  SRGBColorSpace,
+  Shape,
+} from "three";
 
 import { FIDUCIAL, fiducials, MOUNTING_HOLE, mountingHoles } from "@/lib/board/placement";
 import type { Drill } from "@/lib/board/footprints";
@@ -50,7 +57,10 @@ const legendTexture = (text: string, fontFamily: string, length: number) => {
  */
 export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: Props) => {
   const legendLength = Math.min(LEGEND.length, width - LEGEND.inset - LEGEND.clear);
-  const legendMap = useMemo(() => legendTexture(legend, fontFamily, legendLength), [legend, fontFamily, legendLength]);
+  const legendMap = useMemo(
+    () => legendTexture(legend, fontFamily, legendLength),
+    [legend, fontFamily, legendLength],
+  );
   useEffect(() => () => legendMap.dispose(), [legendMap]);
   const marks = useMemo(() => fiducials({ width, depth }), [width, depth]);
 
@@ -61,7 +71,8 @@ export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: P
 
   const plated = useMemo(() => {
     const kept: Drill[] = [];
-    const clear = (a: Drill, b: Drill) => Math.hypot(a.x - b.x, a.z - b.z) >= (a.diameter + b.diameter) / 2 + WEB;
+    const clear = (a: Drill, b: Drill) =>
+      Math.hypot(a.x - b.x, a.z - b.z) >= (a.diameter + b.diameter) / 2 + WEB;
     for (const drill of drills) {
       const r = drill.diameter / 2 + WEB;
       const inside = Math.abs(drill.x) <= width / 2 - r && Math.abs(drill.z) <= depth / 2 - r;
@@ -91,11 +102,22 @@ export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: P
 
   return (
     <group>
-      <mesh geometry={geometry} rotation={[-Math.PI / 2, 0, 0]} material={[materials.mask, materials.laminate]} receiveShadow />
+      <mesh
+        geometry={geometry}
+        rotation={[-Math.PI / 2, 0, 0]}
+        material={[materials.mask, materials.laminate]}
+        receiveShadow
+      />
       {mounting.map(({ x, z }) => (
         <group key={`${x},${z}`} position={[x, 0, z]}>
           {[thickness + 0.03, -0.03].map((y) => (
-            <mesh key={y} position={[0, y, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.gold} receiveShadow>
+            <mesh
+              key={y}
+              position={[0, y, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              material={materials.gold}
+              receiveShadow
+            >
               <ringGeometry args={[HOLE_R, RING_R, 48]} />
             </mesh>
           ))}
@@ -104,7 +126,12 @@ export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: P
       ))}
       {marks.map(([x, z]) => (
         <group key={`${x},${z}`} position={[x, thickness, z]}>
-          <mesh position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.laminate} receiveShadow>
+          <mesh
+            position={[0, 0.002, 0]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            material={materials.laminate}
+            receiveShadow
+          >
             <circleGeometry args={[FIDUCIAL.opening, 40]} />
           </mesh>
           <mesh position={[0, 0.025, 0]} material={materials.gold} receiveShadow>
@@ -113,12 +140,22 @@ export const Board = ({ width, depth, thickness, drills, legend, fontFamily }: P
         </group>
       ))}
       <mesh
-        position={[-width / 2 + LEGEND.inset + legendLength / 2, thickness + 0.045, depth / 2 - FIDUCIAL.inset.z]}
+        position={[
+          -width / 2 + LEGEND.inset + legendLength / 2,
+          thickness + 0.045,
+          depth / 2 - FIDUCIAL.inset.z,
+        ]}
         rotation={[-Math.PI / 2, 0, 0]}
         raycast={() => null}
       >
         <planeGeometry args={[legendLength, LEGEND.height]} />
-        <meshStandardMaterial color="#F3F1EC" alphaMap={legendMap} transparent depthWrite={false} roughness={0.75} />
+        <meshStandardMaterial
+          color="#F3F1EC"
+          alphaMap={legendMap}
+          transparent
+          depthWrite={false}
+          roughness={0.75}
+        />
       </mesh>
       {plated.map(({ x, z, diameter }) => (
         <group key={`${x},${z}`} position={[x, 0, z]}>

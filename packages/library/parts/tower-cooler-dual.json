@@ -3,9 +3,7 @@
   "id": "tower-cooler-dual",
   "name": "Dual-tower air cooler",
   "kind": "cooler",
-  "deviceTypes": [
-    "desktop"
-  ],
+  "deviceTypes": ["desktop"],
   "pins": [],
   "params": {},
   "ratings": {},

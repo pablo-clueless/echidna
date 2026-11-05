@@ -3,7 +3,11 @@ import { describe, expect, it } from "vitest";
 
 import { countIssues, drawerMode, toIssues, verdictKey } from "./model";
 
-const violation = (componentId: string, severity: Violation["severity"], estimated = false): Violation => ({
+const violation = (
+  componentId: string,
+  severity: Violation["severity"],
+  estimated = false,
+): Violation => ({
   componentId,
   ruleId: "max-current",
   actual: 1,
@@ -15,7 +19,11 @@ const violation = (componentId: string, severity: Violation["severity"], estimat
 
 describe("toIssues", () => {
   it("drops passes and sorts worst first", () => {
-    const issues = toIssues([violation("a", "pass"), violation("b", "warn"), violation("c", "fail")]);
+    const issues = toIssues([
+      violation("a", "pass"),
+      violation("b", "warn"),
+      violation("c", "fail"),
+    ]);
     expect(issues.map((v) => v.componentId)).toEqual(["c", "b"]);
   });
 });
@@ -34,7 +42,9 @@ describe("drawerMode", () => {
 
 describe("countIssues", () => {
   it("counts fails and warns separately", () => {
-    expect(countIssues([violation("a", "fail"), violation("b", "warn"), violation("c", "warn")])).toEqual({
+    expect(
+      countIssues([violation("a", "fail"), violation("b", "warn"), violation("c", "warn")]),
+    ).toEqual({
       fails: 1,
       warns: 2,
     });

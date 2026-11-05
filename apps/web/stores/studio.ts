@@ -56,14 +56,22 @@ export const useStudioStore = create<StudioState>()((set) => ({
     set(
       simulating
         ? { simulating }
-        : { simulating, simulation: null, violations: [], dcViolations: [], switchOn: null, playhead: null },
+        : {
+            simulating,
+            simulation: null,
+            violations: [],
+            dcViolations: [],
+            switchOn: null,
+            playhead: null,
+          },
     ),
   select: (selection) =>
     set({ selection, selectedComponentId: selection?.kind === "component" ? selection.id : null }),
   selectComponent: (id) =>
     set({ selection: id ? { kind: "component", id } : null, selectedComponentId: id }),
   setViolations: (violations) => set({ violations }),
-  setSimulation: (simulation, violations) => set({ simulation, violations, dcViolations: violations }),
+  setSimulation: (simulation, violations) =>
+    set({ simulation, violations, dcViolations: violations }),
   setSwitchOn: (switchOn, issues = []) =>
     set((s) => ({ switchOn, playhead: null, violations: [...s.dcViolations, ...issues] })),
   setPlayhead: (playhead) => set({ playhead }),

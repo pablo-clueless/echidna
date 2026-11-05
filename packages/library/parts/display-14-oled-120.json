@@ -3,9 +3,7 @@
   "id": "display-14-oled-120",
   "name": "14-inch 2880 × 1800 OLED display, 120 Hz",
   "kind": "display",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},

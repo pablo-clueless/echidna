@@ -3,9 +3,7 @@
   "id": "charger-usbc-45w",
   "name": "45 W USB-C charger",
   "kind": "charger",
-  "deviceTypes": [
-    "laptop"
-  ],
+  "deviceTypes": ["laptop"],
   "pins": [],
   "params": {},
   "ratings": {},
