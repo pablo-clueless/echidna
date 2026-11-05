@@ -26,12 +26,12 @@ export const ArrowLink = ({ href, children, size = "lg", className }: Props) => 
       {children}
       <span
         className={cn(
-          "relative grid shrink-0 place-items-center overflow-hidden bg-signal text-signal-foreground",
+          "bg-signal text-signal-foreground relative grid shrink-0 place-items-center overflow-hidden",
           size === "lg" ? "size-8" : "size-6",
         )}
       >
         <ArrowRight className="size-4 transition-transform duration-300 ease-[cubic-bezier(0.6,0,0.2,1)] group-hover/arrow:translate-x-[180%]" />
-        <ArrowRight className="absolute size-4 -translate-x-[180%] transition-transform duration-300 ease-[cubic-bezier(0.6,0,0.2,1)] group-hover/arrow:translate-x-0" />
+        <ArrowRight className="absolute size-4 translate-x-[-180%] transition-transform duration-300 ease-[cubic-bezier(0.6,0,0.2,1)] group-hover/arrow:translate-x-0" />
       </span>
     </>
   );

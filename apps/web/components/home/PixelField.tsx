@@ -59,7 +59,8 @@ export const PixelField = ({ seed = 7, cols = 4, rows = 4, className }: Props) =
     const id = setInterval(() => {
       setCells((prev) => {
         const next = [...prev];
-        for (let n = 0; n < 2; n++) next[Math.floor(Math.random() * next.length)] = pick(Math.random());
+        for (let n = 0; n < 2; n++)
+          next[Math.floor(Math.random() * next.length)] = pick(Math.random());
         return next;
       });
     }, 700);
@@ -71,10 +72,19 @@ export const PixelField = ({ seed = 7, cols = 4, rows = 4, className }: Props) =
       ref={ref}
       aria-hidden
       className={cn("grid h-full w-full", className)}
-      style={{ gridTemplateColumns: `repeat(${cols}, 1fr)`, gridTemplateRows: `repeat(${rows}, 1fr)` }}
+      style={{
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gridTemplateRows: `repeat(${rows}, 1fr)`,
+      }}
     >
       {cells.map((cell, i) => (
-        <span key={i} className={cn("border-r border-b border-foreground/6 transition-colors duration-500", cellClass[cell])} />
+        <span
+          key={i}
+          className={cn(
+            "border-foreground/6 border-r border-b transition-colors duration-500",
+            cellClass[cell],
+          )}
+        />
       ))}
     </div>
   );

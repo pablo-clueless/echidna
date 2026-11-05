@@ -170,7 +170,11 @@
         "passives": "Passifs",
         "semiconductors": "Semi-conducteurs",
         "devBoards": "Cartes de développement",
-        "sensors": "Capteurs"
+        "sensors": "Capteurs",
+        "motherboards": "Cartes mères",
+        "pcParts": "Composants PC",
+        "laptops": "Cartes mères de portable",
+        "laptopParts": "Composants de portable"
       }
     },
     "viewport": {
@@ -355,6 +359,22 @@
       "switchOnPower": {
         "name": "Chaleur à la mise sous tension",
         "explain": "Au démarrage du circuit, ce composant transforme en chaleur {percent} de sa puissance nominale pendant une milliseconde ou plus, souvent pendant la charge d’un gros condensateur. Un condensateur plus petit ou plus de résistance en série raccourcit cet appel de courant."
+      },
+      "psuBudget": {
+        "name": "Budget de l’alimentation",
+        "explain": "À pleine charge, la configuration consomme {percent} de la puissance nominale de l’alimentation. Au-delà de 80 %, il reste peu de marge pour les pics ; au-delà de 100 %, l’alimentation peut se couper ou lâcher."
+      },
+      "powerConnectors": {
+        "name": "Connecteurs de l’alimentation",
+        "explain": "Les composants ont besoin de {percent} des connecteurs d’un type que possède l’alimentation. Au-delà de 100 %, un composant ne peut pas être branché."
+      },
+      "cooling": {
+        "name": "Refroidissement",
+        "explain": "Les processeurs dégagent {percent} de la chaleur que le refroidisseur peut évacuer. Au-delà de 90 %, ils chauffent en charge ; au-delà de 100 %, ils ralentissent pour se protéger."
+      },
+      "chargerBudget": {
+        "name": "Puissance du chargeur",
+        "explain": "À pleine charge, l’ordinateur consomme {percent} de ce que fournit le chargeur. Au-delà de 100 %, la batterie compense et se vide même branchée ; au-delà de 150 %, elle ne suit plus en charge."
       }
     },
     "slots": {
@@ -362,12 +382,41 @@
       "noHost": "Ajoutez une carte de développement, comme un Raspberry Pi, pour y brancher ce composant.",
       "names": {
         "i2c": "Connecteur I²C",
-        "gpio": "Broches GPIO"
+        "gpio": "Broches GPIO",
+        "cpu": "Socket processeur",
+        "cooler": "Fixation du refroidisseur",
+        "pcie-x16": "Port PCIe x16",
+        "memory": "Emplacements mémoire",
+        "m2": "Port M.2",
+        "power": "Connecteur d’alimentation ATX",
+        "wifi": "Port Wi-Fi (M.2)",
+        "battery": "Connecteur de batterie",
+        "display": "Connecteur d’écran",
+        "dc-in": "Port de charge"
       },
       "protocols": {
         "i2c": "I²C",
         "gpio": "GPIO",
-        "1-wire": "1-Wire"
+        "1-wire": "1-Wire",
+        "am5": "AM5",
+        "lga1700": "LGA1700",
+        "am5-cooler-mount": "fixation AM5",
+        "lga1700-cooler-mount": "fixation LGA1700",
+        "pcie-x16": "PCIe x16",
+        "ddr5-dimm": "mémoire DDR5",
+        "ddr4-dimm": "mémoire DDR4",
+        "m2-nvme": "M.2 NVMe",
+        "atx-psu": "alimentation ATX",
+        "so-dimm-ddr5": "SO-DIMM DDR5",
+        "so-dimm-ddr4": "SO-DIMM DDR4",
+        "m2-e-key": "M.2 clé E",
+        "battery-3s": "batterie 3 cellules",
+        "battery-4s": "batterie 4 cellules",
+        "edp": "eDP",
+        "ultrabook-cooling-mount": "fixation de refroidisseur d’ultrabook",
+        "gaming-laptop-cooling-mount": "fixation de refroidisseur de PC portable gaming",
+        "usb-c-pd": "USB-C Power Delivery",
+        "dc-barrel": "fiche jack"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Branché, alimenté par {rail}",
@@ -383,7 +432,11 @@
         "railCurrent": "Tirerait {actual} au total sur le rail {rail}, qui fournit {limit}.",
         "logicIntoHost": "Ses sorties montent à {actual}, mais les broches de la carte acceptent au plus {limit}.",
         "logicIntoPart": "La carte pilote ses broches à {actual}, mais les broches de ce composant acceptent au plus {limit}.",
-        "thermal": "Dégage {actual}, mais le connecteur autorise {limit}."
+        "thermal": "Dégage {actual}, mais le connecteur autorise {limit}.",
+        "psuBudget": "La configuration consomme jusqu’à {actual} ; l’alimentation est prévue pour {limit}.",
+        "powerConnectors": "Nécessite {actual} × {connector} ; l’alimentation en a {limit}.",
+        "cooling": "Jusqu’à {actual} de chaleur à évacuer ; le refroidisseur est prévu pour {limit}.",
+        "chargerBudget": "L’ordinateur consomme jusqu’à {actual} ; le chargeur fournit {limit}."
       },
       "railsTitle": "Rails d’alimentation",
       "hostTitle": "Connecteurs",
@@ -393,7 +446,19 @@
       "swap": "Remplacer",
       "swapFits": "Compatible au même endroit",
       "swapFails": "Incompatible",
-      "partReason": "{id} : {reason}"
+      "partReason": "{id} : {reason}",
+      "connectors": {
+        "atx-24pin": "ATX 24 broches",
+        "eps-8pin": "EPS 8 broches",
+        "pcie-8pin": "PCIe 8 broches",
+        "12v-2x6": "12V-2x6"
+      },
+      "pluggedInModule": "Branché",
+      "fitsModule": "Compatible",
+      "buildTitle": "Alimentation et refroidissement",
+      "buildEmpty": "Branchez une alimentation et un refroidisseur pour vérifier l’alimentation et le refroidissement.",
+      "batteryRuntime": "Environ {runtime} sur batterie en usage léger ({energy} à {draw}).",
+      "buildEmptyLaptop": "Branchez un chargeur et un refroidisseur pour vérifier l’alimentation et le refroidissement."
     }
   },
   "Parts": {
@@ -490,6 +555,195 @@
     "ds18b20": {
       "name": "Capteur de température DS18B20",
       "summary": "Température en 1-Wire"
+    },
+    "b650-atx": {
+      "name": "Carte mère ATX B650 (AM5)",
+      "summary": "Pour processeurs AMD Ryzen 7000 et DDR5"
+    },
+    "b760-atx": {
+      "name": "Carte mère ATX B760 (LGA1700)",
+      "summary": "Pour processeurs Intel de 12e à 14e génération et DDR5"
+    },
+    "x670e-atx": {
+      "name": "Carte mère ATX X670E (AM5)",
+      "summary": "Carte AMD haut de gamme à deux connecteurs d’alimentation processeur"
+    },
+    "ryzen-5-7600": {
+      "name": "AMD Ryzen 5 7600",
+      "summary": "Processeur de bureau 6 cœurs, AM5"
+    },
+    "ryzen-7-7800x3d": {
+      "name": "AMD Ryzen 7 7800X3D",
+      "summary": "Processeur de bureau 8 cœurs avec 3D V-Cache, AM5"
+    },
+    "ryzen-9-7950x": {
+      "name": "AMD Ryzen 9 7950X",
+      "summary": "Processeur de bureau 16 cœurs, AM5"
+    },
+    "core-i5-12400": {
+      "name": "Intel Core i5-12400",
+      "summary": "Processeur de bureau 6 cœurs, LGA1700"
+    },
+    "core-i7-14700k": {
+      "name": "Intel Core i7-14700K",
+      "summary": "Processeur de bureau 20 cœurs, LGA1700"
+    },
+    "rtx-4060": {
+      "name": "NVIDIA GeForce RTX 4060",
+      "summary": "Carte graphique, 115 W, un PCIe 8 broches"
+    },
+    "rtx-4070-super": {
+      "name": "NVIDIA GeForce RTX 4070 SUPER",
+      "summary": "Carte graphique, 220 W, 12V-2x6"
+    },
+    "rtx-4090": {
+      "name": "NVIDIA GeForce RTX 4090",
+      "summary": "Carte graphique, 450 W, 12V-2x6"
+    },
+    "rx-7800-xt": {
+      "name": "AMD Radeon RX 7800 XT",
+      "summary": "Carte graphique, 263 W, deux PCIe 8 broches"
+    },
+    "ddr5-32gb-kit": {
+      "name": "Kit DDR5-6000 32 Go (2 × 16 Go)",
+      "summary": "Deux barrettes de mémoire DDR5"
+    },
+    "ddr4-32gb-kit": {
+      "name": "Kit DDR4-3200 32 Go (2 × 16 Go)",
+      "summary": "Deux barrettes de mémoire DDR4"
+    },
+    "nvme-ssd-1tb": {
+      "name": "SSD NVMe PCIe 4.0, 1 To",
+      "summary": "Disque SSD M.2"
+    },
+    "tower-cooler-single": {
+      "name": "Ventirad simple tour",
+      "summary": "Prévu pour environ 150 W"
+    },
+    "tower-cooler-dual": {
+      "name": "Ventirad double tour",
+      "summary": "Prévu pour environ 250 W"
+    },
+    "aio-cooler-360": {
+      "name": "Watercooling AIO 360 mm",
+      "summary": "Prévu pour environ 300 W"
+    },
+    "psu-550w": {
+      "name": "Alimentation ATX 550 W (80 Plus Bronze)",
+      "summary": "Deux PCIe 8 broches, pas de 12V-2x6"
+    },
+    "psu-750w": {
+      "name": "Alimentation ATX 3.1 750 W (80 Plus Gold)",
+      "summary": "Avec un connecteur 12V-2x6"
+    },
+    "psu-1000w": {
+      "name": "Alimentation ATX 3.1 1000 W (80 Plus Gold)",
+      "summary": "12V-2x6 et quatre PCIe 8 broches"
+    },
+    "ultrabook-board": {
+      "name": "Carte mère d’ultrabook (processeur 28 W, 16 Go LPDDR5X soudés)",
+      "summary": "Processeur et mémoire soudés ; batterie 3 cellules et charge USB-C"
+    },
+    "gaming-laptop-board": {
+      "name": "Carte mère de PC portable gaming (processeur 55 W, GPU 115 W)",
+      "summary": "Processeur et graphique soudés ; mémoire SO-DIMM, batterie 4 cellules, charge jack ou USB-C"
+    },
+    "battery-3s-54wh": {
+      "name": "Batterie de portable 3 cellules, 54 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 3 cellules"
+    },
+    "battery-3s-72wh": {
+      "name": "Batterie de portable 3 cellules, 72 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 3 cellules"
+    },
+    "battery-4s-80wh": {
+      "name": "Batterie de portable 4 cellules, 80 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 4 cellules"
+    },
+    "battery-4s-99wh": {
+      "name": "Batterie de portable 4 cellules, 99,9 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 4 cellules"
+    },
+    "sodimm-ddr5-16gb": {
+      "name": "Kit SO-DIMM DDR5-5600 16 Go (2 × 8 Go)",
+      "summary": "Deux barrettes de mémoire DDR5 pour portable"
+    },
+    "sodimm-ddr5-32gb": {
+      "name": "Kit SO-DIMM DDR5-5600 32 Go (2 × 16 Go)",
+      "summary": "Deux barrettes de mémoire DDR5 pour portable"
+    },
+    "sodimm-ddr4-16gb": {
+      "name": "Kit SO-DIMM DDR4-3200 16 Go (2 × 8 Go)",
+      "summary": "Deux barrettes de mémoire DDR4 pour portable"
+    },
+    "wifi-6e-card": {
+      "name": "Carte Wi-Fi 6E et Bluetooth (M.2 2230)",
+      "summary": "Carte sans fil pour port M.2 clé E"
+    },
+    "wifi-7-card": {
+      "name": "Carte Wi-Fi 7 et Bluetooth (M.2 2230)",
+      "summary": "Carte sans fil pour port M.2 clé E"
+    },
+    "display-14-fhd": {
+      "name": "Écran IPS 14 pouces 1920 × 1200, 60 Hz",
+      "summary": "Dalle de portable sur connecteur eDP"
+    },
+    "display-14-oled-120": {
+      "name": "Écran OLED 14 pouces 2880 × 1800, 120 Hz",
+      "summary": "Dalle de portable sur connecteur eDP"
+    },
+    "display-16-qhd-165": {
+      "name": "Écran IPS 16 pouces 2560 × 1600, 165 Hz",
+      "summary": "Dalle de portable sur connecteur eDP"
+    },
+    "laptop-cooler-thin": {
+      "name": "Refroidisseur de portable fin (un ventilateur, un caloduc)",
+      "summary": "Prévu pour environ 35 W ; pour ultrabooks"
+    },
+    "laptop-cooler-dual-fan": {
+      "name": "Refroidisseur d’ultrabook à deux ventilateurs",
+      "summary": "Prévu pour environ 45 W ; pour ultrabooks"
+    },
+    "laptop-cooler-heatpipe": {
+      "name": "Refroidisseur de PC portable gaming (deux ventilateurs, quatre caloducs)",
+      "summary": "Prévu pour environ 150 W ; pour PC portables gaming"
+    },
+    "laptop-cooler-vapour-chamber": {
+      "name": "Refroidisseur de PC portable gaming (chambre à vapeur, trois ventilateurs)",
+      "summary": "Prévu pour environ 200 W ; pour PC portables gaming"
+    },
+    "charger-usbc-45w": {
+      "name": "Chargeur USB-C 45 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-65w": {
+      "name": "Chargeur USB-C 65 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-100w": {
+      "name": "Chargeur USB-C 100 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-barrel-240w": {
+      "name": "Chargeur à fiche jack 240 W",
+      "summary": "Pour PC portables gaming à prise jack"
+    }
+  },
+  "Builds": {
+    "desktop-budget": {
+      "name": "PC de bureau économique"
+    },
+    "desktop-gaming": {
+      "name": "PC de bureau gaming"
+    },
+    "desktop-workstation": {
+      "name": "Station de travail"
+    },
+    "laptop-ultrabook": {
+      "name": "Ultrabook"
+    },
+    "laptop-gaming": {
+      "name": "PC portable gaming"
     }
   }
 }

@@ -3,11 +3,7 @@
   "id": "bme280",
   "name": "BME280 temperature, humidity and pressure sensor",
   "kind": "sensor",
-  "deviceTypes": [
-    "iot",
-    "wearable",
-    "drone"
-  ],
+  "deviceTypes": ["iot", "wearable", "drone"],
   "pins": [
     {
       "id": "vdd",

@@ -91,7 +91,7 @@ export const SwitchControl = ({ component, spec }: Props) => {
             aria-describedby={stateId}
           />
         )}
-        <span id={stateId} aria-live="polite" className="text-xs text-muted-foreground">
+        <span id={stateId} aria-live="polite" className="text-muted-foreground text-xs">
           {state}
         </span>
       </div>

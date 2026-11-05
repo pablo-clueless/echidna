@@ -3,11 +3,7 @@
   "id": "ds18b20",
   "name": "DS18B20 temperature sensor",
   "kind": "sensor",
-  "deviceTypes": [
-    "iot",
-    "wearable",
-    "drone"
-  ],
+  "deviceTypes": ["iot", "wearable", "drone"],
   "pins": [
     {
       "id": "vdd",

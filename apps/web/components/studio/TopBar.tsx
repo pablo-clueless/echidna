@@ -33,22 +33,31 @@ export const TopBar = ({ libraryOpen, onToggleLibrary }: Props) => {
   const simulating = useStudioStore((s) => s.simulating);
   const setSimulating = useStudioStore((s) => s.setSimulating);
   const tParts = useTranslations("Parts");
-  const hostSpecId = useProjectStore((s) => s.components.find((c) => partsById.get(c.specId)?.host)?.specId);
+  const hostSpecId = useProjectStore(
+    (s) => s.components.find((c) => partsById.get(c.specId)?.host)?.specId,
+  );
 
   return (
-    <header className="flex h-12 shrink-0 items-center gap-3 border-b bg-background px-3">
+    <header className="bg-background flex h-12 shrink-0 items-center gap-3 border-b px-3">
       {onToggleLibrary && (
-        <IconButton label={t("toggleLibrary")} onClick={onToggleLibrary} aria-pressed={libraryOpen ?? false}>
+        <IconButton
+          label={t("toggleLibrary")}
+          onClick={onToggleLibrary}
+          aria-pressed={libraryOpen ?? false}
+        >
           <PanelLeft />
         </IconButton>
       )}
-      <Link href="/" className="text-sm font-semibold tracking-tight text-primary-text no-underline">
+      <Link
+        href="/"
+        className="text-primary-text text-sm font-semibold tracking-tight no-underline"
+      >
         Echidna
       </Link>
       <Separator orientation="vertical" className="h-5! max-sm:hidden" />
       <div className="flex min-w-0 items-center gap-2">
         <span className="truncate text-sm font-medium max-sm:hidden">{t("untitledProject")}</span>
-        <Badge variant="outline" className="gap-1 text-muted-foreground max-md:hidden">
+        <Badge variant="outline" className="text-muted-foreground gap-1 max-md:hidden">
           <CircuitBoard />
           {hostSpecId ? tParts(`${partKey(hostSpecId)}.name`) : t("blankBoard")}
         </Badge>

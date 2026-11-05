@@ -49,7 +49,12 @@ describe("compareViolations", () => {
       violation({ componentId: "fail-est", severity: "fail", estimated: true }),
       violation({ componentId: "fail", severity: "fail" }),
     ];
-    expect(list.sort(compareViolations).map((v) => v.componentId)).toEqual(["fail", "fail-est", "warn", "pass"]);
+    expect(list.sort(compareViolations).map((v) => v.componentId)).toEqual([
+      "fail",
+      "fail-est",
+      "warn",
+      "pass",
+    ]);
   });
 });
 
@@ -76,10 +81,16 @@ describe("withVariant", () => {
     kind: "led",
     deviceTypes: [],
     pins: [],
-    params: { saturationCurrent: { value: 1, unit: "A", source: "datasheet" }, emissionCoefficient: { value: 2, unit: "1", source: "datasheet" } },
+    params: {
+      saturationCurrent: { value: 1, unit: "A", source: "datasheet" },
+      emissionCoefficient: { value: 2, unit: "1", source: "datasheet" },
+    },
     ratings: {},
     interfaces: [],
-    variants: [{ id: "red" }, { id: "blue", params: { saturationCurrent: { value: 3, unit: "A", source: "estimated" } } }],
+    variants: [
+      { id: "red" },
+      { id: "blue", params: { saturationCurrent: { value: 3, unit: "A", source: "estimated" } } },
+    ],
     model: "diode",
     footprintId: "",
     meshUrl: "",

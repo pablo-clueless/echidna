@@ -10,7 +10,15 @@ import echidna from "./tools/eslint/index.js";
 
 export default defineConfig(
   {
-    ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/.turbo/**", "target/**", "packages/solver/wasm/**", "**/next-env.d.ts"],
+    ignores: [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/dist/**",
+      "**/.turbo/**",
+      "target/**",
+      "packages/solver/wasm/**",
+      "**/next-env.d.ts",
+    ],
   },
   {
     files: ["**/*.{ts,tsx,js,mjs}"],
@@ -21,7 +29,10 @@ export default defineConfig(
       "func-style": ["error", "expression"],
       "prefer-arrow-callback": "error",
       "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
       "perfectionist/sort-imports": [
         "error",
         {

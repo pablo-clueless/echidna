@@ -170,7 +170,11 @@
         "passives": "Passive Bauteile",
         "semiconductors": "Halbleiter",
         "devBoards": "Entwicklungsboards",
-        "sensors": "Sensoren"
+        "sensors": "Sensoren",
+        "motherboards": "Mainboards",
+        "pcParts": "PC-Komponenten",
+        "laptops": "Laptop-Mainboards",
+        "laptopParts": "Laptop-Komponenten"
       }
     },
     "viewport": {
@@ -355,6 +359,22 @@
       "switchOnPower": {
         "name": "Wärme beim Einschalten",
         "explain": "Während die Schaltung anläuft, wandelt dieses Bauteil für eine Millisekunde oder länger {percent} seiner Nennleistung in Wärme um, meist während sich ein großer Kondensator auflädt. Ein kleinerer Kondensator oder mehr Vorwiderstand verkürzt den Stromstoß."
+      },
+      "psuBudget": {
+        "name": "Netzteil-Leistungsbudget",
+        "explain": "Unter Volllast zieht das System {percent} der Nennleistung des Netzteils. Über 80 % bleibt wenig Reserve für Lastspitzen; über 100 % kann das Netzteil abschalten oder ausfallen."
+      },
+      "powerConnectors": {
+        "name": "Netzteilanschlüsse",
+        "explain": "Die Komponenten brauchen {percent} der Anschlüsse eines Typs, die das Netzteil hat. Über 100 % lässt sich etwas nicht anschließen."
+      },
+      "cooling": {
+        "name": "Kühlung",
+        "explain": "Die Prozessoren geben {percent} der Wärme ab, die der Kühler abführen kann. Über 90 % werden sie unter Last heiß; über 100 % drosseln sie sich zum Schutz."
+      },
+      "chargerBudget": {
+        "name": "Ladegerätleistung",
+        "explain": "Unter Volllast zieht der Laptop {percent} dessen, was das Ladegerät liefert. Über 100 % gleicht der Akku die Differenz aus und entlädt sich selbst am Netz; über 150 % kommt er unter Last nicht mehr hinterher."
       }
     },
     "slots": {
@@ -362,12 +382,41 @@
       "noHost": "Füge ein Entwicklungsboard hinzu, etwa einen Raspberry Pi, um dieses Bauteil anzuschließen.",
       "names": {
         "i2c": "I²C-Anschluss",
-        "gpio": "GPIO-Pins"
+        "gpio": "GPIO-Pins",
+        "cpu": "CPU-Sockel",
+        "cooler": "Kühlerhalterung",
+        "pcie-x16": "PCIe-x16-Steckplatz",
+        "memory": "Speichersteckplätze",
+        "m2": "M.2-Steckplatz",
+        "power": "ATX-Stromanschluss",
+        "wifi": "WLAN-Steckplatz (M.2)",
+        "battery": "Akkuanschluss",
+        "display": "Displayanschluss",
+        "dc-in": "Ladeanschluss"
       },
       "protocols": {
         "i2c": "I²C",
         "gpio": "GPIO",
-        "1-wire": "1-Wire"
+        "1-wire": "1-Wire",
+        "am5": "AM5",
+        "lga1700": "LGA1700",
+        "am5-cooler-mount": "AM5-Kühlerhalterung",
+        "lga1700-cooler-mount": "LGA1700-Kühlerhalterung",
+        "pcie-x16": "PCIe x16",
+        "ddr5-dimm": "DDR5-Speicher",
+        "ddr4-dimm": "DDR4-Speicher",
+        "m2-nvme": "M.2 NVMe",
+        "atx-psu": "ATX-Netzteil",
+        "so-dimm-ddr5": "DDR5-SO-DIMM",
+        "so-dimm-ddr4": "DDR4-SO-DIMM",
+        "m2-e-key": "M.2 E-Key",
+        "battery-3s": "3-Zellen-Akku",
+        "battery-4s": "4-Zellen-Akku",
+        "edp": "eDP",
+        "ultrabook-cooling-mount": "Ultrabook-Kühlerhalterung",
+        "gaming-laptop-cooling-mount": "Gaming-Laptop-Kühlerhalterung",
+        "usb-c-pd": "USB-C Power Delivery",
+        "dc-barrel": "Hohlstecker"
       },
       "slotLabel": "{slot} an {host}",
       "pluggedIn": "Angeschlossen, versorgt über {rail}",
@@ -383,7 +432,11 @@
         "railCurrent": "Würde insgesamt {actual} aus der {rail}-Schiene ziehen, die {limit} liefert.",
         "logicIntoHost": "Seine Ausgänge erreichen {actual}, aber die Pins des Boards vertragen höchstens {limit}.",
         "logicIntoPart": "Das Board treibt seine Pins auf {actual}, aber die Pins dieses Bauteils vertragen höchstens {limit}.",
-        "thermal": "Gibt {actual} ab, aber der Anschluss erlaubt {limit}."
+        "thermal": "Gibt {actual} ab, aber der Anschluss erlaubt {limit}.",
+        "psuBudget": "Das System zieht bis zu {actual}; das Netzteil ist für {limit} ausgelegt.",
+        "powerConnectors": "Braucht {actual} × {connector}; das Netzteil hat {limit}.",
+        "cooling": "Bis zu {actual} Wärme abzuführen; der Kühler ist für {limit} ausgelegt.",
+        "chargerBudget": "Der Laptop zieht bis zu {actual}; das Ladegerät liefert {limit}."
       },
       "railsTitle": "Versorgungsschienen",
       "hostTitle": "Anschlüsse",
@@ -393,7 +446,19 @@
       "swap": "Tauschen",
       "swapFits": "Passt an dieselbe Stelle",
       "swapFails": "Würde nicht passen",
-      "partReason": "{id}: {reason}"
+      "partReason": "{id}: {reason}",
+      "connectors": {
+        "atx-24pin": "24-Pin-ATX",
+        "eps-8pin": "8-Pin-EPS",
+        "pcie-8pin": "8-Pin-PCIe",
+        "12v-2x6": "12V-2x6"
+      },
+      "pluggedInModule": "Eingesteckt",
+      "fitsModule": "Passt",
+      "buildTitle": "Strom und Kühlung",
+      "buildEmpty": "Stecke ein Netzteil und einen Kühler ein, um Strom und Kühlung zu prüfen.",
+      "batteryRuntime": "Etwa {runtime} Akkulaufzeit bei leichter Nutzung ({energy} bei {draw}).",
+      "buildEmptyLaptop": "Stecke ein Ladegerät und einen Kühler ein, um Strom und Kühlung zu prüfen."
     }
   },
   "Parts": {
@@ -490,6 +555,195 @@
     "ds18b20": {
       "name": "Temperatursensor DS18B20",
       "summary": "Temperatur über 1-Wire"
+    },
+    "b650-atx": {
+      "name": "ATX-Mainboard B650 (AM5)",
+      "summary": "Für AMD-Ryzen-7000-CPUs und DDR5"
+    },
+    "b760-atx": {
+      "name": "ATX-Mainboard B760 (LGA1700)",
+      "summary": "Für Intel-CPUs der 12. bis 14. Generation und DDR5"
+    },
+    "x670e-atx": {
+      "name": "ATX-Mainboard X670E (AM5)",
+      "summary": "High-End-AMD-Board mit zwei CPU-Stromanschlüssen"
+    },
+    "ryzen-5-7600": {
+      "name": "AMD Ryzen 5 7600",
+      "summary": "Desktop-CPU mit 6 Kernen, AM5"
+    },
+    "ryzen-7-7800x3d": {
+      "name": "AMD Ryzen 7 7800X3D",
+      "summary": "Desktop-CPU mit 8 Kernen mit 3D V-Cache, AM5"
+    },
+    "ryzen-9-7950x": {
+      "name": "AMD Ryzen 9 7950X",
+      "summary": "Desktop-CPU mit 16 Kernen, AM5"
+    },
+    "core-i5-12400": {
+      "name": "Intel Core i5-12400",
+      "summary": "Desktop-CPU mit 6 Kernen, LGA1700"
+    },
+    "core-i7-14700k": {
+      "name": "Intel Core i7-14700K",
+      "summary": "Desktop-CPU mit 20 Kernen, LGA1700"
+    },
+    "rtx-4060": {
+      "name": "NVIDIA GeForce RTX 4060",
+      "summary": "Grafikkarte, 115 W, ein 8-Pin-PCIe"
+    },
+    "rtx-4070-super": {
+      "name": "NVIDIA GeForce RTX 4070 SUPER",
+      "summary": "Grafikkarte, 220 W, 12V-2x6"
+    },
+    "rtx-4090": {
+      "name": "NVIDIA GeForce RTX 4090",
+      "summary": "Grafikkarte, 450 W, 12V-2x6"
+    },
+    "rx-7800-xt": {
+      "name": "AMD Radeon RX 7800 XT",
+      "summary": "Grafikkarte, 263 W, zwei 8-Pin-PCIe"
+    },
+    "ddr5-32gb-kit": {
+      "name": "DDR5-6000-Kit 32 GB (2 × 16 GB)",
+      "summary": "Zwei DDR5-Speichermodule"
+    },
+    "ddr4-32gb-kit": {
+      "name": "DDR4-3200-Kit 32 GB (2 × 16 GB)",
+      "summary": "Zwei DDR4-Speichermodule"
+    },
+    "nvme-ssd-1tb": {
+      "name": "NVMe-SSD PCIe 4.0, 1 TB",
+      "summary": "M.2-SSD"
+    },
+    "tower-cooler-single": {
+      "name": "Single-Tower-Luftkühler",
+      "summary": "Für etwa 150 W ausgelegt"
+    },
+    "tower-cooler-dual": {
+      "name": "Dual-Tower-Luftkühler",
+      "summary": "Für etwa 250 W ausgelegt"
+    },
+    "aio-cooler-360": {
+      "name": "360-mm-AiO-Wasserkühlung",
+      "summary": "Für etwa 300 W ausgelegt"
+    },
+    "psu-550w": {
+      "name": "ATX-Netzteil 550 W (80 Plus Bronze)",
+      "summary": "Zwei 8-Pin-PCIe, kein 12V-2x6"
+    },
+    "psu-750w": {
+      "name": "ATX 3.1-Netzteil 750 W (80 Plus Gold)",
+      "summary": "Mit 12V-2x6-Anschluss"
+    },
+    "psu-1000w": {
+      "name": "ATX 3.1-Netzteil 1000 W (80 Plus Gold)",
+      "summary": "12V-2x6 und vier 8-Pin-PCIe"
+    },
+    "ultrabook-board": {
+      "name": "Ultrabook-Mainboard (28-W-Prozessor, 16 GB LPDDR5X verlötet)",
+      "summary": "Prozessor und Speicher verlötet; 3-Zellen-Akku und Laden über USB-C"
+    },
+    "gaming-laptop-board": {
+      "name": "Gaming-Laptop-Mainboard (55-W-CPU, 115-W-GPU)",
+      "summary": "Prozessor und Grafik verlötet; SO-DIMM-Speicher, 4-Zellen-Akku, Laden über Hohlstecker oder USB-C"
+    },
+    "battery-3s-54wh": {
+      "name": "3-Zellen-Laptop-Akku, 54 Wh",
+      "summary": "Für Mainboards, die einen 3-Zellen-Akku laden"
+    },
+    "battery-3s-72wh": {
+      "name": "3-Zellen-Laptop-Akku, 72 Wh",
+      "summary": "Für Mainboards, die einen 3-Zellen-Akku laden"
+    },
+    "battery-4s-80wh": {
+      "name": "4-Zellen-Laptop-Akku, 80 Wh",
+      "summary": "Für Mainboards, die einen 4-Zellen-Akku laden"
+    },
+    "battery-4s-99wh": {
+      "name": "4-Zellen-Laptop-Akku, 99,9 Wh",
+      "summary": "Für Mainboards, die einen 4-Zellen-Akku laden"
+    },
+    "sodimm-ddr5-16gb": {
+      "name": "DDR5-5600-SO-DIMM-Kit 16 GB (2 × 8 GB)",
+      "summary": "Zwei DDR5-Laptop-Speichermodule"
+    },
+    "sodimm-ddr5-32gb": {
+      "name": "DDR5-5600-SO-DIMM-Kit 32 GB (2 × 16 GB)",
+      "summary": "Zwei DDR5-Laptop-Speichermodule"
+    },
+    "sodimm-ddr4-16gb": {
+      "name": "DDR4-3200-SO-DIMM-Kit 16 GB (2 × 8 GB)",
+      "summary": "Zwei DDR4-Laptop-Speichermodule"
+    },
+    "wifi-6e-card": {
+      "name": "Wi-Fi-6E- und Bluetooth-Karte (M.2 2230)",
+      "summary": "Funkkarte für einen M.2-E-Key-Steckplatz"
+    },
+    "wifi-7-card": {
+      "name": "Wi-Fi-7- und Bluetooth-Karte (M.2 2230)",
+      "summary": "Funkkarte für einen M.2-E-Key-Steckplatz"
+    },
+    "display-14-fhd": {
+      "name": "14-Zoll-IPS-Display 1920 × 1200, 60 Hz",
+      "summary": "Laptop-Panel mit eDP-Anschluss"
+    },
+    "display-14-oled-120": {
+      "name": "14-Zoll-OLED-Display 2880 × 1800, 120 Hz",
+      "summary": "Laptop-Panel mit eDP-Anschluss"
+    },
+    "display-16-qhd-165": {
+      "name": "16-Zoll-IPS-Display 2560 × 1600, 165 Hz",
+      "summary": "Laptop-Panel mit eDP-Anschluss"
+    },
+    "laptop-cooler-thin": {
+      "name": "Flacher Laptop-Kühler (ein Lüfter, eine Heatpipe)",
+      "summary": "Für etwa 35 W ausgelegt; für Ultrabooks"
+    },
+    "laptop-cooler-dual-fan": {
+      "name": "Ultrabook-Kühler mit zwei Lüftern",
+      "summary": "Für etwa 45 W ausgelegt; für Ultrabooks"
+    },
+    "laptop-cooler-heatpipe": {
+      "name": "Gaming-Laptop-Kühler (zwei Lüfter, vier Heatpipes)",
+      "summary": "Für etwa 150 W ausgelegt; für Gaming-Laptops"
+    },
+    "laptop-cooler-vapour-chamber": {
+      "name": "Gaming-Laptop-Kühler (Vapor Chamber, drei Lüfter)",
+      "summary": "Für etwa 200 W ausgelegt; für Gaming-Laptops"
+    },
+    "charger-usbc-45w": {
+      "name": "USB-C-Ladegerät 45 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-65w": {
+      "name": "USB-C-Ladegerät 65 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-100w": {
+      "name": "USB-C-Ladegerät 100 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-barrel-240w": {
+      "name": "Ladegerät mit Hohlstecker, 240 W",
+      "summary": "Für Gaming-Laptops mit Hohlstecker-Buchse"
+    }
+  },
+  "Builds": {
+    "desktop-budget": {
+      "name": "Einsteiger-Desktop"
+    },
+    "desktop-gaming": {
+      "name": "Gaming-Desktop"
+    },
+    "desktop-workstation": {
+      "name": "Workstation"
+    },
+    "laptop-ultrabook": {
+      "name": "Ultrabook"
+    },
+    "laptop-gaming": {
+      "name": "Gaming-Laptop"
     }
   }
 }

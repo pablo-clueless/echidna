@@ -23,9 +23,27 @@ const regulatorWithLed = (resistance: number): Netlist => ({
     { id: "G1", specId: "ground" },
   ],
   nets: [
-    { id: "vin", pins: [{ componentId: "V1", pinId: "pos" }, { componentId: "U1", pinId: "in" }] },
-    { id: "vout", pins: [{ componentId: "U1", pinId: "out" }, { componentId: "R1", pinId: "1" }] },
-    { id: "a", pins: [{ componentId: "R1", pinId: "2" }, { componentId: "D1", pinId: "a" }] },
+    {
+      id: "vin",
+      pins: [
+        { componentId: "V1", pinId: "pos" },
+        { componentId: "U1", pinId: "in" },
+      ],
+    },
+    {
+      id: "vout",
+      pins: [
+        { componentId: "U1", pinId: "out" },
+        { componentId: "R1", pinId: "1" },
+      ],
+    },
+    {
+      id: "a",
+      pins: [
+        { componentId: "R1", pinId: "2" },
+        { componentId: "D1", pinId: "a" },
+      ],
+    },
     {
       id: "gnd",
       pins: [
@@ -105,11 +123,19 @@ describe("worstAverage", () => {
 const withCapacitor = (capacitance: number, seriesResistance?: number): Netlist => {
   const netlist = regulatorWithLed(150);
   const c = { componentId: "C1", pinId: "1" };
-  netlist.components.push({ id: "C1", specId: "capacitor-ceramic", paramOverrides: { capacitance } });
+  netlist.components.push({
+    id: "C1",
+    specId: "capacitor-ceramic",
+    paramOverrides: { capacitance },
+  });
   if (seriesResistance === undefined) {
     netlist.nets.find((n) => n.id === "vout")?.pins.push(c);
   } else {
-    netlist.components.push({ id: "R2", specId: "resistor", paramOverrides: { resistance: seriesResistance } });
+    netlist.components.push({
+      id: "R2",
+      specId: "resistor",
+      paramOverrides: { resistance: seriesResistance },
+    });
     netlist.nets.find((n) => n.id === "vout")?.pins.push({ componentId: "R2", pinId: "1" });
     netlist.nets.push({ id: "slow", pins: [{ componentId: "R2", pinId: "2" }, c] });
   }
@@ -124,7 +150,9 @@ const switchOn = (build: CircuitBuild) => {
 };
 
 const issues = (violations: ReturnType<typeof evaluate>) =>
-  violations.filter((v) => v.severity !== "pass").map((v) => `${v.componentId} ${v.ruleId} ${v.severity}`);
+  violations
+    .filter((v) => v.severity !== "pass")
+    .map((v) => `${v.componentId} ${v.ruleId} ${v.severity}`);
 
 describe("switch-on rules", () => {
   it("leaves DC verdicts to the DC rules", () => {
@@ -191,14 +219,22 @@ describe("temperature", () => {
   const temperature = (resistance: number, ambient?: number) => {
     const build = heated(resistance);
     const solution = solveDc(build.circuit) as DcSolution;
-    return evaluate(build, solution, undefined, ambient).filter((v) => v.ruleId === "temperatureRating");
+    return evaluate(build, solution, undefined, ambient).filter(
+      (v) => v.ruleId === "temperatureRating",
+    );
   };
 
   it("estimates a part's temperature from its dissipation and thermal resistance", () => {
     const [r1, ...rest] = temperature(1000);
     expect(rest).toEqual([]);
     // 0.1 W through 340 K/W is a 34 K rise above 25 °C.
-    expect(r1).toMatchObject({ componentId: "R1", unit: "K", limit: 428.15, baseline: 298.15, estimated: false });
+    expect(r1).toMatchObject({
+      componentId: "R1",
+      unit: "K",
+      limit: 428.15,
+      baseline: 298.15,
+      estimated: false,
+    });
     expect(r1?.actual).toBeCloseTo(332.15, 6);
     expect(r1?.severity).toBe("pass");
   });
@@ -214,19 +250,40 @@ describe("temperature", () => {
     const solution = solveDc(build.circuit) as DcSolution;
     const hot = evaluate(build, solution, undefined, 393.15);
     expect(hot.find((v) => v.ruleId === "powerRating")?.severity).toBe("pass");
-    expect(hot.find((v) => v.ruleId === "temperatureRating")).toMatchObject({ severity: "warn", baseline: 393.15 });
+    expect(hot.find((v) => v.ruleId === "temperatureRating")).toMatchObject({
+      severity: "warn",
+      baseline: 393.15,
+    });
   });
 
   it("counts an estimated thermal resistance only towards the temperature verdict", () => {
     const { violations } = run(150);
-    expect(violations.find((v) => v.componentId === "D1" && v.ruleId === "temperatureRating")?.estimated).toBe(true);
-    expect(violations.find((v) => v.componentId === "D1" && v.ruleId === "currentRating")?.estimated).toBe(false);
+    expect(
+      violations.find((v) => v.componentId === "D1" && v.ruleId === "temperatureRating")?.estimated,
+    ).toBe(true);
+    expect(
+      violations.find((v) => v.componentId === "D1" && v.ruleId === "currentRating")?.estimated,
+    ).toBe(false);
   });
 
   it("is never checked on a switch-on run", () => {
     const build = heated(200);
-    const solution = { times: [1e-6, 2e-6], nodeVoltages: {}, pinCurrents: {}, componentPower: { R1: [0.5, 0.5] } };
-    const rules = [{ id: "hot", analysis: "switchOn", metric: "temperature", rating: "maxTemperature", warnAt: 0.8, failAbove: 1 }] as const;
+    const solution = {
+      times: [1e-6, 2e-6],
+      nodeVoltages: {},
+      pinCurrents: {},
+      componentPower: { R1: [0.5, 0.5] },
+    };
+    const rules = [
+      {
+        id: "hot",
+        analysis: "switchOn",
+        metric: "temperature",
+        rating: "maxTemperature",
+        warnAt: 0.8,
+        failAbove: 1,
+      },
+    ] as const;
     expect(evaluateSwitchOn(build, solution as unknown as TransientSolution, rules)).toEqual([]);
   });
 });

@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "rtx-4090",
+  "name": "NVIDIA GeForce RTX 4090",
+  "kind": "gpu",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "pcie-x16"
+    }
+  ],
+  "module": {
+    "role": "gpu",
+    "power": {
+      "value": 450,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "NVIDIA Founders Edition specifications: total graphics power 450 W, one 16-pin connector"
+    },
+    "needs": {
+      "12v-2x6": 1
+    }
+  },
+  "model": "module",
+  "footprintId": "module/gpu",
+  "meshUrl": "generic/gpu"
+}

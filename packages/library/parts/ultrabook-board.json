@@ -1,0 +1,88 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ultrabook-board",
+  "name": "Ultrabook mainboard (28 W processor, 16 GB LPDDR5X soldered)",
+  "kind": "laptopBoard",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "motherboard",
+    "power": {
+      "value": 45,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Processor at its short-term boost limit plus the rest of the board; thin laptops cap boost lower than desktops"
+    },
+    "typical": {
+      "value": 3.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Light everyday use (browsing, video) with power saving on; makers don't publish a figure"
+    },
+    "heat": {
+      "value": 28,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Sustained power of a 28 W-class laptop processor, which a thin chassis holds it to"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/laptopBoard",
+  "meshUrl": "generic/laptopBoard",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "m2",
+        "accepts": [
+          {
+            "protocol": "m2-nvme"
+          }
+        ]
+      },
+      {
+        "id": "wifi",
+        "accepts": [
+          {
+            "protocol": "m2-e-key"
+          }
+        ]
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "battery-3s"
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "edp"
+          }
+        ]
+      },
+      {
+        "id": "cooler",
+        "accepts": [
+          {
+            "protocol": "ultrabook-cooling-mount"
+          }
+        ]
+      },
+      {
+        "id": "dc-in",
+        "accepts": [
+          {
+            "protocol": "usb-c-pd"
+          }
+        ]
+      }
+    ]
+  }
+}

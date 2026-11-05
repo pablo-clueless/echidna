@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ddr5-32gb-kit",
+  "name": "DDR5-6000 32 GB kit (2 × 16 GB)",
+  "kind": "memory",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "ddr5-dimm"
+    }
+  ],
+  "module": {
+    "role": "memory",
+    "power": {
+      "value": 8,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "About 4 W per DDR5 module under load, including its on-module PMIC"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/memory",
+  "meshUrl": "generic/memory"
+}

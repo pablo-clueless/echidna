@@ -86,7 +86,7 @@ export const ParamField = ({ name, label, spec, value, overridden, onCommit }: P
         )}
       </div>
       {invalid && (
-        <p id={`${id}-error`} className="text-xs text-status-fail-text">
+        <p id={`${id}-error`} className="text-status-fail-text text-xs">
           {t("invalidNumber")}
         </p>
       )}

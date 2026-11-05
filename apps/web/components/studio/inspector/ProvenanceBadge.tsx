@@ -10,7 +10,10 @@ export const ProvenanceBadge = ({ source }: { source: Provenance | "user" }) => 
   return (
     <Badge
       variant="outline"
-      className={cn("h-4.5 px-1.5 text-[10px] font-normal text-muted-foreground", source === "estimated" && "border-dashed italic")}
+      className={cn(
+        "text-muted-foreground h-4.5 px-1.5 text-[10px] font-normal",
+        source === "estimated" && "border-dashed italic",
+      )}
     >
       {t(source)}
     </Badge>

@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "battery-3s-72wh",
+  "name": "3-cell laptop battery, 72 Wh",
+  "kind": "battery",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "battery-3s"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "energy": {
+      "value": 259200,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "Rated capacity, as printed on the pack"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/battery",
+  "meshUrl": "generic/battery"
+}

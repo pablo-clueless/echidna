@@ -1,0 +1,7 @@
+.notoSansSc {
+  --font-noto-sans-sc: "Noto Sans SC Variable", system-ui, sans-serif;
+}
+
+.notoSansJp {
+  --font-noto-sans-jp: "Noto Sans JP Variable", system-ui, sans-serif;
+}

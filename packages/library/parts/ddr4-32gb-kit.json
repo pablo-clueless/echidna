@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ddr4-32gb-kit",
+  "name": "DDR4-3200 32 GB kit (2 × 16 GB)",
+  "kind": "memory",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "ddr4-dimm"
+    }
+  ],
+  "module": {
+    "role": "memory",
+    "power": {
+      "value": 6,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "About 3 W per DDR4 module under load"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/memory",
+  "meshUrl": "generic/memory"
+}

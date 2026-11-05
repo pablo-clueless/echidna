@@ -44,7 +44,9 @@ export const useOnScreen = <T extends Element>() => {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry?.isIntersecting ?? false));
+    const observer = new IntersectionObserver(([entry]) =>
+      setOnScreen(entry?.isIntersecting ?? false),
+    );
     observer.observe(el);
     return () => observer.disconnect();
   }, []);

@@ -52,7 +52,14 @@ export const LineIcon = ({ kind, className }: Props) => (
     {kind === "cool" &&
       [0, 1, 2, 3].map((i) => {
         const y = 86 - i * 16;
-        return <path key={i} className="layer" style={n(3 - i)} d={`M60 ${y - 15} L100 ${y} L60 ${y + 15} L20 ${y} Z`} />;
+        return (
+          <path
+            key={i}
+            className="layer"
+            style={n(3 - i)}
+            d={`M60 ${y - 15} L100 ${y} L60 ${y + 15} L20 ${y} Z`}
+          />
+        );
       })}
   </svg>
 );

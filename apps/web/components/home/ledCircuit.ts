@@ -24,6 +24,7 @@ const EPSILON = 1e-9;
 export const solveLedCircuit = (resistance: number): LedCircuitResult => {
   const current = (SUPPLY_VOLTAGE - LED_FORWARD_VOLTAGE) / resistance;
   const ratio = current / LED_MAX_CURRENT;
-  const severity: Severity = ratio > 1 + EPSILON ? "fail" : ratio >= WARN_RATIO - EPSILON ? "warn" : "pass";
+  const severity: Severity =
+    ratio > 1 + EPSILON ? "fail" : ratio >= WARN_RATIO - EPSILON ? "warn" : "pass";
   return { current, ratio, severity };
 };

@@ -33,8 +33,26 @@ const pinOffsets: Record<string, Point[]> = {
   pmos: transistorPins(),
 };
 
-/** Kinds drawn as a box with a lead per pin, such as dev boards and sensor modules, whose pin counts vary. */
-export const BOX_KINDS: ReadonlySet<string> = new Set(["devBoard", "sensor"]);
+/**
+ * Kinds drawn as a box with a lead per pin, such as dev boards and sensor modules, whose pin counts vary. Desktop
+ * modules are boxes with no leads, as they plug into slots rather than being wired.
+ */
+export const BOX_KINDS: ReadonlySet<string> = new Set([
+  "devBoard",
+  "sensor",
+  "motherboard",
+  "cpu",
+  "gpu",
+  "memory",
+  "storage",
+  "cooler",
+  "psu",
+  "laptopBoard",
+  "battery",
+  "wifi",
+  "display",
+  "charger",
+]);
 
 /** Half the width of a box symbol's body, in grid units; its leads run one unit further out. */
 export const BOX_HALF_WIDTH = 4;
@@ -59,7 +77,10 @@ export const boxPins = (count: number): Point[] => {
  * @param count - Number of pins.
  * @returns Half-width and half-height in grid units.
  */
-export const boxBounds = (count: number) => ({ w: BOX_HALF_WIDTH, h: Math.max(1, Math.ceil(count / 2)) });
+export const boxBounds = (count: number) => ({
+  w: BOX_HALF_WIDTH,
+  h: Math.max(1, Math.ceil(count / 2)),
+});
 
 const twoPin: Point[] = [
   { x: -2, y: 0 },
@@ -107,7 +128,7 @@ export const pinPositions = (kind: string, placement: SchematicPlacement, pinCou
 export const routeWire = (a: Point, b: Point): Point[] =>
   a.x === b.x || a.y === b.y ? [a, b] : [a, { x: b.x, y: a.y }, b];
 
-export const nextRotation = (r: Rotation): Rotation => (((r + 90) % 360) as Rotation);
+export const nextRotation = (r: Rotation): Rotation => ((r + 90) % 360) as Rotation;
 
 /** The parameter shown beside each symbol, such as a resistor's resistance. */
 export const valueParam: Record<string, string> = {

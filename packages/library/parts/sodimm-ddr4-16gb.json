@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "sodimm-ddr4-16gb",
+  "name": "DDR4-3200 SO-DIMM 16 GB kit (2 × 8 GB)",
+  "kind": "memory",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "so-dimm-ddr4"
+    }
+  ],
+  "module": {
+    "role": "memory",
+    "power": {
+      "value": 3,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "About 1.5 W per DDR4 SO-DIMM under load"
+    },
+    "typical": {
+      "value": 0.6,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Self-refresh and light access"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/memory",
+  "meshUrl": "generic/memory"
+}

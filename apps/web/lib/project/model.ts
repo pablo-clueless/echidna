@@ -1,4 +1,11 @@
-import { type ComponentSpec, type Net, type Netlist, type NetlistComponent, type PinRef, withVariant } from "@echidna/core";
+import {
+  type ComponentSpec,
+  type Net,
+  type Netlist,
+  type NetlistComponent,
+  type PinRef,
+  withVariant,
+} from "@echidna/core";
 
 export type Rotation = 0 | 90 | 180 | 270;
 
@@ -13,8 +20,11 @@ export type BoardSize = { width: number; depth: number };
 
 export type Wire = { id: string; a: PinRef; b: PinRef };
 
-/** Where a part is plugged into a host board, the rail it draws from, and the wires plugging it in added. */
-export type SlotPlacement = { hostId: string; slotId: string; railId: string; wireIds: string[] };
+/**
+ * Where a part is plugged into a host board, the rail it draws from, and the wires plugging it in added. Desktop and
+ * laptop modules, powered by the build rather than a rail, have neither.
+ */
+export type SlotPlacement = { hostId: string; slotId: string; railId?: string; wireIds: string[] };
 
 export type ProjectData = {
   name: string;
@@ -45,6 +55,18 @@ const prefixes: Record<string, string> = {
   pmos: "Q",
   devBoard: "B",
   sensor: "S",
+  motherboard: "MB",
+  cpu: "CPU",
+  gpu: "GPU",
+  memory: "RAM",
+  storage: "SSD",
+  cooler: "FAN",
+  psu: "PSU",
+  laptopBoard: "MB",
+  battery: "BAT",
+  wifi: "WLAN",
+  display: "LCD",
+  charger: "CHG",
 };
 
 /**
@@ -63,7 +85,8 @@ export const nextDesignator = (kind: string, taken: Iterable<string>): string =>
 
 export const pinKey = (pin: PinRef): string => `${pin.componentId}/${pin.pinId}`;
 
-export const samePin = (a: PinRef, b: PinRef): boolean => a.componentId === b.componentId && a.pinId === b.pinId;
+export const samePin = (a: PinRef, b: PinRef): boolean =>
+  a.componentId === b.componentId && a.pinId === b.pinId;
 
 /**
  * Groups wired pins into nets. Each net's ID is derived from its alphabetically first pin, so it stays
@@ -128,7 +151,11 @@ export const netOfPin = (nets: readonly Net[], pin: PinRef): Net | undefined =>
  * @param key - Parameter name.
  * @returns The value in SI units, or `undefined` when the part has no such parameter.
  */
-export const paramValue = (component: NetlistComponent, spec: ComponentSpec, key: string): number | undefined =>
+export const paramValue = (
+  component: NetlistComponent,
+  spec: ComponentSpec,
+  key: string,
+): number | undefined =>
   component.paramOverrides?.[key] ?? withVariant(spec, component.variant).params[key]?.value;
 
 /**
@@ -145,7 +172,9 @@ export const switchClosed = (spec: ComponentSpec, variant?: string): boolean =>
  * @param spec - Switch part spec.
  * @returns The closed and open positions, or `undefined` for a part without both.
  */
-export const switchPositions = (spec: ComponentSpec): { closed: string; open: string } | undefined => {
+export const switchPositions = (
+  spec: ComponentSpec,
+): { closed: string; open: string } | undefined => {
   const variants = spec.variants ?? [];
   const closed = variants.find((v) => switchClosed(spec, v.id))?.id;
   const open = variants.find((v) => !switchClosed(spec, v.id))?.id;
@@ -199,4 +228,6 @@ export const MODEL_PARAMS: ReadonlySet<string> = new Set([
  * @returns Parameter names in spec order.
  */
 export const editableParams = (spec: ComponentSpec): string[] =>
-  Object.keys(spec.params).filter((key) => !MODEL_PARAMS.has(key) && !spec.variants?.some((v) => v.params?.[key]));
+  Object.keys(spec.params).filter(
+    (key) => !MODEL_PARAMS.has(key) && !spec.variants?.some((v) => v.params?.[key]),
+  );

@@ -84,22 +84,22 @@ export type HostSlot = {
   id: string;
   /** Protocols the slot carries, such as `i2c` or `gpio`. */
   accepts: Interface[];
-  /** Rails a part in this slot can draw from, in order of preference. */
-  railIds: string[];
+  /** Rails a part in this slot can draw from, in order of preference. Module slots, powered from a PSU, have none. */
+  railIds?: string[];
   /** Host pins for the slot's signals, by signal name (such as `SDA`), matched to the part's `signals`. */
-  signals: Record<string, string>;
+  signals?: Record<string, string>;
   /** Voltage the host drives its signal pins high to. */
-  logicHigh: SpecValue;
+  logicHigh?: SpecValue;
   /** Highest voltage the host's signal pins can take. */
-  maxInput: SpecValue;
+  maxInput?: SpecValue;
   /** Most heat a part in this slot may give off. */
   thermalBudget?: SpecValue;
 };
 
 /** What makes a part a host board: the rails it offers and the slots parts plug into. */
 export type HostSpec = {
-  /** The host's ground pin, which every rail is measured from. */
-  groundPinId: string;
+  /** The host's ground pin, which every rail is measured from. A motherboard, whose modules are not wired, has none. */
+  groundPinId?: string;
   rails: HostRail[];
   slots: HostSlot[];
 };
@@ -118,6 +118,47 @@ export type SupplySpec = {
   maxInput: SpecValue;
   /** The part's signal pins by signal name, matched to the slot's `signals`. */
   signals: Record<string, string>;
+};
+
+/** What a desktop or laptop module does in the build: the role decides which device-level checks apply to it. */
+export type ModuleRole =
+  | "motherboard"
+  | "cpu"
+  | "gpu"
+  | "memory"
+  | "storage"
+  | "cooler"
+  | "psu"
+  | "battery"
+  | "wifi"
+  | "display"
+  | "charger";
+
+/** A PSU power connector, such as the 12V-2x6 connector newer graphics cards take. */
+export type PowerConnector = "atx-24pin" | "eps-8pin" | "pcie-8pin" | "12v-2x6";
+
+/** A module of a desktop or laptop build, checked at the device level rather than solved as a circuit. */
+export type ModuleSpec = {
+  role: ModuleRole;
+  /** Most power the module draws from the PSU under full load, such as a CPU's package power limit. */
+  power?: SpecValue;
+  /** For coolers: the heat they are rated to remove. */
+  cooling?: SpecValue;
+  /** Power drawn in light everyday use, such as browsing and video, for estimating battery runtime. */
+  typical?: SpecValue;
+  /**
+   * For boards with the processors soldered on, such as a laptop's: the heat they give off under sustained load,
+   * which the cooler has to remove.
+   */
+  heat?: SpecValue;
+  /** For batteries: stored energy, in joules (1 Wh = 3600 J). */
+  energy?: SpecValue;
+  /** For PSUs and chargers: rated continuous output. */
+  output?: SpecValue;
+  /** PSU connectors the module needs plugged into it, by connector, such as a graphics card's 12V-2x6. */
+  needs?: Partial<Record<PowerConnector, number>>;
+  /** For PSUs: the connectors they have, by connector. */
+  provides?: Partial<Record<PowerConnector, number>>;
 };
 
 export type ComponentSpec = {
@@ -139,6 +180,8 @@ export type ComponentSpec = {
   host?: HostSpec;
   /** For parts that plug into a host's slot: how they are powered and their signal levels. */
   supply?: SupplySpec;
+  /** For desktop and laptop modules: what they draw, cool or supply in the build. */
+  module?: ModuleSpec;
   model: string;
   footprintId: string;
   meshUrl: string;

@@ -1,6 +1,13 @@
 "use client";
 
-import { BufferAttribute, BufferGeometry, CustomBlending, DoubleSide, MaxEquation, ShaderMaterial } from "three";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  CustomBlending,
+  DoubleSide,
+  MaxEquation,
+  ShaderMaterial,
+} from "three";
 import { useEffect, useMemo } from "react";
 
 import type { Routing } from "@/lib/board/routing";
@@ -59,7 +66,10 @@ const glowGeometry = (routing: Routing, thickness: number) => {
       const length = Math.hypot(bx - ax, bz - az);
       if (length === 0) continue;
       const [ux, uz] = [(bx - ax) / length, (bz - az) / length];
-      const corner = (s: number, t: number): [number, number] => [ax + ux * s - uz * t, az + uz * s + ux * t];
+      const corner = (s: number, t: number): [number, number] => [
+        ax + ux * s - uz * t,
+        az + uz * s + ux * t,
+      ];
       const quad: [number, number][] = [
         [-reach, -reach],
         [length + reach, -reach],

@@ -10,7 +10,13 @@ type Props = Omit<ComponentProps<typeof Button>, "aria-label" | "children"> & {
   children: ReactNode;
 };
 
-export const IconButton = ({ label, variant = "ghost", size = "icon-sm", children, ...props }: Props) => (
+export const IconButton = ({
+  label,
+  variant = "ghost",
+  size = "icon-sm",
+  children,
+  ...props
+}: Props) => (
   <Tooltip>
     <TooltipTrigger asChild>
       <Button variant={variant} size={size} aria-label={label} {...props}>

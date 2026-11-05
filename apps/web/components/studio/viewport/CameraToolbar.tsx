@@ -1,6 +1,16 @@
 "use client";
 
-import { Box, Flame, FlipVertical2, Minus, Plus, Scan, SquareDashed, Zap, type LucideIcon } from "lucide-react";
+import {
+  Box,
+  Flame,
+  FlipVertical2,
+  Minus,
+  Plus,
+  Scan,
+  SquareDashed,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { type MaskColour, maskColours, type Overlay, useLayoutStore } from "@/stores/layout";
@@ -23,7 +33,12 @@ export const cameraShortcuts: Record<Command, string[]> = {
 };
 
 /** Swatch shown for each solder-mask colour; matches the board's mask in the 3D view. */
-const swatches: Record<MaskColour, string> = { black: "#0C0D0F", green: "#0E4A28", blue: "#0E2C5E", red: "#6E1212" };
+const swatches: Record<MaskColour, string> = {
+  black: "#0C0D0F",
+  green: "#0E4A28",
+  blue: "#0E2C5E",
+  red: "#6E1212",
+};
 
 const groups: { command: Command; icon: LucideIcon }[][] = [
   [
@@ -61,7 +76,10 @@ export const CameraToolbar = () => {
       className="absolute top-2 right-2 flex flex-col gap-1"
     >
       {groups.map((group, i) => (
-        <div key={i} className="flex flex-col rounded-lg border bg-background/85 p-0.5 shadow-xs backdrop-blur-sm">
+        <div
+          key={i}
+          className="bg-background/85 flex flex-col rounded-lg border p-0.5 shadow-xs backdrop-blur-sm"
+        >
           {group.map(({ command, icon: Icon }) => (
             <Tooltip key={command}>
               <TooltipTrigger asChild>
@@ -92,7 +110,7 @@ export const CameraToolbar = () => {
         aria-label={tOverlays("label")}
         value={shownOverlays}
         onValueChange={(value) => setOverlays(value as Overlay[])}
-        className="rounded-lg border bg-background/85 p-0.5 shadow-xs backdrop-blur-sm"
+        className="bg-background/85 rounded-lg border p-0.5 shadow-xs backdrop-blur-sm"
       >
         {(Object.keys(overlayIcons) as Overlay[]).map((overlay) => {
           const Icon = overlayIcons[overlay];
@@ -102,7 +120,7 @@ export const CameraToolbar = () => {
                 <ToggleGroupItem
                   value={overlay}
                   aria-label={tOverlays(overlay)}
-                  className="size-8 aria-pressed:bg-primary/15 aria-pressed:text-primary-text"
+                  className="aria-pressed:bg-primary/15 aria-pressed:text-primary-text size-8"
                 >
                   <Icon />
                 </ToggleGroupItem>
@@ -122,15 +140,19 @@ export const CameraToolbar = () => {
         onValueChange={(value) => {
           if (value) setMaskColour(value as MaskColour);
         }}
-        className="rounded-lg border bg-background/85 p-0.5 shadow-xs backdrop-blur-sm"
+        className="bg-background/85 rounded-lg border p-0.5 shadow-xs backdrop-blur-sm"
       >
         {maskColours.map((colour) => (
           <Tooltip key={colour}>
             <TooltipTrigger asChild>
-              <ToggleGroupItem value={colour} aria-label={tMask(colour)} className="size-8 aria-checked:bg-primary/15">
+              <ToggleGroupItem
+                value={colour}
+                aria-label={tMask(colour)}
+                className="aria-checked:bg-primary/15 size-8"
+              >
                 <span
                   aria-hidden
-                  className="size-3.5 ring-1 ring-foreground/25"
+                  className="ring-foreground/25 size-3.5 ring-1"
                   style={{ backgroundColor: swatches[colour] }}
                 />
               </ToggleGroupItem>

@@ -8,7 +8,14 @@ import { ArrowLink } from "./ArrowLink";
 const sections = ["swap", "checks", "devices", "provenance"] as const;
 
 export const LogoMark = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 16 16" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
+  <svg
+    viewBox="0 0 16 16"
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+    strokeLinecap="round"
+  >
     <path d="M2 11 L5 5 L8 11 L11 5 L14 11" />
   </svg>
 );
@@ -17,11 +24,11 @@ export const SiteHeader = async () => {
   const t = await getTranslations("Home");
 
   return (
-    <header className="band-paper sticky top-0 z-40 border-b bg-background/85! backdrop-blur-md">
+    <header className="band-paper bg-background/85! sticky top-0 z-40 border-b backdrop-blur-md">
       <div className="flex h-14 items-stretch">
         <Link
           href="/"
-          className="flex items-center gap-2 bg-signal px-4 text-sm font-semibold tracking-tight text-signal-foreground! no-underline sm:px-5"
+          className="bg-signal text-signal-foreground! flex items-center gap-2 px-4 text-sm font-semibold tracking-tight no-underline sm:px-5"
         >
           <LogoMark className="size-4" />
           Echidna
@@ -32,7 +39,7 @@ export const SiteHeader = async () => {
             <a
               key={key}
               href={`#${key}`}
-              className="relative py-1 text-muted-foreground no-underline transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-300 hover:text-foreground! hover:after:scale-x-100"
+              className="text-muted-foreground after:bg-foreground hover:text-foreground! relative py-1 no-underline transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100"
             >
               {t(`sections.${key}`)}
             </a>
@@ -42,7 +49,11 @@ export const SiteHeader = async () => {
         <div className="ml-auto flex items-center gap-1 pr-3 sm:pr-4">
           <LocaleSelect />
           <ThemeToggle />
-          <ArrowLink href="/studio" size="sm" className="ml-2 hidden sm:inline-flex justify-between min-w-40">
+          <ArrowLink
+            href="/studio"
+            size="sm"
+            className="ml-2 hidden min-w-40 justify-between sm:inline-flex"
+          >
             {t("openStudio")}
           </ArrowLink>
         </div>

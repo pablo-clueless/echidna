@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "laptop-cooler-thin",
+  "name": "Thin laptop cooler (one fan, one heat pipe)",
+  "kind": "cooler",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "ultrabook-cooling-mount"
+    }
+  ],
+  "module": {
+    "role": "cooler",
+    "power": {
+      "value": 1,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Fan at full speed"
+    },
+    "typical": {
+      "value": 0.2,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Fan mostly off in light use"
+    },
+    "cooling": {
+      "value": 35,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical sustained rating for this class of laptop cooler; makers don't publish one"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cooler",
+  "meshUrl": "generic/cooler"
+}

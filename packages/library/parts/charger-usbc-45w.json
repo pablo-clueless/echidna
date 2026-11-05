@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "charger-usbc-45w",
+  "name": "45 W USB-C charger",
+  "kind": "charger",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "usb-c-pd"
+    }
+  ],
+  "module": {
+    "role": "charger",
+    "output": {
+      "value": 45,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Rated output, the figure the charger is sold on"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/charger",
+  "meshUrl": "generic/charger"
+}

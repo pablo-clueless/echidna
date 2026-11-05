@@ -23,6 +23,10 @@ const categories = [
   { key: "semiconductors", kinds: ["led", "diode", "npn", "pnp", "nmos", "pmos"] },
   { key: "devBoards", kinds: ["devBoard"] },
   { key: "sensors", kinds: ["sensor"] },
+  { key: "motherboards", kinds: ["motherboard"] },
+  { key: "pcParts", kinds: ["cpu", "gpu", "memory", "storage", "cooler", "psu"] },
+  { key: "laptops", kinds: ["laptopBoard"] },
+  { key: "laptopParts", kinds: ["battery", "wifi", "display", "charger"] },
 ] as const;
 
 /** How far a symbol reaches either side of its origin, leads included, turned as placed. */
@@ -40,7 +44,7 @@ const PartIcon = ({ spec }: { spec: ComponentSpec }) => {
     <svg
       aria-hidden
       viewBox={`${-span * GRID} ${-span * GRID} ${span * 2 * GRID} ${span * 2 * GRID}`}
-      className="size-8 shrink-0 rounded-md border bg-background p-1 text-foreground"
+      className="bg-background text-foreground size-8 shrink-0 rounded-md border p-1"
       fill="none"
       stroke="currentColor"
       strokeWidth={2.5}
@@ -67,7 +71,10 @@ export const LibrarySidebar = () => {
       const placedSpec = partsById.get(c.specId);
       return at && placedSpec ? [{ ...at, halfWidth: halfWidthOf(placedSpec, at.rotation) }] : [];
     });
-    const id = addComponent(specId, freeSchematicSpot(placed, spec ? halfWidthOf(spec, 0) : undefined));
+    const id = addComponent(
+      specId,
+      freeSchematicSpot(placed, spec ? halfWidthOf(spec, 0) : undefined),
+    );
     if (id) select({ kind: "component", id });
   };
 
@@ -78,16 +85,22 @@ export const LibrarySidebar = () => {
       parts: parts.filter(
         (p) =>
           (c.kinds as readonly string[]).includes(p.kind) &&
-          (!needle || tParts(`${partKey(p.id)}.name`).toLocaleLowerCase().includes(needle)),
+          (!needle ||
+            tParts(`${partKey(p.id)}.name`)
+              .toLocaleLowerCase()
+              .includes(needle)),
       ),
     }))
     .filter((c) => c.parts.length > 0);
 
   return (
-    <aside aria-label={t("title")} className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+    <aside
+      aria-label={t("title")}
+      className="bg-sidebar text-sidebar-foreground flex h-full flex-col"
+    >
       <PanelHeader title={t("title")} />
       <div className="p-2">
-        <InputGroup className="h-8 bg-background">
+        <InputGroup className="bg-background h-8">
           <InputGroupAddon>
             <Search />
           </InputGroupAddon>
@@ -101,7 +114,11 @@ export const LibrarySidebar = () => {
         </InputGroup>
       </div>
       {groups.length === 0 ? (
-        <PanelEmpty icon={<Package />} title={t("noMatchTitle")} description={t("noMatchDescription")} />
+        <PanelEmpty
+          icon={<Package />}
+          title={t("noMatchTitle")}
+          description={t("noMatchDescription")}
+        />
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
           {groups.map((group) => (
@@ -116,7 +133,7 @@ export const LibrarySidebar = () => {
                 <h3 id={`library-${group.key}`}>
                   <CollapsibleTrigger
                     disabled={!!needle}
-                    className="group flex w-full items-center gap-1 rounded-md px-1 py-1.5 text-xs font-medium text-muted-foreground outline-none hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:hover:text-muted-foreground"
+                    className="group text-muted-foreground hover:text-sidebar-foreground focus-visible:ring-ring disabled:hover:text-muted-foreground flex w-full items-center gap-1 rounded-md px-1 py-1.5 text-xs font-medium outline-none focus-visible:ring-2"
                   >
                     <ChevronRight
                       aria-hidden
@@ -139,12 +156,14 @@ export const LibrarySidebar = () => {
                           }}
                           onClick={() => add(p.id)}
                           title={t("addHint")}
-                          className="flex w-full cursor-grab items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left text-sm outline-none hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing"
+                          className="hover:bg-sidebar-accent focus-visible:ring-ring flex w-full cursor-grab items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left text-sm outline-none focus-visible:ring-2 active:cursor-grabbing"
                         >
                           <PartIcon spec={p} />
                           <span className="min-w-0 flex-1">
-                            <span className="block truncate">{tParts(`${partKey(p.id)}.name`)}</span>
-                            <span className="block truncate text-xs text-muted-foreground">
+                            <span className="block truncate">
+                              {tParts(`${partKey(p.id)}.name`)}
+                            </span>
+                            <span className="text-muted-foreground block truncate text-xs">
                               {tParts(`${partKey(p.id)}.summary`)}
                             </span>
                           </span>

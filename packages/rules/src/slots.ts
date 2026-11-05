@@ -1,10 +1,28 @@
-import { anyEstimated, type ComponentSpec, type HostSlot, type Severity, type SpecValue, type Unit } from "@echidna/core";
+import {
+  anyEstimated,
+  type ComponentSpec,
+  type HostSlot,
+  type PowerConnector,
+  type Severity,
+  type SpecValue,
+  type Unit,
+} from "@echidna/core";
 
 import defaults from "../rules.json";
 import { grade } from "./engine";
 
 /** The checks a part must pass to go in a slot: the physical / protocol, electrical and thermal checks of §5.2. */
-export type FitCheckId = "interface" | "supply" | "railCurrent" | "logicIntoHost" | "logicIntoPart" | "thermal";
+export type FitCheckId =
+  | "interface"
+  | "supply"
+  | "railCurrent"
+  | "logicIntoHost"
+  | "logicIntoPart"
+  | "thermal"
+  | "chargerBudget"
+  | "psuBudget"
+  | "powerConnectors"
+  | "cooling";
 
 /**
  * One check of a part against a slot. `actual` and `limit` are set for the checks that compare two quantities;
@@ -26,6 +44,8 @@ export type FitCheck = {
   offered?: number[];
   /** The rail the part would draw from. */
   railId?: string;
+  /** The PSU connector a power connector check counts, `actual` needed against `limit` offered. */
+  connector?: PowerConnector;
 };
 
 export type SlotFit = {
@@ -40,7 +60,12 @@ type Thresholds = { warnAt: number; failAbove: number };
 
 export const slotThresholds = defaults.slots as Record<"railCurrent" | "thermal", Thresholds>;
 
-const check = (id: FitCheckId, severity: Severity, values: ReadonlyArray<SpecValue | undefined>, extra: Partial<FitCheck> = {}): FitCheck => ({
+export const check = (
+  id: FitCheckId,
+  severity: Severity,
+  values: ReadonlyArray<SpecValue | undefined>,
+  extra: Partial<FitCheck> = {},
+): FitCheck => ({
   id,
   severity,
   estimated: anyEstimated(values),
@@ -73,51 +98,82 @@ export const checkSlotFit = (
   ];
   if (!slot || !supply) return { fits: false, checks };
 
-  const rails = slot.railIds.flatMap((id) => host.host?.rails.find((r) => r.id === id) ?? []);
+  const rails = (slot.railIds ?? []).flatMap(
+    (id) => host.host?.rails.find((r) => r.id === id) ?? [],
+  );
   const rail = rails.find(
-    (r) => r.voltage.value >= supply.minVoltage.value - 1e-9 && r.voltage.value <= supply.maxVoltage.value + 1e-9,
+    (r) =>
+      r.voltage.value >= supply.minVoltage.value - 1e-9 &&
+      r.voltage.value <= supply.maxVoltage.value + 1e-9,
   );
   checks.push(
-    check("supply", rail ? "pass" : "fail", [supply.minVoltage, supply.maxVoltage, ...rails.map((r) => r.voltage)], {
-      min: supply.minVoltage.value,
-      limit: supply.maxVoltage.value,
-      unit: "V",
-      offered: rails.map((r) => r.voltage.value),
-      ...(rail ? { actual: rail.voltage.value, railId: rail.id } : {}),
-    }),
+    check(
+      "supply",
+      rail ? "pass" : "fail",
+      [supply.minVoltage, supply.maxVoltage, ...rails.map((r) => r.voltage)],
+      {
+        min: supply.minVoltage.value,
+        limit: supply.maxVoltage.value,
+        unit: "V",
+        offered: rails.map((r) => r.voltage.value),
+        ...(rail ? { actual: rail.voltage.value, railId: rail.id } : {}),
+      },
+    ),
   );
 
   if (rail) {
     const load = (railLoads[rail.id] ?? 0) + supply.current.value;
     checks.push(
-      check("railCurrent", grade(load / rail.maxCurrent.value, slotThresholds.railCurrent), [supply.current, rail.maxCurrent], {
-        actual: load,
-        limit: rail.maxCurrent.value,
-        unit: "A",
-        railId: rail.id,
-      }),
+      check(
+        "railCurrent",
+        grade(load / rail.maxCurrent.value, slotThresholds.railCurrent),
+        [supply.current, rail.maxCurrent],
+        {
+          actual: load,
+          limit: rail.maxCurrent.value,
+          unit: "A",
+          railId: rail.id,
+        },
+      ),
     );
     const partHigh = supply.logicHigh?.value ?? rail.voltage.value;
-    checks.push(
-      check("logicIntoHost", partHigh > slot.maxInput.value + 1e-9 ? "fail" : "pass", [supply.logicHigh, slot.maxInput], {
-        actual: partHigh,
-        limit: slot.maxInput.value,
-        unit: "V",
-      }),
-      check("logicIntoPart", slot.logicHigh.value > supply.maxInput.value + 1e-9 ? "fail" : "pass", [slot.logicHigh, supply.maxInput], {
-        actual: slot.logicHigh.value,
-        limit: supply.maxInput.value,
-        unit: "V",
-      }),
-    );
+    const { logicHigh, maxInput } = slot;
+    if (logicHigh && maxInput)
+      checks.push(
+        check(
+          "logicIntoHost",
+          partHigh > maxInput.value + 1e-9 ? "fail" : "pass",
+          [supply.logicHigh, maxInput],
+          {
+            actual: partHigh,
+            limit: maxInput.value,
+            unit: "V",
+          },
+        ),
+        check(
+          "logicIntoPart",
+          logicHigh.value > supply.maxInput.value + 1e-9 ? "fail" : "pass",
+          [logicHigh, supply.maxInput],
+          {
+            actual: logicHigh.value,
+            limit: supply.maxInput.value,
+            unit: "V",
+          },
+        ),
+      );
     if (slot.thermalBudget) {
       const heat = rail.voltage.value * supply.current.value;
       checks.push(
-        check("thermal", grade(heat / slot.thermalBudget.value, slotThresholds.thermal), [supply.current, slot.thermalBudget], {
-          actual: heat,
-          limit: slot.thermalBudget.value,
-          unit: "W",
-        }),
+        check(
+          "thermal",
+          grade(heat / slot.thermalBudget.value, slotThresholds.thermal),
+          [supply.current, slot.thermalBudget],
+          {
+            actual: heat,
+            limit: slot.thermalBudget.value,
+            unit: "W",
+          },
+        ),
       );
     }
   }

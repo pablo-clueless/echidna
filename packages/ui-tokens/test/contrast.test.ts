@@ -15,7 +15,9 @@ describe("contrastRatio", () => {
   });
 
   it("is symmetric", () => {
-    expect(contrastRatio(palette.ink, palette.cream)).toBe(contrastRatio(palette.cream, palette.ink));
+    expect(contrastRatio(palette.ink, palette.cream)).toBe(
+      contrastRatio(palette.cream, palette.ink),
+    );
   });
 
   it("rejects malformed colours", () => {
@@ -47,15 +49,22 @@ describe.each(themeNames)("%s theme meets WCAG AA", (name) => {
   });
 
   it.each(statuses)("%s status label on its fill", (status) => {
-    expect(contrastRatio(t[`status${status}OnFill`], t[`status${status}Fill`])).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+    expect(
+      contrastRatio(t[`status${status}OnFill`], t[`status${status}Fill`]),
+    ).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
   });
 
   it.each(["Fail", "Pass"] as const)("%s status fill against surface", (status) => {
-    expect(contrastRatio(t[`status${status}Fill`], t.surface)).toBeGreaterThanOrEqual(WCAG_AA_NON_TEXT);
+    expect(contrastRatio(t[`status${status}Fill`], t.surface)).toBeGreaterThanOrEqual(
+      WCAG_AA_NON_TEXT,
+    );
   });
 
   it("warn status fill or its border against surface", () => {
-    const best = Math.max(contrastRatio(t.statusWarnFill, t.surface), contrastRatio(t.statusWarnBorder, t.surface));
+    const best = Math.max(
+      contrastRatio(t.statusWarnFill, t.surface),
+      contrastRatio(t.statusWarnBorder, t.surface),
+    );
     expect(best).toBeGreaterThanOrEqual(WCAG_AA_NON_TEXT);
   });
 });
@@ -78,13 +87,13 @@ describe("toCss", () => {
   it("emits both themes and honours the system preference", () => {
     expect(css).toContain(`--colour-surface: ${palette.white};`);
     expect(css).toContain(':root[data-theme="dark"]');
-    expect(css).toContain('@media (prefers-color-scheme: dark)');
+    expect(css).toContain("@media (prefers-color-scheme: dark)");
   });
 
   it("adds script fallbacks only for ru, zh and ja", () => {
-    expect(css).toContain(':lang(ru)');
+    expect(css).toContain(":lang(ru)");
     expect(css).toContain('"Noto Sans SC"');
     expect(css).toContain('"Noto Sans JP"');
-    expect(css).not.toContain(':lang(fr)');
+    expect(css).not.toContain(":lang(fr)");
   });
 });

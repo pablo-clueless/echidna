@@ -1,0 +1,80 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "b650-atx",
+  "name": "B650 ATX motherboard (AM5)",
+  "kind": "motherboard",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "motherboard",
+    "power": {
+      "value": 50,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Chipset, VRM losses, fans and USB on a typical ATX board; boards don't publish a figure"
+    },
+    "needs": {
+      "atx-24pin": 1,
+      "eps-8pin": 1
+    }
+  },
+  "model": "module",
+  "footprintId": "module/motherboard",
+  "meshUrl": "generic/motherboard",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "cpu",
+        "accepts": [
+          {
+            "protocol": "am5"
+          }
+        ]
+      },
+      {
+        "id": "cooler",
+        "accepts": [
+          {
+            "protocol": "am5-cooler-mount"
+          }
+        ]
+      },
+      {
+        "id": "pcie-x16",
+        "accepts": [
+          {
+            "protocol": "pcie-x16"
+          }
+        ]
+      },
+      {
+        "id": "memory",
+        "accepts": [
+          {
+            "protocol": "ddr5-dimm"
+          }
+        ]
+      },
+      {
+        "id": "m2",
+        "accepts": [
+          {
+            "protocol": "m2-nvme"
+          }
+        ]
+      },
+      {
+        "id": "power",
+        "accepts": [
+          {
+            "protocol": "atx-psu"
+          }
+        ]
+      }
+    ]
+  }
+}

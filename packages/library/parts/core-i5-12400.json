@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "core-i5-12400",
+  "name": "Intel Core i5-12400",
+  "kind": "cpu",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "lga1700"
+    }
+  ],
+  "module": {
+    "role": "cpu",
+    "power": {
+      "value": 117,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Intel product specifications: Maximum Turbo Power 117 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cpu",
+  "meshUrl": "generic/cpu"
+}

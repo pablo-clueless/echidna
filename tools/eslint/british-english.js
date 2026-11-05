@@ -74,7 +74,15 @@ export const findAmericanSpellings = (text) =>
     index: m.index,
   }));
 
-const userFacingAttributes = new Set(["alt", "aria-label", "aria-description", "aria-valuetext", "label", "placeholder", "title"]);
+const userFacingAttributes = new Set([
+  "alt",
+  "aria-label",
+  "aria-description",
+  "aria-valuetext",
+  "label",
+  "placeholder",
+  "title",
+]);
 
 const check = (context, node, text) => {
   for (const { word, british } of findAmericanSpellings(text)) {

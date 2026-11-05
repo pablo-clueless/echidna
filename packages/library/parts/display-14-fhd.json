@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "display-14-fhd",
+  "name": "14-inch 1920 × 1200 IPS display, 60 Hz",
+  "kind": "display",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "edp"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "power": {
+      "value": 4,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Panel and backlight at full brightness; typical for this size and refresh rate"
+    },
+    "typical": {
+      "value": 2.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Panel and backlight at about half brightness"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/display",
+  "meshUrl": "generic/display"
+}

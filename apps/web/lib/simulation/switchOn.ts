@@ -21,17 +21,28 @@ export type PartResponse = {
  * @param id - Component ID.
  * @returns The part's series, or `undefined` when the part was not simulated.
  */
-export const partResponse = (build: CircuitBuild, solution: TransientSolution, id: string): PartResponse | undefined => {
+export const partResponse = (
+  build: CircuitBuild,
+  solution: TransientSolution,
+  id: string,
+): PartResponse | undefined => {
   const element = build.circuit.elements.find((e) => e.id === id);
   const currents = solution.pinCurrents[id];
   if (!element || !currents || element.nodes.length < 2) return undefined;
-  const pins: [number, number] = element.kind === "linearRegulator" ? [1, 2] : [0, element.nodes.length - 1];
+  const pins: [number, number] =
+    element.kind === "linearRegulator" ? [1, 2] : [0, element.nodes.length - 1];
   const node = (pin: number) => solution.nodeVoltages[element.nodes[pin] ?? ""] ?? [];
   const [from, to] = [node(pins[0]), node(pins[1])];
   const voltage = solution.times.map((_, i) => (from[i] ?? 0) - (to[i] ?? 0));
   const raw = currents[pins[0]] ?? [];
   const outward = (raw.at(-1) ?? 0) < 0;
-  return { pins, voltage, currentPin: pins[0], current: outward ? raw.map((i) => -i) : raw, outward };
+  return {
+    pins,
+    voltage,
+    currentPin: pins[0],
+    current: outward ? raw.map((i) => -i) : raw,
+    outward,
+  };
 };
 
 /**
@@ -40,5 +51,13 @@ export const partResponse = (build: CircuitBuild, solution: TransientSolution, i
  * @param index - Sample index.
  * @returns Current into each pin by component ID.
  */
-export const pinCurrentsAt = (solution: TransientSolution, index: number): Record<string, number[]> =>
-  Object.fromEntries(Object.entries(solution.pinCurrents).map(([id, pins]) => [id, pins.map((series) => series[index] ?? 0)]));
+export const pinCurrentsAt = (
+  solution: TransientSolution,
+  index: number,
+): Record<string, number[]> =>
+  Object.fromEntries(
+    Object.entries(solution.pinCurrents).map(([id, pins]) => [
+      id,
+      pins.map((series) => series[index] ?? 0),
+    ]),
+  );

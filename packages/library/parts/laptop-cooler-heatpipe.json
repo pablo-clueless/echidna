@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "laptop-cooler-heatpipe",
+  "name": "Gaming laptop cooler (two fans, four heat pipes)",
+  "kind": "cooler",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "gaming-laptop-cooling-mount"
+    }
+  ],
+  "module": {
+    "role": "cooler",
+    "power": {
+      "value": 4,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Two fans at full speed"
+    },
+    "typical": {
+      "value": 0.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Fan mostly off in light use"
+    },
+    "cooling": {
+      "value": 150,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical sustained rating for this class of laptop cooler; makers don't publish one"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cooler",
+  "meshUrl": "generic/cooler"
+}

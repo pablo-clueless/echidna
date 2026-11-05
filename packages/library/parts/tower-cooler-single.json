@@ -1,0 +1,36 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "tower-cooler-single",
+  "name": "Single-tower air cooler",
+  "kind": "cooler",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "am5-cooler-mount"
+    },
+    {
+      "protocol": "lga1700-cooler-mount"
+    }
+  ],
+  "module": {
+    "role": "cooler",
+    "power": {
+      "value": 2,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "One 120 mm fan"
+    },
+    "cooling": {
+      "value": 150,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical rating for this class of cooler; makers rate coolers in different ways"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cooler",
+  "meshUrl": "generic/cooler"
+}

@@ -8,7 +8,14 @@ export type Point = [number, number];
  * pin the pad belongs to, so tracks can say which pads they join. Pads sharing a `pin`, such as a regulator's tab and
  * its middle lead, are joined inside the part and get no track between them.
  */
-export type RoutePad = { net: string; x: number; z: number; radius: number; throughHole: boolean; pin?: string };
+export type RoutePad = {
+  net: string;
+  x: number;
+  z: number;
+  radius: number;
+  throughHole: boolean;
+  pin?: string;
+};
 /**
  * A copper track. `ends` names the pins of the connection it is part of, the first at the end where `points`
  * starts, when both pads have a `pin`. A connection can take more than one track, one per layer it runs on.
@@ -71,7 +78,8 @@ type Obstacle = { net: string | null; a: Point; b: Point; r: number };
 const distanceToSegment = ([px, pz]: Point, [ax, az]: Point, [bx, bz]: Point) => {
   const [dx, dz] = [bx - ax, bz - az];
   const length2 = dx * dx + dz * dz;
-  const t = length2 === 0 ? 0 : Math.max(0, Math.min(1, ((px - ax) * dx + (pz - az) * dz) / length2));
+  const t =
+    length2 === 0 ? 0 : Math.max(0, Math.min(1, ((px - ax) * dx + (pz - az) * dz) / length2));
   return Math.hypot(px - (ax + t * dx), pz - (az + t * dz));
 };
 
@@ -135,7 +143,11 @@ const spanningTree = (pads: RoutePad[]): Connection[] => {
       }
     }
     if (!best) break;
-    edges.push({ from: groups[best.from] as RoutePad[], to: groups[best.to] as RoutePad[], length: best.length });
+    edges.push({
+      from: groups[best.from] as RoutePad[],
+      to: groups[best.to] as RoutePad[],
+      length: best.length,
+    });
     inTree.add(best.to);
   }
   return edges;
@@ -199,7 +211,11 @@ class Queue {
  * @param options - Board outline and keepouts.
  * @returns Tracks and vias.
  */
-export const route = (pads: RoutePad[], widthOf: (net: string) => number, options: RouteOptions = {}): Routing => {
+export const route = (
+  pads: RoutePad[],
+  widthOf: (net: string) => number,
+  options: RouteOptions = {},
+): Routing => {
   const traces: Trace[] = [];
   const vias: Via[] = [];
   const byNet = new Map<string, RoutePad[]>();
@@ -211,7 +227,12 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
 
   // Grid covering the board, or the pads with a margin, aligned to the pitch so whole-millimetre pads sit on nodes.
   const [minX, maxX, minZ, maxZ] = options.bounds
-    ? [-options.bounds.width / 2, options.bounds.width / 2, -options.bounds.depth / 2, options.bounds.depth / 2]
+    ? [
+        -options.bounds.width / 2,
+        options.bounds.width / 2,
+        -options.bounds.depth / 2,
+        options.bounds.depth / 2,
+      ]
     : [
         Math.min(...pads.map((p) => p.x)) - MARGIN,
         Math.max(...pads.map((p) => p.x)) + MARGIN,
@@ -227,7 +248,10 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
     const j = Math.min(nz - 1, Math.max(0, Math.round((z - z0) / GRID)));
     return j * nx + i;
   };
-  const pointOf = (cell: number): Point => [x0 + (cell % nx) * GRID, z0 + Math.floor(cell / nx) * GRID];
+  const pointOf = (cell: number): Point => [
+    x0 + (cell % nx) * GRID,
+    z0 + Math.floor(cell / nx) * GRID,
+  ];
   /** Grid columns and rows whose cells keep `inset` from the board edge. */
   const inside = (inset: number) =>
     options.bounds
@@ -268,7 +292,10 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
     const length = Math.hypot(o.b[0] - o.a[0], o.b[1] - o.a[1]);
     const pieces = Math.max(1, Math.ceil(length / CHUNK));
     for (let k = 0; k < pieces; k++) {
-      const at = (t: number): Point => [o.a[0] + (o.b[0] - o.a[0]) * t, o.a[1] + (o.b[1] - o.a[1]) * t];
+      const at = (t: number): Point => [
+        o.a[0] + (o.b[0] - o.a[0]) * t,
+        o.a[1] + (o.b[1] - o.a[1]) * t,
+      ];
       const piece = { a: at(k / pieces), b: at((k + 1) / pieces) };
       reaches.forEach((reach, c) => {
         const grid = (owners[c] as readonly [Int16Array, Int16Array])[layer] as Int16Array;
@@ -280,12 +307,18 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
     }
   };
   for (const pad of pads) {
-    const disc = { net: pad.net, a: [pad.x, pad.z] as Point, b: [pad.x, pad.z] as Point, r: pad.radius };
+    const disc = {
+      net: pad.net,
+      a: [pad.x, pad.z] as Point,
+      b: [pad.x, pad.z] as Point,
+      r: pad.radius,
+    };
     addObstacle(0, disc);
     if (pad.throughHole) addObstacle(1, disc);
   }
   for (const k of options.keepouts ?? []) {
-    for (const layer of [0, 1]) addObstacle(layer, { net: null, a: [k.x, k.z], b: [k.x, k.z], r: k.radius });
+    for (const layer of [0, 1])
+      addObstacle(layer, { net: null, a: [k.x, k.z], b: [k.x, k.z], r: k.radius });
   }
 
   // Search state, reused across connections: `seen`, `closed` and `open` hold the current search's stamp when valid.
@@ -305,20 +338,32 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
   const DJ = [0, 1, 1, 1, 0, -1, -1, -1];
 
   const connections = nets
-    .flatMap(([net, members]) => spanningTree(members).map((connection) => ({ net, members, ...connection })))
-    .sort((a, b) => a.length - b.length || widthOf(b.net) - widthOf(a.net) || a.net.localeCompare(b.net));
+    .flatMap(([net, members]) =>
+      spanningTree(members).map((connection) => ({ net, members, ...connection })),
+    )
+    .sort(
+      (a, b) =>
+        a.length - b.length || widthOf(b.net) - widthOf(a.net) || a.net.localeCompare(b.net),
+    );
 
   for (const connection of connections) {
     const { net, members } = connection;
     const id = netId.get(net) as number;
     const half = widthOf(net) / 2;
-    const [topOwner, bottomOwner] = owners[halves.indexOf(half)] as readonly [Int16Array, Int16Array];
+    const [topOwner, bottomOwner] = owners[halves.indexOf(half)] as readonly [
+      Int16Array,
+      Int16Array,
+    ];
     const [viaTop, viaBottom] = owners[viaClass] as readonly [Int16Array, Int16Array];
     const [roomTop, roomBottom] = owners[roomClass] as readonly [Int16Array, Int16Array];
     const track = inside(EDGE_CLEARANCE + half);
     const viaArea = inside(EDGE_CLEARANCE + VIA_SIZE / 2);
     for (const pad of members) {
-      cellsNear({ a: [pad.x, pad.z], b: [pad.x, pad.z] }, pad.radius + VIA_SIZE / 2, (c) => (padVia[c] = id));
+      cellsNear(
+        { a: [pad.x, pad.z], b: [pad.x, pad.z] },
+        pad.radius + VIA_SIZE / 2,
+        (c) => (padVia[c] = id),
+      );
     }
 
     type Path = { cells: { layer: number; cell: number }[]; from: RoutePad; to: RoutePad };
@@ -342,7 +387,14 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
       const viaFits = (cell: number) => {
         const i = cell % nx;
         const j = (cell - i) / nx;
-        if (i < viaArea.i0 || i > viaArea.i1 || j < viaArea.j0 || j > viaArea.j1 || padVia[cell] === id) return false;
+        if (
+          i < viaArea.i0 ||
+          i > viaArea.i1 ||
+          j < viaArea.j0 ||
+          j > viaArea.j1 ||
+          padVia[cell] === id
+        )
+          return false;
         const [t, b] = [viaTop[cell] as number, viaBottom[cell] as number];
         return (t === 0 || t === id) && (b === 0 || b === id);
       };
@@ -366,7 +418,10 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
         let estimate = Infinity;
         for (const goal of goals) {
           const [di, dj] = [Math.abs(ci - goal.i), Math.abs(cj - goal.j)];
-          estimate = Math.min(estimate, (Math.max(di, dj) + (Math.SQRT2 - 1) * Math.min(di, dj)) * GRID);
+          estimate = Math.min(
+            estimate,
+            (Math.max(di, dj) + (Math.SQRT2 - 1) * Math.min(di, dj)) * GRID,
+          );
         }
         queue.push(value + GREED * estimate + (state >= n && !goalBottom ? VIA_COST : 0), state);
       };
@@ -384,7 +439,8 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
         const cell = state - layer * n;
         if (goalAt[state] === search) {
           const cells: { layer: number; cell: number }[] = [];
-          for (let s = state; s !== -1; s = parent[s] as number) cells.push({ layer: s >= n ? 1 : 0, cell: s % n });
+          for (let s = state; s !== -1; s = parent[s] as number)
+            cells.push({ layer: s >= n ? 1 : 0, cell: s % n });
           cells.reverse();
           const start = (cells[0] as { cell: number }).cell;
           const from = sources.find((pad) => cellOf([pad.x, pad.z]) === start) as RoutePad;
@@ -422,7 +478,17 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
     if (!found) {
       const [from, to] = [connection.from[0] as RoutePad, connection.to[0] as RoutePad];
       const ends: Pick<Trace, "ends"> = from.pin && to.pin ? { ends: [from.pin, to.pin] } : {};
-      traces.push({ net, layer: "top", width, points: [[from.x, from.z], [to.x, to.z]], unrouted: true, ...ends });
+      traces.push({
+        net,
+        layer: "top",
+        width,
+        points: [
+          [from.x, from.z],
+          [to.x, to.z],
+        ],
+        unrouted: true,
+        ...ends,
+      });
       continue;
     }
     const { cells: path, from, to } = found;
@@ -436,7 +502,8 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
         if (last) {
           const [x, z] = pointOf(cell);
           vias.push({ net, x, z });
-          for (const side of [0, 1]) addObstacle(side, { net, a: [x, z], b: [x, z], r: VIA_SIZE / 2 });
+          for (const side of [0, 1])
+            addObstacle(side, { net, a: [x, z], b: [x, z], r: VIA_SIZE / 2 });
         }
         runs.push({ layer, points: [pointOf(cell)] });
       }
@@ -444,8 +511,14 @@ export const route = (pads: RoutePad[], widthOf: (net: string) => number, option
     const [first, last] = [runs[0], runs[runs.length - 1]];
     if (!first || !last) continue;
     // Run the ends into the pad centres with 45° jogs, hidden under the pads.
-    first.points = [...dogleg([from.x, from.z], first.points[0] as Point), ...first.points.slice(1)];
-    last.points = [...last.points.slice(0, -1), ...dogleg(last.points[last.points.length - 1] as Point, [to.x, to.z])];
+    first.points = [
+      ...dogleg([from.x, from.z], first.points[0] as Point),
+      ...first.points.slice(1),
+    ];
+    last.points = [
+      ...last.points.slice(0, -1),
+      ...dogleg(last.points[last.points.length - 1] as Point, [to.x, to.z]),
+    ];
     for (const run of runs) {
       const points = simplify(run.points);
       traces.push({ net, layer: LAYERS[run.layer] as Layer, width, points, ...ends });

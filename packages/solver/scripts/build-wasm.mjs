@@ -14,11 +14,20 @@ if (!available("cargo") || !available("wasm-bindgen")) {
     console.error("cargo/wasm-bindgen not found and no prebuilt solver in packages/solver/wasm/.");
     process.exit(1);
   }
-  console.warn("cargo/wasm-bindgen not found; using prebuilt solver bindings in packages/solver/wasm/.");
+  console.warn(
+    "cargo/wasm-bindgen not found; using prebuilt solver bindings in packages/solver/wasm/.",
+  );
   process.exit(0);
 }
 
-run("cargo", ["build", "-p", "echidna-solver-wasm", "--target", "wasm32-unknown-unknown", "--release"]);
+run("cargo", [
+  "build",
+  "-p",
+  "echidna-solver-wasm",
+  "--target",
+  "wasm32-unknown-unknown",
+  "--release",
+]);
 run("wasm-bindgen", [
   "--target",
   "web",

@@ -1,6 +1,9 @@
 import { test } from "@playwright/test";
 
-if (process.env.GPU) test.use({ launchOptions: { args: ["--enable-gpu", "--ignore-gpu-blocklist", "--use-angle=d3d11"] } });
+if (process.env.GPU)
+  test.use({
+    launchOptions: { args: ["--enable-gpu", "--ignore-gpu-blocklist", "--use-angle=d3d11"] },
+  });
 
 // Temporary: times a resistor edit from Enter to the validator showing the new verdict. Not part of the suite.
 test("time resistor edit", async ({ page }) => {
@@ -10,11 +13,14 @@ test("time resistor edit", async ({ page }) => {
   await page.reload();
   await page.getByRole("button", { name: /example/i }).click();
   await page.getByText("All checks passed").waitFor();
-  console.log("renderer", await page.evaluate(() => {
-    const gl = document.querySelector("canvas")?.getContext("webgl2");
-    const ext = gl?.getExtension("WEBGL_debug_renderer_info");
-    return ext ? gl!.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "?";
-  }));
+  console.log(
+    "renderer",
+    await page.evaluate(() => {
+      const gl = document.querySelector("canvas")?.getContext("webgl2");
+      const ext = gl?.getExtension("WEBGL_debug_renderer_info");
+      return ext ? gl!.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "?";
+    }),
+  );
   await page.getByRole("button", { name: /R1/ }).first().click();
   const field = page.locator('input[name="resistance"]');
   const samples: number[] = [];
@@ -41,10 +47,17 @@ test("time resistor edit", async ({ page }) => {
     );
     await field.press("Enter");
     const ms = await waiting;
-    const solved = await page.locator('section[aria-label="Validator"]').getByText(/Solved in/i).first().textContent().catch(() => "?");
+    const solved = await page
+      .locator('section[aria-label="Validator"]')
+      .getByText(/Solved in/i)
+      .first()
+      .textContent()
+      .catch(() => "?");
     console.log(`edit ${Math.round(ms)}ms, ${solved}`);
     if (i > 0) samples.push(ms);
   }
   samples.sort((a, b) => a - b);
-  console.log(`EDIT_MS ${JSON.stringify(samples.map(Math.round))} median=${Math.round(samples[samples.length >> 1]!)}`);
+  console.log(
+    `EDIT_MS ${JSON.stringify(samples.map(Math.round))} median=${Math.round(samples[samples.length >> 1]!)}`,
+  );
 });

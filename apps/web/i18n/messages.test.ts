@@ -6,10 +6,7 @@ import { locales } from "./routing";
 
 describe("withFallback", () => {
   it("fills missing keys from the fallback and keeps translated ones", () => {
-    const merged = withFallback(
-      { A: { x: "x-en", y: "y-en" }, b: "b-en" },
-      { A: { x: "x-fr" } },
-    );
+    const merged = withFallback({ A: { x: "x-en", y: "y-en" }, b: "b-en" }, { A: { x: "x-fr" } });
     expect(merged).toEqual({ A: { x: "x-fr", y: "y-en" }, b: "b-en" });
   });
 

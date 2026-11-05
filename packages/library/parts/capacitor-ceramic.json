@@ -9,7 +9,12 @@
     { "id": "2", "name": "2" }
   ],
   "params": {
-    "capacitance": { "value": 1e-5, "unit": "F", "source": "datasheet", "reference": "Nominal value" }
+    "capacitance": {
+      "value": 1e-5,
+      "unit": "F",
+      "source": "datasheet",
+      "reference": "Nominal value"
+    }
   },
   "ratings": {
     "maxVoltage": { "value": 16, "unit": "V", "source": "datasheet", "reference": "Rated voltage" }

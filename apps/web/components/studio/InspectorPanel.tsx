@@ -22,6 +22,7 @@ import { ParamField } from "./inspector/ParamField";
 import { useProjectStore } from "@/stores/project";
 import { swapParam } from "@/lib/simulation/swaps";
 import { SlotSwaps } from "./inspector/SlotSwaps";
+import { isPluggable } from "@/lib/project/slots";
 import { HostSlots } from "./inspector/HostSlots";
 import { useStudioStore } from "@/stores/studio";
 import { formatQuantity } from "@/lib/units";
@@ -35,7 +36,13 @@ const Readout = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-const ComponentInspector = ({ component, spec }: { component: NetlistComponent; spec: ComponentSpec }) => {
+const ComponentInspector = ({
+  component,
+  spec,
+}: {
+  component: NetlistComponent;
+  spec: ComponentSpec;
+}) => {
   const t = useTranslations("Studio.inspector");
   const tParts = useTranslations("Parts");
   const tParams = useTranslations("Studio.params");
@@ -52,7 +59,10 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
   const editable = new Set(editableParams(spec));
   const params = Object.entries(spec.params).filter(([key]) => editable.has(key));
 
-  const led = spec.kind === "led" && simulation && solution ? ledState(simulation.build, solution, component.id) : undefined;
+  const led =
+    spec.kind === "led" && simulation && solution
+      ? ledState(simulation.build, solution, component.id)
+      : undefined;
 
   const power = Math.max(0, solution?.componentPower[component.id] ?? 0);
   const thermalResistance = spec.params.thermalResistance?.value;
@@ -78,7 +88,11 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
             ? [
                 {
                   label: t("temperature"),
-                  value: formatQuantity(partTemperature(power, { resistance: thermalResistance, ambient }), "K", locale),
+                  value: formatQuantity(
+                    partTemperature(power, { resistance: thermalResistance, ambient }),
+                    "K",
+                    locale,
+                  ),
                 },
               ]
             : []),
@@ -90,7 +104,7 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
       <div className="@container grid gap-5 p-3">
         <div className="grid gap-0.5">
           <p className="font-mono text-base font-semibold">{component.id}</p>
-          <p className="text-sm text-muted-foreground">{tParts(`${partKey(spec.id)}.name`)}</p>
+          <p className="text-muted-foreground text-sm">{tParts(`${partKey(spec.id)}.name`)}</p>
         </div>
 
         {spec.kind === "switch" ? (
@@ -102,7 +116,9 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
         {led && (
           <div role="status" className="grid gap-0.5 rounded-md border px-2.5 py-2 text-xs">
             <p className="font-medium">
-              {led.lit ? t("led.on", { current: formatQuantity(led.current, "A", locale) }) : t("led.off")}
+              {led.lit
+                ? t("led.on", { current: formatQuantity(led.current, "A", locale) })
+                : t("led.off")}
             </p>
             {!led.lit && <p className="text-muted-foreground">{t(`led.reasons.${led.reason}`)}</p>}
           </div>
@@ -110,7 +126,7 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
 
         {params.length > 0 && (
           <section aria-labelledby="params-heading" className="grid gap-3">
-            <h3 id="params-heading" className="text-xs font-medium text-muted-foreground">
+            <h3 id="params-heading" className="text-muted-foreground text-xs font-medium">
               {t("parameters")}
             </h3>
             <div className="grid grid-cols-2 gap-4">
@@ -129,13 +145,13 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
           </section>
         )}
 
-        {spec.supply && <SlotPicker component={component} />}
+        {isPluggable(spec) && <SlotPicker component={component} />}
         {spec.host && <HostSlots component={component} spec={spec} />}
-        {(spec.supply || spec.host) && <SlotSwaps component={component} />}
+        {(isPluggable(spec) || spec.host) && <SlotSwaps component={component} />}
 
         {readouts.length > 0 && (
           <section aria-labelledby="live-heading" className="grid gap-1">
-            <h3 id="live-heading" className="text-xs font-medium text-muted-foreground">
+            <h3 id="live-heading" className="text-muted-foreground text-xs font-medium">
               {t("liveValues")}
             </h3>
             <dl>
@@ -150,7 +166,7 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
 
         {checks.length > 0 && (
           <section aria-labelledby="checks-heading" className="grid gap-3">
-            <h3 id="checks-heading" className="text-xs font-medium text-muted-foreground">
+            <h3 id="checks-heading" className="text-muted-foreground text-xs font-medium">
               {t("ratings")}
             </h3>
             {checks.map((v) => (
@@ -172,7 +188,12 @@ const WireInspector = ({ wireId }: { wireId: string }) => {
   const simulation = useStudioStore((s) => s.simulation);
   const wire = wires.find((w) => w.id === wireId);
   const net = useMemo(
-    () => (wire ? deriveNets(wires).find((n) => n.pins.some((p) => p.componentId === wire.a.componentId && p.pinId === wire.a.pinId)) : undefined),
+    () =>
+      wire
+        ? deriveNets(wires).find((n) =>
+            n.pins.some((p) => p.componentId === wire.a.componentId && p.pinId === wire.a.pinId),
+          )
+        : undefined,
     [wires, wire],
   );
   if (!wire || !net) return null;
@@ -183,8 +204,13 @@ const WireInspector = ({ wireId }: { wireId: string }) => {
     <div className="grid flex-1 content-start gap-4 overflow-y-auto p-3">
       <p className="font-mono text-base font-semibold">{t("net")}</p>
       <dl>
-        {voltage !== undefined && <Readout label={t("netVoltage")} value={formatQuantity(voltage, "V", locale)} />}
-        <Readout label={t("connections")} value={net.pins.map((p) => `${p.componentId}.${p.pinId}`).join(", ")} />
+        {voltage !== undefined && (
+          <Readout label={t("netVoltage")} value={formatQuantity(voltage, "V", locale)} />
+        )}
+        <Readout
+          label={t("connections")}
+          value={net.pins.map((p) => `${p.componentId}.${p.pinId}`).join(", ")}
+        />
       </dl>
     </div>
   );
@@ -209,7 +235,11 @@ export const InspectorPanel = () => {
         <div className="flex flex-1 flex-col overflow-y-auto">
           <BoardSizeFields />
           <AmbientField />
-          <PanelEmpty icon={<MousePointerClick />} title={t("emptyTitle")} description={t("emptyDescription")} />
+          <PanelEmpty
+            icon={<MousePointerClick />}
+            title={t("emptyTitle")}
+            description={t("emptyDescription")}
+          />
         </div>
       )}
     </section>

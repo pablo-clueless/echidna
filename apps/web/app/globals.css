@@ -134,14 +134,14 @@
     height: 100%;
     user-select: none;
   }
-  
+
   html {
     @apply font-sans;
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background font-sans text-foreground antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     line-height: var(--line-height-normal);
   }
 
@@ -237,11 +237,19 @@
 }
 
 .hatch-v {
-  background-image: repeating-linear-gradient(90deg, color-mix(in srgb, var(--foreground) 28%, transparent) 0 1px, transparent 1px 5px);
+  background-image: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--foreground) 28%, transparent) 0 1px,
+    transparent 1px 5px
+  );
 }
 
 .hatch-h {
-  background-image: repeating-linear-gradient(0deg, color-mix(in srgb, var(--foreground) 28%, transparent) 0 1px, transparent 1px 5px);
+  background-image: repeating-linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--foreground) 28%, transparent) 0 1px,
+    transparent 1px 5px
+  );
 }
 
 /* Typed headings: each character flashes as a solid block before its glyph shows, so a block cursor sweeps the line. */

@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ryzen-9-7950x",
+  "name": "AMD Ryzen 9 7950X",
+  "kind": "cpu",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "am5"
+    }
+  ],
+  "module": {
+    "role": "cpu",
+    "power": {
+      "value": 230,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "AMD's package power limit (PPT) on AM5 is 1.35 × the default TDP of 170 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cpu",
+  "meshUrl": "generic/cpu"
+}

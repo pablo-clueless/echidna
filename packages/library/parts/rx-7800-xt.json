@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "rx-7800-xt",
+  "name": "AMD Radeon RX 7800 XT",
+  "kind": "gpu",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "pcie-x16"
+    }
+  ],
+  "module": {
+    "role": "gpu",
+    "power": {
+      "value": 263,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "AMD specifications: typical board power 263 W, two 8-pin PCIe connectors"
+    },
+    "needs": {
+      "pcie-8pin": 2
+    }
+  },
+  "model": "module",
+  "footprintId": "module/gpu",
+  "meshUrl": "generic/gpu"
+}

@@ -61,7 +61,7 @@ export const Viewport = () => {
       onPointerDown={(e) => {
         if (e.target instanceof HTMLCanvasElement) e.currentTarget.focus({ preventScroll: true });
       }}
-      className="relative h-full bg-(--colour-viewport) outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+      className="focus-visible:ring-ring relative h-full bg-(--colour-viewport) outline-none focus-visible:ring-2 focus-visible:ring-inset"
     >
       <p id={helpId} className="sr-only">
         {t("help")}

@@ -58,7 +58,13 @@ export const CircuitDiagram = ({ resistance, ratio, severity, title }: Props) =>
         </radialGradient>
       </defs>
 
-      <path d={LOOP} fill="none" className="stroke-muted-foreground/45" strokeWidth={2} strokeLinejoin="round" />
+      <path
+        d={LOOP}
+        fill="none"
+        className="stroke-muted-foreground/45"
+        strokeWidth={2}
+        strokeLinejoin="round"
+      />
       <path
         ref={flowRef}
         d={LOOP}
@@ -73,7 +79,12 @@ export const CircuitDiagram = ({ resistance, ratio, severity, title }: Props) =>
         <rect x={44} y={86} width={32} height={26} className="fill-card" />
         <line x1={44} y1={92} x2={76} y2={92} className="stroke-foreground" strokeWidth={2.5} />
         <line x1={52} y1={104} x2={68} y2={104} className="stroke-foreground" strokeWidth={4} />
-        <text x={30} y={102} textAnchor="end" className="fill-muted-foreground font-mono text-[11px]">
+        <text
+          x={30}
+          y={102}
+          textAnchor="end"
+          className="fill-muted-foreground font-mono text-[11px]"
+        >
           5 V
         </text>
         <text x={82} y={88} className="fill-muted-foreground font-mono text-[10px]">
@@ -90,7 +101,12 @@ export const CircuitDiagram = ({ resistance, ratio, severity, title }: Props) =>
           strokeWidth={2}
           strokeLinejoin="round"
         />
-        <text x={180} y={38} textAnchor="middle" className="fill-foreground font-mono text-[12px] font-medium">
+        <text
+          x={180}
+          y={38}
+          textAnchor="middle"
+          className="fill-foreground font-mono text-[12px] font-medium"
+        >
           {resistance}
           <tspan className="font-sans"> Ω</tspan>
         </text>
@@ -103,12 +119,30 @@ export const CircuitDiagram = ({ resistance, ratio, severity, title }: Props) =>
           r={14 + glow * 20}
           fill="url(#led-glow)"
           opacity={Math.min(1, 0.15 + glow * 0.7)}
-          className={cn("transition-[r,opacity] duration-300", severity === "fail" && "motion-safe:animate-pulse")}
+          className={cn(
+            "transition-[r,opacity] duration-300",
+            severity === "fail" && "motion-safe:animate-pulse",
+          )}
         />
-        <path d="M288 87 H312 L300 107 Z" className="fill-card stroke-foreground" strokeWidth={2} strokeLinejoin="round" />
+        <path
+          d="M288 87 H312 L300 107 Z"
+          className="fill-card stroke-foreground"
+          strokeWidth={2}
+          strokeLinejoin="round"
+        />
         <line x1={287} y1={108} x2={313} y2={108} className="stroke-foreground" strokeWidth={2.5} />
-        <path d="M318 90 l9 -7 m-4 0 h4 v4 M318 101 l9 -7 m-4 0 h4 v4" fill="none" className="stroke-muted-foreground" strokeWidth={1.5} />
-        <text x={338} y={136} textAnchor="end" className="fill-muted-foreground font-mono text-[11px]">
+        <path
+          d="M318 90 l9 -7 m-4 0 h4 v4 M318 101 l9 -7 m-4 0 h4 v4"
+          fill="none"
+          className="stroke-muted-foreground"
+          strokeWidth={1.5}
+        />
+        <text
+          x={338}
+          y={136}
+          textAnchor="end"
+          className="fill-muted-foreground font-mono text-[11px]"
+        >
           LED
         </text>
       </g>

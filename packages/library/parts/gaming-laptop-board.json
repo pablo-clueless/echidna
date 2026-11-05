@@ -1,0 +1,99 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "gaming-laptop-board",
+  "name": "Gaming laptop mainboard (55 W CPU, 115 W GPU)",
+  "kind": "laptopBoard",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "motherboard",
+    "power": {
+      "value": 200,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "55 W processor and 115 W graphics at full load, plus about 30 W for the rest of the board"
+    },
+    "typical": {
+      "value": 9,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Light everyday use (browsing, video) with power saving on; makers don't publish a figure"
+    },
+    "heat": {
+      "value": 170,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "55 W processor plus graphics at its 115 W maximum; NVIDIA lists laptop RTX 4060 graphics at 35–115 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/laptopBoard",
+  "meshUrl": "generic/laptopBoard",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "memory",
+        "accepts": [
+          {
+            "protocol": "so-dimm-ddr5"
+          }
+        ]
+      },
+      {
+        "id": "m2",
+        "accepts": [
+          {
+            "protocol": "m2-nvme"
+          }
+        ]
+      },
+      {
+        "id": "wifi",
+        "accepts": [
+          {
+            "protocol": "m2-e-key"
+          }
+        ]
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "battery-4s"
+          }
+        ]
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "edp"
+          }
+        ]
+      },
+      {
+        "id": "cooler",
+        "accepts": [
+          {
+            "protocol": "gaming-laptop-cooling-mount"
+          }
+        ]
+      },
+      {
+        "id": "dc-in",
+        "accepts": [
+          {
+            "protocol": "dc-barrel"
+          },
+          {
+            "protocol": "usb-c-pd"
+          }
+        ]
+      }
+    ]
+  }
+}

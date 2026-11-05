@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "display-14-oled-120",
+  "name": "14-inch 2880 × 1800 OLED display, 120 Hz",
+  "kind": "display",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "edp"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "power": {
+      "value": 6,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Panel and backlight at full brightness; typical for this size and refresh rate"
+    },
+    "typical": {
+      "value": 4,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Mostly light content at about half brightness; OLED draws more on bright pages"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/display",
+  "meshUrl": "generic/display"
+}

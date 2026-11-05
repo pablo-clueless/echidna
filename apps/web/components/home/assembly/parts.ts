@@ -12,7 +12,8 @@ export type Prim = {
   accent?: boolean;
 };
 
-export type StepKey = "soc" | "memory" | "capacitors" | "resistors" | "usb" | "inductor" | "crystal" | "led" | "header";
+export type StepKey =
+  "soc" | "memory" | "capacitors" | "resistors" | "usb" | "inductor" | "crystal" | "led" | "header";
 
 export type Step = {
   key: StepKey;
@@ -21,12 +22,19 @@ export type Step = {
   prims: Prim[];
 };
 
-type Kind = "qfp" | "soic" | "mlcc" | "resistor" | "usb" | "inductor" | "crystal" | "led" | "header";
+type Kind =
+  "qfp" | "soic" | "mlcc" | "resistor" | "usb" | "inductor" | "crystal" | "led" | "header";
 type Placement = { kind: Kind; at: [number, number]; turn?: boolean };
 
 const TOP = BOARD.thickness;
 
-const box = (size: Vec3, pos: Vec3, role: Role, accent = false): Prim => ({ shape: "box", size, pos, role, accent });
+const box = (size: Vec3, pos: Vec3, role: Role, accent = false): Prim => ({
+  shape: "box",
+  size,
+  pos,
+  role,
+  accent,
+});
 
 const pinRow = (count: number, span: number, place: (offset: number) => Prim) =>
   Array.from({ length: count }, (_, i) => place(-span / 2 + (span * i) / Math.max(1, count - 1)));
@@ -40,7 +48,12 @@ const qfp = (): Prim[] => {
   return [
     box([w, h, w], [0, h / 2 + 0.02, 0], "body", true),
     box([w * 0.62, 0.012, w * 0.62], [0, h + 0.026, 0], "top"),
-    { shape: "cyl", size: [0.07, 0.012, 0.07], pos: [-w * 0.38, h + 0.026, -w * 0.38], role: "top" },
+    {
+      shape: "cyl",
+      size: [0.07, 0.012, 0.07],
+      pos: [-w * 0.38, h + 0.026, -w * 0.38],
+      role: "top",
+    },
     ...pinRow(8, span, (o) => pin(o, -w / 2 - 0.07, "x")),
     ...pinRow(8, span, (o) => pin(o, w / 2 + 0.07, "x")),
     ...pinRow(8, span, (o) => pin(-w / 2 - 0.07, o, "z")),
@@ -152,7 +165,10 @@ export const buildSteps = (): Step[] =>
     const prims = items.flatMap(({ kind, at, turn }) =>
       kinds[kind]().map((p) => {
         const placed = turn ? turnPrim(p) : p;
-        return { ...placed, pos: [placed.pos[0] + at[0] - cx, placed.pos[1], placed.pos[2] + at[1] - cz] as Vec3 };
+        return {
+          ...placed,
+          pos: [placed.pos[0] + at[0] - cx, placed.pos[1], placed.pos[2] + at[1] - cz] as Vec3,
+        };
       }),
     );
     return { key, designator, centre: [cx, TOP, cz], prims };

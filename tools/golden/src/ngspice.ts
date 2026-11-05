@@ -5,7 +5,9 @@ import { execFileSync, spawnSync } from "node:child_process";
  * `NGSPICE` to run it another way, such as `wsl.exe -d Ubuntu-24.04 ngspice` on Windows.
  */
 const command = (): [string, string[]] => {
-  const [program = "ngspice", ...args] = (process.env.NGSPICE ?? "ngspice").split(/\s+/).filter(Boolean);
+  const [program = "ngspice", ...args] = (process.env.NGSPICE ?? "ngspice")
+    .split(/\s+/)
+    .filter(Boolean);
   return [program, args];
 };
 
@@ -22,5 +24,9 @@ export const ngspiceAvailable = (): boolean => {
  */
 export const runNgspice = (netlist: string): string => {
   const [program, args] = command();
-  return execFileSync(program, [...args, "-b"], { input: netlist, encoding: "utf8", timeout: 30_000 });
+  return execFileSync(program, [...args, "-b"], {
+    input: netlist,
+    encoding: "utf8",
+    timeout: 30_000,
+  });
 };

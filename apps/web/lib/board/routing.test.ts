@@ -3,7 +3,13 @@ import { describe, expect, it } from "vitest";
 import { CLEARANCE, type Point, type RoutePad, route, type Trace } from "./routing";
 import { clearanceViolations, distance } from "./clearance";
 
-const pad = (net: string, x: number, z: number, throughHole = true): RoutePad => ({ net, x, z, radius: 1, throughHole });
+const pad = (net: string, x: number, z: number, throughHole = true): RoutePad => ({
+  net,
+  x,
+  z,
+  radius: 1,
+  throughHole,
+});
 const width = () => 0.4;
 
 const segments = (traces: Trace[]) =>
@@ -21,7 +27,10 @@ describe("route", () => {
   });
 
   it("only uses horizontal, vertical and 45° segments", () => {
-    const { traces } = route([pad("a", 0, 0), pad("a", 7, 3), pad("a", -4, 9), pad("b", 20, 20), pad("b", 13, -6)], width);
+    const { traces } = route(
+      [pad("a", 0, 0), pad("a", 7, 3), pad("a", -4, 9), pad("b", 20, 20), pad("b", 13, -6)],
+      width,
+    );
     for (const [[ax, az], [bx, bz]] of segments(traces)) {
       const [dx, dz] = [Math.abs(bx - ax), Math.abs(bz - az)];
       expect(dx < 1e-9 || dz < 1e-9 || Math.abs(dx - dz) < 1e-9).toBe(true);
@@ -29,7 +38,10 @@ describe("route", () => {
   });
 
   it("connects n pads with n − 1 tracks and skips single-pad nets", () => {
-    const { traces } = route([pad("a", 0, 0), pad("a", 10, 0), pad("a", 20, 0), pad("b", 5, 5)], width);
+    const { traces } = route(
+      [pad("a", 0, 0), pad("a", 10, 0), pad("a", 20, 0), pad("b", 5, 5)],
+      width,
+    );
     expect(traces).toHaveLength(2);
     expect(traces.every((t) => t.net === "a")).toBe(true);
   });
@@ -45,7 +57,10 @@ describe("route", () => {
   });
 
   it("needs no vias to drop a through-hole connection to the bottom", () => {
-    const { traces, vias } = route([pad("a", -10, 0), pad("a", 10, 0), pad("b", 0, -10), pad("b", 0, 10)], width);
+    const { traces, vias } = route(
+      [pad("a", -10, 0), pad("a", 10, 0), pad("b", 0, -10), pad("b", 0, 10)],
+      width,
+    );
     expect(traces.find((t) => t.net === "b")?.layer).toBe("bottom");
     expect(vias).toEqual([]);
   });
@@ -80,7 +95,9 @@ describe("route", () => {
     const lead = { ...pad("out", 0, 5, false), pin: "U1/out" };
     const tab = { ...pad("out", 0, -5, false), pin: "U1/out" };
     const load = { ...pad("out", 10, 0), pin: "R1/1" };
-    const { traces, vias } = route([lead, tab, load], width, { keepouts: [{ x: 5, z: 2.5, radius: 2.5 }] });
+    const { traces, vias } = route([lead, tab, load], width, {
+      keepouts: [{ x: 5, z: 2.5, radius: 2.5 }],
+    });
     expect(vias).toEqual([]);
     expect(traces).toHaveLength(1);
     expect(traces[0]?.points[0]).toEqual([0, -5]);
@@ -100,9 +117,14 @@ describe("route", () => {
 
   it("stays inside the board and out of keepouts", () => {
     const keepout = { x: 0, z: 0, radius: 3 };
-    const { traces } = route([pad("a", -8, 0), pad("a", 8, 0)], width, { bounds: { width: 30, depth: 20 }, keepouts: [keepout] });
+    const { traces } = route([pad("a", -8, 0), pad("a", 8, 0)], width, {
+      bounds: { width: 30, depth: 20 },
+      keepouts: [keepout],
+    });
     for (const [a, b] of segments(traces)) {
-      expect(distance([keepout.x, keepout.z], a, b)).toBeGreaterThanOrEqual(keepout.radius + 0.2 + CLEARANCE - 1e-6);
+      expect(distance([keepout.x, keepout.z], a, b)).toBeGreaterThanOrEqual(
+        keepout.radius + 0.2 + CLEARANCE - 1e-6,
+      );
       for (const [x, z] of [a, b]) {
         expect(Math.abs(x)).toBeLessThanOrEqual(15);
         expect(Math.abs(z)).toBeLessThanOrEqual(10);
@@ -112,9 +134,21 @@ describe("route", () => {
 
   it("marks a connection it cannot route as unrouted, without copper", () => {
     // Pad "a" at the origin is walled in on both layers by a ring of keepouts.
-    const ring = Array.from({ length: 16 }, (_, k) => ({ x: 4 * Math.cos((k * Math.PI) / 8), z: 4 * Math.sin((k * Math.PI) / 8), radius: 1.2 }));
+    const ring = Array.from({ length: 16 }, (_, k) => ({
+      x: 4 * Math.cos((k * Math.PI) / 8),
+      z: 4 * Math.sin((k * Math.PI) / 8),
+      radius: 1.2,
+    }));
     const { traces, vias } = route([pad("a", 0, 0), pad("a", 12, 0)], width, { keepouts: ring });
-    expect(traces).toEqual([expect.objectContaining({ unrouted: true, points: [[0, 0], [12, 0]] })]);
+    expect(traces).toEqual([
+      expect.objectContaining({
+        unrouted: true,
+        points: [
+          [0, 0],
+          [12, 0],
+        ],
+      }),
+    ]);
     expect(vias).toEqual([]);
   });
 

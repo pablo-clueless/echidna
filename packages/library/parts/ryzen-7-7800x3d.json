@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ryzen-7-7800x3d",
+  "name": "AMD Ryzen 7 7800X3D",
+  "kind": "cpu",
+  "deviceTypes": ["desktop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "am5"
+    }
+  ],
+  "module": {
+    "role": "cpu",
+    "power": {
+      "value": 162,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "AMD's package power limit (PPT) on AM5 is 1.35 × the default TDP of 120 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cpu",
+  "meshUrl": "generic/cpu"
+}

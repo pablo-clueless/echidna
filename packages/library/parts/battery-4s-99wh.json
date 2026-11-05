@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "battery-4s-99wh",
+  "name": "4-cell laptop battery, 99.9 Wh",
+  "kind": "battery",
+  "deviceTypes": ["laptop"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "battery-4s"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "energy": {
+      "value": 359640.0,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "Rated capacity; 100 Wh is the most airlines allow in the cabin without approval"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/battery",
+  "meshUrl": "generic/battery"
+}

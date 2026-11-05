@@ -31,7 +31,9 @@ export const VerdictTicker = () => {
 
   return (
     <div ref={ref} aria-hidden className="flex h-full flex-col justify-between gap-6 p-5">
-      <span className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">{t("hero.verdict")}</span>
+      <span className="text-muted-foreground font-mono text-[10px] tracking-[0.18em] uppercase">
+        {t("hero.verdict")}
+      </span>
       <div className="relative h-6 overflow-hidden">
         {order.map((severity, i) => {
           const offset = (i - index + order.length) % order.length;

@@ -4,8 +4,7 @@ type Payload = { kind: "dc"; circuits: Circuit[] } | { kind: "switchOn"; circuit
 
 export type SolveRequest = { id: number } & Payload;
 export type SolveResponse = { id: number } & (
-  | { kind: "dc"; outcomes: SolveOutcome[] }
-  | { kind: "switchOn"; outcome: SwitchOnOutcome }
+  { kind: "dc"; outcomes: SolveOutcome[] } | { kind: "switchOn"; outcome: SwitchOnOutcome }
 );
 
 export type SolverClient = {

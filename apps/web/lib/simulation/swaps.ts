@@ -1,4 +1,9 @@
-import { compareViolations, type ComponentSpec, type Severity, type Violation } from "@echidna/core";
+import {
+  compareViolations,
+  type ComponentSpec,
+  type Severity,
+  type Violation,
+} from "@echidna/core";
 import { type CircuitBuild, partsById, toCircuit } from "@echidna/library";
 import type { DcSolution, SolveOutcome } from "@echidna/solver/types";
 import { evaluate } from "@echidna/rules";
@@ -11,7 +16,11 @@ const series: Record<string, readonly number[]> = {
 };
 
 /** Which standard series to suggest values from, per part kind. */
-const kindSeries: Record<string, keyof typeof series> = { resistor: "E12", capacitor: "E6", inductor: "E6" };
+const kindSeries: Record<string, keyof typeof series> = {
+  resistor: "E12",
+  capacitor: "E6",
+  inductor: "E6",
+};
 
 /**
  * Standard values either side of the current one.
@@ -62,7 +71,9 @@ export const swapCandidates = (
       toNetlist({
         ...project,
         components: project.components.map((c) =>
-          c.id === componentId ? { ...c, paramOverrides: { ...c.paramOverrides, [key]: value } } : c,
+          c.id === componentId
+            ? { ...c, paramOverrides: { ...c.paramOverrides, [key]: value } }
+            : c,
         ),
       }),
       partsById,
@@ -84,7 +95,10 @@ export const gradeSwaps = (
   candidates.map(({ value, build }, i) => {
     const outcome = outcomes[i];
     if (!outcome?.ok) return { value, severity: "fail", estimated: false, worst: null };
-    const worst = evaluate(build, outcome.solution as DcSolution, undefined, ambient).sort(compareViolations)[0] ?? null;
+    const worst =
+      evaluate(build, outcome.solution as DcSolution, undefined, ambient).sort(
+        compareViolations,
+      )[0] ?? null;
     return {
       value,
       severity: worst?.severity ?? "pass",
@@ -93,7 +107,11 @@ export const gradeSwaps = (
     };
   });
 
-const swapParams: Record<string, string> = { resistor: "resistance", capacitor: "capacitance", inductor: "inductance" };
+const swapParams: Record<string, string> = {
+  resistor: "resistance",
+  capacitor: "capacitance",
+  inductor: "inductance",
+};
 
 /**
  * Whether a part has a value worth offering swaps for.

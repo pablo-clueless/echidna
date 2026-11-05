@@ -3,9 +3,7 @@
   "id": "arduino-uno-r4",
   "name": "Arduino UNO R4 Minima",
   "kind": "devBoard",
-  "deviceTypes": [
-    "iot"
-  ],
+  "deviceTypes": ["iot"],
   "pins": [
     {
       "id": "3v3",
@@ -83,10 +81,7 @@
             "protocol": "i2c"
           }
         ],
-        "railIds": [
-          "5v",
-          "3v3"
-        ],
+        "railIds": ["5v", "3v3"],
         "signals": {
           "SDA": "sda",
           "SCL": "scl"
@@ -114,10 +109,7 @@
             "protocol": "1-wire"
           }
         ],
-        "railIds": [
-          "5v",
-          "3v3"
-        ],
+        "railIds": ["5v", "3v3"],
         "signals": {
           "IO1": "d2",
           "IO2": "d3"
