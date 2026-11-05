@@ -13,8 +13,11 @@ export type BoardSize = { width: number; depth: number };
 
 export type Wire = { id: string; a: PinRef; b: PinRef };
 
-/** Where a part is plugged into a host board, the rail it draws from, and the wires plugging it in added. */
-export type SlotPlacement = { hostId: string; slotId: string; railId: string; wireIds: string[] };
+/**
+ * Where a part is plugged into a host board, the rail it draws from, and the wires plugging it in added. Desktop
+ * modules, powered from the PSU rather than a rail, have neither.
+ */
+export type SlotPlacement = { hostId: string; slotId: string; railId?: string; wireIds: string[] };
 
 export type ProjectData = {
   name: string;
@@ -45,6 +48,13 @@ const prefixes: Record<string, string> = {
   pmos: "Q",
   devBoard: "B",
   sensor: "S",
+  motherboard: "MB",
+  cpu: "CPU",
+  gpu: "GPU",
+  memory: "RAM",
+  storage: "SSD",
+  cooler: "FAN",
+  psu: "PSU",
 };
 
 /**

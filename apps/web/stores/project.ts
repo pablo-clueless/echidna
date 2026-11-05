@@ -1,7 +1,7 @@
 import { createJSONStorage, persist } from "zustand/middleware";
+import { builds, partsById } from "@echidna/library";
 import { DEFAULT_AMBIENT } from "@echidna/rules";
 import type { SlotFit } from "@echidna/rules";
-import { partsById } from "@echidna/library";
 import type { PinRef } from "@echidna/core";
 import { create } from "zustand";
 
@@ -69,6 +69,8 @@ type ProjectActions = {
   swapInSlots: (id: string, specId: string) => void;
   /** Starts a new project from a host board, such as a Raspberry Pi, with nothing plugged in. */
   loadPreset: (hostSpecId: string) => void;
+  /** Starts a new project from a reference build, such as the gaming desktop, with every module plugged in. */
+  loadBuild: (buildId: string) => void;
   loadExample: () => void;
   clear: () => void;
 };
@@ -226,20 +228,21 @@ export const useProjectStore = create<ProjectState>()(
         const part = partsById.get(s.components.find((c) => c.id === partId)?.specId ?? "");
         const host = partsById.get(s.components.find((c) => c.id === hostId)?.specId ?? "");
         if (!option || !part || !host) return null;
-        if (!option.fit.fits || option.occupant || !option.fit.railId) return option.fit;
         const railId = option.fit.railId;
+        // A sensor needs a rail to draw from; a desktop module is powered from the PSU.
+        if (!option.fit.fits || option.occupant || (part.supply && !railId)) return option.fit;
         set((state) => {
           const freed = withoutSlot(state, partId);
           const wires = [...freed.wires];
           const wireIds: string[] = [];
-          for (const [a, b] of slotConnections(host, hostId, option.slot, part, partId, railId)) {
+          for (const [a, b] of railId ? slotConnections(host, hostId, option.slot, part, partId, railId) : []) {
             const existing = wires.find((w) => (samePin(w.a, a) && samePin(w.b, b)) || (samePin(w.a, b) && samePin(w.b, a)));
             if (existing) continue;
             const id = wireId(wires);
             wires.push({ id, a, b });
             wireIds.push(id);
           }
-          return { wires, slots: { ...freed.slots, [partId]: { hostId, slotId, railId, wireIds } } };
+          return { wires, slots: { ...freed.slots, [partId]: { hostId, slotId, ...(railId ? { railId } : {}), wireIds } } };
         });
         return option.fit;
       },
@@ -257,6 +260,20 @@ export const useProjectStore = create<ProjectState>()(
         if (!spec?.host) return;
         set(empty());
         get().addComponent(hostSpecId, { x: 8, y: 6 });
+      },
+
+      loadBuild: (buildId) => {
+        const build = builds.find((b) => b.id === buildId);
+        if (!build) return;
+        // A whole build needs a larger board than the default to lay its modules out on.
+        set({ ...empty(), boardSize: clampBoardSize({ width: 120, depth: 80 }) });
+        const hostId = get().addComponent(build.hostId, { x: 8, y: 12 });
+        if (!hostId) return;
+        // Modules stack in a column beside the motherboard: each box is two grid units tall, with room for its label.
+        Object.entries(build.modules).forEach(([slotId, specId], i) => {
+          const id = get().addComponent(specId, { x: 22, y: 2 + i * 4 });
+          if (id) get().plugIn(id, hostId, slotId);
+        });
       },
 
       loadExample: () => set(regulatorExample()),

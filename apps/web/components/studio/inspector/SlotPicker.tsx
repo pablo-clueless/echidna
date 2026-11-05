@@ -6,8 +6,8 @@ import type { FitCheck } from "@echidna/rules";
 import { partsById } from "@echidna/library";
 import { useMemo } from "react";
 
+import { connectorKey, protocolKey, slotKey } from "@/lib/messageKeys";
 import { slotOptions, type SlotOption } from "@/lib/project/slots";
-import { protocolKey, slotKey } from "@/lib/messageKeys";
 import { useProjectStore } from "@/stores/project";
 import { Button } from "@/components/ui/button";
 import { formatQuantity } from "@/lib/units";
@@ -61,6 +61,12 @@ export const useCheckReason = () => {
             limit: q(check.limit, unit),
             rail: railName(host, check.railId ?? ""),
           });
+        case "powerConnectors":
+          return t("checks.powerConnectors", {
+            connector: t(`connectors.${connectorKey(check.connector ?? "")}`),
+            actual: check.actual ?? 0,
+            limit: check.limit ?? 0,
+          });
         default:
           return t(`checks.${check.id}`, { actual: q(check.actual, unit), limit: q(check.limit, unit) });
       }
@@ -113,12 +119,18 @@ export const SlotPicker = ({ component }: { component: NetlistComponent }) => {
             const severity = worstOf(option);
             const problems = option.fit.checks.filter((c) => c.severity !== "pass");
             const rail = railName(host, option.fit.railId ?? "");
+            // A desktop module draws from the PSU, not one of the board's rails.
+            const powered = option.fit.railId !== undefined;
             const status = here
-              ? t("pluggedIn", { rail })
+              ? powered
+                ? t("pluggedIn", { rail })
+                : t("pluggedInModule")
               : option.occupant
                 ? t("inUse", { id: option.occupant })
                 : option.fit.fits
-                  ? t("fits", { rail })
+                  ? powered
+                    ? t("fits", { rail })
+                    : t("fitsModule")
                   : t("blocked");
             return (
               <li

@@ -170,7 +170,9 @@
         "passives": "受動部品",
         "semiconductors": "半導体",
         "devBoards": "開発ボード",
-        "sensors": "センサー"
+        "sensors": "センサー",
+        "motherboards": "マザーボード",
+        "pcParts": "PC パーツ"
       }
     },
     "viewport": {
@@ -355,6 +357,18 @@
       "switchOnPower": {
         "name": "電源投入時の発熱",
         "explain": "回路の起動中、この部品は 1 ミリ秒以上にわたって定格電力の {percent} を熱に変えます。多くは大きなコンデンサの充電中です。コンデンサを小さくするか直列抵抗を増やすと、突入電流が短くなります。"
+      },
+      "psuBudget": {
+        "name": "電源の電力予算",
+        "explain": "フル負荷時、構成全体で電源の定格出力の {percent} を消費します。80% を超えるとピークへの余裕が少なく、100% を超えると電源が停止または故障するおそれがあります。"
+      },
+      "powerConnectors": {
+        "name": "電源コネクタ",
+        "explain": "パーツが必要とするある種類のコネクタは、電源にある数の {percent} です。100% を超えると接続できないパーツがあります。"
+      },
+      "cooling": {
+        "name": "CPU の冷却",
+        "explain": "CPU の発熱はクーラーの定格冷却能力の {percent} です。90% を超えると高負荷時に高温になり、100% を超えると保護のためにクロックを下げます。"
       }
     },
     "slots": {
@@ -362,12 +376,27 @@
       "noHost": "接続するには、Raspberry Pi などの開発ボードを追加してください。",
       "names": {
         "i2c": "I²C ヘッダー",
-        "gpio": "GPIO ピン"
+        "gpio": "GPIO ピン",
+        "cpu": "CPU ソケット",
+        "cooler": "クーラー取り付け部",
+        "pcie-x16": "PCIe x16 スロット",
+        "memory": "メモリスロット",
+        "m2": "M.2 スロット",
+        "power": "ATX 電源コネクタ"
       },
       "protocols": {
         "i2c": "I²C",
         "gpio": "GPIO",
-        "1-wire": "1-Wire"
+        "1-wire": "1-Wire",
+        "am5": "AM5",
+        "lga1700": "LGA1700",
+        "am5-cooler-mount": "AM5 取り付け",
+        "lga1700-cooler-mount": "LGA1700 取り付け",
+        "pcie-x16": "PCIe x16",
+        "ddr5-dimm": "DDR5 メモリ",
+        "ddr4-dimm": "DDR4 メモリ",
+        "m2-nvme": "M.2 NVMe",
+        "atx-psu": "ATX 電源"
       },
       "slotLabel": "{host} の{slot}",
       "pluggedIn": "接続済み、{rail} から給電",
@@ -383,7 +412,10 @@
         "railCurrent": "{rail} レールから合計 {actual} を消費しますが、供給できるのは {limit} までです。",
         "logicIntoHost": "出力は {actual} に達しますが、ボードのピンが耐えられるのは {limit} までです。",
         "logicIntoPart": "ボードはピンを {actual} で駆動しますが、この部品のピンが耐えられるのは {limit} までです。",
-        "thermal": "発熱は {actual} ですが、このスロットの許容値は {limit} です。"
+        "thermal": "発熱は {actual} ですが、このスロットの許容値は {limit} です。",
+        "psuBudget": "構成全体の最大消費電力は {actual}、電源の定格は {limit} です。",
+        "powerConnectors": "{connector} が {actual} 本必要で、電源には {limit} 本あります。",
+        "cooling": "CPU の最大発熱は {actual}、クーラーの定格は {limit} です。"
       },
       "railsTitle": "電源レール",
       "hostTitle": "スロット",
@@ -393,7 +425,17 @@
       "swap": "交換",
       "swapFits": "同じ場所に接続可能",
       "swapFails": "接続できません",
-      "partReason": "{id}：{reason}"
+      "partReason": "{id}：{reason}",
+      "connectors": {
+        "atx-24pin": "24 ピン ATX",
+        "eps-8pin": "8 ピン EPS",
+        "pcie-8pin": "8 ピン PCIe",
+        "12v-2x6": "12V-2x6"
+      },
+      "pluggedInModule": "接続済み",
+      "fitsModule": "接続可能",
+      "buildTitle": "電源と冷却",
+      "buildEmpty": "電源とクーラーを接続すると、電源と冷却をチェックできます。"
     }
   },
   "Parts": {
@@ -490,6 +532,101 @@
     "ds18b20": {
       "name": "DS18B20 温度センサー",
       "summary": "1-Wire で温度を測定"
+    },
+    "b650-atx": {
+      "name": "B650 ATX マザーボード（AM5）",
+      "summary": "AMD Ryzen 7000 CPU と DDR5 用"
+    },
+    "b760-atx": {
+      "name": "B760 ATX マザーボード（LGA1700）",
+      "summary": "第 12〜14 世代 Intel CPU と DDR5 用"
+    },
+    "x670e-atx": {
+      "name": "X670E ATX マザーボード（AM5）",
+      "summary": "CPU 電源コネクタを 2 つ備えたハイエンド AMD ボード"
+    },
+    "ryzen-5-7600": {
+      "name": "AMD Ryzen 5 7600",
+      "summary": "6 コアのデスクトップ CPU、AM5"
+    },
+    "ryzen-7-7800x3d": {
+      "name": "AMD Ryzen 7 7800X3D",
+      "summary": "8 コアのデスクトップ CPU（3D V-Cache）、AM5"
+    },
+    "ryzen-9-7950x": {
+      "name": "AMD Ryzen 9 7950X",
+      "summary": "16 コアのデスクトップ CPU、AM5"
+    },
+    "core-i5-12400": {
+      "name": "Intel Core i5-12400",
+      "summary": "6 コアのデスクトップ CPU、LGA1700"
+    },
+    "core-i7-14700k": {
+      "name": "Intel Core i7-14700K",
+      "summary": "20 コアのデスクトップ CPU、LGA1700"
+    },
+    "rtx-4060": {
+      "name": "NVIDIA GeForce RTX 4060",
+      "summary": "グラフィックスカード、115 W、8 ピン PCIe ×1"
+    },
+    "rtx-4070-super": {
+      "name": "NVIDIA GeForce RTX 4070 SUPER",
+      "summary": "グラフィックスカード、220 W、12V-2x6"
+    },
+    "rtx-4090": {
+      "name": "NVIDIA GeForce RTX 4090",
+      "summary": "グラフィックスカード、450 W、12V-2x6"
+    },
+    "rx-7800-xt": {
+      "name": "AMD Radeon RX 7800 XT",
+      "summary": "グラフィックスカード、263 W、8 ピン PCIe ×2"
+    },
+    "ddr5-32gb-kit": {
+      "name": "DDR5-6000 32 GB キット（2 × 16 GB）",
+      "summary": "DDR5 メモリモジュール 2 枚"
+    },
+    "ddr4-32gb-kit": {
+      "name": "DDR4-3200 32 GB キット（2 × 16 GB）",
+      "summary": "DDR4 メモリモジュール 2 枚"
+    },
+    "nvme-ssd-1tb": {
+      "name": "NVMe PCIe 4.0 SSD、1 TB",
+      "summary": "M.2 SSD"
+    },
+    "tower-cooler-single": {
+      "name": "シングルタワー空冷クーラー",
+      "summary": "定格 約 150 W"
+    },
+    "tower-cooler-dual": {
+      "name": "デュアルタワー空冷クーラー",
+      "summary": "定格 約 250 W"
+    },
+    "aio-cooler-360": {
+      "name": "360 mm 簡易水冷クーラー",
+      "summary": "定格 約 300 W"
+    },
+    "psu-550w": {
+      "name": "550 W ATX 電源（80 Plus Bronze）",
+      "summary": "8 ピン PCIe ×2、12V-2x6 なし"
+    },
+    "psu-750w": {
+      "name": "750 W ATX 3.1 電源（80 Plus Gold）",
+      "summary": "12V-2x6 コネクタ付き"
+    },
+    "psu-1000w": {
+      "name": "1000 W ATX 3.1 電源（80 Plus Gold）",
+      "summary": "12V-2x6 と 8 ピン PCIe ×4"
+    }
+  },
+  "Builds": {
+    "desktop-budget": {
+      "name": "エントリー向けデスクトップ"
+    },
+    "desktop-gaming": {
+      "name": "ゲーミングデスクトップ"
+    },
+    "desktop-workstation": {
+      "name": "ワークステーション"
     }
   }
 }

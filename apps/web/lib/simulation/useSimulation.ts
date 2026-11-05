@@ -6,10 +6,11 @@ import { useEffect } from "react";
 
 import { disposeSolver, getSolver, getSwitchOnSolver } from "./solver";
 import { useProjectStore, type ProjectState } from "@/stores/project";
+import { buildViolations } from "@/lib/project/buildChecks";
 import { useStudioStore } from "@/stores/studio";
 import { toNetlist } from "@/lib/project/model";
 
-type Electrical = Pick<ProjectState, "components" | "wires" | "ambientTemperature">;
+type Electrical = Pick<ProjectState, "components" | "wires" | "ambientTemperature" | "slots">;
 
 /**
  * Keeps the solver and rule engine in step with the project: every electrical edit re-solves on the worker
@@ -24,15 +25,17 @@ export const useSimulation = () => {
       if (!useStudioStore.getState().simulating) return;
       const editedAt = performance.now();
       const build = toCircuit(toNetlist(project), partsById);
+      // Desktop builds are checked as a whole rather than solved, so they have verdicts with or without a circuit.
+      const modules = buildViolations(project, partsById);
       if (build.circuit.elements.length === 0) {
-        useStudioStore.getState().setSimulation(null, []);
+        useStudioStore.getState().setSimulation(null, modules);
         useStudioStore.getState().setSwitchOn(null);
         return;
       }
       const outcome = await getSolver().solve(build.circuit);
       if (!outcome || !useStudioStore.getState().simulating) return;
       const solution = outcome.ok ? outcome.solution : null;
-      const violations = solution ? evaluate(build, solution, undefined, project.ambientTemperature) : [];
+      const violations = [...(solution ? evaluate(build, solution, undefined, project.ambientTemperature) : []), ...modules];
       useStudioStore.getState().setSimulation(
         { build, solution, error: outcome.ok ? null : outcome.error, latencyMs: performance.now() - editedAt },
         violations,
@@ -54,7 +57,7 @@ export const useSimulation = () => {
 
     void run(useProjectStore.getState());
     const unsubscribe = useProjectStore.subscribe((s, prev) => {
-      const electrical = s.components !== prev.components || s.wires !== prev.wires;
+      const electrical = s.components !== prev.components || s.wires !== prev.wires || s.slots !== prev.slots;
       if (electrical || s.ambientTemperature !== prev.ambientTemperature) void run(s);
     });
     const unsubscribeStudio = useStudioStore.subscribe((s, prev) => {

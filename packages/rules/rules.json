@@ -1,13 +1,53 @@
 {
   "slots": {
-    "railCurrent": { "warnAt": 0.8, "failAbove": 1 },
-    "thermal": { "warnAt": 0.8, "failAbove": 1 }
+    "railCurrent": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    "thermal": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    }
+  },
+  "modules": {
+    "psuBudget": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    "cooling": {
+      "warnAt": 0.9,
+      "failAbove": 1
+    }
   },
   "rules": [
-    { "id": "voltageRating", "metric": "voltage", "rating": "maxVoltage", "warnAt": 0.8, "failAbove": 1 },
-    { "id": "currentRating", "metric": "current", "rating": "maxCurrent", "warnAt": 0.8, "failAbove": 1 },
-    { "id": "powerRating", "metric": "power", "rating": "maxPower", "warnAt": 0.8, "failAbove": 1 },
-    { "id": "temperatureRating", "metric": "temperature", "rating": "maxTemperature", "warnAt": 0.8, "failAbove": 1 },
+    {
+      "id": "voltageRating",
+      "metric": "voltage",
+      "rating": "maxVoltage",
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    {
+      "id": "currentRating",
+      "metric": "current",
+      "rating": "maxCurrent",
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    {
+      "id": "powerRating",
+      "metric": "power",
+      "rating": "maxPower",
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    {
+      "id": "temperatureRating",
+      "metric": "temperature",
+      "rating": "maxTemperature",
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
     {
       "id": "switchOnVoltage",
       "analysis": "switchOn",
