@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
 import {
   BufferAttribute,
   BufferGeometry,
@@ -9,6 +8,7 @@ import {
   MaxEquation,
   ShaderMaterial,
 } from "three";
+import { useEffect, useMemo } from "react";
 
 import type { Routing } from "@/lib/board/routing";
 import { glowColour } from "./materials";

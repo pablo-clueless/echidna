@@ -5,17 +5,17 @@ import type { NetlistComponent } from "@echidna/core";
 import { partsById } from "@echidna/library";
 import { useEffect, useState } from "react";
 
-import { paramValue, type ProjectData } from "@/lib/project/model";
-import { getSolver } from "@/lib/simulation/solver";
-import { useProjectStore } from "@/stores/project";
-import { formatQuantity } from "@/lib/units";
-import { cn } from "@/lib/utils";
 import {
   gradeSwaps,
   neighbourValues,
   swapCandidates,
   type SwapVerdict,
 } from "@/lib/simulation/swaps";
+import { paramValue, type ProjectData } from "@/lib/project/model";
+import { getSolver } from "@/lib/simulation/solver";
+import { useProjectStore } from "@/stores/project";
+import { formatQuantity } from "@/lib/units";
+import { cn } from "@/lib/utils";
 
 const dotClass = {
   pass: "bg-status-pass",

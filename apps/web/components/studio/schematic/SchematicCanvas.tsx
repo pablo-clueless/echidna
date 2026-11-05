@@ -1,8 +1,5 @@
 "use client";
 
-import { compareViolations, type PinRef, type Severity } from "@echidna/core";
-import { useLocale, useTranslations } from "next-intl";
-import { partsById } from "@echidna/library";
 import {
   type DragEvent,
   type KeyboardEvent,
@@ -14,14 +11,10 @@ import {
   useState,
   type WheelEvent,
 } from "react";
+import { compareViolations, type PinRef, type Severity } from "@echidna/core";
+import { useLocale, useTranslations } from "next-intl";
+import { partsById } from "@echidna/library";
 
-import { deriveNets, paramValue, pinKey, samePin } from "@/lib/project/model";
-import { boundsOf, innerLabels, SymbolGlyph } from "./SymbolGlyph";
-import { useProjectStore } from "@/stores/project";
-import { useStudioStore } from "@/stores/studio";
-import { formatQuantity } from "@/lib/units";
-import { partKey } from "@/lib/messageKeys";
-import { cn } from "@/lib/utils";
 import {
   boxBounds,
   GRID,
@@ -31,6 +24,13 @@ import {
   routeWire,
   valueParam,
 } from "@/lib/schematic/symbols";
+import { deriveNets, paramValue, pinKey, samePin } from "@/lib/project/model";
+import { boundsOf, innerLabels, SymbolGlyph } from "./SymbolGlyph";
+import { useProjectStore } from "@/stores/project";
+import { useStudioStore } from "@/stores/studio";
+import { formatQuantity } from "@/lib/units";
+import { partKey } from "@/lib/messageKeys";
+import { cn } from "@/lib/utils";
 
 type View = { x: number; y: number; scale: number };
 

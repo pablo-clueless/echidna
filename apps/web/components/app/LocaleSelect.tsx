@@ -3,8 +3,6 @@
 import { hasLocale, useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 
-import { usePathname, useRouter } from "@/i18n/navigation";
-import { localeNames, routing } from "@/i18n/routing";
 import {
   Select,
   SelectContent,
@@ -12,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { localeNames, routing } from "@/i18n/routing";
 
 export const LocaleSelect = () => {
   const t = useTranslations("Preferences");

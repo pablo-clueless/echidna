@@ -5,11 +5,6 @@ import type { SlotFit } from "@echidna/rules";
 import type { PinRef } from "@echidna/core";
 import { create } from "zustand";
 
-import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
-import { slotConnections, slotOptions } from "@/lib/project/slots";
-import { regulatorExample } from "@/lib/project/example";
-import { nextRotation } from "@/lib/schematic/symbols";
-import { footprints } from "@/lib/board/footprints";
 import {
   type BoardSize,
   clampAmbient,
@@ -19,6 +14,11 @@ import {
   samePin,
   type SchematicPlacement,
 } from "@/lib/project/model";
+import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
+import { slotConnections, slotOptions } from "@/lib/project/slots";
+import { regulatorExample } from "@/lib/project/example";
+import { nextRotation } from "@/lib/schematic/symbols";
+import { footprints } from "@/lib/board/footprints";
 
 export const PROJECT_STORAGE_KEY = "echidna-project";
 

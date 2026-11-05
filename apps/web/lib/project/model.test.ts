@@ -1,8 +1,6 @@
 import { partsById, toCircuit } from "@echidna/library";
 import { describe, expect, it } from "vitest";
 
-import { pinPositions, routeWire } from "../schematic/symbols";
-import { regulatorExample } from "./example";
 import {
   deriveNets,
   nextDesignator,
@@ -12,6 +10,8 @@ import {
   toNetlist,
   type Wire,
 } from "./model";
+import { pinPositions, routeWire } from "../schematic/symbols";
+import { regulatorExample } from "./example";
 
 const pin = (componentId: string, pinId: string) => ({ componentId, pinId });
 

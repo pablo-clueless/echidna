@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
 import {
   CanvasTexture,
   ExtrudeGeometry,
@@ -9,6 +8,7 @@ import {
   SRGBColorSpace,
   Shape,
 } from "three";
+import { useEffect, useMemo } from "react";
 
 import { FIDUCIAL, fiducials, MOUNTING_HOLE, mountingHoles } from "@/lib/board/placement";
 import type { Drill } from "@/lib/board/footprints";

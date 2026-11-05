@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import {
   Box,
   Flame,
@@ -12,6 +11,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { type MaskColour, maskColours, type Overlay, useLayoutStore } from "@/stores/layout";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";

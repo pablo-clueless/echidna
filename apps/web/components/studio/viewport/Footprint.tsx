@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { Line } from "@react-three/drei";
 import {
   CanvasTexture,
   ExtrudeGeometry,
@@ -10,6 +8,8 @@ import {
   SRGBColorSpace,
   Shape,
 } from "three";
+import { useEffect, useMemo } from "react";
+import { Line } from "@react-three/drei";
 
 import type { Footprint as FootprintData, Pad } from "@/lib/board/footprints";
 import { materials } from "./materials";

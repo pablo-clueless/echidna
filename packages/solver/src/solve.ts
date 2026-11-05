@@ -1,4 +1,3 @@
-import { solveDc, solveTransient } from "../wasm/solver.js";
 import {
   type Circuit,
   type DcSolution,
@@ -9,6 +8,7 @@ import {
   type TransientSolution,
   isSolveError,
 } from "./types";
+import { solveDc, solveTransient } from "../wasm/solver.js";
 
 /**
  * Runs a DC solve against an already initialised WASM module and times it.

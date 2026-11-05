@@ -5,14 +5,6 @@ import { useFormatter, useLocale, useTranslations } from "next-intl";
 import type { Violation } from "@echidna/core";
 import { useMemo } from "react";
 
-import { countIssues, drawerMode, PEEK_COUNT, toIssues, verdictKey } from "./model";
-import { useLayoutStore } from "@/stores/layout";
-import { useStudioStore } from "@/stores/studio";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { formatQuantity } from "@/lib/units";
-import { ruleKey } from "@/lib/messageKeys";
-import { cn } from "@/lib/utils";
 import {
   Item,
   ItemActions,
@@ -21,6 +13,14 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
+import { countIssues, drawerMode, PEEK_COUNT, toIssues, verdictKey } from "./model";
+import { useLayoutStore } from "@/stores/layout";
+import { useStudioStore } from "@/stores/studio";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { formatQuantity } from "@/lib/units";
+import { ruleKey } from "@/lib/messageKeys";
+import { cn } from "@/lib/utils";
 
 const dotClass = {
   fail: "bg-status-fail",

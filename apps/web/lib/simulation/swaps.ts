@@ -1,12 +1,12 @@
-import { type CircuitBuild, partsById, toCircuit } from "@echidna/library";
-import type { DcSolution, SolveOutcome } from "@echidna/solver/types";
-import { evaluate } from "@echidna/rules";
 import {
   compareViolations,
   type ComponentSpec,
   type Severity,
   type Violation,
 } from "@echidna/core";
+import { type CircuitBuild, partsById, toCircuit } from "@echidna/library";
+import type { DcSolution, SolveOutcome } from "@echidna/solver/types";
+import { evaluate } from "@echidna/rules";
 
 import { type ProjectData, toNetlist } from "@/lib/project/model";
 

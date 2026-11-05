@@ -3,13 +3,13 @@
 import { useId, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 
-import { parseQuantity } from "@/lib/units";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
+import { parseQuantity } from "@/lib/units";
 
 type Props = {
   label: string;

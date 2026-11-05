@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import {
   BufferAttribute,
   BufferGeometry,
@@ -10,6 +8,8 @@ import {
   type Mesh,
   ShaderMaterial,
 } from "three";
+import { useEffect, useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import type { Routing } from "@/lib/board/routing";

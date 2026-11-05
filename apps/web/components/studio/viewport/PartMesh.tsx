@@ -1,7 +1,5 @@
 "use client";
 
-import { RoundedBox } from "@react-three/drei";
-import { useEffect, useMemo } from "react";
 import {
   AdditiveBlending,
   CanvasTexture,
@@ -18,6 +16,8 @@ import {
   Vector2,
   Vector3,
 } from "three";
+import { RoundedBox } from "@react-three/drei";
+import { useEffect, useMemo } from "react";
 
 import { LED_LIT_CURRENT, LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
 import { DEFAULT_LED_COLOUR, ledColours } from "@/lib/parts/ledColours";

@@ -1,5 +1,3 @@
-import type { DcSolution, TransientSolution } from "@echidna/solver/types";
-import type { CircuitBuild } from "@echidna/library";
 import {
   anyEstimated,
   type Ratings,
@@ -8,6 +6,8 @@ import {
   type Unit,
   type Violation,
 } from "@echidna/core";
+import type { DcSolution, TransientSolution } from "@echidna/solver/types";
+import type { CircuitBuild } from "@echidna/library";
 
 import defaults from "../rules.json";
 

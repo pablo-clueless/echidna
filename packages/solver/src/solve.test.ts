@@ -1,8 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
-import { initSync, solverVersion } from "../wasm/solver.js";
-import type { Circuit } from "./types";
 import {
   settleTime,
   solveNow,
@@ -10,6 +8,8 @@ import {
   solveTransientNow,
   SWITCH_ON_STEPS,
 } from "./solve";
+import { initSync, solverVersion } from "../wasm/solver.js";
+import type { Circuit } from "./types";
 
 beforeAll(() => {
   initSync({ module: readFileSync(new URL("../wasm/solver_bg.wasm", import.meta.url)) });
