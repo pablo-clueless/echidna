@@ -170,7 +170,9 @@
         "passives": "Pasivos",
         "semiconductors": "Semiconductores",
         "devBoards": "Placas de desarrollo",
-        "sensors": "Sensores"
+        "sensors": "Sensores",
+        "motherboards": "Placas base",
+        "pcParts": "Componentes de PC"
       }
     },
     "viewport": {
@@ -355,6 +357,18 @@
       "switchOnPower": {
         "name": "Calor al encender",
         "explain": "Mientras el circuito arranca, este componente convierte en calor el {percent} de su potencia nominal durante un milisegundo o más, normalmente mientras se carga un condensador grande. Un condensador más pequeño o más resistencia en serie acortan el pico."
+      },
+      "psuBudget": {
+        "name": "Potencia de la fuente",
+        "explain": "A plena carga, el equipo consume el {percent} de la potencia nominal de la fuente. Por encima del 80 % queda poco margen para los picos; por encima del 100 % la fuente puede apagarse o fallar."
+      },
+      "powerConnectors": {
+        "name": "Conectores de la fuente",
+        "explain": "Los componentes necesitan el {percent} de los conectores de un tipo que tiene la fuente. Por encima del 100 % algo no se puede conectar."
+      },
+      "cooling": {
+        "name": "Refrigeración del procesador",
+        "explain": "El procesador disipa el {percent} del calor que el disipador puede evacuar. Por encima del 90 % se calienta con carga; por encima del 100 % se ralentiza para protegerse."
       }
     },
     "slots": {
@@ -362,12 +376,27 @@
       "noHost": "Añade una placa de desarrollo, como una Raspberry Pi, para conectar este componente.",
       "names": {
         "i2c": "Conector I²C",
-        "gpio": "Pines GPIO"
+        "gpio": "Pines GPIO",
+        "cpu": "Zócalo del procesador",
+        "cooler": "Anclaje del disipador",
+        "pcie-x16": "Ranura PCIe x16",
+        "memory": "Ranuras de memoria",
+        "m2": "Ranura M.2",
+        "power": "Conector de alimentación ATX"
       },
       "protocols": {
         "i2c": "I²C",
         "gpio": "GPIO",
-        "1-wire": "1-Wire"
+        "1-wire": "1-Wire",
+        "am5": "AM5",
+        "lga1700": "LGA1700",
+        "am5-cooler-mount": "anclaje AM5",
+        "lga1700-cooler-mount": "anclaje LGA1700",
+        "pcie-x16": "PCIe x16",
+        "ddr5-dimm": "memoria DDR5",
+        "ddr4-dimm": "memoria DDR4",
+        "m2-nvme": "M.2 NVMe",
+        "atx-psu": "fuente ATX"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Conectado, alimentado desde {rail}",
@@ -383,7 +412,10 @@
         "railCurrent": "Consumiría {actual} en total del raíl {rail}, que suministra {limit}.",
         "logicIntoHost": "Sus salidas llegan a {actual}, pero los pines de la placa admiten como máximo {limit}.",
         "logicIntoPart": "La placa lleva sus pines a {actual}, pero los pines de este componente admiten como máximo {limit}.",
-        "thermal": "Disipa {actual}, pero el conector permite {limit}."
+        "thermal": "Disipa {actual}, pero el conector permite {limit}.",
+        "psuBudget": "El equipo consume hasta {actual}; la fuente está diseñada para {limit}.",
+        "powerConnectors": "Necesita {actual} × {connector}; la fuente tiene {limit}.",
+        "cooling": "El procesador disipa hasta {actual}; el disipador está diseñado para {limit}."
       },
       "railsTitle": "Raíles de alimentación",
       "hostTitle": "Conectores",
@@ -393,7 +425,17 @@
       "swap": "Cambiar",
       "swapFits": "Cabe en el mismo sitio",
       "swapFails": "No cabría",
-      "partReason": "{id}: {reason}"
+      "partReason": "{id}: {reason}",
+      "connectors": {
+        "atx-24pin": "ATX de 24 pines",
+        "eps-8pin": "EPS de 8 pines",
+        "pcie-8pin": "PCIe de 8 pines",
+        "12v-2x6": "12V-2x6"
+      },
+      "pluggedInModule": "Conectado",
+      "fitsModule": "Compatible",
+      "buildTitle": "Alimentación y refrigeración",
+      "buildEmpty": "Conecta una fuente y un disipador para comprobar la alimentación y la refrigeración."
     }
   },
   "Parts": {
@@ -490,6 +532,101 @@
     "ds18b20": {
       "name": "Sensor de temperatura DS18B20",
       "summary": "Temperatura por 1-Wire"
+    },
+    "b650-atx": {
+      "name": "Placa base ATX B650 (AM5)",
+      "summary": "Para procesadores AMD Ryzen 7000 y DDR5"
+    },
+    "b760-atx": {
+      "name": "Placa base ATX B760 (LGA1700)",
+      "summary": "Para procesadores Intel de 12.ª a 14.ª generación y DDR5"
+    },
+    "x670e-atx": {
+      "name": "Placa base ATX X670E (AM5)",
+      "summary": "Placa AMD de gama alta con dos conectores de alimentación de CPU"
+    },
+    "ryzen-5-7600": {
+      "name": "AMD Ryzen 5 7600",
+      "summary": "Procesador de sobremesa de 6 núcleos, AM5"
+    },
+    "ryzen-7-7800x3d": {
+      "name": "AMD Ryzen 7 7800X3D",
+      "summary": "Procesador de sobremesa de 8 núcleos con 3D V-Cache, AM5"
+    },
+    "ryzen-9-7950x": {
+      "name": "AMD Ryzen 9 7950X",
+      "summary": "Procesador de sobremesa de 16 núcleos, AM5"
+    },
+    "core-i5-12400": {
+      "name": "Intel Core i5-12400",
+      "summary": "Procesador de sobremesa de 6 núcleos, LGA1700"
+    },
+    "core-i7-14700k": {
+      "name": "Intel Core i7-14700K",
+      "summary": "Procesador de sobremesa de 20 núcleos, LGA1700"
+    },
+    "rtx-4060": {
+      "name": "NVIDIA GeForce RTX 4060",
+      "summary": "Tarjeta gráfica, 115 W, un PCIe de 8 pines"
+    },
+    "rtx-4070-super": {
+      "name": "NVIDIA GeForce RTX 4070 SUPER",
+      "summary": "Tarjeta gráfica, 220 W, 12V-2x6"
+    },
+    "rtx-4090": {
+      "name": "NVIDIA GeForce RTX 4090",
+      "summary": "Tarjeta gráfica, 450 W, 12V-2x6"
+    },
+    "rx-7800-xt": {
+      "name": "AMD Radeon RX 7800 XT",
+      "summary": "Tarjeta gráfica, 263 W, dos PCIe de 8 pines"
+    },
+    "ddr5-32gb-kit": {
+      "name": "Kit DDR5-6000 de 32 GB (2 × 16 GB)",
+      "summary": "Dos módulos de memoria DDR5"
+    },
+    "ddr4-32gb-kit": {
+      "name": "Kit DDR4-3200 de 32 GB (2 × 16 GB)",
+      "summary": "Dos módulos de memoria DDR4"
+    },
+    "nvme-ssd-1tb": {
+      "name": "SSD NVMe PCIe 4.0 de 1 TB",
+      "summary": "Unidad de estado sólido M.2"
+    },
+    "tower-cooler-single": {
+      "name": "Disipador por aire de una torre",
+      "summary": "Diseñado para unos 150 W"
+    },
+    "tower-cooler-dual": {
+      "name": "Disipador por aire de doble torre",
+      "summary": "Diseñado para unos 250 W"
+    },
+    "aio-cooler-360": {
+      "name": "Refrigeración líquida AIO de 360 mm",
+      "summary": "Diseñado para unos 300 W"
+    },
+    "psu-550w": {
+      "name": "Fuente ATX de 550 W (80 Plus Bronze)",
+      "summary": "Dos PCIe de 8 pines, sin 12V-2x6"
+    },
+    "psu-750w": {
+      "name": "Fuente ATX 3.1 de 750 W (80 Plus Gold)",
+      "summary": "Con un conector 12V-2x6"
+    },
+    "psu-1000w": {
+      "name": "Fuente ATX 3.1 de 1000 W (80 Plus Gold)",
+      "summary": "12V-2x6 y cuatro PCIe de 8 pines"
+    }
+  },
+  "Builds": {
+    "desktop-budget": {
+      "name": "PC de sobremesa económico"
+    },
+    "desktop-gaming": {
+      "name": "PC de sobremesa gaming"
+    },
+    "desktop-workstation": {
+      "name": "Estación de trabajo"
     }
   }
 }

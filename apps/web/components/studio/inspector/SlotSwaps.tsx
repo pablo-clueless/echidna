@@ -40,11 +40,12 @@ export const SlotSwaps = ({ component }: { component: NetlistComponent }) => {
       <ul className="grid gap-1.5">
         {swaps.map((swap) => {
           const name = tParts(`${partKey(swap.specId)}.name`);
-          const severity = swap.fits ? "pass" : "fail";
+          const checks = Object.values(swap.byPart).flatMap((fit) => fit.checks);
+          const severity = !swap.fits ? "fail" : checks.some((c) => c.severity === "warn") ? "warn" : "pass";
           const candidate = partsById.get(swap.specId);
           const problems = Object.entries(swap.byPart).flatMap(([partId, fit]) =>
             fit.checks
-              .filter((c) => c.severity === "fail")
+              .filter((c) => c.severity !== "pass")
               .map((c) => ({
                 key: `${partId}:${c.id}`,
                 // A host swap is refused for what is plugged into it, so say which part each reason is about.

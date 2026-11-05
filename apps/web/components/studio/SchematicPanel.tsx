@@ -1,17 +1,17 @@
 "use client";
 
 import { RotateCw, Spline, Trash2 } from "lucide-react";
+import { builds, parts } from "@echidna/library";
 import { useTranslations } from "next-intl";
-import { parts } from "@echidna/library";
 import dynamic from "next/dynamic";
 
 import { IconButton } from "@/components/app/IconButton";
+import { buildKey, partKey } from "@/lib/messageKeys";
 import { EmptyContent } from "@/components/ui/empty";
 import { useProjectStore } from "@/stores/project";
 import { useStudioStore } from "@/stores/studio";
 import { Button } from "@/components/ui/button";
 import { PanelHeader } from "./PanelHeader";
-import { partKey } from "@/lib/messageKeys";
 import { Kbd } from "@/components/ui/kbd";
 import { PanelEmpty } from "./PanelEmpty";
 
@@ -20,7 +20,7 @@ const SchematicCanvas = dynamic(() => import("./schematic/SchematicCanvas").then
 });
 
 /** Dev boards a project can start from. */
-const hosts = parts.filter((p) => p.host);
+const hosts = parts.filter((p) => p.host && p.kind === "devBoard");
 
 export const SchematicPanel = () => {
   const t = useTranslations("Studio.schematic");
@@ -28,7 +28,8 @@ export const SchematicPanel = () => {
   const hasParts = useProjectStore((s) => s.components.length > 0);
   const selection = useStudioStore((s) => s.selection);
   const select = useStudioStore((s) => s.select);
-  const { loadExample, loadPreset, rotateComponent, removeComponent, removeWire } = useProjectStore.getState();
+  const tBuilds = useTranslations("Builds");
+  const { loadExample, loadPreset, loadBuild, rotateComponent, removeComponent, removeWire } = useProjectStore.getState();
 
   const remove = () => {
     if (!selection) return;
@@ -72,6 +73,11 @@ export const SchematicPanel = () => {
               {hosts.map((host) => (
                 <Button key={host.id} size="xs" variant="ghost" onClick={() => loadPreset(host.id)}>
                   {t("startFromBoard", { board: tParts(`${partKey(host.id)}.name`) })}
+                </Button>
+              ))}
+              {builds.map((build) => (
+                <Button key={build.id} size="xs" variant="ghost" onClick={() => loadBuild(build.id)}>
+                  {t("startFromBoard", { board: tBuilds(`${buildKey(build.id)}.name`) })}
                 </Button>
               ))}
             </div>

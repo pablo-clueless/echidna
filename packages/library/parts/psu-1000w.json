@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "psu-1000w",
+  "name": "1000 W ATX 3.1 PSU (80 Plus Gold)",
+  "kind": "psu",
+  "deviceTypes": [
+    "desktop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "atx-psu"
+    }
+  ],
+  "module": {
+    "role": "psu",
+    "output": {
+      "value": 1000,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Rated continuous DC output, the figure the PSU is sold on"
+    },
+    "provides": {
+      "atx-24pin": 1,
+      "eps-8pin": 2,
+      "pcie-8pin": 4,
+      "12v-2x6": 1
+    }
+  },
+  "model": "module",
+  "footprintId": "module/psu",
+  "meshUrl": "generic/psu"
+}

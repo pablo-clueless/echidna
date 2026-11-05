@@ -78,7 +78,32 @@ const pinHeader = (pins: string[], label: string): Footprint => {
   };
 };
 
+/**
+ * A desktop module's outline, drawn smaller than life so a whole build fits on the board. Modules plug into slots
+ * rather than being soldered, so it has no pads.
+ * @param w - Width in millimetres.
+ * @param h - Depth in millimetres.
+ * @param label - Printed in the middle.
+ * @returns The footprint.
+ */
+const moduleOutline = (w: number, h: number, label: string): Footprint => ({
+  pads: [],
+  courtyard: { w: w + 1, h: h + 1 },
+  silk: [
+    { kind: "rect", x: 0, z: 0, w, h },
+    { kind: "text", x: 0, z: 0, text: label, size: 2 },
+  ],
+  ref: { x: 0, z: -h / 2 - 1.6 },
+});
+
 export const footprints: Record<string, Footprint> = {
+  "module/motherboard": moduleOutline(40, 32, "ATX"),
+  "module/cpu": moduleOutline(12, 12, "CPU"),
+  "module/gpu": moduleOutline(32, 12, "GPU"),
+  "module/memory": moduleOutline(24, 5, "RAM"),
+  "module/storage": moduleOutline(18, 6, "M.2"),
+  "module/cooler": moduleOutline(14, 14, "COOLER"),
+  "module/psu": moduleOutline(22, 16, "PSU"),
   "header/raspberry-pi": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio23", "gpio24"], "RPI"),
   "header/esp32-devkitc": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio4", "gpio5"], "ESP32"),
   "header/arduino-uno-r4": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "d2", "d3"], "UNO R4"),

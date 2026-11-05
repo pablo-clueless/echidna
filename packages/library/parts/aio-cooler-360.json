@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "aio-cooler-360",
+  "name": "360 mm all-in-one liquid cooler",
+  "kind": "cooler",
+  "deviceTypes": [
+    "desktop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "am5-cooler-mount"
+    },
+    {
+      "protocol": "lga1700-cooler-mount"
+    }
+  ],
+  "module": {
+    "role": "cooler",
+    "power": {
+      "value": 10,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Pump and three 120 mm fans"
+    },
+    "cooling": {
+      "value": 300,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical rating for this class of cooler; makers rate coolers in different ways"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cooler",
+  "meshUrl": "generic/cooler"
+}

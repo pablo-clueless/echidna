@@ -20,6 +20,7 @@ export const requiredParams: Record<string, readonly string[]> = {
   pmos: ["thresholdVoltage", "transconductance"],
   devBoard: [],
   load: [],
+  module: [],
 };
 
 /** Library models that are one solver element with a fixed polarity, as SPICE `.model` types are. */
@@ -71,7 +72,8 @@ export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, Component
   const elements: CircuitElement[] = [];
   for (const c of netlist.components) {
     const spec = used[c.id];
-    if (!spec || spec.model === "ground") continue;
+    // Desktop modules are checked as a build, not solved as a circuit.
+    if (!spec || spec.model === "ground" || spec.model === "module") continue;
     const node = (pinId: string) => {
       if (spec.host?.groundPinId === pinId) return GROUND_NODE;
       const net = pinNet.get(`${c.id}/${pinId}`);

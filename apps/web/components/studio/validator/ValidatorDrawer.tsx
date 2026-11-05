@@ -67,6 +67,8 @@ export const ValidatorDrawer = () => {
   const setExpanded = useLayoutStore((s) => s.setValidatorExpanded);
 
   const simulation = useStudioStore((s) => s.simulation);
+  // A desktop build has verdicts without a circuit to solve.
+  const checked = useStudioStore((s) => s.simulation !== null || s.violations.length > 0);
   const format = useFormatter();
   const issues = useMemo(() => toIssues(violations), [violations]);
   const mode = drawerMode(issues.length, expanded);
@@ -95,7 +97,7 @@ export const ValidatorDrawer = () => {
     return (
       <section aria-label={t("label")} className="flex h-9 shrink-0 items-center gap-2 border-t px-3 text-sm">
         <CircleCheck className="size-4 text-status-pass-text" aria-hidden />
-        <span className="text-muted-foreground">{simulation ? t("allPassed") : t("idle")}</span>
+        <span className="text-muted-foreground">{checked ? t("allPassed") : t("idle")}</span>
         {timing}
       </section>
     );

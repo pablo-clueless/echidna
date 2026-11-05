@@ -4,54 +4,148 @@
   "title": "Echidna component spec",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "name", "kind", "deviceTypes", "pins", "params", "ratings", "interfaces", "model", "footprintId", "meshUrl"],
+  "required": [
+    "id",
+    "name",
+    "kind",
+    "deviceTypes",
+    "pins",
+    "params",
+    "ratings",
+    "interfaces",
+    "model",
+    "footprintId",
+    "meshUrl"
+  ],
   "properties": {
-    "$schema": { "type": "string" },
-    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
-    "name": { "type": "string", "minLength": 1 },
-    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "switch", "led", "diode", "regulator", "npn", "pnp", "nmos", "pmos", "devBoard", "sensor"] },
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "ground",
+        "supply",
+        "resistor",
+        "capacitor",
+        "inductor",
+        "switch",
+        "led",
+        "diode",
+        "regulator",
+        "npn",
+        "pnp",
+        "nmos",
+        "pmos",
+        "devBoard",
+        "sensor",
+        "motherboard",
+        "cpu",
+        "gpu",
+        "memory",
+        "storage",
+        "cooler",
+        "psu"
+      ]
+    },
     "deviceTypes": {
       "type": "array",
-      "items": { "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"] },
+      "items": {
+        "enum": [
+          "smartphone",
+          "desktop",
+          "laptop",
+          "drone",
+          "iot",
+          "wearable"
+        ]
+      },
       "uniqueItems": true
     },
     "pins": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 0,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "name"],
-        "properties": { "id": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1 } }
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     },
-    "params": { "type": "object", "additionalProperties": { "$ref": "#/$defs/specValue" } },
+    "params": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/specValue"
+      }
+    },
     "ratings": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "maxVoltage": { "$ref": "#/$defs/specValue" },
-        "maxCurrent": { "$ref": "#/$defs/specValue" },
-        "maxPower": { "$ref": "#/$defs/specValue" },
-        "maxTemperature": { "$ref": "#/$defs/specValue" }
+        "maxVoltage": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxCurrent": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxPower": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxTemperature": {
+          "$ref": "#/$defs/specValue"
+        }
       }
     },
     "ratingPins": {
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
-        "^max(Voltage|Current|Power|Temperature)$": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+        "^max(Voltage|Current|Power|Temperature)$": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
       }
     },
     "interfaces": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["protocol"],
+        "required": [
+          "protocol"
+        ],
         "properties": {
-          "protocol": { "type": "string" },
-          "lanes": { "type": "integer", "minimum": 1 },
-          "connector": { "type": "string" }
+          "protocol": {
+            "type": "string"
+          },
+          "lanes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "connector": {
+            "type": "string"
+          }
         }
       }
     },
@@ -61,35 +155,87 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id"],
+        "required": [
+          "id"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
-          "params": { "type": "object", "additionalProperties": { "$ref": "#/$defs/specValue" } },
-          "ratings": { "$ref": "#/properties/ratings" }
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/specValue"
+            }
+          },
+          "ratings": {
+            "$ref": "#/properties/ratings"
+          }
         }
       }
     },
-    "actuation": { "enum": ["latching", "momentary"] },
+    "actuation": {
+      "enum": [
+        "latching",
+        "momentary"
+      ]
+    },
     "model": {
-      "enum": ["ground", "resistor", "switch", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator", "npn", "pnp", "nmos", "pmos", "devBoard", "load"]
+      "enum": [
+        "ground",
+        "resistor",
+        "switch",
+        "capacitor",
+        "inductor",
+        "voltageSource",
+        "currentSource",
+        "diode",
+        "linearRegulator",
+        "npn",
+        "pnp",
+        "nmos",
+        "pmos",
+        "devBoard",
+        "load",
+        "module"
+      ]
     },
     "host": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["groundPinId", "rails", "slots"],
+      "required": [
+        "rails",
+        "slots"
+      ],
       "properties": {
-        "groundPinId": { "type": "string" },
+        "groundPinId": {
+          "type": "string"
+        },
         "rails": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "pinId", "voltage", "maxCurrent"],
+            "required": [
+              "id",
+              "pinId",
+              "voltage",
+              "maxCurrent"
+            ],
             "properties": {
-              "id": { "type": "string" },
-              "pinId": { "type": "string" },
-              "voltage": { "$ref": "#/$defs/specValue" },
-              "maxCurrent": { "$ref": "#/$defs/specValue" }
+              "id": {
+                "type": "string"
+              },
+              "pinId": {
+                "type": "string"
+              },
+              "voltage": {
+                "$ref": "#/$defs/specValue"
+              },
+              "maxCurrent": {
+                "$ref": "#/$defs/specValue"
+              }
             }
           }
         },
@@ -98,15 +244,40 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "accepts", "railIds", "signals", "logicHigh", "maxInput"],
+            "required": [
+              "id",
+              "accepts"
+            ],
             "properties": {
-              "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
-              "accepts": { "$ref": "#/properties/interfaces" },
-              "railIds": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-              "signals": { "type": "object", "additionalProperties": { "type": "string" } },
-              "logicHigh": { "$ref": "#/$defs/specValue" },
-              "maxInput": { "$ref": "#/$defs/specValue" },
-              "thermalBudget": { "$ref": "#/$defs/specValue" }
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accepts": {
+                "$ref": "#/properties/interfaces"
+              },
+              "railIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "signals": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "logicHigh": {
+                "$ref": "#/$defs/specValue"
+              },
+              "maxInput": {
+                "$ref": "#/$defs/specValue"
+              },
+              "thermalBudget": {
+                "$ref": "#/$defs/specValue"
+              }
             }
           }
         }
@@ -115,36 +286,165 @@
     "supply": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["pinId", "groundPinId", "minVoltage", "maxVoltage", "current", "maxInput", "signals"],
+      "required": [
+        "pinId",
+        "groundPinId",
+        "minVoltage",
+        "maxVoltage",
+        "current",
+        "maxInput",
+        "signals"
+      ],
       "properties": {
-        "pinId": { "type": "string" },
-        "groundPinId": { "type": "string" },
-        "minVoltage": { "$ref": "#/$defs/specValue" },
-        "maxVoltage": { "$ref": "#/$defs/specValue" },
-        "current": { "$ref": "#/$defs/specValue" },
-        "logicHigh": { "$ref": "#/$defs/specValue" },
-        "maxInput": { "$ref": "#/$defs/specValue" },
-        "signals": { "type": "object", "additionalProperties": { "type": "string" } }
+        "pinId": {
+          "type": "string"
+        },
+        "groundPinId": {
+          "type": "string"
+        },
+        "minVoltage": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxVoltage": {
+          "$ref": "#/$defs/specValue"
+        },
+        "current": {
+          "$ref": "#/$defs/specValue"
+        },
+        "logicHigh": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxInput": {
+          "$ref": "#/$defs/specValue"
+        },
+        "signals": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
       }
     },
-    "footprintId": { "type": "string" },
-    "meshUrl": { "type": "string" },
+    "footprintId": {
+      "type": "string"
+    },
+    "meshUrl": {
+      "type": "string"
+    },
     "attribution": {
       "type": "object",
-      "required": ["source", "licence"],
-      "properties": { "source": { "type": "string" }, "licence": { "type": "string" }, "url": { "type": "string" } }
+      "required": [
+        "source",
+        "licence"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "licence": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "motherboard",
+            "cpu",
+            "gpu",
+            "memory",
+            "storage",
+            "cooler",
+            "psu"
+          ]
+        },
+        "power": {
+          "$ref": "#/$defs/specValue"
+        },
+        "cooling": {
+          "$ref": "#/$defs/specValue"
+        },
+        "output": {
+          "$ref": "#/$defs/specValue"
+        },
+        "needs": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^(atx-24pin|eps-8pin|pcie-8pin|12v-2x6)$": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "provides": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^(atx-24pin|eps-8pin|pcie-8pin|12v-2x6)$": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {
     "specValue": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["value", "unit", "source"],
+      "required": [
+        "value",
+        "unit",
+        "source"
+      ],
       "properties": {
-        "value": { "type": "number" },
-        "unit": { "enum": ["V", "A", "W", "Ω", "F", "H", "K", "m", "kg", "s", "Hz", "N", "J", "C", "W/K", "K/W", "A/V²", "1/V", "1"] },
-        "source": { "enum": ["datasheet", "teardown", "estimated"] },
-        "reference": { "type": "string" }
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "V",
+            "A",
+            "W",
+            "Ω",
+            "F",
+            "H",
+            "K",
+            "m",
+            "kg",
+            "s",
+            "Hz",
+            "N",
+            "J",
+            "C",
+            "W/K",
+            "K/W",
+            "A/V²",
+            "1/V",
+            "1"
+          ]
+        },
+        "source": {
+          "enum": [
+            "datasheet",
+            "teardown",
+            "estimated"
+          ]
+        },
+        "reference": {
+          "type": "string"
+        }
       }
     }
   }
