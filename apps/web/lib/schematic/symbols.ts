@@ -33,8 +33,21 @@ const pinOffsets: Record<string, Point[]> = {
   pmos: transistorPins(),
 };
 
-/** Kinds drawn as a box with a lead per pin, such as dev boards and sensor modules, whose pin counts vary. */
-export const BOX_KINDS: ReadonlySet<string> = new Set(["devBoard", "sensor"]);
+/**
+ * Kinds drawn as a box with a lead per pin, such as dev boards and sensor modules, whose pin counts vary. Desktop
+ * modules are boxes with no leads, as they plug into slots rather than being wired.
+ */
+export const BOX_KINDS: ReadonlySet<string> = new Set([
+  "devBoard",
+  "sensor",
+  "motherboard",
+  "cpu",
+  "gpu",
+  "memory",
+  "storage",
+  "cooler",
+  "psu",
+]);
 
 /** Half the width of a box symbol's body, in grid units; its leads run one unit further out. */
 export const BOX_HALF_WIDTH = 4;

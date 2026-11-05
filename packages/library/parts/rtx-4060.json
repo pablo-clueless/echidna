@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "rtx-4060",
+  "name": "NVIDIA GeForce RTX 4060",
+  "kind": "gpu",
+  "deviceTypes": [
+    "desktop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "pcie-x16"
+    }
+  ],
+  "module": {
+    "role": "gpu",
+    "power": {
+      "value": 115,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "NVIDIA specifications: total graphics power 115 W, one 8-pin PCIe connector"
+    },
+    "needs": {
+      "pcie-8pin": 1
+    }
+  },
+  "model": "module",
+  "footprintId": "module/gpu",
+  "meshUrl": "generic/gpu"
+}

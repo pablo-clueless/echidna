@@ -383,6 +383,33 @@ const Terminal = () => (
 );
 
 /** A 2.54 mm pin header: a black plastic strip with a gold pin standing up through it for each pad. */
+/** How tall each desktop module stands, in millimetres, so a build reads at a glance. */
+const moduleHeights: Record<string, number> = {
+  "module/motherboard": 1.6,
+  "module/cpu": 2,
+  "module/gpu": 8,
+  "module/memory": 6,
+  "module/storage": 1.5,
+  "module/cooler": 12,
+  "module/psu": 10,
+};
+
+/** A desktop module as a plain block the size of its outline. */
+const ModuleBlock = ({ footprintId }: { footprintId: string }) => {
+  const courtyard = footprints[footprintId]?.courtyard ?? { w: 10, h: 10 };
+  const height = moduleHeights[footprintId] ?? 4;
+  return (
+    <RoundedBox
+      args={[courtyard.w - 1, height, courtyard.h - 1]}
+      radius={0.4}
+      smoothness={2}
+      position={[0, height / 2, 0]}
+      material={materials.epoxy}
+      castShadow
+    />
+  );
+};
+
 const PinHeader = ({ count }: { count: number }) => (
   <group>
     <RoundedBox args={[count * 2.54, 2.5, 2.54]} radius={0.15} smoothness={2} position={[0, 1.25, 0]} material={materials.epoxy} castShadow />
@@ -396,6 +423,7 @@ const PinHeader = ({ count }: { count: number }) => (
 
 export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed }: Props) => {
   if (footprintId.startsWith("header/")) return <PinHeader count={footprints[footprintId]?.pads.length ?? 1} />;
+  if (footprintId.startsWith("module/")) return <ModuleBlock footprintId={footprintId} />;
   switch (footprintId) {
     case "generic/axial-0.4in":
       return <Resistor bands={bands} />;

@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "core-i7-14700k",
+  "name": "Intel Core i7-14700K",
+  "kind": "cpu",
+  "deviceTypes": [
+    "desktop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "lga1700"
+    }
+  ],
+  "module": {
+    "role": "cpu",
+    "power": {
+      "value": 253,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Intel product specifications: Maximum Turbo Power 253 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cpu",
+  "meshUrl": "generic/cpu"
+}

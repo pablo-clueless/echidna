@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "psu-550w",
+  "name": "550 W ATX PSU (80 Plus Bronze)",
+  "kind": "psu",
+  "deviceTypes": [
+    "desktop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "atx-psu"
+    }
+  ],
+  "module": {
+    "role": "psu",
+    "output": {
+      "value": 550,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Rated continuous DC output, the figure the PSU is sold on"
+    },
+    "provides": {
+      "atx-24pin": 1,
+      "eps-8pin": 1,
+      "pcie-8pin": 2
+    }
+  },
+  "model": "module",
+  "footprintId": "module/psu",
+  "meshUrl": "generic/psu"
+}

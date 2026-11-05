@@ -23,6 +23,8 @@ const categories = [
   { key: "semiconductors", kinds: ["led", "diode", "npn", "pnp", "nmos", "pmos"] },
   { key: "devBoards", kinds: ["devBoard"] },
   { key: "sensors", kinds: ["sensor"] },
+  { key: "motherboards", kinds: ["motherboard"] },
+  { key: "pcParts", kinds: ["cpu", "gpu", "memory", "storage", "cooler", "psu"] },
 ] as const;
 
 /** How far a symbol reaches either side of its origin, leads included, turned as placed. */

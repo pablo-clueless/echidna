@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ryzen-5-7600",
+  "name": "AMD Ryzen 5 7600",
+  "kind": "cpu",
+  "deviceTypes": [
+    "desktop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "am5"
+    }
+  ],
+  "module": {
+    "role": "cpu",
+    "power": {
+      "value": 88,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "AMD's package power limit (PPT) on AM5 is 1.35 × the default TDP of 65 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cpu",
+  "meshUrl": "generic/cpu"
+}

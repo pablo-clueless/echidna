@@ -118,3 +118,24 @@ describe("swapping parts in slots", () => {
     expect(store().wires).toEqual([]);
   });
 });
+
+describe("desktop reference builds", () => {
+  beforeEach(() => {
+    store().loadBuild("desktop-budget");
+  });
+
+  it("plugs every module into the motherboard, with no wires", () => {
+    const placed = Object.values(store().slots).map((at) => at.slotId).sort();
+    expect(placed).toEqual(["cooler", "cpu", "m2", "memory", "pcie-x16", "power"]);
+    expect(store().wires).toEqual([]);
+    expect(Object.values(store().slots).every((at) => at.hostId === "MB1" && at.railId === undefined)).toBe(true);
+  });
+
+  it("swaps a graphics card that fits, and leaves one beyond the PSU unplugged", () => {
+    const gpu = Object.entries(store().slots).find(([, at]) => at.slotId === "pcie-x16")?.[0] ?? "";
+    store().swapInSlots(gpu, "rx-7800-xt");
+    expect(store().slots[gpu]).toMatchObject({ slotId: "pcie-x16" });
+    store().swapInSlots(gpu, "rtx-4090");
+    expect(store().slots[gpu]).toBeUndefined();
+  });
+});

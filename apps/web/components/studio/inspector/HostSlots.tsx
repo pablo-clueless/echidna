@@ -2,24 +2,55 @@
 
 import type { ComponentSpec, NetlistComponent } from "@echidna/core";
 import { useLocale, useTranslations } from "next-intl";
+import { partsById } from "@echidna/library";
+import { checkBuild } from "@echidna/rules";
+import { useMemo } from "react";
 
+import { dotClass, railName, textClass, useCheckReason } from "./SlotPicker";
 import { ProvenanceBadge } from "./ProvenanceBadge";
 import { useProjectStore } from "@/stores/project";
 import { useStudioStore } from "@/stores/studio";
+import { modulesIn } from "@/lib/project/slots";
 import { formatQuantity } from "@/lib/units";
 import { slotKey } from "@/lib/messageKeys";
-import { railName } from "./SlotPicker";
+import { cn } from "@/lib/utils";
 
 /** A host board's rails, with the current drawn from each, and what is plugged into each of its slots. */
 export const HostSlots = ({ component, spec }: { component: NetlistComponent; spec: ComponentSpec }) => {
   const t = useTranslations("Studio.slots");
   const locale = useLocale();
   const slots = useProjectStore((s) => s.slots);
+  const components = useProjectStore((s) => s.components);
   const pinCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
+  const reasonFor = useCheckReason();
+  const buildChecks = useMemo(
+    () => (spec.module ? checkBuild(spec, modulesIn({ components, slots }, partsById, component.id)) : []),
+    [spec, components, slots, component.id],
+  );
   if (!spec.host) return null;
 
   return (
     <>
+      {spec.module && (
+        <section aria-labelledby="build-heading" className="grid gap-1">
+          <h3 id="build-heading" className="text-xs font-medium text-muted-foreground">
+            {t("buildTitle")}
+          </h3>
+          {buildChecks.length === 0 ? (
+            <p className="text-xs text-muted-foreground">{t("buildEmpty")}</p>
+          ) : (
+            <ul className="grid gap-1">
+              {buildChecks.map((check) => (
+                <li key={`${check.id}:${check.connector ?? ""}`} className="flex items-start gap-1.5 text-xs">
+                  <span aria-hidden className={cn("mt-1 size-1.5 shrink-0", dotClass[check.severity])} />
+                  <span className={cn(check.severity !== "pass" && textClass[check.severity])}>{reasonFor(check, spec)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+      {spec.host.rails.length > 0 && (
       <section aria-labelledby="rails-heading" className="grid gap-1">
         <h3 id="rails-heading" className="text-xs font-medium text-muted-foreground">
           {t("railsTitle")}
@@ -44,6 +75,7 @@ export const HostSlots = ({ component, spec }: { component: NetlistComponent; sp
           })}
         </dl>
       </section>
+      )}
       <section aria-labelledby="host-slots-heading" className="grid gap-1">
         <h3 id="host-slots-heading" className="text-xs font-medium text-muted-foreground">
           {t("hostTitle")}

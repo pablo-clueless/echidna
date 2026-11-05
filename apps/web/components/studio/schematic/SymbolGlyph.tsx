@@ -134,13 +134,26 @@ const box = (count: number) => {
 
 type InnerLabel = { text: string; x: number; y: number; anchor: "start" | "middle" | "end" };
 
+/** What a desktop module's box says inside: the abbreviations printed on cases and boxes, so not translated. */
+const moduleLabels: Record<NonNullable<ComponentSpec["module"]>["role"], string> = {
+  motherboard: "ATX",
+  cpu: "CPU",
+  gpu: "GPU",
+  memory: "RAM",
+  storage: "SSD",
+  cooler: "COOLER",
+  psu: "PSU",
+};
+
 /**
  * Pin labels drawn inside a symbol, which stay upright regardless of rotation.
  * @param spec - The part spec.
  * @returns Labels in grid units around the symbol's origin; none for symbols without them.
  */
 export const innerLabels = (spec: ComponentSpec): InnerLabel[] =>
-  BOX_KINDS.has(spec.kind)
+  spec.module
+    ? [{ text: moduleLabels[spec.module.role], x: 0, y: 0, anchor: "middle" }]
+    : BOX_KINDS.has(spec.kind)
     ? boxPins(spec.pins.length).map((p, i) => ({
         text: spec.pins[i]?.name ?? "",
         x: p.x < 0 ? -BOX_HALF_WIDTH + 0.3 : BOX_HALF_WIDTH - 0.3,

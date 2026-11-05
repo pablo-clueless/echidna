@@ -12,3 +12,4 @@ pkg/
 HANDOFF.md
 apps/web/test-results/
 apps/web/playwright-report/
+config.bat
