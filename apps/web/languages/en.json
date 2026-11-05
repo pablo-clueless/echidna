@@ -388,7 +388,12 @@
       "railsTitle": "Rails",
       "hostTitle": "Slots",
       "railLoad": "{actual} of {limit}",
-      "empty": "Empty"
+      "empty": "Empty",
+      "swapTitle": "Swap without unplugging",
+      "swap": "Swap",
+      "swapFits": "Fits where this one is",
+      "swapFails": "Wouldn’t fit",
+      "partReason": "{id}: {reason}"
     }
   },
   "Parts": {

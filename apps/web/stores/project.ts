@@ -62,6 +62,11 @@ type ProjectActions = {
   plugIn: (partId: string, hostId: string, slotId: string) => SlotFit | null;
   /** Takes a part out of its slot, removing the wires plugging it in added. */
   unplug: (partId: string) => void;
+  /**
+   * Swaps a part for another, keeping it in its slot, or a host board for another, keeping everything plugged into
+   * it in the same slots. Anything that no longer fits is left unplugged.
+   */
+  swapInSlots: (id: string, specId: string) => void;
   /** Starts a new project from a host board, such as a Raspberry Pi, with nothing plugged in. */
   loadPreset: (hostSpecId: string) => void;
   loadExample: () => void;
@@ -240,6 +245,12 @@ export const useProjectStore = create<ProjectState>()(
       },
 
       unplug: (partId) => set((s) => withoutSlot(s, partId)),
+
+      swapInSlots: (id, specId) => {
+        const replug = Object.entries(get().slots).filter(([part, at]) => part === id || at.hostId === id);
+        get().swapSpec(id, specId);
+        for (const [part, at] of replug) get().plugIn(part, at.hostId, at.slotId);
+      },
 
       loadPreset: (hostSpecId) => {
         const spec = partsById.get(hostSpecId);

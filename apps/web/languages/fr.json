@@ -388,7 +388,12 @@
       "railsTitle": "Rails d’alimentation",
       "hostTitle": "Connecteurs",
       "railLoad": "{actual} sur {limit}",
-      "empty": "Libre"
+      "empty": "Libre",
+      "swapTitle": "Remplacer sans débrancher",
+      "swap": "Remplacer",
+      "swapFits": "Compatible au même endroit",
+      "swapFails": "Incompatible",
+      "partReason": "{id} : {reason}"
     }
   },
   "Parts": {

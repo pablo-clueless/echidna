@@ -388,7 +388,12 @@
       "railsTitle": "Шины питания",
       "hostTitle": "Разъёмы",
       "railLoad": "{actual} из {limit}",
-      "empty": "Свободно"
+      "empty": "Свободно",
+      "swapTitle": "Заменить, не отключая",
+      "swap": "Заменить",
+      "swapFits": "Подходит на то же место",
+      "swapFails": "Не подойдёт",
+      "partReason": "{id}: {reason}"
     }
   },
   "Parts": {

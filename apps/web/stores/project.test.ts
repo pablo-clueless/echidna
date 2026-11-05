@@ -88,3 +88,33 @@ describe("plugging parts into a host board", () => {
     expect(store().wires).toEqual([]);
   });
 });
+
+describe("swapping parts in slots", () => {
+  beforeEach(() => {
+    store().loadPreset("raspberry-pi-4");
+  });
+
+  it("keeps a swapped sensor in its slot", () => {
+    const id = store().addComponent("ds18b20", { x: 20, y: 6 }) ?? "";
+    store().plugIn(id, "B1", "gpio");
+    store().swapInSlots(id, "ds18b20");
+    expect(store().slots[id]).toMatchObject({ hostId: "B1", slotId: "gpio" });
+  });
+
+  it("keeps everything plugged into a swapped host in the same slots", () => {
+    const sensor = store().addComponent("bme280", { x: 20, y: 6 }) ?? "";
+    store().plugIn(sensor, "B1", "i2c");
+    store().swapInSlots("B1", "esp32-devkitc");
+    expect(store().components.find((c) => c.id === "B1")?.specId).toBe("esp32-devkitc");
+    expect(store().slots[sensor]).toMatchObject({ hostId: "B1", slotId: "i2c", railId: "3v3" });
+    expect(wiredTo(sensor, "sda")).toEqual(["B1/sda", `${sensor}/sda`]);
+  });
+
+  it("leaves a part unplugged when the new host no longer takes it", () => {
+    const sensor = store().addComponent("bme280", { x: 20, y: 6 }) ?? "";
+    store().plugIn(sensor, "B1", "i2c");
+    store().swapInSlots("B1", "arduino-uno-r4");
+    expect(store().slots[sensor]).toBeUndefined();
+    expect(store().wires).toEqual([]);
+  });
+});

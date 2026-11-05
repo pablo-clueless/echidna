@@ -94,3 +94,64 @@ export const slotConnections = (
     }),
   ];
 };
+
+/** A part the selected one could be swapped for, checked against where the selected one is plugged in. */
+export type SlotSwap = {
+  specId: string;
+  /** Whether everything still fits after the swap. */
+  fits: boolean;
+  /** Each plugged-in part's checks after the swap, by part ID; failing ones say why the swap is refused. */
+  byPart: Record<string, SlotFit>;
+};
+
+/**
+ * Parts the selected one could be swapped for without leaving its slots: other plug-in parts for a part that is
+ * plugged in, checked against its slot; other host boards for a host with parts plugged in, checked against every
+ * one of them, in the same slots.
+ * @param project - Parts and slot placements.
+ * @param specs - Part specs by ID.
+ * @param candidates - Every part spec there is to swap to.
+ * @param id - The selected part.
+ * @returns One entry per candidate; empty when the part is in no slot and holds none.
+ */
+export const slotSwaps = (
+  project: Project,
+  specs: ReadonlyMap<string, ComponentSpec>,
+  candidates: readonly ComponentSpec[],
+  id: string,
+): SlotSwap[] => {
+  const specOf = (componentId: string) => specs.get(project.components.find((c) => c.id === componentId)?.specId ?? "");
+  const current = specOf(id);
+  if (!current) return [];
+
+  const placed = project.slots[id];
+  if (current.supply && placed) {
+    const host = specOf(placed.hostId);
+    if (!host) return [];
+    const loads = railLoads(project, specs, placed.hostId, id);
+    return candidates
+      .filter((c) => c.supply && c.id !== current.id)
+      .map((c) => {
+        const fit = checkSlotFit(host, placed.slotId, c, loads);
+        return { specId: c.id, fits: fit.fits, byPart: { [id]: fit } };
+      });
+  }
+
+  const held = Object.entries(project.slots).filter(([, at]) => at.hostId === id);
+  if (!current.host || held.length === 0) return [];
+  return candidates
+    .filter((c) => c.host && c.id !== current.id)
+    .map((c) => {
+      // Parts go back in one by one, as plugging them in would, so each sees the load of those before it.
+      const loads: Record<string, number> = {};
+      const byPart: Record<string, SlotFit> = {};
+      for (const [partId, at] of held) {
+        const part = specOf(partId);
+        if (!part) continue;
+        const fit = checkSlotFit(c, at.slotId, part, loads);
+        byPart[partId] = fit;
+        if (fit.railId) loads[fit.railId] = (loads[fit.railId] ?? 0) + (part.supply?.current.value ?? 0);
+      }
+      return { specId: c.id, fits: Object.values(byPart).every((f) => f.fits), byPart };
+    });
+};

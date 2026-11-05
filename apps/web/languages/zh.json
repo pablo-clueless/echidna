@@ -388,7 +388,12 @@
       "railsTitle": "电源轨",
       "hostTitle": "接口",
       "railLoad": "{actual} / {limit}",
-      "empty": "空闲"
+      "empty": "空闲",
+      "swapTitle": "不拔出直接替换",
+      "swap": "替换",
+      "swapFits": "可插在相同位置",
+      "swapFails": "无法插入",
+      "partReason": "{id}：{reason}"
     }
   },
   "Parts": {

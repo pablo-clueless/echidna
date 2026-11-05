@@ -388,7 +388,12 @@
       "railsTitle": "Versorgungsschienen",
       "hostTitle": "Anschlüsse",
       "railLoad": "{actual} von {limit}",
-      "empty": "Frei"
+      "empty": "Frei",
+      "swapTitle": "Tauschen, ohne zu trennen",
+      "swap": "Tauschen",
+      "swapFits": "Passt an dieselbe Stelle",
+      "swapFails": "Würde nicht passen",
+      "partReason": "{id}: {reason}"
     }
   },
   "Parts": {

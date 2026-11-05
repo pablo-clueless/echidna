@@ -388,7 +388,12 @@
       "railsTitle": "電源レール",
       "hostTitle": "スロット",
       "railLoad": "{actual} / {limit}",
-      "empty": "空き"
+      "empty": "空き",
+      "swapTitle": "取り外さずに交換",
+      "swap": "交換",
+      "swapFits": "同じ場所に接続可能",
+      "swapFails": "接続できません",
+      "partReason": "{id}：{reason}"
     }
   },
   "Parts": {

@@ -21,6 +21,7 @@ import { SlotPicker } from "./inspector/SlotPicker";
 import { ParamField } from "./inspector/ParamField";
 import { useProjectStore } from "@/stores/project";
 import { swapParam } from "@/lib/simulation/swaps";
+import { SlotSwaps } from "./inspector/SlotSwaps";
 import { HostSlots } from "./inspector/HostSlots";
 import { useStudioStore } from "@/stores/studio";
 import { formatQuantity } from "@/lib/units";
@@ -130,6 +131,7 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
 
         {spec.supply && <SlotPicker component={component} />}
         {spec.host && <HostSlots component={component} spec={spec} />}
+        {(spec.supply || spec.host) && <SlotSwaps component={component} />}
 
         {readouts.length > 0 && (
           <section aria-labelledby="live-heading" className="grid gap-1">

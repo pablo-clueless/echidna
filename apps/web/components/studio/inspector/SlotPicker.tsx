@@ -13,13 +13,13 @@ import { Button } from "@/components/ui/button";
 import { formatQuantity } from "@/lib/units";
 import { cn } from "@/lib/utils";
 
-const dotClass: Record<Severity, string> = {
+export const dotClass: Record<Severity, string> = {
   pass: "bg-status-pass",
   warn: "bg-status-warn ring-1 ring-status-warn-border",
   fail: "bg-status-fail",
 };
 
-const textClass: Record<Severity, string> = {
+export const textClass: Record<Severity, string> = {
   pass: "text-status-pass-text",
   warn: "text-status-warn-text",
   fail: "text-status-fail-text",
@@ -32,7 +32,7 @@ export const railName = (host: ComponentSpec | undefined, railId: string) => {
 };
 
 /** Words for one slot check that is not a pass: what the part needs and what the slot gives. */
-const useCheckReason = () => {
+export const useCheckReason = () => {
   const t = useTranslations("Studio.slots");
   const format = useFormatter();
   const locale = useLocale();
