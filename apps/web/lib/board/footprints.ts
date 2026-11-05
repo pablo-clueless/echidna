@@ -59,7 +59,32 @@ const to92 = (pins: [string, string, string]): Footprint => ({
   ref: { x: 0, z: -4.4 },
 });
 
+/**
+ * A single-row 2.54 mm pin header, where a dev board or sensor module connects to this board. Pin 1 is square.
+ * @param pins - Pin IDs from left to right.
+ * @param label - Printed beside the header, such as the module's name.
+ * @returns The footprint.
+ */
+const pinHeader = (pins: string[], label: string): Footprint => {
+  const width = pins.length * 2.54;
+  return {
+    pads: pins.map((pin, i) => tht(pin, (i - (pins.length - 1) / 2) * 2.54, 1.7, 1.0, i === 0 ? "rect" : "round")),
+    courtyard: { w: width + 0.6, h: 3.2 },
+    silk: [
+      { kind: "rect", x: 0, z: 0, w: width, h: 2.54 },
+      { kind: "text", x: 0, z: 2.6, text: label, size: 1.2 },
+    ],
+    ref: { x: 0, z: -2.4 },
+  };
+};
+
 export const footprints: Record<string, Footprint> = {
+  "header/raspberry-pi": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio23", "gpio24"], "RPI"),
+  "header/esp32-devkitc": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio4", "gpio5"], "ESP32"),
+  "header/arduino-uno-r4": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "d2", "d3"], "UNO R4"),
+  "header/bme280": pinHeader(["vdd", "gnd", "sda", "scl"], "BME280"),
+  "header/hc-sr04": pinHeader(["vcc", "trig", "echo", "gnd"], "HC-SR04"),
+  "header/ds18b20": pinHeader(["vdd", "dq", "gnd"], "DS18B20"),
   "generic/axial-0.4in": {
     pads: [tht("1", -5.08, 2.0, 1.0), tht("2", 5.08, 2.0, 1.0)],
     courtyard: { w: 12.6, h: 3.4 },

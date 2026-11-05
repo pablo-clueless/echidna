@@ -13,6 +13,9 @@ export type BoardSize = { width: number; depth: number };
 
 export type Wire = { id: string; a: PinRef; b: PinRef };
 
+/** Where a part is plugged into a host board, the rail it draws from, and the wires plugging it in added. */
+export type SlotPlacement = { hostId: string; slotId: string; railId: string; wireIds: string[] };
+
 export type ProjectData = {
   name: string;
   components: NetlistComponent[];
@@ -22,6 +25,8 @@ export type ProjectData = {
   boardSize: BoardSize;
   /** Air temperature around the board, in kelvin, that part temperatures are estimated from. */
   ambientTemperature: number;
+  /** Parts plugged into a host board's slots, by part ID. */
+  slots: Record<string, SlotPlacement>;
 };
 
 const prefixes: Record<string, string> = {
@@ -38,6 +43,8 @@ const prefixes: Record<string, string> = {
   pnp: "Q",
   nmos: "Q",
   pmos: "Q",
+  devBoard: "B",
+  sensor: "S",
 };
 
 /**

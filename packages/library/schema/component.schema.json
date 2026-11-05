@@ -9,7 +9,7 @@
     "$schema": { "type": "string" },
     "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
     "name": { "type": "string", "minLength": 1 },
-    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "switch", "led", "diode", "regulator", "npn", "pnp", "nmos", "pmos"] },
+    "kind": { "enum": ["ground", "supply", "resistor", "capacitor", "inductor", "switch", "led", "diode", "regulator", "npn", "pnp", "nmos", "pmos", "devBoard", "sensor"] },
     "deviceTypes": {
       "type": "array",
       "items": { "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"] },
@@ -71,7 +71,61 @@
     },
     "actuation": { "enum": ["latching", "momentary"] },
     "model": {
-      "enum": ["ground", "resistor", "switch", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator", "npn", "pnp", "nmos", "pmos"]
+      "enum": ["ground", "resistor", "switch", "capacitor", "inductor", "voltageSource", "currentSource", "diode", "linearRegulator", "npn", "pnp", "nmos", "pmos", "devBoard", "load"]
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["groundPinId", "rails", "slots"],
+      "properties": {
+        "groundPinId": { "type": "string" },
+        "rails": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "pinId", "voltage", "maxCurrent"],
+            "properties": {
+              "id": { "type": "string" },
+              "pinId": { "type": "string" },
+              "voltage": { "$ref": "#/$defs/specValue" },
+              "maxCurrent": { "$ref": "#/$defs/specValue" }
+            }
+          }
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "accepts", "railIds", "signals", "logicHigh", "maxInput"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+              "accepts": { "$ref": "#/properties/interfaces" },
+              "railIds": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "signals": { "type": "object", "additionalProperties": { "type": "string" } },
+              "logicHigh": { "$ref": "#/$defs/specValue" },
+              "maxInput": { "$ref": "#/$defs/specValue" },
+              "thermalBudget": { "$ref": "#/$defs/specValue" }
+            }
+          }
+        }
+      }
+    },
+    "supply": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pinId", "groundPinId", "minVoltage", "maxVoltage", "current", "maxInput", "signals"],
+      "properties": {
+        "pinId": { "type": "string" },
+        "groundPinId": { "type": "string" },
+        "minVoltage": { "$ref": "#/$defs/specValue" },
+        "maxVoltage": { "$ref": "#/$defs/specValue" },
+        "current": { "$ref": "#/$defs/specValue" },
+        "logicHigh": { "$ref": "#/$defs/specValue" },
+        "maxInput": { "$ref": "#/$defs/specValue" },
+        "signals": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
     },
     "footprintId": { "type": "string" },
     "meshUrl": { "type": "string" },

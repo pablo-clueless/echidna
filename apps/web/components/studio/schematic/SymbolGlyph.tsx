@@ -1,8 +1,8 @@
 import type { ComponentSpec } from "@echidna/core";
 import type { ReactNode } from "react";
 
+import { BOX_HALF_WIDTH, BOX_KINDS, boxBounds, boxPins, GRID } from "@/lib/schematic/symbols";
 import { switchClosed } from "@/lib/project/model";
-import { GRID } from "@/lib/schematic/symbols";
 
 const g = (n: number) => n * GRID;
 
@@ -121,6 +121,34 @@ export const innerPinLabels: Record<string, { text: string; x: number; y: number
   ],
 };
 
+/** A box with a lead to each pin, for dev boards and sensor modules. */
+const box = (count: number) => {
+  const { w, h } = boxBounds(count);
+  return (
+    <>
+      <path d={boxPins(count).map((p) => line(Math.sign(p.x) * w, p.y, p.x, p.y)).join("")} />
+      <rect x={g(-w)} y={g(-h)} width={g(w * 2)} height={g(h * 2)} rx={2} className="fill-background" />
+    </>
+  );
+};
+
+type InnerLabel = { text: string; x: number; y: number; anchor: "start" | "middle" | "end" };
+
+/**
+ * Pin labels drawn inside a symbol, which stay upright regardless of rotation.
+ * @param spec - The part spec.
+ * @returns Labels in grid units around the symbol's origin; none for symbols without them.
+ */
+export const innerLabels = (spec: ComponentSpec): InnerLabel[] =>
+  BOX_KINDS.has(spec.kind)
+    ? boxPins(spec.pins.length).map((p, i) => ({
+        text: spec.pins[i]?.name ?? "",
+        x: p.x < 0 ? -BOX_HALF_WIDTH + 0.3 : BOX_HALF_WIDTH - 0.3,
+        y: p.y,
+        anchor: p.x < 0 ? "start" : "end",
+      }))
+    : (innerPinLabels[spec.kind] ?? []);
+
 /** Single-throw switch: two contacts and a lever that touches the right contact when closed. */
 const toggle = (closed: boolean) => (
   <>
@@ -150,10 +178,19 @@ const pushButton = (closed: boolean) => {
  * @param variant - The chosen variant, for symbols that show it, such as a switch's position. Defaults to the first.
  */
 export const SymbolGlyph = ({ spec, variant }: { spec: ComponentSpec; variant?: string | undefined }) => {
+  if (BOX_KINDS.has(spec.kind)) return box(spec.pins.length);
   if (spec.kind !== "switch") return glyphs[spec.kind] ?? glyphs.resistor;
   const closed = switchClosed(spec, variant);
   return spec.actuation === "momentary" ? pushButton(closed) : toggle(closed);
 };
+
+/**
+ * Half-extents of a part's symbol body in grid units at rotation 0, for hit areas and selection outlines.
+ * @param spec - The part spec.
+ * @returns Half-width and half-height.
+ */
+export const boundsOf = (spec: ComponentSpec): { w: number; h: number } =>
+  BOX_KINDS.has(spec.kind) ? boxBounds(spec.pins.length) : (symbolBounds[spec.kind] ?? { w: 2, h: 1 });
 
 /** Half-extents of each symbol's body in grid units at rotation 0, for hit areas and selection outlines. */
 export const symbolBounds: Record<string, { w: number; h: number }> = {

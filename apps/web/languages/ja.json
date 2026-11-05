@@ -168,7 +168,9 @@
       "categories": {
         "power": "電源",
         "passives": "受動部品",
-        "semiconductors": "半導体"
+        "semiconductors": "半導体",
+        "devBoards": "開発ボード",
+        "sensors": "センサー"
       }
     },
     "viewport": {
@@ -209,7 +211,8 @@
       "canvasLabel": "回路図エディター",
       "canvasRole": "回路図",
       "partLabel": "{id}、{name}",
-      "hint": "ピンからピンへドラッグして配線 · <key>R</key> 回転 · <key>Del</key> 削除 · ダブルクリックで全体表示"
+      "hint": "ピンからピンへドラッグして配線 · <key>R</key> 回転 · <key>Del</key> 削除 · ダブルクリックで全体表示",
+      "startFromBoard": "{board} から始める"
     },
     "inspector": {
       "board": {
@@ -353,6 +356,39 @@
         "name": "電源投入時の発熱",
         "explain": "回路の起動中、この部品は 1 ミリ秒以上にわたって定格電力の {percent} を熱に変えます。多くは大きなコンデンサの充電中です。コンデンサを小さくするか直列抵抗を増やすと、突入電流が短くなります。"
       }
+    },
+    "slots": {
+      "title": "ボードに接続",
+      "noHost": "接続するには、Raspberry Pi などの開発ボードを追加してください。",
+      "names": {
+        "i2c": "I²C ヘッダー",
+        "gpio": "GPIO ピン"
+      },
+      "protocols": {
+        "i2c": "I²C",
+        "gpio": "GPIO",
+        "1-wire": "1-Wire"
+      },
+      "slotLabel": "{host} の{slot}",
+      "pluggedIn": "接続済み、{rail} から給電",
+      "fits": "接続可能、{rail} から給電",
+      "inUse": "{id} が使用中",
+      "blocked": "ここには接続できません",
+      "plugIn": "接続",
+      "unplug": "取り外す",
+      "estimated": "（推定値）",
+      "checks": {
+        "interface": "{protocols} が必要ですが、このスロットが対応しているのは {accepts} です。",
+        "supply": "{min}～{max} の電源が必要ですが、このスロットが供給できるのは {offered} です。",
+        "railCurrent": "{rail} レールから合計 {actual} を消費しますが、供給できるのは {limit} までです。",
+        "logicIntoHost": "出力は {actual} に達しますが、ボードのピンが耐えられるのは {limit} までです。",
+        "logicIntoPart": "ボードはピンを {actual} で駆動しますが、この部品のピンが耐えられるのは {limit} までです。",
+        "thermal": "発熱は {actual} ですが、このスロットの許容値は {limit} です。"
+      },
+      "railsTitle": "電源レール",
+      "hostTitle": "スロット",
+      "railLoad": "{actual} / {limit}",
+      "empty": "空き"
     }
   },
   "Parts": {
@@ -421,6 +457,34 @@
     "pmos-bs250": {
       "name": "P チャネル MOSFET、BS250 タイプ",
       "summary": "ハイサイドスイッチ、約 45 V"
+    },
+    "raspberry-pi-4": {
+      "name": "Raspberry Pi 4 Model B",
+      "summary": "シングルボードコンピューター、3.3 V ピン"
+    },
+    "raspberry-pi-5": {
+      "name": "Raspberry Pi 5",
+      "summary": "シングルボードコンピューター、3.3 V ピン"
+    },
+    "esp32-devkitc": {
+      "name": "ESP32-DevKitC",
+      "summary": "Wi-Fi・Bluetooth 開発ボード、3.3 V ピン"
+    },
+    "arduino-uno-r4": {
+      "name": "Arduino UNO R4 Minima",
+      "summary": "マイコンボード、5 V ピン"
+    },
+    "bme280": {
+      "name": "BME280 環境センサー",
+      "summary": "I²C で温度・湿度・気圧を測定"
+    },
+    "hc-sr04": {
+      "name": "HC-SR04 超音波センサー",
+      "summary": "距離を測定、5 V 電源が必要"
+    },
+    "ds18b20": {
+      "name": "DS18B20 温度センサー",
+      "summary": "1-Wire で温度を測定"
     }
   }
 }

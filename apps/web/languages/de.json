@@ -168,7 +168,9 @@
       "categories": {
         "power": "Stromversorgung",
         "passives": "Passive Bauteile",
-        "semiconductors": "Halbleiter"
+        "semiconductors": "Halbleiter",
+        "devBoards": "Entwicklungsboards",
+        "sensors": "Sensoren"
       }
     },
     "viewport": {
@@ -209,7 +211,8 @@
       "canvasLabel": "Schaltplan-Editor",
       "canvasRole": "Schaltplan",
       "partLabel": "{id}, {name}",
-      "hint": "Von Pin zu Pin ziehen zum Verdrahten · <key>R</key> drehen · <key>Entf</key> löschen · Doppelklick zum Einpassen"
+      "hint": "Von Pin zu Pin ziehen zum Verdrahten · <key>R</key> drehen · <key>Entf</key> löschen · Doppelklick zum Einpassen",
+      "startFromBoard": "Mit {board} beginnen"
     },
     "inspector": {
       "board": {
@@ -353,6 +356,39 @@
         "name": "Wärme beim Einschalten",
         "explain": "Während die Schaltung anläuft, wandelt dieses Bauteil für eine Millisekunde oder länger {percent} seiner Nennleistung in Wärme um, meist während sich ein großer Kondensator auflädt. Ein kleinerer Kondensator oder mehr Vorwiderstand verkürzt den Stromstoß."
       }
+    },
+    "slots": {
+      "title": "An ein Board anschließen",
+      "noHost": "Füge ein Entwicklungsboard hinzu, etwa einen Raspberry Pi, um dieses Bauteil anzuschließen.",
+      "names": {
+        "i2c": "I²C-Anschluss",
+        "gpio": "GPIO-Pins"
+      },
+      "protocols": {
+        "i2c": "I²C",
+        "gpio": "GPIO",
+        "1-wire": "1-Wire"
+      },
+      "slotLabel": "{slot} an {host}",
+      "pluggedIn": "Angeschlossen, versorgt über {rail}",
+      "fits": "Passt, versorgt über {rail}",
+      "inUse": "Belegt durch {id}",
+      "blocked": "Kann hier nicht angeschlossen werden",
+      "plugIn": "Anschließen",
+      "unplug": "Trennen",
+      "estimated": "(geschätzt)",
+      "checks": {
+        "interface": "Braucht {protocols}, aber dieser Anschluss bietet {accepts}.",
+        "supply": "Braucht eine Versorgung von {min} bis {max}, aber dieser Anschluss bietet {offered}.",
+        "railCurrent": "Würde insgesamt {actual} aus der {rail}-Schiene ziehen, die {limit} liefert.",
+        "logicIntoHost": "Seine Ausgänge erreichen {actual}, aber die Pins des Boards vertragen höchstens {limit}.",
+        "logicIntoPart": "Das Board treibt seine Pins auf {actual}, aber die Pins dieses Bauteils vertragen höchstens {limit}.",
+        "thermal": "Gibt {actual} ab, aber der Anschluss erlaubt {limit}."
+      },
+      "railsTitle": "Versorgungsschienen",
+      "hostTitle": "Anschlüsse",
+      "railLoad": "{actual} von {limit}",
+      "empty": "Frei"
     }
   },
   "Parts": {
@@ -421,6 +457,34 @@
     "pmos-bs250": {
       "name": "P-Kanal-MOSFET, Typ BS250",
       "summary": "High-Side-Schalter, etwa 45 V"
+    },
+    "raspberry-pi-4": {
+      "name": "Raspberry Pi 4 Model B",
+      "summary": "Einplatinencomputer, 3,3-V-Pins"
+    },
+    "raspberry-pi-5": {
+      "name": "Raspberry Pi 5",
+      "summary": "Einplatinencomputer, 3,3-V-Pins"
+    },
+    "esp32-devkitc": {
+      "name": "ESP32-DevKitC",
+      "summary": "Board mit WLAN und Bluetooth, 3,3-V-Pins"
+    },
+    "arduino-uno-r4": {
+      "name": "Arduino UNO R4 Minima",
+      "summary": "Mikrocontroller-Board, 5-V-Pins"
+    },
+    "bme280": {
+      "name": "Umweltsensor BME280",
+      "summary": "Temperatur, Luftfeuchte und Luftdruck über I²C"
+    },
+    "hc-sr04": {
+      "name": "Ultraschallsensor HC-SR04",
+      "summary": "Misst Abstände; braucht 5 V"
+    },
+    "ds18b20": {
+      "name": "Temperatursensor DS18B20",
+      "summary": "Temperatur über 1-Wire"
     }
   }
 }

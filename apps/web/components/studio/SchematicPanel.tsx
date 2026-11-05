@@ -2,6 +2,7 @@
 
 import { RotateCw, Spline, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { parts } from "@echidna/library";
 import dynamic from "next/dynamic";
 
 import { IconButton } from "@/components/app/IconButton";
@@ -10,6 +11,7 @@ import { useProjectStore } from "@/stores/project";
 import { useStudioStore } from "@/stores/studio";
 import { Button } from "@/components/ui/button";
 import { PanelHeader } from "./PanelHeader";
+import { partKey } from "@/lib/messageKeys";
 import { Kbd } from "@/components/ui/kbd";
 import { PanelEmpty } from "./PanelEmpty";
 
@@ -17,12 +19,16 @@ const SchematicCanvas = dynamic(() => import("./schematic/SchematicCanvas").then
   ssr: false,
 });
 
+/** Dev boards a project can start from. */
+const hosts = parts.filter((p) => p.host);
+
 export const SchematicPanel = () => {
   const t = useTranslations("Studio.schematic");
+  const tParts = useTranslations("Parts");
   const hasParts = useProjectStore((s) => s.components.length > 0);
   const selection = useStudioStore((s) => s.selection);
   const select = useStudioStore((s) => s.select);
-  const { loadExample, rotateComponent, removeComponent, removeWire } = useProjectStore.getState();
+  const { loadExample, loadPreset, rotateComponent, removeComponent, removeWire } = useProjectStore.getState();
 
   const remove = () => {
     if (!selection) return;
@@ -62,6 +68,13 @@ export const SchematicPanel = () => {
             <Button size="sm" variant="outline" onClick={loadExample}>
               {t("openExample")}
             </Button>
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {hosts.map((host) => (
+                <Button key={host.id} size="xs" variant="ghost" onClick={() => loadPreset(host.id)}>
+                  {t("startFromBoard", { board: tParts(`${partKey(host.id)}.name`) })}
+                </Button>
+              ))}
+            </div>
           </EmptyContent>
         </PanelEmpty>
       )}

@@ -168,7 +168,9 @@
       "categories": {
         "power": "Alimentation",
         "passives": "Passifs",
-        "semiconductors": "Semi-conducteurs"
+        "semiconductors": "Semi-conducteurs",
+        "devBoards": "Cartes de développement",
+        "sensors": "Capteurs"
       }
     },
     "viewport": {
@@ -209,7 +211,8 @@
       "canvasLabel": "Éditeur de schéma",
       "canvasRole": "schéma",
       "partLabel": "{id}, {name}",
-      "hint": "Glissez d’une broche à l’autre pour câbler · <key>R</key> pivoter · <key>Suppr</key> supprimer · double-clic pour ajuster"
+      "hint": "Glissez d’une broche à l’autre pour câbler · <key>R</key> pivoter · <key>Suppr</key> supprimer · double-clic pour ajuster",
+      "startFromBoard": "Partir de : {board}"
     },
     "inspector": {
       "board": {
@@ -353,6 +356,39 @@
         "name": "Chaleur à la mise sous tension",
         "explain": "Au démarrage du circuit, ce composant transforme en chaleur {percent} de sa puissance nominale pendant une milliseconde ou plus, souvent pendant la charge d’un gros condensateur. Un condensateur plus petit ou plus de résistance en série raccourcit cet appel de courant."
       }
+    },
+    "slots": {
+      "title": "Brancher sur une carte",
+      "noHost": "Ajoutez une carte de développement, comme un Raspberry Pi, pour y brancher ce composant.",
+      "names": {
+        "i2c": "Connecteur I²C",
+        "gpio": "Broches GPIO"
+      },
+      "protocols": {
+        "i2c": "I²C",
+        "gpio": "GPIO",
+        "1-wire": "1-Wire"
+      },
+      "slotLabel": "{slot} de {host}",
+      "pluggedIn": "Branché, alimenté par {rail}",
+      "fits": "Compatible, alimenté par {rail}",
+      "inUse": "Occupé par {id}",
+      "blocked": "Branchement impossible ici",
+      "plugIn": "Brancher",
+      "unplug": "Débrancher",
+      "estimated": "(estimation)",
+      "checks": {
+        "interface": "Nécessite {protocols}, mais ce connecteur fournit {accepts}.",
+        "supply": "Nécessite une alimentation de {min} à {max}, mais ce connecteur propose {offered}.",
+        "railCurrent": "Tirerait {actual} au total sur le rail {rail}, qui fournit {limit}.",
+        "logicIntoHost": "Ses sorties montent à {actual}, mais les broches de la carte acceptent au plus {limit}.",
+        "logicIntoPart": "La carte pilote ses broches à {actual}, mais les broches de ce composant acceptent au plus {limit}.",
+        "thermal": "Dégage {actual}, mais le connecteur autorise {limit}."
+      },
+      "railsTitle": "Rails d’alimentation",
+      "hostTitle": "Connecteurs",
+      "railLoad": "{actual} sur {limit}",
+      "empty": "Libre"
     }
   },
   "Parts": {
@@ -421,6 +457,34 @@
     "pmos-bs250": {
       "name": "MOSFET canal P, type BS250",
       "summary": "Commutation côté haut, environ 45 V"
+    },
+    "raspberry-pi-4": {
+      "name": "Raspberry Pi 4 Model B",
+      "summary": "Ordinateur monocarte, broches en 3,3 V"
+    },
+    "raspberry-pi-5": {
+      "name": "Raspberry Pi 5",
+      "summary": "Ordinateur monocarte, broches en 3,3 V"
+    },
+    "esp32-devkitc": {
+      "name": "ESP32-DevKitC",
+      "summary": "Carte Wi-Fi et Bluetooth, broches en 3,3 V"
+    },
+    "arduino-uno-r4": {
+      "name": "Arduino UNO R4 Minima",
+      "summary": "Carte à microcontrôleur, broches en 5 V"
+    },
+    "bme280": {
+      "name": "Capteur d’environnement BME280",
+      "summary": "Température, humidité et pression en I²C"
+    },
+    "hc-sr04": {
+      "name": "Capteur à ultrasons HC-SR04",
+      "summary": "Mesure les distances, alimenté en 5 V"
+    },
+    "ds18b20": {
+      "name": "Capteur de température DS18B20",
+      "summary": "Température en 1-Wire"
     }
   }
 }

@@ -1,4 +1,8 @@
 {
+  "slots": {
+    "railCurrent": { "warnAt": 0.8, "failAbove": 1 },
+    "thermal": { "warnAt": 0.8, "failAbove": 1 }
+  },
   "rules": [
     { "id": "voltageRating", "metric": "voltage", "rating": "maxVoltage", "warnAt": 0.8, "failAbove": 1 },
     { "id": "currentRating", "metric": "current", "rating": "maxCurrent", "warnAt": 0.8, "failAbove": 1 },

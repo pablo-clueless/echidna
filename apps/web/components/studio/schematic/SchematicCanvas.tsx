@@ -17,7 +17,7 @@ import { partsById } from "@echidna/library";
 
 import { GRID, PART_MIME, pinPositions, type Point, routeWire, valueParam } from "@/lib/schematic/symbols";
 import { deriveNets, paramValue, pinKey, samePin } from "@/lib/project/model";
-import { innerPinLabels, symbolBounds, SymbolGlyph } from "./SymbolGlyph";
+import { boundsOf, innerLabels, SymbolGlyph } from "./SymbolGlyph";
 import { useProjectStore } from "@/stores/project";
 import { useStudioStore } from "@/stores/studio";
 import { formatQuantity } from "@/lib/units";
@@ -77,7 +77,7 @@ export const SchematicCanvas = () => {
       const spec = partsById.get(c.specId);
       const placement = schematic[c.id];
       if (!spec || !placement) continue;
-      pinPositions(spec.kind, placement).forEach((at, i) => {
+      pinPositions(spec.kind, placement, spec.pins.length).forEach((at, i) => {
         const pinId = spec.pins[i]?.id;
         if (pinId) hits.push({ ref: { componentId: c.id, pinId }, at });
       });
@@ -383,7 +383,7 @@ export const SchematicCanvas = () => {
           const spec = partsById.get(c.specId);
           const placement = schematic[c.id];
           if (!spec || !placement) return null;
-          const bounds = symbolBounds[spec.kind] ?? { w: 2, h: 1 };
+          const bounds = boundsOf(spec);
           const vertical = placement.rotation % 180 !== 0;
           const [hw, hh] = vertical ? [bounds.h, bounds.w] : [bounds.w, bounds.h];
           const selected = selection?.kind === "component" && selection.id === c.id;
@@ -431,9 +431,9 @@ export const SchematicCanvas = () => {
                 strokeWidth={1.5}
               >
                 <SymbolGlyph spec={spec} variant={c.variant} />
-                {innerPinLabels[spec.kind]?.map((l) => (
+                {innerLabels(spec).map((l) => (
                   <text
-                    key={l.text}
+                    key={`${l.text}:${l.x}:${l.y}`}
                     x={l.x * GRID}
                     y={l.y * GRID}
                     transform={`rotate(${-placement.rotation} ${l.x * GRID} ${l.y * GRID})`}

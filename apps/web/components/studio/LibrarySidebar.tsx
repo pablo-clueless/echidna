@@ -1,15 +1,15 @@
 "use client";
 
 import { ChevronRight, Package, Search } from "lucide-react";
+import { parts, partsById } from "@echidna/library";
 import type { ComponentSpec } from "@echidna/core";
 import { useTranslations } from "next-intl";
-import { parts } from "@echidna/library";
 import { useState } from "react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { freeSchematicSpot, GRID, PART_MIME } from "@/lib/schematic/symbols";
-import { symbolBounds, SymbolGlyph } from "./schematic/SymbolGlyph";
+import { BOX_KINDS, freeSchematicSpot, GRID, PART_MIME } from "@/lib/schematic/symbols";
+import { boundsOf, SymbolGlyph } from "./schematic/SymbolGlyph";
 import { useProjectStore } from "@/stores/project";
 import { useLayoutStore } from "@/stores/layout";
 import { useStudioStore } from "@/stores/studio";
@@ -21,11 +21,21 @@ const categories = [
   { key: "power", kinds: ["supply", "regulator", "ground"] },
   { key: "passives", kinds: ["resistor", "capacitor", "inductor", "switch"] },
   { key: "semiconductors", kinds: ["led", "diode", "npn", "pnp", "nmos", "pmos"] },
+  { key: "devBoards", kinds: ["devBoard"] },
+  { key: "sensors", kinds: ["sensor"] },
 ] as const;
 
+/** How far a symbol reaches either side of its origin, leads included, turned as placed. */
+const halfWidthOf = (spec: ComponentSpec, rotation: number) => {
+  const b = boundsOf(spec);
+  const lead = BOX_KINDS.has(spec.kind) ? 1 : 0;
+  return rotation % 180 === 0 ? b.w + lead : b.h;
+};
+
 const PartIcon = ({ spec }: { spec: ComponentSpec }) => {
-  const b = symbolBounds[spec.kind] ?? { w: 2, h: 1 };
-  const span = Math.max(b.w, b.h) + 0.6;
+  const b = boundsOf(spec);
+  // Box symbols' leads reach a unit past the body.
+  const span = Math.max(b.w + (BOX_KINDS.has(spec.kind) ? 1 : 0), b.h) + 0.6;
   return (
     <svg
       aria-hidden
@@ -50,8 +60,14 @@ export const LibrarySidebar = () => {
   const setCategoryOpen = useLayoutStore((s) => s.setCategoryOpen);
 
   const add = (specId: string) => {
-    const { addComponent, schematic } = useProjectStore.getState();
-    const id = addComponent(specId, freeSchematicSpot(Object.values(schematic)));
+    const { addComponent, components, schematic } = useProjectStore.getState();
+    const spec = partsById.get(specId);
+    const placed = components.flatMap((c) => {
+      const at = schematic[c.id];
+      const placedSpec = partsById.get(c.specId);
+      return at && placedSpec ? [{ ...at, halfWidth: halfWidthOf(placedSpec, at.rotation) }] : [];
+    });
+    const id = addComponent(specId, freeSchematicSpot(placed, spec ? halfWidthOf(spec, 0) : undefined));
     if (id) select({ kind: "component", id });
   };
 

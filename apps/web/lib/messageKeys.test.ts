@@ -21,6 +21,17 @@ describe("data-driven message keys", () => {
     expect(en.Studio.rules).toHaveProperty([id, "explain"]);
   });
 
+  it.each(parts.filter((p) => p.host).map((p) => [p.id, p] as const))("host %s names its slots and protocols", (_, part) => {
+    for (const slot of part.host?.slots ?? []) {
+      expect(en.Studio.slots.names).toHaveProperty([slot.id]);
+      for (const i of slot.accepts) expect(en.Studio.slots.protocols).toHaveProperty([i.protocol]);
+    }
+  });
+
+  it.each(parts.filter((p) => p.supply).map((p) => [p.id, p] as const))("part %s names its protocols", (_, part) => {
+    for (const i of part.interfaces) expect(en.Studio.slots.protocols).toHaveProperty([i.protocol]);
+  });
+
   it("every user-editable parameter has a label", () => {
     for (const key of parts.flatMap(editableParams)) {
       expect(en.Studio.params).toHaveProperty(key);

@@ -168,7 +168,9 @@
       "categories": {
         "power": "Power",
         "passives": "Passives",
-        "semiconductors": "Semiconductors"
+        "semiconductors": "Semiconductors",
+        "devBoards": "Dev boards",
+        "sensors": "Sensors"
       }
     },
     "viewport": {
@@ -209,7 +211,8 @@
       "canvasLabel": "Schematic editor",
       "canvasRole": "schematic",
       "partLabel": "{id}, {name}",
-      "hint": "Drag pin to pin to wire · <key>R</key> rotate · <key>Del</key> delete · double-click to fit"
+      "hint": "Drag pin to pin to wire · <key>R</key> rotate · <key>Del</key> delete · double-click to fit",
+      "startFromBoard": "Start from {board}"
     },
     "inspector": {
       "board": {
@@ -353,6 +356,39 @@
         "name": "Heat at switch-on",
         "explain": "While the circuit starts up, this part turns {percent} of its rated power into heat for a millisecond or more, usually while a large capacitor charges. A smaller capacitor or more series resistance shortens the surge."
       }
+    },
+    "slots": {
+      "title": "Plug into a board",
+      "noHost": "Add a dev board, such as a Raspberry Pi, to plug this into.",
+      "names": {
+        "i2c": "I²C header",
+        "gpio": "GPIO pins"
+      },
+      "protocols": {
+        "i2c": "I²C",
+        "gpio": "GPIO",
+        "1-wire": "1-Wire"
+      },
+      "slotLabel": "{slot} on {host}",
+      "pluggedIn": "Plugged in, powered from {rail}",
+      "fits": "Fits, powered from {rail}",
+      "inUse": "In use by {id}",
+      "blocked": "Can’t plug in here",
+      "plugIn": "Plug in",
+      "unplug": "Unplug",
+      "estimated": "(estimated)",
+      "checks": {
+        "interface": "Needs {protocols}, but this slot carries {accepts}.",
+        "supply": "Needs a supply of {min} to {max}, but this slot offers {offered}.",
+        "railCurrent": "Would draw {actual} in total from the {rail} rail, which supplies {limit}.",
+        "logicIntoHost": "Its outputs reach {actual}, but the board’s pins take at most {limit}.",
+        "logicIntoPart": "The board drives its pins to {actual}, but this part’s pins take at most {limit}.",
+        "thermal": "Gives off {actual}, but the slot allows {limit}."
+      },
+      "railsTitle": "Rails",
+      "hostTitle": "Slots",
+      "railLoad": "{actual} of {limit}",
+      "empty": "Empty"
     }
   },
   "Parts": {
@@ -421,6 +457,34 @@
     "pmos-bs250": {
       "name": "P-channel MOSFET, BS250 type",
       "summary": "High-side switch, about 45 V"
+    },
+    "raspberry-pi-4": {
+      "name": "Raspberry Pi 4 Model B",
+      "summary": "Single-board computer, 3.3 V pins"
+    },
+    "raspberry-pi-5": {
+      "name": "Raspberry Pi 5",
+      "summary": "Single-board computer, 3.3 V pins"
+    },
+    "esp32-devkitc": {
+      "name": "ESP32-DevKitC",
+      "summary": "Wi-Fi and Bluetooth board, 3.3 V pins"
+    },
+    "arduino-uno-r4": {
+      "name": "Arduino UNO R4 Minima",
+      "summary": "Microcontroller board, 5 V pins"
+    },
+    "bme280": {
+      "name": "BME280 environment sensor",
+      "summary": "Temperature, humidity and pressure over I²C"
+    },
+    "hc-sr04": {
+      "name": "HC-SR04 ultrasonic sensor",
+      "summary": "Measures distance; needs 5 V"
+    },
+    "ds18b20": {
+      "name": "DS18B20 temperature sensor",
+      "summary": "Temperature over 1-Wire"
     }
   }
 }

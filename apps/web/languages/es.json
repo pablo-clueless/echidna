@@ -168,7 +168,9 @@
       "categories": {
         "power": "Alimentación",
         "passives": "Pasivos",
-        "semiconductors": "Semiconductores"
+        "semiconductors": "Semiconductores",
+        "devBoards": "Placas de desarrollo",
+        "sensors": "Sensores"
       }
     },
     "viewport": {
@@ -209,7 +211,8 @@
       "canvasLabel": "Editor de esquemas",
       "canvasRole": "esquema",
       "partLabel": "{id}, {name}",
-      "hint": "Arrastra de un pin a otro para cablear · <key>R</key> girar · <key>Supr</key> eliminar · doble clic para ajustar"
+      "hint": "Arrastra de un pin a otro para cablear · <key>R</key> girar · <key>Supr</key> eliminar · doble clic para ajustar",
+      "startFromBoard": "Empezar con {board}"
     },
     "inspector": {
       "board": {
@@ -353,6 +356,39 @@
         "name": "Calor al encender",
         "explain": "Mientras el circuito arranca, este componente convierte en calor el {percent} de su potencia nominal durante un milisegundo o más, normalmente mientras se carga un condensador grande. Un condensador más pequeño o más resistencia en serie acortan el pico."
       }
+    },
+    "slots": {
+      "title": "Conectar a una placa",
+      "noHost": "Añade una placa de desarrollo, como una Raspberry Pi, para conectar este componente.",
+      "names": {
+        "i2c": "Conector I²C",
+        "gpio": "Pines GPIO"
+      },
+      "protocols": {
+        "i2c": "I²C",
+        "gpio": "GPIO",
+        "1-wire": "1-Wire"
+      },
+      "slotLabel": "{slot} de {host}",
+      "pluggedIn": "Conectado, alimentado desde {rail}",
+      "fits": "Compatible, alimentado desde {rail}",
+      "inUse": "Ocupado por {id}",
+      "blocked": "No se puede conectar aquí",
+      "plugIn": "Conectar",
+      "unplug": "Desconectar",
+      "estimated": "(estimado)",
+      "checks": {
+        "interface": "Necesita {protocols}, pero este conector ofrece {accepts}.",
+        "supply": "Necesita una alimentación de {min} a {max}, pero este conector ofrece {offered}.",
+        "railCurrent": "Consumiría {actual} en total del raíl {rail}, que suministra {limit}.",
+        "logicIntoHost": "Sus salidas llegan a {actual}, pero los pines de la placa admiten como máximo {limit}.",
+        "logicIntoPart": "La placa lleva sus pines a {actual}, pero los pines de este componente admiten como máximo {limit}.",
+        "thermal": "Disipa {actual}, pero el conector permite {limit}."
+      },
+      "railsTitle": "Raíles de alimentación",
+      "hostTitle": "Conectores",
+      "railLoad": "{actual} de {limit}",
+      "empty": "Libre"
     }
   },
   "Parts": {
@@ -421,6 +457,34 @@
     "pmos-bs250": {
       "name": "MOSFET de canal P, tipo BS250",
       "summary": "Conmutación del lado alto, unos 45 V"
+    },
+    "raspberry-pi-4": {
+      "name": "Raspberry Pi 4 Model B",
+      "summary": "Ordenador de placa única, pines de 3,3 V"
+    },
+    "raspberry-pi-5": {
+      "name": "Raspberry Pi 5",
+      "summary": "Ordenador de placa única, pines de 3,3 V"
+    },
+    "esp32-devkitc": {
+      "name": "ESP32-DevKitC",
+      "summary": "Placa con Wi-Fi y Bluetooth, pines de 3,3 V"
+    },
+    "arduino-uno-r4": {
+      "name": "Arduino UNO R4 Minima",
+      "summary": "Placa de microcontrolador, pines de 5 V"
+    },
+    "bme280": {
+      "name": "Sensor ambiental BME280",
+      "summary": "Temperatura, humedad y presión por I²C"
+    },
+    "hc-sr04": {
+      "name": "Sensor ultrasónico HC-SR04",
+      "summary": "Mide distancias; necesita 5 V"
+    },
+    "ds18b20": {
+      "name": "Sensor de temperatura DS18B20",
+      "summary": "Temperatura por 1-Wire"
     }
   }
 }

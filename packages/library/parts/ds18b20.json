@@ -1,0 +1,66 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ds18b20",
+  "name": "DS18B20 temperature sensor",
+  "kind": "sensor",
+  "deviceTypes": [
+    "iot",
+    "wearable",
+    "drone"
+  ],
+  "pins": [
+    {
+      "id": "vdd",
+      "name": "VDD"
+    },
+    {
+      "id": "gnd",
+      "name": "GND"
+    },
+    {
+      "id": "dq",
+      "name": "DQ"
+    }
+  ],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "1-wire"
+    }
+  ],
+  "supply": {
+    "pinId": "vdd",
+    "groundPinId": "gnd",
+    "minVoltage": {
+      "value": 3.0,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Analog Devices (Maxim) DS18B20 datasheet: VDD range"
+    },
+    "maxVoltage": {
+      "value": 5.5,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Analog Devices (Maxim) DS18B20 datasheet: VDD range"
+    },
+    "current": {
+      "value": 0.0015,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "Analog Devices (Maxim) DS18B20 datasheet: active current 1.5 mA"
+    },
+    "maxInput": {
+      "value": 5.5,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Analog Devices (Maxim) DS18B20 datasheet: DQ pin up to VDD, at most 5.5 V"
+    },
+    "signals": {
+      "IO1": "dq"
+    }
+  },
+  "model": "load",
+  "footprintId": "header/ds18b20",
+  "meshUrl": "generic/pin-header"
+}

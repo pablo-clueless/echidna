@@ -18,6 +18,8 @@ export const requiredParams: Record<string, readonly string[]> = {
   pnp: ["saturationCurrent", "forwardBeta"],
   nmos: ["thresholdVoltage", "transconductance"],
   pmos: ["thresholdVoltage", "transconductance"],
+  devBoard: [],
+  load: [],
 };
 
 /** Library models that are one solver element with a fixed polarity, as SPICE `.model` types are. */
@@ -50,10 +52,13 @@ export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, Component
     if (spec) used[c.id] = withVariant(spec, c.variant);
   }
 
+  // A host board's ground is the reference too: a dev board and what is plugged into it need no ground symbol.
+  const isGroundPin = (p: { componentId: string; pinId: string }) => {
+    const spec = used[p.componentId];
+    return spec?.model === "ground" || spec?.host?.groundPinId === p.pinId;
+  };
   const groundNets = new Set(
-    netlist.nets
-      .filter((n) => n.id === netlist.groundNetId || n.pins.some((p) => used[p.componentId]?.model === "ground"))
-      .map((n) => n.id),
+    netlist.nets.filter((n) => n.id === netlist.groundNetId || n.pins.some(isGroundPin)).map((n) => n.id),
   );
   const netNodes: Record<string, string> = Object.fromEntries(
     netlist.nets.map((n) => [n.id, groundNets.has(n.id) ? GROUND_NODE : `n:${n.id}`]),
@@ -67,10 +72,29 @@ export const toCircuit = (netlist: Netlist, specs: ReadonlyMap<string, Component
   for (const c of netlist.components) {
     const spec = used[c.id];
     if (!spec || spec.model === "ground") continue;
-    const nodes = spec.pins.map((pin) => {
-      const net = pinNet.get(`${c.id}/${pin.id}`);
-      return net === undefined ? `p:${c.id}/${pin.id}` : (netNodes[net] ?? `n:${net}`);
-    });
+    const node = (pinId: string) => {
+      if (spec.host?.groundPinId === pinId) return GROUND_NODE;
+      const net = pinNet.get(`${c.id}/${pinId}`);
+      return net === undefined ? `p:${c.id}/${pinId}` : (netNodes[net] ?? `n:${net}`);
+    };
+    if (spec.host) {
+      // Each rail is an ideal source from the host's ground; the rule engine never sees these, as their IDs are
+      // not components.
+      for (const rail of spec.host.rails) {
+        elements.push({ id: `${c.id}:${rail.id}`, nodes: [node(rail.pinId), GROUND_NODE], kind: "voltageSource", voltage: rail.voltage.value });
+      }
+      continue;
+    }
+    if (spec.model === "load" && spec.supply) {
+      elements.push({
+        id: c.id,
+        nodes: [node(spec.supply.pinId), node(spec.supply.groundPinId)],
+        kind: "currentSource",
+        current: spec.supply.current.value,
+      });
+      continue;
+    }
+    const nodes = spec.pins.map((pin) => node(pin.id));
     const values = Object.fromEntries(Object.entries(spec.params).map(([k, v]) => [k, v.value]));
     elements.push({
       id: c.id,
