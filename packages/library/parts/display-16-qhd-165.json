@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "display-16-qhd-165",
+  "name": "16-inch 2560 × 1600 IPS display, 165 Hz",
+  "kind": "display",
+  "deviceTypes": [
+    "laptop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "edp"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "power": {
+      "value": 8,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Panel and backlight at full brightness; typical for this size and refresh rate"
+    },
+    "typical": {
+      "value": 5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Panel and backlight at about half brightness"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/display",
+  "meshUrl": "generic/display"
+}

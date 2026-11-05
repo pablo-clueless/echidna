@@ -52,7 +52,12 @@
         "memory",
         "storage",
         "cooler",
-        "psu"
+        "psu",
+        "laptopBoard",
+        "battery",
+        "wifi",
+        "display",
+        "charger"
       ]
     },
     "deviceTypes": {
@@ -364,7 +369,11 @@
             "memory",
             "storage",
             "cooler",
-            "psu"
+            "psu",
+            "battery",
+            "wifi",
+            "display",
+            "charger"
           ]
         },
         "power": {
@@ -395,6 +404,15 @@
               "minimum": 1
             }
           }
+        },
+        "typical": {
+          "$ref": "#/$defs/specValue"
+        },
+        "heat": {
+          "$ref": "#/$defs/specValue"
+        },
+        "energy": {
+          "$ref": "#/$defs/specValue"
         }
       }
     }

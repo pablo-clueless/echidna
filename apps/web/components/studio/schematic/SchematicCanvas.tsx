@@ -15,7 +15,7 @@ import { compareViolations, type PinRef, type Severity } from "@echidna/core";
 import { useLocale, useTranslations } from "next-intl";
 import { partsById } from "@echidna/library";
 
-import { GRID, PART_MIME, pinPositions, type Point, routeWire, valueParam } from "@/lib/schematic/symbols";
+import { boxBounds, GRID, PART_MIME, pinPositions, type Point, routeWire, valueParam } from "@/lib/schematic/symbols";
 import { deriveNets, paramValue, pinKey, samePin } from "@/lib/project/model";
 import { boundsOf, innerLabels, SymbolGlyph } from "./SymbolGlyph";
 import { useProjectStore } from "@/stores/project";
@@ -87,6 +87,21 @@ export const SchematicCanvas = () => {
 
   const pinAt = useMemo(() => new Map(pins.map((p) => [pinKey(p.ref), p.at])), [pins]);
 
+  /** Points the view fits around: every pin, and the corners of parts with none, such as desktop and laptop modules. */
+  const extent = useMemo(() => {
+    const { w, h } = boxBounds(0);
+    const reach = Math.max(w, h);
+    const corners = components.flatMap((c) => {
+      const placement = schematic[c.id];
+      if (!placement || (partsById.get(c.specId)?.pins.length ?? 0) > 0) return [];
+      return [
+        { x: placement.x - reach, y: placement.y - reach },
+        { x: placement.x + reach, y: placement.y + reach },
+      ];
+    });
+    return [...pins.map((p) => p.at), ...corners];
+  }, [pins, components, schematic]);
+
   const worst = useMemo(() => {
     const map = new Map<string, { severity: Exclude<Severity, "pass">; estimated: boolean }>();
     for (const v of [...violations].sort(compareViolations)) {
@@ -111,10 +126,10 @@ export const SchematicCanvas = () => {
 
   const fit = () => {
     const svg = svgRef.current;
-    if (!svg || pins.length === 0) return;
+    if (!svg || extent.length === 0) return;
     const { width, height } = svg.getBoundingClientRect();
-    const xs = pins.map((p) => p.at.x);
-    const ys = pins.map((p) => p.at.y);
+    const xs = extent.map((p) => p.x);
+    const ys = extent.map((p) => p.y);
     const [minX, maxX, minY, maxY] = [Math.min(...xs) - 3, Math.max(...xs) + 3, Math.min(...ys) - 2, Math.max(...ys) + 2];
     const scale = Math.max(
       MIN_SCALE,

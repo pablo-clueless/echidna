@@ -19,6 +19,7 @@ export type FitCheckId =
   | "logicIntoHost"
   | "logicIntoPart"
   | "thermal"
+  | "chargerBudget"
   | "psuBudget"
   | "powerConnectors"
   | "cooling";

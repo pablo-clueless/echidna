@@ -121,7 +121,18 @@ export type SupplySpec = {
 };
 
 /** What a desktop or laptop module does in the build: the role decides which device-level checks apply to it. */
-export type ModuleRole = "motherboard" | "cpu" | "gpu" | "memory" | "storage" | "cooler" | "psu";
+export type ModuleRole =
+  | "motherboard"
+  | "cpu"
+  | "gpu"
+  | "memory"
+  | "storage"
+  | "cooler"
+  | "psu"
+  | "battery"
+  | "wifi"
+  | "display"
+  | "charger";
 
 /** A PSU power connector, such as the 12V-2x6 connector newer graphics cards take. */
 export type PowerConnector = "atx-24pin" | "eps-8pin" | "pcie-8pin" | "12v-2x6";
@@ -133,7 +144,16 @@ export type ModuleSpec = {
   power?: SpecValue;
   /** For coolers: the heat they are rated to remove. */
   cooling?: SpecValue;
-  /** For PSUs: rated continuous output. */
+  /** Power drawn in light everyday use, such as browsing and video, for estimating battery runtime. */
+  typical?: SpecValue;
+  /**
+   * For boards with the processors soldered on, such as a laptop's: the heat they give off under sustained load,
+   * which the cooler has to remove.
+   */
+  heat?: SpecValue;
+  /** For batteries: stored energy, in joules (1 Wh = 3600 J). */
+  energy?: SpecValue;
+  /** For PSUs and chargers: rated continuous output. */
   output?: SpecValue;
   /** PSU connectors the module needs plugged into it, by connector, such as a graphics card's 12V-2x6. */
   needs?: Partial<Record<PowerConnector, number>>;

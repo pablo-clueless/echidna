@@ -172,7 +172,9 @@
         "devBoards": "Entwicklungsboards",
         "sensors": "Sensoren",
         "motherboards": "Mainboards",
-        "pcParts": "PC-Komponenten"
+        "pcParts": "PC-Komponenten",
+        "laptops": "Laptop-Mainboards",
+        "laptopParts": "Laptop-Komponenten"
       }
     },
     "viewport": {
@@ -367,8 +369,12 @@
         "explain": "Die Komponenten brauchen {percent} der Anschlüsse eines Typs, die das Netzteil hat. Über 100 % lässt sich etwas nicht anschließen."
       },
       "cooling": {
-        "name": "CPU-Kühlung",
-        "explain": "Die CPU gibt {percent} der Wärme ab, die der Kühler abführen kann. Über 90 % wird sie unter Last heiß; über 100 % drosselt sie sich zum Schutz."
+        "name": "Kühlung",
+        "explain": "Die Prozessoren geben {percent} der Wärme ab, die der Kühler abführen kann. Über 90 % werden sie unter Last heiß; über 100 % drosseln sie sich zum Schutz."
+      },
+      "chargerBudget": {
+        "name": "Ladegerätleistung",
+        "explain": "Unter Volllast zieht der Laptop {percent} dessen, was das Ladegerät liefert. Über 100 % gleicht der Akku die Differenz aus und entlädt sich selbst am Netz; über 150 % kommt er unter Last nicht mehr hinterher."
       }
     },
     "slots": {
@@ -382,7 +388,11 @@
         "pcie-x16": "PCIe-x16-Steckplatz",
         "memory": "Speichersteckplätze",
         "m2": "M.2-Steckplatz",
-        "power": "ATX-Stromanschluss"
+        "power": "ATX-Stromanschluss",
+        "wifi": "WLAN-Steckplatz (M.2)",
+        "battery": "Akkuanschluss",
+        "display": "Displayanschluss",
+        "dc-in": "Ladeanschluss"
       },
       "protocols": {
         "i2c": "I²C",
@@ -396,7 +406,17 @@
         "ddr5-dimm": "DDR5-Speicher",
         "ddr4-dimm": "DDR4-Speicher",
         "m2-nvme": "M.2 NVMe",
-        "atx-psu": "ATX-Netzteil"
+        "atx-psu": "ATX-Netzteil",
+        "so-dimm-ddr5": "DDR5-SO-DIMM",
+        "so-dimm-ddr4": "DDR4-SO-DIMM",
+        "m2-e-key": "M.2 E-Key",
+        "battery-3s": "3-Zellen-Akku",
+        "battery-4s": "4-Zellen-Akku",
+        "edp": "eDP",
+        "ultrabook-cooling-mount": "Ultrabook-Kühlerhalterung",
+        "gaming-laptop-cooling-mount": "Gaming-Laptop-Kühlerhalterung",
+        "usb-c-pd": "USB-C Power Delivery",
+        "dc-barrel": "Hohlstecker"
       },
       "slotLabel": "{slot} an {host}",
       "pluggedIn": "Angeschlossen, versorgt über {rail}",
@@ -415,7 +435,8 @@
         "thermal": "Gibt {actual} ab, aber der Anschluss erlaubt {limit}.",
         "psuBudget": "Das System zieht bis zu {actual}; das Netzteil ist für {limit} ausgelegt.",
         "powerConnectors": "Braucht {actual} × {connector}; das Netzteil hat {limit}.",
-        "cooling": "Die CPU gibt bis zu {actual} ab; der Kühler ist für {limit} ausgelegt."
+        "cooling": "Bis zu {actual} Wärme abzuführen; der Kühler ist für {limit} ausgelegt.",
+        "chargerBudget": "Der Laptop zieht bis zu {actual}; das Ladegerät liefert {limit}."
       },
       "railsTitle": "Versorgungsschienen",
       "hostTitle": "Anschlüsse",
@@ -435,7 +456,9 @@
       "pluggedInModule": "Eingesteckt",
       "fitsModule": "Passt",
       "buildTitle": "Strom und Kühlung",
-      "buildEmpty": "Stecke ein Netzteil und einen Kühler ein, um Strom und Kühlung zu prüfen."
+      "buildEmpty": "Stecke ein Netzteil und einen Kühler ein, um Strom und Kühlung zu prüfen.",
+      "batteryRuntime": "Etwa {runtime} Akkulaufzeit bei leichter Nutzung ({energy} bei {draw}).",
+      "buildEmptyLaptop": "Stecke ein Ladegerät und einen Kühler ein, um Strom und Kühlung zu prüfen."
     }
   },
   "Parts": {
@@ -616,6 +639,94 @@
     "psu-1000w": {
       "name": "ATX 3.1-Netzteil 1000 W (80 Plus Gold)",
       "summary": "12V-2x6 und vier 8-Pin-PCIe"
+    },
+    "ultrabook-board": {
+      "name": "Ultrabook-Mainboard (28-W-Prozessor, 16 GB LPDDR5X verlötet)",
+      "summary": "Prozessor und Speicher verlötet; 3-Zellen-Akku und Laden über USB-C"
+    },
+    "gaming-laptop-board": {
+      "name": "Gaming-Laptop-Mainboard (55-W-CPU, 115-W-GPU)",
+      "summary": "Prozessor und Grafik verlötet; SO-DIMM-Speicher, 4-Zellen-Akku, Laden über Hohlstecker oder USB-C"
+    },
+    "battery-3s-54wh": {
+      "name": "3-Zellen-Laptop-Akku, 54 Wh",
+      "summary": "Für Mainboards, die einen 3-Zellen-Akku laden"
+    },
+    "battery-3s-72wh": {
+      "name": "3-Zellen-Laptop-Akku, 72 Wh",
+      "summary": "Für Mainboards, die einen 3-Zellen-Akku laden"
+    },
+    "battery-4s-80wh": {
+      "name": "4-Zellen-Laptop-Akku, 80 Wh",
+      "summary": "Für Mainboards, die einen 4-Zellen-Akku laden"
+    },
+    "battery-4s-99wh": {
+      "name": "4-Zellen-Laptop-Akku, 99,9 Wh",
+      "summary": "Für Mainboards, die einen 4-Zellen-Akku laden"
+    },
+    "sodimm-ddr5-16gb": {
+      "name": "DDR5-5600-SO-DIMM-Kit 16 GB (2 × 8 GB)",
+      "summary": "Zwei DDR5-Laptop-Speichermodule"
+    },
+    "sodimm-ddr5-32gb": {
+      "name": "DDR5-5600-SO-DIMM-Kit 32 GB (2 × 16 GB)",
+      "summary": "Zwei DDR5-Laptop-Speichermodule"
+    },
+    "sodimm-ddr4-16gb": {
+      "name": "DDR4-3200-SO-DIMM-Kit 16 GB (2 × 8 GB)",
+      "summary": "Zwei DDR4-Laptop-Speichermodule"
+    },
+    "wifi-6e-card": {
+      "name": "Wi-Fi-6E- und Bluetooth-Karte (M.2 2230)",
+      "summary": "Funkkarte für einen M.2-E-Key-Steckplatz"
+    },
+    "wifi-7-card": {
+      "name": "Wi-Fi-7- und Bluetooth-Karte (M.2 2230)",
+      "summary": "Funkkarte für einen M.2-E-Key-Steckplatz"
+    },
+    "display-14-fhd": {
+      "name": "14-Zoll-IPS-Display 1920 × 1200, 60 Hz",
+      "summary": "Laptop-Panel mit eDP-Anschluss"
+    },
+    "display-14-oled-120": {
+      "name": "14-Zoll-OLED-Display 2880 × 1800, 120 Hz",
+      "summary": "Laptop-Panel mit eDP-Anschluss"
+    },
+    "display-16-qhd-165": {
+      "name": "16-Zoll-IPS-Display 2560 × 1600, 165 Hz",
+      "summary": "Laptop-Panel mit eDP-Anschluss"
+    },
+    "laptop-cooler-thin": {
+      "name": "Flacher Laptop-Kühler (ein Lüfter, eine Heatpipe)",
+      "summary": "Für etwa 35 W ausgelegt; für Ultrabooks"
+    },
+    "laptop-cooler-dual-fan": {
+      "name": "Ultrabook-Kühler mit zwei Lüftern",
+      "summary": "Für etwa 45 W ausgelegt; für Ultrabooks"
+    },
+    "laptop-cooler-heatpipe": {
+      "name": "Gaming-Laptop-Kühler (zwei Lüfter, vier Heatpipes)",
+      "summary": "Für etwa 150 W ausgelegt; für Gaming-Laptops"
+    },
+    "laptop-cooler-vapour-chamber": {
+      "name": "Gaming-Laptop-Kühler (Vapor Chamber, drei Lüfter)",
+      "summary": "Für etwa 200 W ausgelegt; für Gaming-Laptops"
+    },
+    "charger-usbc-45w": {
+      "name": "USB-C-Ladegerät 45 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-65w": {
+      "name": "USB-C-Ladegerät 65 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-100w": {
+      "name": "USB-C-Ladegerät 100 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-barrel-240w": {
+      "name": "Ladegerät mit Hohlstecker, 240 W",
+      "summary": "Für Gaming-Laptops mit Hohlstecker-Buchse"
     }
   },
   "Builds": {
@@ -627,6 +738,12 @@
     },
     "desktop-workstation": {
       "name": "Workstation"
+    },
+    "laptop-ultrabook": {
+      "name": "Ultrabook"
+    },
+    "laptop-gaming": {
+      "name": "Gaming-Laptop"
     }
   }
 }

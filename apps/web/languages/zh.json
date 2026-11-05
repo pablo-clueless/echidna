@@ -172,7 +172,9 @@
         "devBoards": "开发板",
         "sensors": "传感器",
         "motherboards": "主板",
-        "pcParts": "电脑配件"
+        "pcParts": "电脑配件",
+        "laptops": "笔记本主板",
+        "laptopParts": "笔记本配件"
       }
     },
     "viewport": {
@@ -367,8 +369,12 @@
         "explain": "部件所需的某类接口为电源所提供数量的 {percent}。超过 100% 时有部件无法接上。"
       },
       "cooling": {
-        "name": "CPU 散热",
-        "explain": "CPU 发热量为散热器额定散热能力的 {percent}。超过 90% 时满载会很热；超过 100% 时 CPU 会降频自保。"
+        "name": "散热",
+        "explain": "处理器发热量为散热器额定散热能力的 {percent}。超过 90% 时满载会很热；超过 100% 时会降频自保。"
+      },
+      "chargerBudget": {
+        "name": "充电器功率",
+        "explain": "满载时笔记本耗电为充电器输出的 {percent}。超过 100% 时由电池补足差额，即使插着电也会掉电；超过 150% 时高负载下无法维持。"
       }
     },
     "slots": {
@@ -382,7 +388,11 @@
         "pcie-x16": "PCIe x16 插槽",
         "memory": "内存插槽",
         "m2": "M.2 插槽",
-        "power": "ATX 电源接口"
+        "power": "ATX 电源接口",
+        "wifi": "Wi-Fi 插槽（M.2）",
+        "battery": "电池接口",
+        "display": "屏幕接口",
+        "dc-in": "充电接口"
       },
       "protocols": {
         "i2c": "I²C",
@@ -396,7 +406,17 @@
         "ddr5-dimm": "DDR5 内存",
         "ddr4-dimm": "DDR4 内存",
         "m2-nvme": "M.2 NVMe",
-        "atx-psu": "ATX 电源"
+        "atx-psu": "ATX 电源",
+        "so-dimm-ddr5": "DDR5 SO-DIMM",
+        "so-dimm-ddr4": "DDR4 SO-DIMM",
+        "m2-e-key": "M.2 E-key",
+        "battery-3s": "3 芯电池",
+        "battery-4s": "4 芯电池",
+        "edp": "eDP",
+        "ultrabook-cooling-mount": "轻薄本散热模组位",
+        "gaming-laptop-cooling-mount": "游戏本散热模组位",
+        "usb-c-pd": "USB-C PD",
+        "dc-barrel": "圆口插头"
       },
       "slotLabel": "{host} 的{slot}",
       "pluggedIn": "已插入，由 {rail} 供电",
@@ -415,7 +435,8 @@
         "thermal": "发热 {actual}，但此接口只允许 {limit}。",
         "psuBudget": "整机最高耗电 {actual}；电源额定 {limit}。",
         "powerConnectors": "需要 {actual} 个 {connector}；电源提供 {limit} 个。",
-        "cooling": "CPU 最高发热 {actual}；散热器额定 {limit}。"
+        "cooling": "最高需散热 {actual}；散热器额定 {limit}。",
+        "chargerBudget": "笔记本最高耗电 {actual}；充电器输出 {limit}。"
       },
       "railsTitle": "电源轨",
       "hostTitle": "接口",
@@ -435,7 +456,9 @@
       "pluggedInModule": "已插入",
       "fitsModule": "可插入",
       "buildTitle": "供电与散热",
-      "buildEmpty": "插入电源和散热器即可检查供电与散热。"
+      "buildEmpty": "插入电源和散热器即可检查供电与散热。",
+      "batteryRuntime": "轻度使用时电池续航约 {runtime}（{energy}，{draw}）。",
+      "buildEmptyLaptop": "插入充电器和散热器即可检查供电与散热。"
     }
   },
   "Parts": {
@@ -616,6 +639,94 @@
     "psu-1000w": {
       "name": "1000 W ATX 3.1 电源（80 Plus Gold）",
       "summary": "12V-2x6 和四个 8 针 PCIe"
+    },
+    "ultrabook-board": {
+      "name": "轻薄本主板（28 W 处理器，板载 16 GB LPDDR5X）",
+      "summary": "处理器和内存板载；使用 3 芯电池和 USB-C 充电"
+    },
+    "gaming-laptop-board": {
+      "name": "游戏本主板（55 W CPU，115 W GPU）",
+      "summary": "处理器和显卡板载；SO-DIMM 内存、4 芯电池、圆口或 USB-C 充电"
+    },
+    "battery-3s-54wh": {
+      "name": "3 芯笔记本电池，54 Wh",
+      "summary": "适用于为 3 芯电池充电的主板"
+    },
+    "battery-3s-72wh": {
+      "name": "3 芯笔记本电池，72 Wh",
+      "summary": "适用于为 3 芯电池充电的主板"
+    },
+    "battery-4s-80wh": {
+      "name": "4 芯笔记本电池，80 Wh",
+      "summary": "适用于为 4 芯电池充电的主板"
+    },
+    "battery-4s-99wh": {
+      "name": "4 芯笔记本电池，99.9 Wh",
+      "summary": "适用于为 4 芯电池充电的主板"
+    },
+    "sodimm-ddr5-16gb": {
+      "name": "DDR5-5600 SO-DIMM 16 GB 套装（2 × 8 GB）",
+      "summary": "两条 DDR5 笔记本内存"
+    },
+    "sodimm-ddr5-32gb": {
+      "name": "DDR5-5600 SO-DIMM 32 GB 套装（2 × 16 GB）",
+      "summary": "两条 DDR5 笔记本内存"
+    },
+    "sodimm-ddr4-16gb": {
+      "name": "DDR4-3200 SO-DIMM 16 GB 套装（2 × 8 GB）",
+      "summary": "两条 DDR4 笔记本内存"
+    },
+    "wifi-6e-card": {
+      "name": "Wi-Fi 6E 和蓝牙网卡（M.2 2230）",
+      "summary": "用于 M.2 E-key 插槽的无线网卡"
+    },
+    "wifi-7-card": {
+      "name": "Wi-Fi 7 和蓝牙网卡（M.2 2230）",
+      "summary": "用于 M.2 E-key 插槽的无线网卡"
+    },
+    "display-14-fhd": {
+      "name": "14 英寸 1920 × 1200 IPS 屏幕，60 Hz",
+      "summary": "eDP 接口笔记本屏幕"
+    },
+    "display-14-oled-120": {
+      "name": "14 英寸 2880 × 1800 OLED 屏幕，120 Hz",
+      "summary": "eDP 接口笔记本屏幕"
+    },
+    "display-16-qhd-165": {
+      "name": "16 英寸 2560 × 1600 IPS 屏幕，165 Hz",
+      "summary": "eDP 接口笔记本屏幕"
+    },
+    "laptop-cooler-thin": {
+      "name": "轻薄笔记本散热器（单风扇、单热管）",
+      "summary": "额定约 35 W；适用于轻薄本"
+    },
+    "laptop-cooler-dual-fan": {
+      "name": "双风扇轻薄本散热器",
+      "summary": "额定约 45 W；适用于轻薄本"
+    },
+    "laptop-cooler-heatpipe": {
+      "name": "游戏本散热器（双风扇、四热管）",
+      "summary": "额定约 150 W；适用于游戏本"
+    },
+    "laptop-cooler-vapour-chamber": {
+      "name": "游戏本散热器（均热板、三风扇）",
+      "summary": "额定约 200 W；适用于游戏本"
+    },
+    "charger-usbc-45w": {
+      "name": "45 W USB-C 充电器",
+      "summary": "USB-C PD 快充"
+    },
+    "charger-usbc-65w": {
+      "name": "65 W USB-C 充电器",
+      "summary": "USB-C PD 快充"
+    },
+    "charger-usbc-100w": {
+      "name": "100 W USB-C 充电器",
+      "summary": "USB-C PD 快充"
+    },
+    "charger-barrel-240w": {
+      "name": "240 W 圆口充电器",
+      "summary": "适用于带圆口插座的游戏本"
     }
   },
   "Builds": {
@@ -627,6 +738,12 @@
     },
     "desktop-workstation": {
       "name": "工作站"
+    },
+    "laptop-ultrabook": {
+      "name": "轻薄本"
+    },
+    "laptop-gaming": {
+      "name": "游戏本"
     }
   }
 }

@@ -172,7 +172,9 @@
         "devBoards": "Dev boards",
         "sensors": "Sensors",
         "motherboards": "Motherboards",
-        "pcParts": "PC parts"
+        "pcParts": "PC parts",
+        "laptops": "Laptop boards",
+        "laptopParts": "Laptop parts"
       }
     },
     "viewport": {
@@ -367,8 +369,12 @@
         "explain": "The parts need {percent} of the connectors the PSU has of one type. Above 100% something can’t be plugged in."
       },
       "cooling": {
-        "name": "CPU cooling",
-        "explain": "The CPU gives off {percent} of the heat the cooler is rated to remove. Above 90% it runs hot under load; above 100% it slows itself down to stay safe."
+        "name": "Cooling",
+        "explain": "The processors give off {percent} of the heat the cooler is rated to remove. Above 90% they run hot under load; above 100% they slow themselves down to stay safe."
+      },
+      "chargerBudget": {
+        "name": "Charger power",
+        "explain": "At full load the laptop draws {percent} of what the charger supplies. Above 100% the battery makes up the difference and drains even while plugged in; above 150% it can’t keep up under load."
       }
     },
     "slots": {
@@ -382,7 +388,11 @@
         "pcie-x16": "PCIe x16 slot",
         "memory": "Memory slots",
         "m2": "M.2 slot",
-        "power": "ATX power connector"
+        "power": "ATX power connector",
+        "wifi": "Wi-Fi slot (M.2)",
+        "battery": "Battery connector",
+        "display": "Display connector",
+        "dc-in": "Charging port"
       },
       "protocols": {
         "i2c": "I²C",
@@ -396,7 +406,17 @@
         "ddr5-dimm": "DDR5 memory",
         "ddr4-dimm": "DDR4 memory",
         "m2-nvme": "M.2 NVMe",
-        "atx-psu": "ATX PSU"
+        "atx-psu": "ATX PSU",
+        "so-dimm-ddr5": "DDR5 SO-DIMM",
+        "so-dimm-ddr4": "DDR4 SO-DIMM",
+        "m2-e-key": "M.2 E-key",
+        "battery-3s": "3-cell battery",
+        "battery-4s": "4-cell battery",
+        "edp": "eDP",
+        "ultrabook-cooling-mount": "ultrabook cooler mount",
+        "gaming-laptop-cooling-mount": "gaming laptop cooler mount",
+        "usb-c-pd": "USB-C Power Delivery",
+        "dc-barrel": "barrel plug"
       },
       "slotLabel": "{slot} on {host}",
       "pluggedIn": "Plugged in, powered from {rail}",
@@ -415,7 +435,8 @@
         "thermal": "Gives off {actual}, but the slot allows {limit}.",
         "psuBudget": "The build draws up to {actual}; the PSU is rated for {limit}.",
         "powerConnectors": "Needs {actual} × {connector}; the PSU has {limit}.",
-        "cooling": "The CPU gives off up to {actual}; the cooler is rated for {limit}."
+        "cooling": "Up to {actual} of heat to remove; the cooler is rated for {limit}.",
+        "chargerBudget": "The laptop draws up to {actual}; the charger supplies {limit}."
       },
       "railsTitle": "Rails",
       "hostTitle": "Slots",
@@ -435,7 +456,9 @@
       "pluggedInModule": "Plugged in",
       "fitsModule": "Fits",
       "buildTitle": "Power and cooling",
-      "buildEmpty": "Plug in a PSU and a cooler to check power and cooling."
+      "buildEmpty": "Plug in a PSU and a cooler to check power and cooling.",
+      "batteryRuntime": "About {runtime} on battery in light use ({energy} at {draw}).",
+      "buildEmptyLaptop": "Plug in a charger and a cooler to check power and cooling."
     }
   },
   "Parts": {
@@ -616,6 +639,94 @@
     "psu-1000w": {
       "name": "1000 W ATX 3.1 PSU (80 Plus Gold)",
       "summary": "12V-2x6 and four 8-pin PCIe"
+    },
+    "ultrabook-board": {
+      "name": "Ultrabook mainboard (28 W processor, 16 GB LPDDR5X soldered)",
+      "summary": "Processor and memory soldered on; takes a 3-cell battery and USB-C charging"
+    },
+    "gaming-laptop-board": {
+      "name": "Gaming laptop mainboard (55 W CPU, 115 W GPU)",
+      "summary": "Processor and graphics soldered on; SO-DIMM memory, 4-cell battery, barrel or USB-C charging"
+    },
+    "battery-3s-54wh": {
+      "name": "3-cell laptop battery, 54 Wh",
+      "summary": "Fits boards that charge a 3-cell pack"
+    },
+    "battery-3s-72wh": {
+      "name": "3-cell laptop battery, 72 Wh",
+      "summary": "Fits boards that charge a 3-cell pack"
+    },
+    "battery-4s-80wh": {
+      "name": "4-cell laptop battery, 80 Wh",
+      "summary": "Fits boards that charge a 4-cell pack"
+    },
+    "battery-4s-99wh": {
+      "name": "4-cell laptop battery, 99.9 Wh",
+      "summary": "Fits boards that charge a 4-cell pack"
+    },
+    "sodimm-ddr5-16gb": {
+      "name": "DDR5-5600 SO-DIMM 16 GB kit (2 × 8 GB)",
+      "summary": "Two DDR5 laptop memory modules"
+    },
+    "sodimm-ddr5-32gb": {
+      "name": "DDR5-5600 SO-DIMM 32 GB kit (2 × 16 GB)",
+      "summary": "Two DDR5 laptop memory modules"
+    },
+    "sodimm-ddr4-16gb": {
+      "name": "DDR4-3200 SO-DIMM 16 GB kit (2 × 8 GB)",
+      "summary": "Two DDR4 laptop memory modules"
+    },
+    "wifi-6e-card": {
+      "name": "Wi-Fi 6E and Bluetooth card (M.2 2230)",
+      "summary": "Wireless card for an M.2 E-key slot"
+    },
+    "wifi-7-card": {
+      "name": "Wi-Fi 7 and Bluetooth card (M.2 2230)",
+      "summary": "Wireless card for an M.2 E-key slot"
+    },
+    "display-14-fhd": {
+      "name": "14-inch 1920 × 1200 IPS display, 60 Hz",
+      "summary": "Laptop panel on an eDP connector"
+    },
+    "display-14-oled-120": {
+      "name": "14-inch 2880 × 1800 OLED display, 120 Hz",
+      "summary": "Laptop panel on an eDP connector"
+    },
+    "display-16-qhd-165": {
+      "name": "16-inch 2560 × 1600 IPS display, 165 Hz",
+      "summary": "Laptop panel on an eDP connector"
+    },
+    "laptop-cooler-thin": {
+      "name": "Thin laptop cooler (one fan, one heat pipe)",
+      "summary": "Rated for about 35 W; fits ultrabooks"
+    },
+    "laptop-cooler-dual-fan": {
+      "name": "Dual-fan ultrabook cooler",
+      "summary": "Rated for about 45 W; fits ultrabooks"
+    },
+    "laptop-cooler-heatpipe": {
+      "name": "Gaming laptop cooler (two fans, four heat pipes)",
+      "summary": "Rated for about 150 W; fits gaming laptops"
+    },
+    "laptop-cooler-vapour-chamber": {
+      "name": "Gaming laptop cooler (vapour chamber, three fans)",
+      "summary": "Rated for about 200 W; fits gaming laptops"
+    },
+    "charger-usbc-45w": {
+      "name": "45 W USB-C charger",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-65w": {
+      "name": "65 W USB-C charger",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-100w": {
+      "name": "100 W USB-C charger",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-barrel-240w": {
+      "name": "240 W barrel-plug charger",
+      "summary": "For gaming laptops with a barrel socket"
     }
   },
   "Builds": {
@@ -627,6 +738,12 @@
     },
     "desktop-workstation": {
       "name": "Workstation desktop"
+    },
+    "laptop-ultrabook": {
+      "name": "Ultrabook"
+    },
+    "laptop-gaming": {
+      "name": "Gaming laptop"
     }
   }
 }

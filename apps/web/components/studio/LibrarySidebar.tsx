@@ -25,6 +25,8 @@ const categories = [
   { key: "sensors", kinds: ["sensor"] },
   { key: "motherboards", kinds: ["motherboard"] },
   { key: "pcParts", kinds: ["cpu", "gpu", "memory", "storage", "cooler", "psu"] },
+  { key: "laptops", kinds: ["laptopBoard"] },
+  { key: "laptopParts", kinds: ["battery", "wifi", "display", "charger"] },
 ] as const;
 
 /** How far a symbol reaches either side of its origin, leads included, turned as placed. */

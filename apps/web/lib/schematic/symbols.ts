@@ -47,6 +47,11 @@ export const BOX_KINDS: ReadonlySet<string> = new Set([
   "storage",
   "cooler",
   "psu",
+  "laptopBoard",
+  "battery",
+  "wifi",
+  "display",
+  "charger",
 ]);
 
 /** Half the width of a box symbol's body, in grid units; its leads run one unit further out. */

@@ -1,0 +1,41 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "laptop-cooler-dual-fan",
+  "name": "Dual-fan ultrabook cooler",
+  "kind": "cooler",
+  "deviceTypes": [
+    "laptop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "ultrabook-cooling-mount"
+    }
+  ],
+  "module": {
+    "role": "cooler",
+    "power": {
+      "value": 1.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Two fans at full speed"
+    },
+    "typical": {
+      "value": 0.3,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Fan mostly off in light use"
+    },
+    "cooling": {
+      "value": 45,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical sustained rating for this class of laptop cooler; makers don't publish one"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/cooler",
+  "meshUrl": "generic/cooler"
+}

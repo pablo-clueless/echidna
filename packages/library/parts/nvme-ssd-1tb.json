@@ -4,7 +4,8 @@
   "name": "NVMe PCIe 4.0 SSD, 1 TB",
   "kind": "storage",
   "deviceTypes": [
-    "desktop"
+    "desktop",
+    "laptop"
   ],
   "pins": [],
   "params": {},
@@ -21,6 +22,12 @@
       "unit": "W",
       "source": "estimated",
       "reference": "Typical peak write power of a PCIe 4.0 M.2 drive"
+    },
+    "typical": {
+      "value": 0.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Light, mostly idle use with power saving on"
     }
   },
   "model": "module",

@@ -2,7 +2,7 @@ import { builds, partsById } from "@echidna/library";
 import type { ComponentSpec } from "@echidna/core";
 import { describe, expect, it } from "vitest";
 
-import { checkBuild, checkModuleFit } from "./modules";
+import { batteryRuntime, checkBuild, checkModuleFit } from "./modules";
 
 const part = (id: string): ComponentSpec => {
   const spec = partsById.get(id);
@@ -86,5 +86,50 @@ describe("checkModuleFit", () => {
     const result = checkModuleFit(part("b650-atx"), "pcie-x16", part("rtx-4090"), []);
     expect(result.fits).toBe(true);
     expect(result.checks.map((c) => c.id)).toEqual(["interface"]);
+  });
+});
+
+describe("laptops", () => {
+  it("checks the charger, not a PSU, against the gaming laptop's full-load draw", () => {
+    const { host, modules } = build("laptop-gaming");
+    const budget = checkBuild(host, modules).find((c) => c.id === "chargerBudget");
+    expect(budget).toMatchObject({ severity: "pass", actual: 227, limit: 240, unit: "W" });
+  });
+
+  it("fails a 100 W USB-C charger on the gaming laptop, and only warns about a 45 W one on the ultrabook", () => {
+    expect(fit("laptop-gaming", "dc-in", "charger-usbc-100w").by.chargerBudget).toMatchObject({ severity: "fail", actual: 227, limit: 100 });
+    const ultrabook = fit("laptop-ultrabook", "dc-in", "charger-usbc-45w");
+    expect(ultrabook.fits).toBe(true);
+    expect(ultrabook.by.chargerBudget).toMatchObject({ severity: "warn", actual: 60, limit: 45 });
+  });
+
+  it("refuses a barrel-plug charger in the ultrabook's USB-C port", () => {
+    expect(fit("laptop-ultrabook", "dc-in", "charger-barrel-240w").by.interface?.severity).toBe("fail");
+  });
+
+  it("cools the processors soldered onto the board", () => {
+    const vapour = fit("laptop-gaming", "cooler", "laptop-cooler-vapour-chamber").by.cooling;
+    expect(vapour).toMatchObject({ severity: "pass", actual: 170, limit: 200, estimated: true });
+    expect(fit("laptop-gaming", "cooler", "laptop-cooler-heatpipe").by.cooling?.severity).toBe("fail");
+  });
+
+  it("only takes a battery with the cell count the board charges", () => {
+    expect(fit("laptop-gaming", "battery", "battery-3s-72wh").by.interface?.severity).toBe("fail");
+    expect(fit("laptop-gaming", "battery", "battery-4s-99wh").fits).toBe(true);
+  });
+
+  it("estimates runtime from the battery's energy and every part's light-use draw", () => {
+    const { host, modules } = build("laptop-ultrabook");
+    const estimate = batteryRuntime(host, modules);
+    expect(estimate?.draw).toBeCloseTo(7.1);
+    expect(estimate?.energy).toBe(54 * 3600);
+    expect((estimate?.runtime ?? 0) / 3600).toBeCloseTo(54 / 7.1);
+    expect(estimate?.estimated).toBe(true);
+    expect(batteryRuntime(host, modules.filter((m) => m.module?.role !== "battery"))).toBeNull();
+  });
+
+  it("gives desktops no battery runtime", () => {
+    const { host, modules } = build("desktop-gaming");
+    expect(batteryRuntime(host, modules)).toBeNull();
   });
 });

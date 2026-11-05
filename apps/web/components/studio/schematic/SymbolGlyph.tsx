@@ -134,15 +134,23 @@ const box = (count: number) => {
 
 type InnerLabel = { text: string; x: number; y: number; anchor: "start" | "middle" | "end" };
 
-/** What a desktop module's box says inside: the abbreviations printed on cases and boxes, so not translated. */
-const moduleLabels: Record<NonNullable<ComponentSpec["module"]>["role"], string> = {
+/**
+ * What a desktop or laptop module's box says inside, by kind: the abbreviations printed on cases and boxes, so not
+ * translated.
+ */
+const moduleLabels: Record<string, string> = {
   motherboard: "ATX",
+  laptopBoard: "LAPTOP",
   cpu: "CPU",
   gpu: "GPU",
   memory: "RAM",
   storage: "SSD",
   cooler: "COOLER",
   psu: "PSU",
+  battery: "BATT",
+  wifi: "WI-FI",
+  display: "eDP",
+  charger: "DC IN",
 };
 
 /**
@@ -152,7 +160,7 @@ const moduleLabels: Record<NonNullable<ComponentSpec["module"]>["role"], string>
  */
 export const innerLabels = (spec: ComponentSpec): InnerLabel[] =>
   spec.module
-    ? [{ text: moduleLabels[spec.module.role], x: 0, y: 0, anchor: "middle" }]
+    ? [{ text: moduleLabels[spec.kind] ?? spec.module.role, x: 0, y: 0, anchor: "middle" }]
     : BOX_KINDS.has(spec.kind)
     ? boxPins(spec.pins.length).map((p, i) => ({
         text: spec.pins[i]?.name ?? "",

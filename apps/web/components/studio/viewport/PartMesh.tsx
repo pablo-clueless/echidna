@@ -392,6 +392,11 @@ const moduleHeights: Record<string, number> = {
   "module/storage": 1.5,
   "module/cooler": 12,
   "module/psu": 10,
+  "module/laptopBoard": 1.2,
+  "module/battery": 4,
+  "module/wifi": 1,
+  "module/display": 1.5,
+  "module/charger": 6,
 };
 
 /** A desktop module as a plain block the size of its outline. */

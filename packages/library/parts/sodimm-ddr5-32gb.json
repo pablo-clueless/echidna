@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "sodimm-ddr5-32gb",
+  "name": "DDR5-5600 SO-DIMM 32 GB kit (2 × 16 GB)",
+  "kind": "memory",
+  "deviceTypes": [
+    "laptop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "so-dimm-ddr5"
+    }
+  ],
+  "module": {
+    "role": "memory",
+    "power": {
+      "value": 5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "About 2.5 W per DDR5 SO-DIMM under load"
+    },
+    "typical": {
+      "value": 1,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Self-refresh and light access"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/memory",
+  "meshUrl": "generic/memory"
+}

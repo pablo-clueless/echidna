@@ -1,6 +1,6 @@
 import type { DeviceType } from "@echidna/core";
 
-/** A ready-made device: a motherboard and the part in each of its slots. */
+/** A ready-made desktop or laptop: a motherboard and the part in each of its slots. */
 export type BuildPreset = {
   id: string;
   deviceType: DeviceType;
@@ -10,7 +10,7 @@ export type BuildPreset = {
   modules: Record<string, string>;
 };
 
-/** The desktop reference builds: budget, gaming and workstation. */
+/** The reference builds: budget, gaming and workstation desktops, and an ultrabook and a gaming laptop. */
 export const builds: readonly BuildPreset[] = [
   {
     id: "desktop-budget",
@@ -49,6 +49,33 @@ export const builds: readonly BuildPreset[] = [
       memory: "ddr5-32gb-kit",
       m2: "nvme-ssd-1tb",
       power: "psu-1000w",
+    },
+  },
+  {
+    id: "laptop-ultrabook",
+    deviceType: "laptop",
+    hostId: "ultrabook-board",
+    modules: {
+      m2: "nvme-ssd-1tb",
+      wifi: "wifi-6e-card",
+      battery: "battery-3s-54wh",
+      display: "display-14-fhd",
+      cooler: "laptop-cooler-thin",
+      "dc-in": "charger-usbc-65w",
+    },
+  },
+  {
+    id: "laptop-gaming",
+    deviceType: "laptop",
+    hostId: "gaming-laptop-board",
+    modules: {
+      memory: "sodimm-ddr5-16gb",
+      m2: "nvme-ssd-1tb",
+      wifi: "wifi-6e-card",
+      battery: "battery-4s-80wh",
+      display: "display-16-qhd-165",
+      cooler: "laptop-cooler-vapour-chamber",
+      "dc-in": "charger-barrel-240w",
     },
   },
 ];

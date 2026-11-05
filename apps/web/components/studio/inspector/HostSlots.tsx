@@ -1,9 +1,9 @@
 "use client";
 
 import type { ComponentSpec, NetlistComponent } from "@echidna/core";
-import { useLocale, useTranslations } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { batteryRuntime, checkBuild } from "@echidna/rules";
 import { partsById } from "@echidna/library";
-import { checkBuild } from "@echidna/rules";
 import { useMemo } from "react";
 
 import { dotClass, railName, textClass, useCheckReason } from "./SlotPicker";
@@ -15,7 +15,13 @@ import { formatQuantity } from "@/lib/units";
 import { slotKey } from "@/lib/messageKeys";
 import { cn } from "@/lib/utils";
 
-/** A host board's rails, with the current drawn from each, and what is plugged into each of its slots. */
+/** Seconds in an hour, and so joules in a watt-hour, the unit battery capacity is printed in. */
+const HOUR = 3600;
+
+/**
+ * A host board's rails, with the current drawn from each, and what is plugged into each of its slots. A desktop's or
+ * laptop's board also shows its power and cooling checks and, for a laptop, the estimated time on battery.
+ */
 export const HostSlots = ({ component, spec }: { component: NetlistComponent; spec: ComponentSpec }) => {
   const t = useTranslations("Studio.slots");
   const locale = useLocale();
@@ -23,10 +29,14 @@ export const HostSlots = ({ component, spec }: { component: NetlistComponent; sp
   const components = useProjectStore((s) => s.components);
   const pinCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
   const reasonFor = useCheckReason();
-  const buildChecks = useMemo(
-    () => (spec.module ? checkBuild(spec, modulesIn({ components, slots }, partsById, component.id)) : []),
+  const format = useFormatter();
+  const modules = useMemo(
+    () => (spec.module ? modulesIn({ components, slots }, partsById, component.id) : []),
     [spec, components, slots, component.id],
   );
+  const buildChecks = useMemo(() => (spec.module ? checkBuild(spec, modules) : []), [spec, modules]);
+  const runtime = useMemo(() => (spec.module ? batteryRuntime(spec, modules) : null), [spec, modules]);
+  const isLaptop = spec.deviceTypes.includes("laptop");
   if (!spec.host) return null;
 
   return (
@@ -36,8 +46,18 @@ export const HostSlots = ({ component, spec }: { component: NetlistComponent; sp
           <h3 id="build-heading" className="text-xs font-medium text-muted-foreground">
             {t("buildTitle")}
           </h3>
+          {runtime && (
+            <p className="text-xs">
+              {t("batteryRuntime", {
+                runtime: format.number(runtime.runtime / HOUR, { style: "unit", unit: "hour", unitDisplay: "long", maximumFractionDigits: 1 }),
+                energy: formatQuantity(runtime.energy / HOUR, "Wh", locale),
+                draw: formatQuantity(runtime.draw, "W", locale),
+              })}
+              {runtime.estimated && ` ${t("estimated")}`}
+            </p>
+          )}
           {buildChecks.length === 0 ? (
-            <p className="text-xs text-muted-foreground">{t("buildEmpty")}</p>
+            <p className="text-xs text-muted-foreground">{t(isLaptop ? "buildEmptyLaptop" : "buildEmpty")}</p>
           ) : (
             <ul className="grid gap-1">
               {buildChecks.map((check) => (

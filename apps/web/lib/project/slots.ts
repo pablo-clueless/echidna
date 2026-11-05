@@ -185,8 +185,12 @@ export const slotSwaps = (
   if (isPluggable(current) && placed) {
     const host = specOf(placed.hostId);
     if (!host) return [];
-    // Sensors swap for sensors, and a module for another in the same role, such as one graphics card for another.
-    const sameFamily = (c: ComponentSpec) => (current.module ? c.module?.role === current.module.role : Boolean(c.supply));
+    // Sensors swap for sensors, and a module for another in the same role made for the same kind of device, such as
+    // one graphics card for another, or a laptop cooler for another laptop cooler.
+    const sameFamily = (c: ComponentSpec) =>
+      current.module
+        ? c.module?.role === current.module.role && c.deviceTypes.some((d) => current.deviceTypes.includes(d))
+        : Boolean(c.supply);
     return candidates
       .filter((c) => sameFamily(c) && c.id !== current.id)
       .map((c) => {

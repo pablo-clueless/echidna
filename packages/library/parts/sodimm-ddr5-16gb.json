@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "sodimm-ddr5-16gb",
+  "name": "DDR5-5600 SO-DIMM 16 GB kit (2 × 8 GB)",
+  "kind": "memory",
+  "deviceTypes": [
+    "laptop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "so-dimm-ddr5"
+    }
+  ],
+  "module": {
+    "role": "memory",
+    "power": {
+      "value": 4,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "About 2 W per DDR5 SO-DIMM under load"
+    },
+    "typical": {
+      "value": 0.8,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Self-refresh and light access"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/memory",
+  "meshUrl": "generic/memory"
+}

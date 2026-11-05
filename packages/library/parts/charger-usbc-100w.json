@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "charger-usbc-100w",
+  "name": "100 W USB-C charger",
+  "kind": "charger",
+  "deviceTypes": [
+    "laptop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "usb-c-pd"
+    }
+  ],
+  "module": {
+    "role": "charger",
+    "output": {
+      "value": 100,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Rated output; 100 W is the most USB-C Power Delivery offered before the 240 W extended range"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/charger",
+  "meshUrl": "generic/charger"
+}

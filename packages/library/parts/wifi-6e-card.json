@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "wifi-6e-card",
+  "name": "Wi-Fi 6E and Bluetooth card (M.2 2230)",
+  "kind": "wifi",
+  "deviceTypes": [
+    "laptop"
+  ],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "m2-e-key"
+    }
+  ],
+  "module": {
+    "role": "wifi",
+    "power": {
+      "value": 3,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Transmitting at full rate"
+    },
+    "typical": {
+      "value": 0.4,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Mostly idle, waking to receive"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/wifi",
+  "meshUrl": "generic/wifi"
+}

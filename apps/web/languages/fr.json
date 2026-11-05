@@ -172,7 +172,9 @@
         "devBoards": "Cartes de développement",
         "sensors": "Capteurs",
         "motherboards": "Cartes mères",
-        "pcParts": "Composants PC"
+        "pcParts": "Composants PC",
+        "laptops": "Cartes mères de portable",
+        "laptopParts": "Composants de portable"
       }
     },
     "viewport": {
@@ -367,8 +369,12 @@
         "explain": "Les composants ont besoin de {percent} des connecteurs d’un type que possède l’alimentation. Au-delà de 100 %, un composant ne peut pas être branché."
       },
       "cooling": {
-        "name": "Refroidissement du processeur",
-        "explain": "Le processeur dégage {percent} de la chaleur que le refroidisseur peut évacuer. Au-delà de 90 %, il chauffe en charge ; au-delà de 100 %, il ralentit pour se protéger."
+        "name": "Refroidissement",
+        "explain": "Les processeurs dégagent {percent} de la chaleur que le refroidisseur peut évacuer. Au-delà de 90 %, ils chauffent en charge ; au-delà de 100 %, ils ralentissent pour se protéger."
+      },
+      "chargerBudget": {
+        "name": "Puissance du chargeur",
+        "explain": "À pleine charge, l’ordinateur consomme {percent} de ce que fournit le chargeur. Au-delà de 100 %, la batterie compense et se vide même branchée ; au-delà de 150 %, elle ne suit plus en charge."
       }
     },
     "slots": {
@@ -382,7 +388,11 @@
         "pcie-x16": "Port PCIe x16",
         "memory": "Emplacements mémoire",
         "m2": "Port M.2",
-        "power": "Connecteur d’alimentation ATX"
+        "power": "Connecteur d’alimentation ATX",
+        "wifi": "Port Wi-Fi (M.2)",
+        "battery": "Connecteur de batterie",
+        "display": "Connecteur d’écran",
+        "dc-in": "Port de charge"
       },
       "protocols": {
         "i2c": "I²C",
@@ -396,7 +406,17 @@
         "ddr5-dimm": "mémoire DDR5",
         "ddr4-dimm": "mémoire DDR4",
         "m2-nvme": "M.2 NVMe",
-        "atx-psu": "alimentation ATX"
+        "atx-psu": "alimentation ATX",
+        "so-dimm-ddr5": "SO-DIMM DDR5",
+        "so-dimm-ddr4": "SO-DIMM DDR4",
+        "m2-e-key": "M.2 clé E",
+        "battery-3s": "batterie 3 cellules",
+        "battery-4s": "batterie 4 cellules",
+        "edp": "eDP",
+        "ultrabook-cooling-mount": "fixation de refroidisseur d’ultrabook",
+        "gaming-laptop-cooling-mount": "fixation de refroidisseur de PC portable gaming",
+        "usb-c-pd": "USB-C Power Delivery",
+        "dc-barrel": "fiche jack"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Branché, alimenté par {rail}",
@@ -415,7 +435,8 @@
         "thermal": "Dégage {actual}, mais le connecteur autorise {limit}.",
         "psuBudget": "La configuration consomme jusqu’à {actual} ; l’alimentation est prévue pour {limit}.",
         "powerConnectors": "Nécessite {actual} × {connector} ; l’alimentation en a {limit}.",
-        "cooling": "Le processeur dégage jusqu’à {actual} ; le refroidisseur est prévu pour {limit}."
+        "cooling": "Jusqu’à {actual} de chaleur à évacuer ; le refroidisseur est prévu pour {limit}.",
+        "chargerBudget": "L’ordinateur consomme jusqu’à {actual} ; le chargeur fournit {limit}."
       },
       "railsTitle": "Rails d’alimentation",
       "hostTitle": "Connecteurs",
@@ -435,7 +456,9 @@
       "pluggedInModule": "Branché",
       "fitsModule": "Compatible",
       "buildTitle": "Alimentation et refroidissement",
-      "buildEmpty": "Branchez une alimentation et un refroidisseur pour vérifier l’alimentation et le refroidissement."
+      "buildEmpty": "Branchez une alimentation et un refroidisseur pour vérifier l’alimentation et le refroidissement.",
+      "batteryRuntime": "Environ {runtime} sur batterie en usage léger ({energy} à {draw}).",
+      "buildEmptyLaptop": "Branchez un chargeur et un refroidisseur pour vérifier l’alimentation et le refroidissement."
     }
   },
   "Parts": {
@@ -616,6 +639,94 @@
     "psu-1000w": {
       "name": "Alimentation ATX 3.1 1000 W (80 Plus Gold)",
       "summary": "12V-2x6 et quatre PCIe 8 broches"
+    },
+    "ultrabook-board": {
+      "name": "Carte mère d’ultrabook (processeur 28 W, 16 Go LPDDR5X soudés)",
+      "summary": "Processeur et mémoire soudés ; batterie 3 cellules et charge USB-C"
+    },
+    "gaming-laptop-board": {
+      "name": "Carte mère de PC portable gaming (processeur 55 W, GPU 115 W)",
+      "summary": "Processeur et graphique soudés ; mémoire SO-DIMM, batterie 4 cellules, charge jack ou USB-C"
+    },
+    "battery-3s-54wh": {
+      "name": "Batterie de portable 3 cellules, 54 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 3 cellules"
+    },
+    "battery-3s-72wh": {
+      "name": "Batterie de portable 3 cellules, 72 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 3 cellules"
+    },
+    "battery-4s-80wh": {
+      "name": "Batterie de portable 4 cellules, 80 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 4 cellules"
+    },
+    "battery-4s-99wh": {
+      "name": "Batterie de portable 4 cellules, 99,9 Wh",
+      "summary": "Pour les cartes qui chargent une batterie 4 cellules"
+    },
+    "sodimm-ddr5-16gb": {
+      "name": "Kit SO-DIMM DDR5-5600 16 Go (2 × 8 Go)",
+      "summary": "Deux barrettes de mémoire DDR5 pour portable"
+    },
+    "sodimm-ddr5-32gb": {
+      "name": "Kit SO-DIMM DDR5-5600 32 Go (2 × 16 Go)",
+      "summary": "Deux barrettes de mémoire DDR5 pour portable"
+    },
+    "sodimm-ddr4-16gb": {
+      "name": "Kit SO-DIMM DDR4-3200 16 Go (2 × 8 Go)",
+      "summary": "Deux barrettes de mémoire DDR4 pour portable"
+    },
+    "wifi-6e-card": {
+      "name": "Carte Wi-Fi 6E et Bluetooth (M.2 2230)",
+      "summary": "Carte sans fil pour port M.2 clé E"
+    },
+    "wifi-7-card": {
+      "name": "Carte Wi-Fi 7 et Bluetooth (M.2 2230)",
+      "summary": "Carte sans fil pour port M.2 clé E"
+    },
+    "display-14-fhd": {
+      "name": "Écran IPS 14 pouces 1920 × 1200, 60 Hz",
+      "summary": "Dalle de portable sur connecteur eDP"
+    },
+    "display-14-oled-120": {
+      "name": "Écran OLED 14 pouces 2880 × 1800, 120 Hz",
+      "summary": "Dalle de portable sur connecteur eDP"
+    },
+    "display-16-qhd-165": {
+      "name": "Écran IPS 16 pouces 2560 × 1600, 165 Hz",
+      "summary": "Dalle de portable sur connecteur eDP"
+    },
+    "laptop-cooler-thin": {
+      "name": "Refroidisseur de portable fin (un ventilateur, un caloduc)",
+      "summary": "Prévu pour environ 35 W ; pour ultrabooks"
+    },
+    "laptop-cooler-dual-fan": {
+      "name": "Refroidisseur d’ultrabook à deux ventilateurs",
+      "summary": "Prévu pour environ 45 W ; pour ultrabooks"
+    },
+    "laptop-cooler-heatpipe": {
+      "name": "Refroidisseur de PC portable gaming (deux ventilateurs, quatre caloducs)",
+      "summary": "Prévu pour environ 150 W ; pour PC portables gaming"
+    },
+    "laptop-cooler-vapour-chamber": {
+      "name": "Refroidisseur de PC portable gaming (chambre à vapeur, trois ventilateurs)",
+      "summary": "Prévu pour environ 200 W ; pour PC portables gaming"
+    },
+    "charger-usbc-45w": {
+      "name": "Chargeur USB-C 45 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-65w": {
+      "name": "Chargeur USB-C 65 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-usbc-100w": {
+      "name": "Chargeur USB-C 100 W",
+      "summary": "USB-C Power Delivery"
+    },
+    "charger-barrel-240w": {
+      "name": "Chargeur à fiche jack 240 W",
+      "summary": "Pour PC portables gaming à prise jack"
     }
   },
   "Builds": {
@@ -627,6 +738,12 @@
     },
     "desktop-workstation": {
       "name": "Station de travail"
+    },
+    "laptop-ultrabook": {
+      "name": "Ultrabook"
+    },
+    "laptop-gaming": {
+      "name": "PC portable gaming"
     }
   }
 }
