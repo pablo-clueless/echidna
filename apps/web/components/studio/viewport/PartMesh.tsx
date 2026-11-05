@@ -22,6 +22,7 @@ import { useEffect, useMemo } from "react";
 import { LED_LIT_CURRENT, LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState";
 import { DEFAULT_LED_COLOUR, ledColours } from "@/lib/parts/ledColours";
 import { bandMaterial, materials } from "./materials";
+import { footprints } from "@/lib/board/footprints";
 
 /** Generic part bodies in millimetres, y up from the board surface. Sized like the real packages; no brand artwork. */
 type Props = {
@@ -381,7 +382,20 @@ const Terminal = () => (
   </group>
 );
 
+/** A 2.54 mm pin header: a black plastic strip with a gold pin standing up through it for each pad. */
+const PinHeader = ({ count }: { count: number }) => (
+  <group>
+    <RoundedBox args={[count * 2.54, 2.5, 2.54]} radius={0.15} smoothness={2} position={[0, 1.25, 0]} material={materials.epoxy} castShadow />
+    {Array.from({ length: count }, (_, i) => (
+      <mesh key={i} position={[(i - (count - 1) / 2) * 2.54, 4.2, 0]} material={materials.gold} castShadow>
+        <boxGeometry args={[0.64, 6, 0.64]} />
+      </mesh>
+    ))}
+  </group>
+);
+
 export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed }: Props) => {
+  if (footprintId.startsWith("header/")) return <PinHeader count={footprints[footprintId]?.pads.length ?? 1} />;
   switch (footprintId) {
     case "generic/axial-0.4in":
       return <Resistor bands={bands} />;

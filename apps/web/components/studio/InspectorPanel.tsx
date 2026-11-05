@@ -17,9 +17,12 @@ import { AmbientField } from "./inspector/AmbientField";
 import { RatingMeter } from "./inspector/RatingMeter";
 import { paramKey, partKey } from "@/lib/messageKeys";
 import { ledState } from "@/lib/simulation/ledState";
+import { SlotPicker } from "./inspector/SlotPicker";
 import { ParamField } from "./inspector/ParamField";
 import { useProjectStore } from "@/stores/project";
 import { swapParam } from "@/lib/simulation/swaps";
+import { SlotSwaps } from "./inspector/SlotSwaps";
+import { HostSlots } from "./inspector/HostSlots";
 import { useStudioStore } from "@/stores/studio";
 import { formatQuantity } from "@/lib/units";
 import { PanelHeader } from "./PanelHeader";
@@ -57,7 +60,8 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
   const readouts =
     element && solution
       ? [
-          ...spec.pins.map((pin, i) => ({
+          // A sensor's solver element models only its supply pins, which come first; its signal pins have no voltage.
+          ...spec.pins.slice(0, element.nodes.length).map((pin, i) => ({
             label: t("pinVoltage", { pin: pin.name }),
             value: formatQuantity(solution.nodeVoltages[element.nodes[i] ?? ""] ?? 0, "V", locale),
           })),
@@ -124,6 +128,10 @@ const ComponentInspector = ({ component, spec }: { component: NetlistComponent; 
             </div>
           </section>
         )}
+
+        {spec.supply && <SlotPicker component={component} />}
+        {spec.host && <HostSlots component={component} spec={spec} />}
+        {(spec.supply || spec.host) && <SlotSwaps component={component} />}
 
         {readouts.length > 0 && (
           <section aria-labelledby="live-heading" className="grid gap-1">

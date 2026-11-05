@@ -1,0 +1,77 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "hc-sr04",
+  "name": "HC-SR04 ultrasonic distance sensor",
+  "kind": "sensor",
+  "deviceTypes": [
+    "iot",
+    "wearable",
+    "drone"
+  ],
+  "pins": [
+    {
+      "id": "vcc",
+      "name": "VCC"
+    },
+    {
+      "id": "gnd",
+      "name": "GND"
+    },
+    {
+      "id": "trig",
+      "name": "Trig"
+    },
+    {
+      "id": "echo",
+      "name": "Echo"
+    }
+  ],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "gpio"
+    }
+  ],
+  "supply": {
+    "pinId": "vcc",
+    "groundPinId": "gnd",
+    "minVoltage": {
+      "value": 4.5,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "HC-SR04 module datasheet gives 5 V only; ±10 % assumed"
+    },
+    "maxVoltage": {
+      "value": 5.5,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "HC-SR04 module datasheet gives 5 V only; ±10 % assumed"
+    },
+    "current": {
+      "value": 0.015,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "HC-SR04 module datasheet: working current 15 mA"
+    },
+    "logicHigh": {
+      "value": 5,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "HC-SR04 module datasheet: the echo pulse is a 5 V level"
+    },
+    "maxInput": {
+      "value": 5.5,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "Assumed equal to the highest supply voltage"
+    },
+    "signals": {
+      "IO1": "trig",
+      "IO2": "echo"
+    }
+  },
+  "model": "load",
+  "footprintId": "header/hc-sr04",
+  "meshUrl": "generic/pin-header"
+}

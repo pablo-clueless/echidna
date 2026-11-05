@@ -1,0 +1,143 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "raspberry-pi-5",
+  "name": "Raspberry Pi 5",
+  "kind": "devBoard",
+  "deviceTypes": [
+    "iot"
+  ],
+  "pins": [
+    {
+      "id": "3v3",
+      "name": "3V3"
+    },
+    {
+      "id": "5v",
+      "name": "5V"
+    },
+    {
+      "id": "gnd",
+      "name": "GND"
+    },
+    {
+      "id": "sda",
+      "name": "GPIO2 SDA"
+    },
+    {
+      "id": "scl",
+      "name": "GPIO3 SCL"
+    },
+    {
+      "id": "gpio23",
+      "name": "GPIO23"
+    },
+    {
+      "id": "gpio24",
+      "name": "GPIO24"
+    }
+  ],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "host": {
+    "groundPinId": "gnd",
+    "rails": [
+      {
+        "id": "3v3",
+        "pinId": "3v3",
+        "voltage": {
+          "value": 3.3,
+          "unit": "V",
+          "source": "datasheet",
+          "reference": "Raspberry Pi documentation, GPIO header"
+        },
+        "maxCurrent": {
+          "value": 0.5,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Raspberry Pi does not publish a limit for the 3.3 V header pins; 500 mA is a common community figure"
+        }
+      },
+      {
+        "id": "5v",
+        "pinId": "5v",
+        "voltage": {
+          "value": 5,
+          "unit": "V",
+          "source": "datasheet",
+          "reference": "Raspberry Pi documentation, GPIO header: 5 V pins come straight from the USB-C supply"
+        },
+        "maxCurrent": {
+          "value": 1.6,
+          "unit": "A",
+          "source": "datasheet",
+          "reference": "Raspberry Pi documentation, power supply: 1.6 A for peripherals with the official 5 A supply"
+        }
+      }
+    ],
+    "slots": [
+      {
+        "id": "i2c",
+        "accepts": [
+          {
+            "protocol": "i2c"
+          }
+        ],
+        "railIds": [
+          "3v3",
+          "5v"
+        ],
+        "signals": {
+          "SDA": "sda",
+          "SCL": "scl"
+        },
+        "logicHigh": {
+          "value": 3.3,
+          "unit": "V",
+          "source": "datasheet",
+          "reference": "Raspberry Pi documentation, GPIO header: GPIO pins run at 3.3 V"
+        },
+        "maxInput": {
+          "value": 3.3,
+          "unit": "V",
+          "source": "datasheet",
+          "reference": "Raspberry Pi documentation, GPIO header: GPIO pins are not 5 V tolerant"
+        }
+      },
+      {
+        "id": "gpio",
+        "accepts": [
+          {
+            "protocol": "gpio"
+          },
+          {
+            "protocol": "1-wire"
+          }
+        ],
+        "railIds": [
+          "3v3",
+          "5v"
+        ],
+        "signals": {
+          "IO1": "gpio23",
+          "IO2": "gpio24"
+        },
+        "logicHigh": {
+          "value": 3.3,
+          "unit": "V",
+          "source": "datasheet",
+          "reference": "Raspberry Pi documentation, GPIO header: GPIO pins run at 3.3 V"
+        },
+        "maxInput": {
+          "value": 3.3,
+          "unit": "V",
+          "source": "datasheet",
+          "reference": "Raspberry Pi documentation, GPIO header: GPIO pins are not 5 V tolerant"
+        }
+      }
+    ]
+  },
+  "model": "devBoard",
+  "footprintId": "header/raspberry-pi",
+  "meshUrl": "generic/pin-header"
+}

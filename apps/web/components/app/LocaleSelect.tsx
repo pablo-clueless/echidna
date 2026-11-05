@@ -21,10 +21,10 @@ export const LocaleSelect = () => {
 
   return (
     <Select value={locale} onValueChange={change} disabled={pending}>
-      <SelectTrigger size="sm" aria-label={t("language")} className="h-7 gap-1 px-2 text-xs">
+      <SelectTrigger size="sm" aria-label={t("language")} className="h-7 min-w-37.5 gap-1 px-2 text-xs">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent align="end">
+      <SelectContent align="end" className="w-37.5">
         {routing.locales.map((l) => (
           <SelectItem key={l} value={l} lang={l} className="text-xs">
             {localeNames[l]}

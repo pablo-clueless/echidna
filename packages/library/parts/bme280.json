@@ -1,0 +1,71 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "bme280",
+  "name": "BME280 temperature, humidity and pressure sensor",
+  "kind": "sensor",
+  "deviceTypes": [
+    "iot",
+    "wearable",
+    "drone"
+  ],
+  "pins": [
+    {
+      "id": "vdd",
+      "name": "VDD"
+    },
+    {
+      "id": "gnd",
+      "name": "GND"
+    },
+    {
+      "id": "sda",
+      "name": "SDA"
+    },
+    {
+      "id": "scl",
+      "name": "SCL"
+    }
+  ],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "i2c"
+    }
+  ],
+  "supply": {
+    "pinId": "vdd",
+    "groundPinId": "gnd",
+    "minVoltage": {
+      "value": 1.71,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Bosch BME280 datasheet: VDD range"
+    },
+    "maxVoltage": {
+      "value": 3.6,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Bosch BME280 datasheet: VDD range"
+    },
+    "current": {
+      "value": 0.000714,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "Bosch BME280 datasheet: peak current during pressure measurement"
+    },
+    "maxInput": {
+      "value": 3.6,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Bosch BME280 datasheet: interface voltage VDDIO at most 3.6 V"
+    },
+    "signals": {
+      "SDA": "sda",
+      "SCL": "scl"
+    }
+  },
+  "model": "load",
+  "footprintId": "header/bme280",
+  "meshUrl": "generic/pin-header"
+}

@@ -51,4 +51,5 @@ export const regulatorExample = (): ProjectData => ({
   },
   boardSize: { width: 100, depth: 55 },
   ambientTemperature: DEFAULT_AMBIENT,
+  slots: {},
 });

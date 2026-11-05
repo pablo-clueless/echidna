@@ -69,6 +69,57 @@ export type Variant = {
   ratings?: Ratings;
 };
 
+/** A supply a host board offers on one of its pins, such as a Raspberry Pi's 3.3 V header pin. */
+export type HostRail = {
+  id: string;
+  /** Host pin the rail is on. */
+  pinId: string;
+  voltage: SpecValue;
+  /** Most current the rail can supply to everything plugged into it. */
+  maxCurrent: SpecValue;
+};
+
+/** A place on a host board that a part plugs into, such as an I²C header. */
+export type HostSlot = {
+  id: string;
+  /** Protocols the slot carries, such as `i2c` or `gpio`. */
+  accepts: Interface[];
+  /** Rails a part in this slot can draw from, in order of preference. */
+  railIds: string[];
+  /** Host pins for the slot's signals, by signal name (such as `SDA`), matched to the part's `signals`. */
+  signals: Record<string, string>;
+  /** Voltage the host drives its signal pins high to. */
+  logicHigh: SpecValue;
+  /** Highest voltage the host's signal pins can take. */
+  maxInput: SpecValue;
+  /** Most heat a part in this slot may give off. */
+  thermalBudget?: SpecValue;
+};
+
+/** What makes a part a host board: the rails it offers and the slots parts plug into. */
+export type HostSpec = {
+  /** The host's ground pin, which every rail is measured from. */
+  groundPinId: string;
+  rails: HostRail[];
+  slots: HostSlot[];
+};
+
+/** How a part that plugs into a slot is powered, and the levels its signal pins work at. */
+export type SupplySpec = {
+  pinId: string;
+  groundPinId: string;
+  minVoltage: SpecValue;
+  maxVoltage: SpecValue;
+  /** Most current the part draws from its supply. */
+  current: SpecValue;
+  /** Voltage the part drives its outputs high to. Defaults to its supply voltage. */
+  logicHigh?: SpecValue;
+  /** Highest voltage the part's signal pins can take. */
+  maxInput: SpecValue;
+  /** The part's signal pins by signal name, matched to the slot's `signals`. */
+  signals: Record<string, string>;
+};
+
 export type ComponentSpec = {
   id: string;
   name: string;
@@ -84,6 +135,10 @@ export type ComponentSpec = {
   variants?: Variant[];
   /** For switches: how the user operates it. Defaults to `latching`. */
   actuation?: Actuation;
+  /** For host boards: the rails they offer and the slots parts plug into. */
+  host?: HostSpec;
+  /** For parts that plug into a host's slot: how they are powered and their signal levels. */
+  supply?: SupplySpec;
   model: string;
   footprintId: string;
   meshUrl: string;

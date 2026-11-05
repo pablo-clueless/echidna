@@ -42,7 +42,7 @@ export const SiteHeader = async () => {
         <div className="ml-auto flex items-center gap-1 pr-3 sm:pr-4">
           <LocaleSelect />
           <ThemeToggle />
-          <ArrowLink href="/studio" size="sm" className="ml-2 hidden sm:inline-flex">
+          <ArrowLink href="/studio" size="sm" className="ml-2 hidden sm:inline-flex justify-between min-w-40">
             {t("openStudio")}
           </ArrowLink>
         </div>

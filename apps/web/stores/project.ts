@@ -1,5 +1,6 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { DEFAULT_AMBIENT } from "@echidna/rules";
+import type { SlotFit } from "@echidna/rules";
 import { partsById } from "@echidna/library";
 import type { PinRef } from "@echidna/core";
 import { create } from "zustand";
@@ -14,6 +15,7 @@ import {
   type SchematicPlacement,
 } from "@/lib/project/model";
 import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
+import { slotConnections, slotOptions } from "@/lib/project/slots";
 import { regulatorExample } from "@/lib/project/example";
 import { nextRotation } from "@/lib/schematic/symbols";
 import { footprints } from "@/lib/board/footprints";
@@ -30,6 +32,9 @@ const migrateLegacyLed = (project: ProjectData): ProjectData => ({
 
 /** Projects before version 4 had no ambient temperature setting; checks assumed 25 °C. */
 const migrateAmbient = (project: ProjectData): ProjectData => ({ ...project, ambientTemperature: DEFAULT_AMBIENT });
+
+/** Projects before version 5 had no host boards, so nothing was plugged into a slot. */
+const migrateSlots = (project: ProjectData): ProjectData => ({ ...project, slots: {} });
 
 /** Projects before version 3 had a fixed board, the default size. */
 const migrateBoardSize = (project: ProjectData): ProjectData => ({
@@ -50,6 +55,20 @@ type ProjectActions = {
   placeOnBoard: (id: string, x: number, z: number) => void;
   resizeBoard: (size: BoardSize) => void;
   setAmbientTemperature: (kelvin: number) => void;
+  /**
+   * Plugs a part into a host board's slot, wiring its supply, ground and signals, if it passes every slot check.
+   * @returns The checks, so a refusal can say why; `null` if the part, host or slot does not exist.
+   */
+  plugIn: (partId: string, hostId: string, slotId: string) => SlotFit | null;
+  /** Takes a part out of its slot, removing the wires plugging it in added. */
+  unplug: (partId: string) => void;
+  /**
+   * Swaps a part for another, keeping it in its slot, or a host board for another, keeping everything plugged into
+   * it in the same slots. Anything that no longer fits is left unplugged.
+   */
+  swapInSlots: (id: string, specId: string) => void;
+  /** Starts a new project from a host board, such as a Raspberry Pi, with nothing plugged in. */
+  loadPreset: (hostSpecId: string) => void;
   loadExample: () => void;
   clear: () => void;
 };
@@ -64,7 +83,16 @@ const empty = (): ProjectData => ({
   board: {},
   boardSize: { width: BOARD.width, depth: BOARD.depth },
   ambientTemperature: DEFAULT_AMBIENT,
+  slots: {},
 });
+
+/** Drops a part's slot placement, and the wires plugging it in added, from a project. */
+const withoutSlot = (s: Pick<ProjectData, "slots" | "wires">, partId: string): Pick<ProjectData, "slots" | "wires"> => {
+  const placed = s.slots[partId];
+  if (!placed) return s;
+  const { [partId]: _gone, ...slots } = s.slots;
+  return { slots, wires: s.wires.filter((w) => !placed.wireIds.includes(w.id)) };
+};
 
 /** Where a new part lands on the board: clear of every placed part's courtyard. */
 const boardSpotFor = (footprintId: string, project: Pick<ProjectData, "components" | "board" | "boardSize">) => {
@@ -115,11 +143,14 @@ export const useProjectStore = create<ProjectState>()(
         set((s) => {
           const { [id]: _schematic, ...schematic } = s.schematic;
           const { [id]: _board, ...board } = s.board;
+          // A removed host unplugs everything in it; their wires all touch it, so they go below.
+          const slots = Object.fromEntries(Object.entries(s.slots).filter(([part, at]) => part !== id && at.hostId !== id));
           return {
             components: s.components.filter((c) => c.id !== id),
             wires: s.wires.filter((w) => w.a.componentId !== id && w.b.componentId !== id),
             schematic,
             board,
+            slots,
           };
         }),
 
@@ -161,8 +192,15 @@ export const useProjectStore = create<ProjectState>()(
       setVariant: (id, variant) =>
         set((s) => ({ components: s.components.map((c) => (c.id === id ? { ...c, variant } : c)) })),
 
+      // A swapped part comes out of its slot, and a swapped host lets go of what was in it: the new part has to pass
+      // the slot checks again.
       swapSpec: (id, specId) =>
-        set((s) => ({ components: s.components.map((c) => (c.id === id ? { id, specId } : c)) })),
+        set((s) => {
+          const unplugged = Object.entries(s.slots)
+            .filter(([part, at]) => part === id || at.hostId === id)
+            .reduce((acc, [part]) => withoutSlot(acc, part), { slots: s.slots, wires: s.wires });
+          return { ...unplugged, components: s.components.map((c) => (c.id === id ? { id, specId } : c)) };
+        }),
 
       placeOnBoard: (id, x, z) =>
         set((s) => {
@@ -182,22 +220,62 @@ export const useProjectStore = create<ProjectState>()(
 
       setAmbientTemperature: (kelvin) => set({ ambientTemperature: clampAmbient(kelvin) }),
 
+      plugIn: (partId, hostId, slotId) => {
+        const s = get();
+        const option = slotOptions(s, partsById, partId).find((o) => o.hostId === hostId && o.slot.id === slotId);
+        const part = partsById.get(s.components.find((c) => c.id === partId)?.specId ?? "");
+        const host = partsById.get(s.components.find((c) => c.id === hostId)?.specId ?? "");
+        if (!option || !part || !host) return null;
+        if (!option.fit.fits || option.occupant || !option.fit.railId) return option.fit;
+        const railId = option.fit.railId;
+        set((state) => {
+          const freed = withoutSlot(state, partId);
+          const wires = [...freed.wires];
+          const wireIds: string[] = [];
+          for (const [a, b] of slotConnections(host, hostId, option.slot, part, partId, railId)) {
+            const existing = wires.find((w) => (samePin(w.a, a) && samePin(w.b, b)) || (samePin(w.a, b) && samePin(w.b, a)));
+            if (existing) continue;
+            const id = wireId(wires);
+            wires.push({ id, a, b });
+            wireIds.push(id);
+          }
+          return { wires, slots: { ...freed.slots, [partId]: { hostId, slotId, railId, wireIds } } };
+        });
+        return option.fit;
+      },
+
+      unplug: (partId) => set((s) => withoutSlot(s, partId)),
+
+      swapInSlots: (id, specId) => {
+        const replug = Object.entries(get().slots).filter(([part, at]) => part === id || at.hostId === id);
+        get().swapSpec(id, specId);
+        for (const [part, at] of replug) get().plugIn(part, at.hostId, at.slotId);
+      },
+
+      loadPreset: (hostSpecId) => {
+        const spec = partsById.get(hostSpecId);
+        if (!spec?.host) return;
+        set(empty());
+        get().addComponent(hostSpecId, { x: 8, y: 6 });
+      },
+
       loadExample: () => set(regulatorExample()),
 
       clear: () => set(empty()),
     }),
     {
       name: PROJECT_STORAGE_KEY,
-      version: 4,
+      version: 5,
       migrate: (persisted, version) => {
         let project = persisted as ProjectData;
         if (version < 2) project = migrateLegacyLed(project);
         if (version < 3) project = migrateBoardSize(project);
         if (version < 4) project = migrateAmbient(project);
+        if (version < 5) project = migrateSlots(project);
         return project;
       },
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ name, components, wires, schematic, board, boardSize, ambientTemperature }) => ({
+      partialize: ({ name, components, wires, schematic, board, boardSize, ambientTemperature, slots }) => ({
         name,
         components: releaseMomentary(components, partsById),
         wires,
@@ -205,6 +283,7 @@ export const useProjectStore = create<ProjectState>()(
         board,
         boardSize,
         ambientTemperature,
+        slots,
       }),
       skipHydration: true,
     },

@@ -1,6 +1,7 @@
 "use client";
 
 import { CircuitBoard, PanelLeft, Play } from "lucide-react";
+import { partsById } from "@echidna/library";
 import { useTranslations } from "next-intl";
 import { useId } from "react";
 
@@ -10,11 +11,13 @@ import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { usePreferencesStore } from "@/stores/preferences";
 import { IconButton } from "@/components/app/IconButton";
 import { Separator } from "@/components/ui/separator";
+import { useProjectStore } from "@/stores/project";
 import { useStudioStore } from "@/stores/studio";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { partKey } from "@/lib/messageKeys";
 import { Link } from "@/i18n/navigation";
 
 type Props = {
@@ -29,6 +32,8 @@ export const TopBar = ({ libraryOpen, onToggleLibrary }: Props) => {
   const learnId = useId();
   const simulating = useStudioStore((s) => s.simulating);
   const setSimulating = useStudioStore((s) => s.setSimulating);
+  const tParts = useTranslations("Parts");
+  const hostSpecId = useProjectStore((s) => s.components.find((c) => partsById.get(c.specId)?.host)?.specId);
 
   return (
     <header className="flex h-12 shrink-0 items-center gap-3 border-b bg-background px-3">
@@ -45,7 +50,7 @@ export const TopBar = ({ libraryOpen, onToggleLibrary }: Props) => {
         <span className="truncate text-sm font-medium max-sm:hidden">{t("untitledProject")}</span>
         <Badge variant="outline" className="gap-1 text-muted-foreground max-md:hidden">
           <CircuitBoard />
-          {t("blankBoard")}
+          {hostSpecId ? tParts(`${partKey(hostSpecId)}.name`) : t("blankBoard")}
         </Badge>
       </div>
 
