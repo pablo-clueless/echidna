@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { BOX_KINDS, freeSchematicSpot, GRID, PART_MIME } from "@/lib/schematic/symbols";
+import { fitsFoundation, foundationsFor } from "@/lib/project/foundation";
 import { boundsOf, SymbolGlyph } from "./schematic/SymbolGlyph";
 import { useProjectStore } from "@/stores/project";
 import { useLayoutStore } from "@/stores/layout";
@@ -58,6 +59,11 @@ const PartIcon = ({ spec }: { spec: ComponentSpec }) => {
 export const LibrarySidebar = () => {
   const t = useTranslations("Studio.library");
   const tParts = useTranslations("Parts");
+  const tFoundation = useTranslations("Studio.foundation");
+  const foundation = useProjectStore((s) => s.foundation);
+  const empty = useProjectStore((s) => s.components.length === 0);
+  // Only parts that belong on the project's foundation can be added, so a laptop board never lands on a PCB.
+  const fits = (spec: ComponentSpec) => empty || fitsFoundation(spec, foundation);
   const [query, setQuery] = useState("");
   const select = useStudioStore((s) => s.select);
   const collapsed = useLayoutStore((s) => s.collapsedCategories);
@@ -145,31 +151,45 @@ export const LibrarySidebar = () => {
                 </h3>
                 <CollapsibleContent asChild>
                   <ul className="flex flex-col gap-0.5">
-                    {group.parts.map((p) => (
-                      <li key={p.id}>
-                        <button
-                          type="button"
-                          draggable
-                          onDragStart={(e) => {
-                            e.dataTransfer.setData(PART_MIME, p.id);
-                            e.dataTransfer.effectAllowed = "copy";
-                          }}
-                          onClick={() => add(p.id)}
-                          title={t("addHint")}
-                          className="hover:bg-sidebar-accent focus-visible:ring-ring flex w-full cursor-grab items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left text-sm outline-none focus-visible:ring-2 active:cursor-grabbing"
-                        >
-                          <PartIcon spec={p} />
-                          <span className="min-w-0 flex-1">
-                            <span className="block truncate">
-                              {tParts(`${partKey(p.id)}.name`)}
+                    {group.parts.map((p) => {
+                      const fit = fits(p);
+                      return (
+                        <li key={p.id}>
+                          <button
+                            type="button"
+                            draggable={fit}
+                            aria-disabled={!fit}
+                            onDragStart={(e) => {
+                              e.dataTransfer.setData(PART_MIME, p.id);
+                              e.dataTransfer.effectAllowed = "copy";
+                            }}
+                            onClick={() => {
+                              if (fit) add(p.id);
+                            }}
+                            title={fit ? t("addHint") : undefined}
+                            className="hover:bg-sidebar-accent focus-visible:ring-ring flex w-full cursor-grab items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left text-sm outline-none focus-visible:ring-2 active:cursor-grabbing aria-disabled:cursor-not-allowed aria-disabled:opacity-60 aria-disabled:hover:bg-transparent"
+                          >
+                            <PartIcon spec={p} />
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate">
+                                {tParts(`${partKey(p.id)}.name`)}
+                              </span>
+                              <span
+                                className={
+                                  fit
+                                    ? "text-muted-foreground block truncate text-xs"
+                                    : "text-muted-foreground block text-xs"
+                                }
+                              >
+                                {fit
+                                  ? tParts(`${partKey(p.id)}.summary`)
+                                  : tFoundation(`refused.${foundationsFor(p)[0] ?? "pcb"}`)}
+                              </span>
                             </span>
-                            <span className="text-muted-foreground block truncate text-xs">
-                              {tParts(`${partKey(p.id)}.summary`)}
-                            </span>
-                          </span>
-                        </button>
-                      </li>
-                    ))}
+                          </button>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </CollapsibleContent>
               </section>

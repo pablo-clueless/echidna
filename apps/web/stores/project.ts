@@ -1,8 +1,8 @@
 import { createJSONStorage, persist } from "zustand/middleware";
+import type { ComponentSpec, PinRef } from "@echidna/core";
 import { builds, partsById } from "@echidna/library";
 import { DEFAULT_AMBIENT } from "@echidna/rules";
 import type { SlotFit } from "@echidna/rules";
-import type { PinRef } from "@echidna/core";
 import { create } from "zustand";
 
 import {
@@ -14,8 +14,16 @@ import {
   samePin,
   type SchematicPlacement,
 } from "@/lib/project/model";
+import {
+  acceptsPart,
+  CHASSIS,
+  type Foundation,
+  fitsFoundation,
+  foundationOf,
+  foundationsFor,
+} from "@/lib/project/foundation";
 import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
-import { slotConnections, slotOptions } from "@/lib/project/slots";
+import { seatOf, seatPlacement, slotConnections, slotOptions } from "@/lib/project/slots";
 import { regulatorExample } from "@/lib/project/example";
 import { nextRotation } from "@/lib/schematic/symbols";
 import { footprints } from "@/lib/board/footprints";
@@ -39,13 +47,43 @@ const migrateAmbient = (project: ProjectData): ProjectData => ({
 /** Projects before version 5 had no host boards, so nothing was plugged into a slot. */
 const migrateSlots = (project: ProjectData): ProjectData => ({ ...project, slots: {} });
 
+/**
+ * Projects before version 6 were all built on a PCB, desktop and laptop builds included, with modules drawn smaller
+ * than life. A build moves into its chassis, its mainboard onto the mount and each module into its slot's seat.
+ */
+const migrateFoundation = (project: ProjectData): ProjectData => {
+  const specs = project.components.flatMap((c) => partsById.get(c.specId) ?? []);
+  const foundation = foundationOf(specs);
+  if (foundation === "pcb") return { ...project, foundation };
+  let moved: ProjectData = { ...project, foundation, boardSize: sizeOf(foundation) };
+  for (const c of project.components) {
+    const spec = partsById.get(c.specId);
+    const at = moved.board[c.id];
+    if (!spec?.host || !at) continue;
+    const board = { ...moved.board, [c.id]: { ...at, ...landingSpot(spec, moved) } };
+    moved = { ...moved, board: reseat({ ...moved, board }, c.id) };
+  }
+  return moved;
+};
+
 /** Projects before version 3 had a fixed board, the default size. */
 const migrateBoardSize = (project: ProjectData): ProjectData => ({
   ...project,
   boardSize: { width: BOARD.width, depth: BOARD.depth },
 });
 
+/** A chassis's fixed floor, or the default PCB outline, in millimetres. */
+const sizeOf = (foundation: Foundation): BoardSize =>
+  foundation === "pcb"
+    ? { width: BOARD.width, depth: BOARD.depth }
+    : { width: CHASSIS[foundation].width, depth: CHASSIS[foundation].depth };
+
 type ProjectActions = {
+  /**
+   * Adds a part to the project, if it belongs on the project's foundation. The first part into an empty project sets
+   * the foundation, such as a laptop chassis for a laptop mainboard.
+   * @returns The new part's ID, or `null` if the part does not exist or does not fit the foundation.
+   */
   addComponent: (specId: string, at: Pick<SchematicPlacement, "x" | "y">) => string | null;
   removeComponent: (id: string) => void;
   moveComponent: (id: string, at: Pick<SchematicPlacement, "x" | "y">) => void;
@@ -56,6 +94,7 @@ type ProjectActions = {
   setVariant: (id: string, variant: string) => void;
   swapSpec: (id: string, specId: string) => void;
   placeOnBoard: (id: string, x: number, z: number) => void;
+  /** Resizes a PCB. A chassis's size is fixed, so it ignores this. */
   resizeBoard: (size: BoardSize) => void;
   setAmbientTemperature: (kelvin: number) => void;
   /**
@@ -82,6 +121,7 @@ export type ProjectState = ProjectData & ProjectActions;
 
 const empty = (): ProjectData => ({
   name: "",
+  foundation: "pcb",
   components: [],
   wires: [],
   schematic: {},
@@ -117,6 +157,38 @@ const boardSpotFor = (
   return freeBoardSpot(footprint, placed, project.boardSize);
 };
 
+/**
+ * Where a new part lands: a mainboard on its chassis's mount, where it is screwed down, and anything else clear of
+ * every placed part. Placements are in metres.
+ */
+const landingSpot = (
+  spec: ComponentSpec,
+  project: Pick<ProjectData, "components" | "board" | "boardSize" | "foundation">,
+) => {
+  const mainboard = spec.host && spec.module?.role === "motherboard";
+  if (mainboard && project.foundation !== "pcb") {
+    const { mount } = CHASSIS[project.foundation];
+    return { x: mount.x / 1000, z: mount.z / 1000 };
+  }
+  return boardSpotFor(spec.footprintId, project);
+};
+
+/** Moves every module seated in a host's slots to follow the host's placement. */
+const reseat = (
+  s: Pick<ProjectData, "components" | "board" | "slots">,
+  hostId: string,
+): ProjectData["board"] => {
+  const host = s.board[hostId];
+  if (!host) return s.board;
+  const board = { ...s.board };
+  for (const [part, at] of Object.entries(s.slots)) {
+    if (at.hostId !== hostId) continue;
+    const seated = seatOf(s, partsById, part);
+    if (seated) board[part] = seatPlacement(host, seated.seat);
+  }
+  return board;
+};
+
 let wireCount = 0;
 const wireId = (wires: ProjectData["wires"]) => {
   const ids = new Set(wires.map((w) => w.id));
@@ -137,7 +209,12 @@ export const useProjectStore = create<ProjectState>()(
 
       addComponent: (specId, at) => {
         const spec = partsById.get(specId);
-        if (!spec) return null;
+        if (!spec || !acceptsPart(get(), spec)) return null;
+        const { foundation } = get();
+        if (!fitsFoundation(spec, foundation)) {
+          const next = foundationsFor(spec)[0] ?? "pcb";
+          set({ foundation: next, boardSize: sizeOf(next) });
+        }
         const id = nextDesignator(
           spec.kind,
           get().components.map((c) => c.id),
@@ -148,7 +225,7 @@ export const useProjectStore = create<ProjectState>()(
           board:
             spec.model === "ground"
               ? s.board
-              : { ...s.board, [id]: { ...boardSpotFor(spec.footprintId, s), rotation: 0 } },
+              : { ...s.board, [id]: { ...landingSpot(spec, s), rotation: 0 } },
         }));
         return id;
       },
@@ -221,6 +298,8 @@ export const useProjectStore = create<ProjectState>()(
       // the slot checks again.
       swapSpec: (id, specId) =>
         set((s) => {
+          const spec = partsById.get(specId);
+          if (!spec || !fitsFoundation(spec, s.foundation)) return s;
           const unplugged = Object.entries(s.slots)
             .filter(([part, at]) => part === id || at.hostId === id)
             .reduce((acc, [part]) => withoutSlot(acc, part), { slots: s.slots, wires: s.wires });
@@ -233,11 +312,14 @@ export const useProjectStore = create<ProjectState>()(
       placeOnBoard: (id, x, z) =>
         set((s) => {
           const current = s.board[id];
-          return current ? { board: { ...s.board, [id]: { ...current, x, z } } } : s;
+          if (!current) return s;
+          // Modules seated in a host's slots move with it.
+          return { board: reseat({ ...s, board: { ...s.board, [id]: { ...current, x, z } } }, id) };
         }),
 
       resizeBoard: (size) =>
         set((s) => {
+          if (s.foundation !== "pcb") return s;
           const boardSize = clampBoardSize(size);
           // Parts left outside the new outline move in to its edge.
           const board = Object.fromEntries(
@@ -277,13 +359,12 @@ export const useProjectStore = create<ProjectState>()(
             wires.push({ id, a, b });
             wireIds.push(id);
           }
-          return {
-            wires,
-            slots: {
-              ...freed.slots,
-              [partId]: { hostId, slotId, ...(railId ? { railId } : {}), wireIds },
-            },
+          const slots = {
+            ...freed.slots,
+            [partId]: { hostId, slotId, ...(railId ? { railId } : {}), wireIds },
           };
+          // A module with a seat in the slot moves into it, such as a graphics card into its PCIe slot.
+          return { wires, slots, board: reseat({ ...state, slots }, hostId) };
         });
         return option.fit;
       },
@@ -301,18 +382,21 @@ export const useProjectStore = create<ProjectState>()(
       loadPreset: (hostSpecId) => {
         const spec = partsById.get(hostSpecId);
         if (!spec?.host) return;
-        set(empty());
+        const foundation = foundationsFor(spec)[0] ?? "pcb";
+        set({ ...empty(), foundation, boardSize: sizeOf(foundation) });
         get().addComponent(hostSpecId, { x: 8, y: 6 });
       },
 
       loadBuild: (buildId) => {
         const build = builds.find((b) => b.id === buildId);
         if (!build) return;
-        // A whole build needs a larger board than the default to lay its modules out on.
-        set({ ...empty(), boardSize: clampBoardSize({ width: 120, depth: 80 }) });
+        // A build goes in its device's chassis, never on a PCB.
+        const foundation: Foundation = build.deviceType === "laptop" ? "laptop" : "desktop";
+        set({ ...empty(), foundation, boardSize: sizeOf(foundation) });
         const hostId = get().addComponent(build.hostId, { x: 8, y: 12 });
         if (!hostId) return;
-        // Modules stack in a column beside the motherboard: each box is two grid units tall, with room for its label.
+        // Modules stack in a column beside the motherboard in the schematic: each box is two grid units tall, with
+        // room for its label. In the chassis, each is seated in its slot.
         Object.entries(build.modules).forEach(([slotId, specId], i) => {
           const id = get().addComponent(specId, { x: 22, y: 2 + i * 4 });
           if (id) get().plugIn(id, hostId, slotId);
@@ -325,18 +409,20 @@ export const useProjectStore = create<ProjectState>()(
     }),
     {
       name: PROJECT_STORAGE_KEY,
-      version: 5,
+      version: 6,
       migrate: (persisted, version) => {
         let project = persisted as ProjectData;
         if (version < 2) project = migrateLegacyLed(project);
         if (version < 3) project = migrateBoardSize(project);
         if (version < 4) project = migrateAmbient(project);
         if (version < 5) project = migrateSlots(project);
+        if (version < 6) project = migrateFoundation(project);
         return project;
       },
       storage: createJSONStorage(() => localStorage),
       partialize: ({
         name,
+        foundation,
         components,
         wires,
         schematic,
@@ -346,6 +432,7 @@ export const useProjectStore = create<ProjectState>()(
         slots,
       }) => ({
         name,
+        foundation,
         components: releaseMomentary(components, partsById),
         wires,
         schematic,

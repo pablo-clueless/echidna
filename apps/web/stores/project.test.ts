@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { CHASSIS } from "@/lib/project/foundation";
 import { deriveNets } from "@/lib/project/model";
 import { useProjectStore } from "./project";
 
@@ -141,5 +142,114 @@ describe("desktop reference builds", () => {
     expect(store().slots[gpu]).toMatchObject({ slotId: "pcie-x16" });
     store().swapInSlots(gpu, "rtx-4090");
     expect(store().slots[gpu]).toBeUndefined();
+  });
+});
+
+describe("the project's foundation", () => {
+  beforeEach(() => {
+    store().clear();
+  });
+
+  it("starts on a PCB and keeps circuit parts on it", () => {
+    expect(store().addComponent("resistor", { x: 0, y: 0 })).toBe("R1");
+    expect(store().foundation).toBe("pcb");
+  });
+
+  it("puts each reference build in its own chassis, at the chassis's fixed size", () => {
+    store().loadBuild("laptop-ultrabook");
+    expect(store().foundation).toBe("laptop");
+    expect(store().boardSize).toEqual({ width: CHASSIS.laptop.width, depth: CHASSIS.laptop.depth });
+    store().loadBuild("desktop-gaming");
+    expect(store().foundation).toBe("desktop");
+    store().resizeBoard({ width: 60, depth: 40 });
+    expect(store().boardSize).toEqual({
+      width: CHASSIS.desktop.width,
+      depth: CHASSIS.desktop.depth,
+    });
+  });
+
+  it("refuses a laptop board on a circuit, and a resistor in a laptop", () => {
+    store().addComponent("resistor", { x: 0, y: 0 });
+    expect(store().addComponent("ultrabook-board", { x: 8, y: 0 })).toBeNull();
+    store().loadBuild("laptop-ultrabook");
+    expect(store().addComponent("resistor", { x: 0, y: 0 })).toBeNull();
+    expect(store().components.some((c) => c.specId === "resistor")).toBe(false);
+  });
+
+  it("lets the first part into an empty project choose its foundation", () => {
+    store().addComponent("gaming-laptop-board", { x: 8, y: 0 });
+    expect(store().foundation).toBe("laptop");
+    store().clear();
+    expect(store().foundation).toBe("pcb");
+  });
+
+  it("refuses to swap a part for one that does not belong on the foundation", () => {
+    store().loadBuild("laptop-gaming");
+    store().swapSpec("MB1", "b650-atx");
+    expect(store().components.find((c) => c.id === "MB1")?.specId).toBe("gaming-laptop-board");
+  });
+
+  it("moves an older laptop build off the PCB it was saved on", () => {
+    const migrate = useProjectStore.persist.getOptions().migrate;
+    const saved = {
+      name: "",
+      components: [
+        { id: "MB1", specId: "ultrabook-board" },
+        { id: "BAT1", specId: "battery-3s-54wh" },
+      ],
+      wires: [],
+      schematic: {},
+      board: {
+        MB1: { x: -0.01, z: 0.02, rotation: 0 },
+        BAT1: { x: 0.03, z: -0.02, rotation: 0 },
+      },
+      boardSize: { width: 120, depth: 80 },
+      ambientTemperature: 298.15,
+      slots: { BAT1: { hostId: "MB1", slotId: "battery", wireIds: [] } },
+    };
+    const { mount } = CHASSIS.laptop;
+    expect(migrate?.(saved, 5)).toMatchObject({
+      foundation: "laptop",
+      boardSize: { width: CHASSIS.laptop.width, depth: CHASSIS.laptop.depth },
+      board: {
+        MB1: { x: mount.x / 1000, z: mount.z / 1000 },
+        BAT1: { x: mount.x / 1000, z: (mount.z + 115) / 1000 },
+      },
+    });
+  });
+});
+
+describe("seating modules in their slots", () => {
+  beforeEach(() => {
+    store().loadBuild("desktop-budget");
+  });
+
+  const placementOf = (slotId: string) => {
+    const part = Object.entries(store().slots).find(([, at]) => at.slotId === slotId)?.[0] ?? "";
+    return store().board[part];
+  };
+
+  it("screws the motherboard to its mount and seats each module in its slot", () => {
+    const { mount } = CHASSIS.desktop;
+    expect(store().board.MB1).toMatchObject({ x: mount.x / 1000, z: mount.z / 1000 });
+    const gpu = placementOf("pcie-x16");
+    expect(gpu?.x).toBeCloseTo((mount.x - 25) / 1000, 9);
+    expect(gpu?.z).toBeCloseTo((mount.z + 45) / 1000, 9);
+    expect(placementOf("memory")?.rotation).toBe(90);
+  });
+
+  it("moves seated modules with the motherboard", () => {
+    const before = placementOf("cpu");
+    store().placeOnBoard("MB1", (store().board.MB1?.x ?? 0) + 0.01, store().board.MB1?.z ?? 0);
+    expect(placementOf("cpu")?.x).toBeCloseTo((before?.x ?? 0) + 0.01, 9);
+    expect(placementOf("cpu")?.z).toBeCloseTo(before?.z ?? 0, 9);
+  });
+
+  it("keeps a module where it was once unplugged, and leaves it behind when the board moves", () => {
+    const gpu = Object.entries(store().slots).find(([, at]) => at.slotId === "pcie-x16")?.[0] ?? "";
+    const seated = store().board[gpu];
+    store().unplug(gpu);
+    store().placeOnBoard("MB1", (store().board.MB1?.x ?? 0) + 0.02, store().board.MB1?.z ?? 0);
+    expect(store().board[gpu]).toEqual(seated);
   });
 });

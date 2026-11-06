@@ -1,4 +1,7 @@
 import {
+  type AcOptions,
+  type AcOutcome,
+  type AcSolution,
   type Circuit,
   type DcSolution,
   type SolveOutcome,
@@ -8,7 +11,7 @@ import {
   type TransientSolution,
   isSolveError,
 } from "./types";
-import { solveDc, solveTransient } from "../wasm/solver.js";
+import { solveAc, solveDc, solveTransient } from "../wasm/solver.js";
 
 /**
  * Runs a DC solve against an already initialised WASM module and times it.
@@ -42,6 +45,26 @@ export const solveTransientNow = (
   const start = performance.now();
   try {
     const solution = solveTransient(circuit, options) as TransientSolution;
+    return { ok: true, solution, durationMs: performance.now() - start };
+  } catch (error) {
+    return {
+      ok: false,
+      error: isSolveError(error) ? error : { code: "internal", message: String(error) },
+      durationMs: performance.now() - start,
+    };
+  }
+};
+
+/**
+ * Runs an AC small-signal sweep against an already initialised WASM module and times it.
+ * @param circuit - Circuit to sweep.
+ * @param options - The driven source and the frequency range.
+ * @returns Phasors at each frequency, or a structured error, with the time taken.
+ */
+export const solveAcNow = (circuit: Circuit, options: AcOptions): AcOutcome => {
+  const start = performance.now();
+  try {
+    const solution = solveAc(circuit, options) as AcSolution;
     return { ok: true, solution, durationMs: performance.now() - start };
   } catch (error) {
     return {

@@ -17,6 +17,7 @@ import { type MaskColour, maskColours, type Overlay, useLayoutStore } from "@/st
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { type CameraCommands, useViewportStore } from "@/stores/viewport";
+import { useProjectStore } from "@/stores/project";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 
@@ -57,7 +58,10 @@ const overlayIcons: Record<Overlay, LucideIcon> = { current: Zap, heat: Flame };
 
 const shown = (key: string) => (key === "-" ? "−" : key.length === 1 ? key.toUpperCase() : key);
 
-/** On-screen controls for the 3D view: zoom, fit the board, preset angles, simulation overlays and the solder-mask colour. */
+/**
+ * On-screen controls for the 3D view: zoom, fit the board, preset angles, simulation overlays and, on a PCB, the
+ * solder-mask colour. A chassis has no copper or mask, so it offers neither the current overlay nor mask colours.
+ */
 export const CameraToolbar = () => {
   const t = useTranslations("Studio.viewport.controls");
   const tMask = useTranslations("Studio.viewport.mask");
@@ -67,6 +71,8 @@ export const CameraToolbar = () => {
   const setMaskColour = useLayoutStore((s) => s.setMaskColour);
   const shownOverlays = useLayoutStore((s) => s.overlays);
   const setOverlays = useLayoutStore((s) => s.setOverlays);
+  const onPcb = useProjectStore((s) => s.foundation === "pcb");
+  const overlays = (Object.keys(overlayIcons) as Overlay[]).filter((o) => onPcb || o !== "current");
 
   return (
     <div
@@ -108,11 +114,17 @@ export const CameraToolbar = () => {
         size="sm"
         spacing={0}
         aria-label={tOverlays("label")}
-        value={shownOverlays}
-        onValueChange={(value) => setOverlays(value as Overlay[])}
+        value={shownOverlays.filter((o) => overlays.includes(o))}
+        // Keeps overlays hidden on a chassis switched on, for when the project is back on a PCB.
+        onValueChange={(value) =>
+          setOverlays([
+            ...shownOverlays.filter((o) => !overlays.includes(o)),
+            ...(value as Overlay[]),
+          ])
+        }
         className="bg-background/85 rounded-lg border p-0.5 shadow-xs backdrop-blur-sm"
       >
-        {(Object.keys(overlayIcons) as Overlay[]).map((overlay) => {
+        {overlays.map((overlay) => {
           const Icon = overlayIcons[overlay];
           return (
             <Tooltip key={overlay}>
@@ -130,39 +142,41 @@ export const CameraToolbar = () => {
           );
         })}
       </ToggleGroup>
-      <ToggleGroup
-        type="single"
-        orientation="vertical"
-        size="sm"
-        spacing={0}
-        aria-label={tMask("label")}
-        value={maskColour}
-        onValueChange={(value) => {
-          if (value) setMaskColour(value as MaskColour);
-        }}
-        className="bg-background/85 rounded-lg border p-0.5 shadow-xs backdrop-blur-sm"
-      >
-        {maskColours.map((colour) => (
-          <Tooltip key={colour}>
-            <TooltipTrigger asChild>
-              <ToggleGroupItem
-                value={colour}
-                aria-label={tMask(colour)}
-                className="aria-checked:bg-primary/15 size-8"
-              >
-                <span
-                  aria-hidden
-                  className="ring-foreground/25 size-3.5 ring-1"
-                  style={{ backgroundColor: swatches[colour] }}
-                />
-              </ToggleGroupItem>
-            </TooltipTrigger>
-            <TooltipContent side="left">
-              {tMask("label")}: {tMask(colour)}
-            </TooltipContent>
-          </Tooltip>
-        ))}
-      </ToggleGroup>
+      {onPcb && (
+        <ToggleGroup
+          type="single"
+          orientation="vertical"
+          size="sm"
+          spacing={0}
+          aria-label={tMask("label")}
+          value={maskColour}
+          onValueChange={(value) => {
+            if (value) setMaskColour(value as MaskColour);
+          }}
+          className="bg-background/85 rounded-lg border p-0.5 shadow-xs backdrop-blur-sm"
+        >
+          {maskColours.map((colour) => (
+            <Tooltip key={colour}>
+              <TooltipTrigger asChild>
+                <ToggleGroupItem
+                  value={colour}
+                  aria-label={tMask(colour)}
+                  className="aria-checked:bg-primary/15 size-8"
+                >
+                  <span
+                    aria-hidden
+                    className="ring-foreground/25 size-3.5 ring-1"
+                    style={{ backgroundColor: swatches[colour] }}
+                  />
+                </ToggleGroupItem>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                {tMask("label")}: {tMask(colour)}
+              </TooltipContent>
+            </Tooltip>
+          ))}
+        </ToggleGroup>
+      )}
     </div>
   );
 };

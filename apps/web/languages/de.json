@@ -1,6 +1,7 @@
 {
   "Metadata": {
-    "description": "Stelle Platinen und Geräte in 3D zusammen, simuliere sie und sieh sofort, ob jedes Bauteil funktionieren wird."
+    "description": "Stelle Platinen und Geräte in 3D zusammen, simuliere sie und sieh sofort, ob jedes Bauteil funktionieren wird.",
+    "imageAlt": "Die Startseite von Echidna: „Wisse, dass es funktioniert, bevor du es baust.“ neben einem 3D-Entwicklungsboard, bei dem alle Prüfungen bestanden sind."
   },
   "Home": {
     "openStudio": "Studio öffnen",
@@ -220,7 +221,6 @@
     },
     "inspector": {
       "board": {
-        "title": "Platine",
         "width": "Breite",
         "depth": "Tiefe",
         "outOfRange": "Gib eine Größe von {min} bis {max} mm ein."
@@ -459,6 +459,19 @@
       "buildEmpty": "Stecke ein Netzteil und einen Kühler ein, um Strom und Kühlung zu prüfen.",
       "batteryRuntime": "Etwa {runtime} Akkulaufzeit bei leichter Nutzung ({energy} bei {draw}).",
       "buildEmptyLaptop": "Stecke ein Ladegerät und einen Kühler ein, um Strom und Kühlung zu prüfen."
+    },
+    "foundation": {
+      "names": {
+        "pcb": "Leiterplatte",
+        "desktop": "Desktop-Gehäuse",
+        "laptop": "Laptop-Gehäuse"
+      },
+      "fixedSize": "{width} × {depth} mm, vom Gehäuse vorgegeben",
+      "refused": {
+        "pcb": "Gehört auf eine Leiterplatte, nicht in dieses Gehäuse. Leere das Projekt, um eine Schaltung zu beginnen.",
+        "desktop": "Gehört in ein Desktop-Gehäuse. Starte einen Desktop-Aufbau, um es zu verwenden.",
+        "laptop": "Gehört in ein Laptop-Gehäuse. Starte einen Laptop-Aufbau, um es zu verwenden."
+      }
     }
   },
   "Parts": {

@@ -34,6 +34,6 @@
     }
   },
   "model": "module",
-  "footprintId": "module/cooler",
+  "footprintId": "module/laptopCooler",
   "meshUrl": "generic/cooler"
 }

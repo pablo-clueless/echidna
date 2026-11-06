@@ -1,6 +1,7 @@
 {
   "Metadata": {
-    "description": "在 3D 中组装电路板和设备，进行仿真，即时了解每个元件能否正常工作。"
+    "description": "在 3D 中组装电路板和设备，进行仿真，即时了解每个元件能否正常工作。",
+    "imageAlt": "Echidna 首页：“先确认能用，再动手搭建。”旁边是一块全部检查均已通过的 3D 开发板。"
   },
   "Home": {
     "openStudio": "打开工作室",
@@ -220,7 +221,6 @@
     },
     "inspector": {
       "board": {
-        "title": "电路板",
         "width": "宽度",
         "depth": "深度",
         "outOfRange": "请输入 {min} 到 {max} mm 之间的尺寸。"
@@ -459,6 +459,19 @@
       "buildEmpty": "插入电源和散热器即可检查供电与散热。",
       "batteryRuntime": "轻度使用时电池续航约 {runtime}（{energy}，{draw}）。",
       "buildEmptyLaptop": "插入充电器和散热器即可检查供电与散热。"
+    },
+    "foundation": {
+      "names": {
+        "pcb": "电路板",
+        "desktop": "台式机机箱",
+        "laptop": "笔记本机身"
+      },
+      "fixedSize": "{width} × {depth} mm，由机身决定",
+      "refused": {
+        "pcb": "用于电路板，不能装进这个机身。清空项目即可开始电路。",
+        "desktop": "用于台式机机箱。开始一个台式机配置即可使用。",
+        "laptop": "用于笔记本机身。开始一个笔记本配置即可使用。"
+      }
     }
   },
   "Parts": {

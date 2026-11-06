@@ -1,7 +1,13 @@
-import type { Circuit, TransientOptions } from "@echidna/solver/types";
+import type { AcOptions, Circuit, TransientOptions } from "@echidna/solver/types";
 
 /** A transient run to compare, with the times to sample it at. Each time must fall on a step. */
 export type TransientCheck = TransientOptions & { at: number[] };
+
+/** An AC sweep to compare, with the frequencies to sample it at. Each must fall on a sweep point. */
+export type AcCheck = AcOptions & { at: number[] };
+
+/** One part of a node voltage's phasor that ngspice measures during an AC sweep. */
+export type AcMeasure = { frequency: number; name: string; node: string; part: "re" | "im" };
 
 /** One value ngspice measures during a transient run. */
 export type Measure = { time: number; name: string } & ({ node: string } | { source: string });
@@ -15,23 +21,34 @@ export type SpiceDeck = {
   sourceCurrents: Map<string, string>;
   /** For a transient deck, the measurements it prints. */
   measures: Measure[];
+  /** For an AC deck, the measurements it prints. */
+  acMeasures: AcMeasure[];
 };
 
 const value = (n: number) => n.toExponential(12);
 
 /**
  * Writes an ngspice deck that prints every node voltage and source current: at the DC operating point, or with
- * `transient`, at each of its sample times in a run from switch-on (`uic`), with the step capped at ours.
+ * a transient check, at each of its sample times in a run from switch-on (`uic`), with the step capped at ours.
+ * With an AC check, it drives the named source with `AC 1`, sweeps `.ac dec`, and prints the real and imaginary
+ * part of every node voltage at each sample frequency.
  * Node and element names are replaced with SPICE-safe ones, since ours contain `:` and `/`.
  * Our behavioural regulator becomes a B-source holding `min(V(gnd) + Vset, V(in) − dropout)` behind a 0 V
  * sense source, a current-controlled source drawing the output current from the input, and the quiescent current.
  * MOSFETs have their body tied to the source, as ours do.
  * @param circuit - Circuit in solver format.
  * @param title - First line of the deck.
- * @param transient - A transient run to measure instead of the operating point.
+ * @param check - A transient run or AC sweep to measure instead of the operating point.
  * @returns The deck and name mappings.
  */
-export const toSpice = (circuit: Circuit, title: string, transient?: TransientCheck): SpiceDeck => {
+export const toSpice = (
+  circuit: Circuit,
+  title: string,
+  check?: TransientCheck | AcCheck,
+): SpiceDeck => {
+  const transient = check && "stopTime" in check ? check : undefined;
+  const ac = check && "source" in check ? check : undefined;
+  const drive = (id: string) => (ac?.source === id ? " AC 1" : "");
   const nodes = new Map<string, string>([[circuit.ground, "0"]]);
   const node = (name: string) => {
     let spice = nodes.get(name);
@@ -63,11 +80,11 @@ export const toSpice = (circuit: Circuit, title: string, transient?: TransientCh
         lines.push(`L${name} ${a} ${b} ${value(element.inductance)}`);
         break;
       case "voltageSource":
-        lines.push(`V${name} ${a} ${b} DC ${value(element.voltage)}`);
+        lines.push(`V${name} ${a} ${b} DC ${value(element.voltage)}${drive(element.id)}`);
         sourceCurrents.set(element.id, `v${name}#branch`);
         break;
       case "currentSource":
-        lines.push(`I${name} ${a} ${b} DC ${value(element.current)}`);
+        lines.push(`I${name} ${a} ${b} DC ${value(element.current)}${drive(element.id)}`);
         break;
       case "diode": {
         const model = `dmod${name}`;
@@ -110,7 +127,25 @@ export const toSpice = (circuit: Circuit, title: string, transient?: TransientCh
   });
 
   const measures: Measure[] = [];
-  if (transient) {
+  const acMeasures: AcMeasure[] = [];
+  if (ac) {
+    ac.at.forEach((frequency, i) => {
+      for (const [ours, spice] of nodes) {
+        if (spice === "0") continue;
+        for (const part of ["re", "im"] as const)
+          acMeasures.push({ frequency, name: `f${i}_${spice}_${part}`, node: ours, part });
+      }
+    });
+    lines.push(
+      ".control",
+      `ac dec ${ac.pointsPerDecade} ${value(ac.startFrequency)} ${value(ac.stopFrequency)}`,
+    );
+    for (const m of acMeasures) {
+      const vector = `v${m.part === "re" ? "r" : "i"}(${nodes.get(m.node)})`;
+      lines.push(`meas ac ${m.name} find ${vector} at=${value(m.frequency)}`);
+    }
+    lines.push(".endc", ".end", "");
+  } else if (transient) {
     const step = value(transient.timeStep);
     transient.at.forEach((time, i) => {
       for (const [ours, spice] of nodes) {
@@ -131,7 +166,7 @@ export const toSpice = (circuit: Circuit, title: string, transient?: TransientCh
   } else {
     lines.push(".control", "op", "print all", ".endc", ".end", "");
   }
-  return { netlist: lines.join("\n"), nodes, sourceCurrents, measures };
+  return { netlist: lines.join("\n"), nodes, sourceCurrents, measures, acMeasures };
 };
 
 const assignment =

@@ -1,8 +1,8 @@
 import { parts, partsById } from "@echidna/library";
 import { describe, expect, it } from "vitest";
 
+import { seatPlacement, slotSwaps } from "./slots";
 import type { ProjectData } from "./model";
-import { slotSwaps } from "./slots";
 
 const project = (
   hostSpec: string,
@@ -52,5 +52,22 @@ describe("slotSwaps", () => {
       "arduino-uno-r4": false,
     });
     expect(swaps.find((s) => s.specId === "arduino-uno-r4")?.byPart.S1?.fits).toBe(false);
+  });
+});
+
+describe("seatPlacement", () => {
+  it("puts a seat at its offset from an unturned host, in metres", () => {
+    const at = seatPlacement({ x: 0.1, z: -0.05, rotation: 0 }, { x: 20, z: -45 });
+    expect(at.x).toBeCloseTo(0.12, 12);
+    expect(at.z).toBeCloseTo(-0.095, 12);
+    expect(at.rotation).toBe(0);
+  });
+
+  it("turns the offset and the module with the host", () => {
+    const at = seatPlacement({ x: 0, z: 0, rotation: 90 }, { x: 10, z: 0, rotation: 90 });
+    // Turned a quarter clockwise seen from above, +x becomes +z.
+    expect(at.x).toBeCloseTo(0, 12);
+    expect(at.z).toBeCloseTo(0.01, 12);
+    expect(at.rotation).toBe(180);
   });
 });

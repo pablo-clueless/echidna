@@ -522,34 +522,58 @@ const Terminal = () => (
 );
 
 /** A 2.54 mm pin header: a black plastic strip with a gold pin standing up through it for each pad. */
-/** How tall each desktop module stands, in millimetres, so a build reads at a glance. */
+/**
+ * How tall each module stands above what it sits on, in millimetres, at life size: a graphics card stands 112 mm
+ * proud of the board, a tower cooler 155 mm, and the display stands up in the open lid.
+ */
 const moduleHeights: Record<string, number> = {
   "module/motherboard": 1.6,
-  "module/cpu": 2,
-  "module/gpu": 8,
-  "module/memory": 6,
-  "module/storage": 1.5,
-  "module/cooler": 12,
-  "module/psu": 10,
+  "module/cpu": 4,
+  "module/gpu": 112,
+  "module/memory": 32,
+  "module/storage": 2.4,
+  "module/cooler": 155,
+  "module/aio": 50,
+  "module/psu": 86,
   "module/laptopBoard": 1.2,
-  "module/battery": 4,
-  "module/wifi": 1,
-  "module/display": 1.5,
-  "module/charger": 6,
+  "module/sodimm": 3.8,
+  "module/laptopCooler": 9,
+  "module/battery": 6,
+  "module/wifi": 2.4,
+  "module/display": 210,
+  "module/charger": 5,
 };
 
-/** A desktop module as a plain block the size of its outline. */
+/**
+ * What each module's block is made of, so a build reads at a glance: boards in solder mask, coolers in bare
+ * aluminium, the PSU in case steel, and the rest in black plastic.
+ */
+const moduleMaterials: Record<string, keyof typeof materials> = {
+  "module/motherboard": "mask",
+  "module/laptopBoard": "mask",
+  "module/storage": "mask",
+  "module/wifi": "mask",
+  "module/sodimm": "mask",
+  "module/cpu": "solder",
+  "module/cooler": "anodised",
+  "module/laptopCooler": "plating",
+  "module/psu": "caseSteel",
+  "module/gpu": "fallback",
+};
+
+/** A desktop or laptop module as a plain block the size of its outline. */
 const ModuleBlock = ({ footprintId }: { footprintId: string }) => {
   const courtyard = footprints[footprintId]?.courtyard ?? { w: 10, h: 10 };
   const height = moduleHeights[footprintId] ?? 4;
   return (
     <RoundedBox
       args={[courtyard.w - 1, height, courtyard.h - 1]}
-      radius={0.4}
+      radius={Math.min(0.4, height / 3)}
       smoothness={2}
       position={[0, height / 2, 0]}
-      material={materials.epoxy}
+      material={materials[moduleMaterials[footprintId] ?? "epoxy"]}
       castShadow
+      receiveShadow
     />
   );
 };

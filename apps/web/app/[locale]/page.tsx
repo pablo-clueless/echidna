@@ -1,6 +1,8 @@
 import { ArrowDownRight, Cpu, Drone, Laptop, PcCase, Smartphone, Watch } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
+import * as rootParams from "next/root-params";
+import { hasLocale } from "next-intl";
 import type { Metadata } from "next";
 
 import { AssemblyHero } from "@/components/home/assembly/AssemblyHero";
@@ -13,6 +15,7 @@ import { ArrowLink } from "@/components/home/ArrowLink";
 import { LineIcon } from "@/components/home/LineIcon";
 import { SwapDemo } from "@/components/home/SwapDemo";
 import { localeNames, routing } from "@/i18n/routing";
+import { shareMetadata, SITE_NAME } from "@/lib/site";
 import { CountUp } from "@/components/home/CountUp";
 import { Reveal } from "@/components/home/Reveal";
 import { InView } from "@/components/home/InView";
@@ -89,8 +92,14 @@ const SectionHead = ({ index, label, heading, lead }: SectionHeadProps) => (
 );
 
 export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await rootParams.locale();
+  if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations("Metadata");
-  return { title: { absolute: "Echidna" }, description: t("description") };
+  return {
+    title: { absolute: SITE_NAME },
+    description: t("description"),
+    ...shareMetadata({ locale, description: t("description"), imageAlt: t("imageAlt") }),
+  };
 };
 
 const HomePage = async () => {

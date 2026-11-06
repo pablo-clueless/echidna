@@ -8,6 +8,7 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
 import { PersistedStores } from "@/components/app/PersistedStores";
+import { shareMetadata, SITE_NAME, SITE_URL } from "@/lib/site";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeSync } from "@/components/app/ThemeSync";
 import { htmlLang, routing } from "@/i18n/routing";
@@ -21,10 +22,22 @@ type Props = {
 export const generateStaticParams = () => routing.locales.map((locale) => ({ locale }));
 
 export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await rootParams.locale();
+  if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations("Metadata");
   return {
-    title: { default: "Echidna", template: "%s · Echidna" },
+    metadataBase: new URL(SITE_URL),
+    applicationName: SITE_NAME,
+    title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
     description: t("description"),
+    icons: {
+      icon: [
+        { url: "/meta/favicon.ico", sizes: "any" },
+        { url: "/meta/favicon-160x160.png", type: "image/png", sizes: "160x160" },
+      ],
+      apple: { url: "/meta/favicon-160x160.png", sizes: "160x160" },
+    },
+    ...shareMetadata({ locale, description: t("description"), imageAlt: t("imageAlt") }),
   };
 };
 

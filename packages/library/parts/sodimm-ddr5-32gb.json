@@ -28,6 +28,6 @@
     }
   },
   "model": "module",
-  "footprintId": "module/memory",
+  "footprintId": "module/sodimm",
   "meshUrl": "generic/memory"
 }

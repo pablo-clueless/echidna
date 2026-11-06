@@ -66,7 +66,8 @@ export const CameraRig = ({ enabled, centre, radius, narrowRadius }: Props) => {
       enabled={enabled}
       dollyToCursor
       minDistance={0.008}
-      maxDistance={0.6}
+      // Room to stand back from the largest scene, a desktop case, as well as a small board.
+      maxDistance={Math.max(0.6, narrowRadius * 6)}
       maxPolarAngle={Math.PI}
       smoothTime={0.2}
     />

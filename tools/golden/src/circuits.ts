@@ -1,6 +1,6 @@
 import type { Circuit } from "@echidna/solver/types";
 
-import type { TransientCheck } from "./spice";
+import type { AcCheck, TransientCheck } from "./spice";
 
 /** Red 5 mm LED model from `packages/library/parts/led-5mm.json`. */
 const RED_LED = { saturationCurrent: 3.23e-19, emissionCoefficient: 2 } as const;
@@ -309,5 +309,106 @@ export const goldenTransient: { name: string; circuit: Circuit; check: Transient
       ],
     },
     check: { stopTime: 3e-2, timeStep: 2e-5, at: [1e-3, 1.4e-3, 2e-3, 5e-3, 3e-2] },
+  },
+];
+
+/** Golden AC circuits, each swept with one source driven and sampled at frequencies on the sweep. */
+export const goldenAc: { name: string; circuit: Circuit; check: AcCheck }[] = [
+  {
+    name: "RC low-pass",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 0 },
+        { id: "R1", kind: "resistor", nodes: ["in", "out"], resistance: 1000 },
+        { id: "C1", kind: "capacitor", nodes: ["out", "0"], capacitance: 159.154943e-9 },
+      ],
+    },
+    check: {
+      source: "V1",
+      startFrequency: 10,
+      stopFrequency: 1e5,
+      pointsPerDecade: 10,
+      at: [100, 1e3, 1e4],
+    },
+  },
+  {
+    name: "series RLC band-pass",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 0 },
+        { id: "L1", kind: "inductor", nodes: ["in", "a"], inductance: 10e-3 },
+        { id: "C1", kind: "capacitor", nodes: ["a", "out"], capacitance: 2.533e-6 },
+        { id: "R1", kind: "resistor", nodes: ["out", "0"], resistance: 50 },
+      ],
+    },
+    check: {
+      source: "V1",
+      startFrequency: 10,
+      stopFrequency: 1e5,
+      pointsPerDecade: 10,
+      at: [100, 1e3, 1e4],
+    },
+  },
+  {
+    name: "NPN common-emitter amplifier with bypassed emitter",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "VCC", kind: "voltageSource", nodes: ["vcc", "0"], voltage: 12 },
+        { id: "VIN", kind: "voltageSource", nodes: ["in", "0"], voltage: 0 },
+        { id: "CIN", kind: "capacitor", nodes: ["in", "b"], capacitance: 10e-6 },
+        { id: "R1", kind: "resistor", nodes: ["vcc", "b"], resistance: 47_000 },
+        { id: "R2", kind: "resistor", nodes: ["b", "0"], resistance: 10_000 },
+        { id: "RC", kind: "resistor", nodes: ["vcc", "c"], resistance: 4700 },
+        { id: "RE", kind: "resistor", nodes: ["e", "0"], resistance: 1000 },
+        { id: "CE", kind: "capacitor", nodes: ["e", "0"], capacitance: 100e-6 },
+        { id: "COUT", kind: "capacitor", nodes: ["c", "out"], capacitance: 10e-6 },
+        { id: "RL", kind: "resistor", nodes: ["out", "0"], resistance: 10_000 },
+        { id: "Q1", kind: "bjt", nodes: ["c", "b", "e"], ...NPN },
+      ],
+    },
+    check: {
+      source: "VIN",
+      startFrequency: 1,
+      stopFrequency: 1e5,
+      pointsPerDecade: 10,
+      at: [1, 10, 100, 1e3, 1e4],
+    },
+  },
+  {
+    name: "n-channel MOSFET common-source amplifier",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "VDD", kind: "voltageSource", nodes: ["vdd", "0"], voltage: 12 },
+        { id: "VIN", kind: "voltageSource", nodes: ["in", "0"], voltage: 0 },
+        { id: "CIN", kind: "capacitor", nodes: ["in", "g"], capacitance: 1e-6 },
+        { id: "R1", kind: "resistor", nodes: ["vdd", "g"], resistance: 1e6 },
+        { id: "R2", kind: "resistor", nodes: ["g", "0"], resistance: 330_000 },
+        { id: "RD", kind: "resistor", nodes: ["vdd", "d"], resistance: 100 },
+        { id: "M1", kind: "mosfet", nodes: ["d", "g", "0"], ...NMOS },
+      ],
+    },
+    check: {
+      source: "VIN",
+      startFrequency: 0.1,
+      stopFrequency: 1e4,
+      pointsPerDecade: 10,
+      at: [0.1, 1, 10, 1e3],
+    },
+  },
+  {
+    name: "3.3 V regulator rejecting ripple on its input",
+    circuit: {
+      ground: "0",
+      elements: [
+        { id: "V1", kind: "voltageSource", nodes: ["in", "0"], voltage: 5 },
+        { id: "U1", kind: "linearRegulator", nodes: ["in", "out", "0"], ...LDO_3V3 },
+        { id: "R1", kind: "resistor", nodes: ["out", "0"], resistance: 330 },
+      ],
+    },
+    check: { source: "V1", startFrequency: 10, stopFrequency: 1e4, pointsPerDecade: 5, at: [100] },
   },
 ];

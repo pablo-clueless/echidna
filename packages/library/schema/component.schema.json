@@ -254,6 +254,22 @@
               },
               "thermalBudget": {
                 "$ref": "#/$defs/specValue"
+              },
+              "seat": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x", "z"],
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "z": {
+                    "type": "number"
+                  },
+                  "rotation": {
+                    "enum": [0, 90, 180, 270]
+                  }
+                }
               }
             }
           }

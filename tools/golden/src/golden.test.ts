@@ -1,11 +1,11 @@
-import { solveNow, solveTransientNow } from "@echidna/solver/solve";
+import { solveAcNow, solveNow, solveTransientNow } from "@echidna/solver/solve";
 import { beforeAll, describe, expect, it } from "vitest";
 import { initSync } from "@echidna/solver/wasm";
 import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 
+import { goldenAc, goldenDc, goldenTransient } from "./circuits";
 import { ngspiceAvailable, runNgspice } from "./ngspice";
-import { goldenDc, goldenTransient } from "./circuits";
 import { parsePrintAll, toSpice } from "./spice";
 
 /** HANDOFF §5: DC results must match ngspice within 0.1 %. */
@@ -133,6 +133,59 @@ describe.skipIf(!available)("golden transient circuits against ngspice", () => {
         TRANSIENT_TOLERANCE * Math.max(Math.abs(expected), floor)
       )
         mismatches.push(`${label} at ${m.time} s: ${actual} vs ngspice ${expected}`);
+    }
+    expect(mismatches, deck.netlist).toEqual([]);
+  });
+});
+
+/** AC results are held to the transient tolerance, 1 % of each phasor's size, for both its parts. */
+const AC_TOLERANCE = 1e-2;
+/** Below this, a node carries effectively no signal and is compared absolutely. */
+const AC_FLOOR = 1e-6;
+
+const runAc = ({ circuit, check }: (typeof goldenAc)[number]) => {
+  const outcome = solveAcNow(circuit, check);
+  if (!outcome.ok) throw new Error(`our solver failed: ${outcome.error.code}`);
+  const { solution } = outcome;
+  const sample = (node: string, frequency: number) => {
+    const index = solution.frequencies.findIndex((f) => Math.abs(f / frequency - 1) < 1e-9);
+    return index < 0 ? undefined : solution.nodeVoltages[node]?.[index];
+  };
+  return { solution, sample };
+};
+
+describe("golden AC circuits in our solver", () => {
+  it.each(goldenAc)("$name sweeps every sample frequency", (golden) => {
+    const { sample } = runAc(golden);
+    for (const f of golden.check.at) expect(sample("in", f) ?? sample("out", f)).toBeDefined();
+  });
+
+  it("is 3 dB down at the RC filter's corner", () => {
+    const golden = goldenAc.find((g) => g.name === "RC low-pass");
+    if (!golden) throw new Error("missing circuit");
+    const out = runAc(golden).sample("out", 1e3);
+    expect(out && Math.hypot(out.re, out.im)).toBeCloseTo(Math.SQRT1_2, 5);
+  });
+});
+
+describe.skipIf(!available)("golden AC circuits against ngspice", () => {
+  it.each(goldenAc)("$name", (golden) => {
+    const { sample } = runAc(golden);
+    const deck = toSpice(golden.circuit, golden.name, golden.check);
+    const reference = parsePrintAll(runNgspice(deck.netlist));
+
+    const mismatches: string[] = [];
+    for (const m of deck.acMeasures) {
+      const expected = reference.get(m.name);
+      const phasor = sample(m.node, m.frequency);
+      const label = `V(${m.node}).${m.part} at ${m.frequency} Hz`;
+      if (expected === undefined || !phasor) {
+        mismatches.push(`${label}: missing`);
+        continue;
+      }
+      const size = Math.max(Math.hypot(phasor.re, phasor.im), AC_FLOOR);
+      if (Math.abs(phasor[m.part] - expected) > AC_TOLERANCE * size)
+        mismatches.push(`${label}: ${phasor[m.part]} vs ngspice ${expected}`);
     }
     expect(mismatches, deck.netlist).toEqual([]);
   });
