@@ -1,6 +1,7 @@
 {
   "Metadata": {
-    "description": "Compón placas de circuito y dispositivos en 3D, simúlalos y comprueba al instante si cada componente funcionará."
+    "description": "Compón placas de circuito y dispositivos en 3D, simúlalos y comprueba al instante si cada componente funcionará.",
+    "imageAlt": "La página de inicio de Echidna: «Comprueba que funciona antes de construirlo.» junto a una placa de desarrollo en 3D con todas las comprobaciones superadas."
   },
   "Home": {
     "openStudio": "Abrir el estudio",
@@ -220,7 +221,6 @@
     },
     "inspector": {
       "board": {
-        "title": "Placa",
         "width": "Ancho",
         "depth": "Fondo",
         "outOfRange": "Introduce un tamaño de {min} a {max} mm."
@@ -459,6 +459,19 @@
       "buildEmpty": "Conecta una fuente y un disipador para comprobar la alimentación y la refrigeración.",
       "batteryRuntime": "Unas {runtime} con batería en uso ligero ({energy} a {draw}).",
       "buildEmptyLaptop": "Conecta un cargador y un disipador para comprobar la alimentación y la refrigeración."
+    },
+    "foundation": {
+      "names": {
+        "pcb": "Placa de circuito",
+        "desktop": "Caja de sobremesa",
+        "laptop": "Chasis de portátil"
+      },
+      "fixedSize": "{width} × {depth} mm, fijado por el chasis",
+      "refused": {
+        "pcb": "Va en una placa de circuito, no en este chasis. Vacía el proyecto para empezar un circuito.",
+        "desktop": "Va en una caja de sobremesa. Empieza un montaje de sobremesa para usarlo.",
+        "laptop": "Va en un chasis de portátil. Empieza un montaje de portátil para usarlo."
+      }
     }
   },
   "Parts": {

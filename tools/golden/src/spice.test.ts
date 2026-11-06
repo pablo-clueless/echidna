@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { parsePrintAll, toSpice } from "./spice";
-import { goldenDc } from "./circuits";
+import { goldenAc, goldenDc } from "./circuits";
 
 describe("toSpice", () => {
   it("renames nodes to SPICE-safe names with ground as 0", () => {
@@ -37,6 +37,28 @@ describe("toSpice", () => {
     for (const { name, circuit } of goldenDc) {
       expect(toSpice(circuit, name).netlist).toMatch(/\.control\nop\nprint all\n\.endc\n\.end\n$/);
     }
+  });
+});
+
+describe("toSpice for an AC sweep", () => {
+  it("drives only the chosen source and measures both parts of each node at each frequency", () => {
+    const golden = goldenAc.find((g) => g.name === "RC low-pass");
+    if (!golden) throw new Error("missing circuit");
+    const deck = toSpice(golden.circuit, golden.name, golden.check);
+    expect(deck.netlist).toMatch(/^V0 n1 0 DC 0\.0+e\+0 AC 1$/m);
+    expect(deck.netlist).toMatch(/^ac dec 10 1\.0+e\+1 1\.0+e\+5$/m);
+    expect(deck.netlist).toMatch(/^meas ac f1_n2_re find vr\(n2\) at=1\.0+e\+3$/m);
+    expect(deck.netlist).toMatch(/^meas ac f1_n2_im find vi\(n2\) at=1\.0+e\+3$/m);
+    expect(deck.acMeasures).toHaveLength(golden.check.at.length * 2 * 2);
+    expect(deck.netlist).toMatch(/\.endc\n\.end\n$/);
+  });
+
+  it("leaves the other sources without an AC drive", () => {
+    const golden = goldenAc.find((g) => g.name.startsWith("NPN"));
+    if (!golden) throw new Error("missing circuit");
+    const { netlist } = toSpice(golden.circuit, golden.name, golden.check);
+    expect(netlist.match(/ AC 1$/gm)).toHaveLength(1);
+    expect(netlist).toMatch(/^V1 \S+ 0 DC \S+ AC 1$/m);
   });
 });
 

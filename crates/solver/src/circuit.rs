@@ -192,6 +192,52 @@ pub struct TransientSolution {
     pub iterations: usize,
 }
 
+/// Settings for an AC small-signal analysis: a logarithmic sweep, SPICE `.ac dec`, with one source driven.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AcOptions {
+    /// ID of the voltage or current source that drives the circuit, with an amplitude of 1 V or 1 A at zero phase,
+    /// as SPICE's `AC 1`. Every other source is held at its DC value, so it contributes no signal.
+    pub source: String,
+    /// Lowest frequency in the sweep, in hertz.
+    pub start_frequency: f64,
+    /// Highest frequency in the sweep, in hertz.
+    pub stop_frequency: f64,
+    /// Frequencies per decade, spaced evenly on a log scale.
+    pub points_per_decade: usize,
+}
+
+/// A complex amplitude: a signal's size and phase at one frequency.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct Phasor {
+    pub re: f64,
+    pub im: f64,
+}
+
+impl Phasor {
+    /// Size of the signal: volts or amperes per volt or ampere of drive.
+    pub fn magnitude(self) -> f64 {
+        self.re.hypot(self.im)
+    }
+
+    /// Phase relative to the drive, in degrees.
+    pub fn phase_degrees(self) -> f64 {
+        self.im.atan2(self.re).to_degrees()
+    }
+}
+
+/// Result of an AC small-signal analysis. Each series is sampled at `frequencies`. Non-linear parts are linearised
+/// at the DC operating point, which is included.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AcSolution {
+    pub frequencies: Vec<f64>,
+    pub node_voltages: std::collections::BTreeMap<String, Vec<Phasor>>,
+    /// Current into the first pin of each voltage source and inductor, as `DcSolution::branch_currents` gives it.
+    pub branch_currents: std::collections::BTreeMap<String, Vec<Phasor>>,
+    pub operating_point: DcSolution,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, thiserror::Error)]
 #[serde(
     tag = "code",

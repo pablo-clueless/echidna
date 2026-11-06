@@ -94,6 +94,12 @@ export type HostSlot = {
   maxInput?: SpecValue;
   /** Most heat a part in this slot may give off. */
   thermalBudget?: SpecValue;
+  /**
+   * Where a module plugged into this slot sits, in millimetres from the host board's centre, x across it and z
+   * towards the viewer, turned by `rotation` degrees. A slot without one, such as a dev board's header, leaves the
+   * part where it is.
+   */
+  seat?: { x: number; z: number; rotation?: 0 | 90 | 180 | 270 };
 };
 
 /** What makes a part a host board: the rails it offers and the slots parts plug into. */

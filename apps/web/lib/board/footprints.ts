@@ -87,11 +87,11 @@ const pinHeader = (pins: string[], label: string): Footprint => {
 };
 
 /**
- * A desktop module's outline, drawn smaller than life so a whole build fits on the board. Modules plug into slots
- * rather than being soldered, so it has no pads.
+ * A desktop or laptop module's outline at life size: what it covers of the chassis floor or the board it plugs into.
+ * Modules plug into slots rather than being soldered, so it has no pads.
  * @param w - Width in millimetres.
  * @param h - Depth in millimetres.
- * @param label - Printed in the middle.
+ * @param label - Printed in the middle, scaled to the outline.
  * @returns The footprint.
  */
 const moduleOutline = (w: number, h: number, label: string): Footprint => ({
@@ -99,24 +99,31 @@ const moduleOutline = (w: number, h: number, label: string): Footprint => ({
   courtyard: { w: w + 1, h: h + 1 },
   silk: [
     { kind: "rect", x: 0, z: 0, w, h },
-    { kind: "text", x: 0, z: 0, text: label, size: 2 },
+    { kind: "text", x: 0, z: 0, text: label, size: Math.min(8, Math.max(2, Math.min(w, h) / 4)) },
   ],
-  ref: { x: 0, z: -h / 2 - 1.6 },
+  ref: { x: 0, z: -h / 2 - 2.5 },
 });
 
 export const footprints: Record<string, Footprint> = {
-  "module/motherboard": moduleOutline(40, 32, "ATX"),
-  "module/cpu": moduleOutline(12, 12, "CPU"),
-  "module/gpu": moduleOutline(32, 12, "GPU"),
-  "module/memory": moduleOutline(24, 5, "RAM"),
-  "module/storage": moduleOutline(18, 6, "M.2"),
-  "module/cooler": moduleOutline(14, 14, "COOLER"),
-  "module/psu": moduleOutline(22, 16, "PSU"),
-  "module/laptopBoard": moduleOutline(36, 22, "LAPTOP"),
-  "module/battery": moduleOutline(30, 10, "BATT"),
-  "module/wifi": moduleOutline(6, 8, "WI-FI"),
-  "module/display": moduleOutline(36, 4, "eDP"),
-  "module/charger": moduleOutline(10, 8, "DC IN"),
+  // Life-size outlines, from the form-factor standards: ATX is 305 × 244 mm, a DIMM 133 mm long, M.2 2280 is
+  // 80 × 22 mm and 2230 is 30 × 22 mm, an ATX PSU 150 × 140 mm. A graphics card stands on edge, so it covers its
+  // length by its two-slot thickness.
+  "module/motherboard": moduleOutline(305, 244, "ATX"),
+  "module/cpu": moduleOutline(40, 40, "CPU"),
+  "module/gpu": moduleOutline(267, 40, "GPU"),
+  "module/memory": moduleOutline(133, 16, "DIMM"),
+  "module/storage": moduleOutline(80, 22, "M.2"),
+  "module/cooler": moduleOutline(125, 110, "COOLER"),
+  "module/aio": moduleOutline(72, 72, "AIO"),
+  "module/psu": moduleOutline(150, 140, "PSU"),
+  "module/laptopBoard": moduleOutline(290, 120, "MAINBOARD"),
+  "module/sodimm": moduleOutline(70, 30, "SO-DIMM"),
+  "module/laptopCooler": moduleOutline(200, 70, "COOLER"),
+  "module/battery": moduleOutline(250, 80, "BATTERY"),
+  "module/wifi": moduleOutline(30, 22, "WI-FI"),
+  // The panel stands in the open lid, so it covers only its thickness along the hinge.
+  "module/display": moduleOutline(320, 6, "eDP"),
+  "module/charger": moduleOutline(14, 9, "DC IN"),
   "header/raspberry-pi": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio23", "gpio24"], "RPI"),
   "header/esp32-devkitc": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio4", "gpio5"], "ESP32"),
   "header/arduino-uno-r4": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "d2", "d3"], "UNO R4"),

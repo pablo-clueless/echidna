@@ -3,13 +3,14 @@ import { readFileSync } from "node:fs";
 
 import {
   settleTime,
+  solveAcNow,
   solveNow,
   solveSwitchOnNow,
   solveTransientNow,
   SWITCH_ON_STEPS,
 } from "./solve";
+import { type Circuit, decibels, phaseDegrees } from "./types";
 import { initSync, solverVersion } from "../wasm/solver.js";
-import type { Circuit } from "./types";
 
 beforeAll(() => {
   initSync({ module: readFileSync(new URL("../wasm/solver_bg.wasm", import.meta.url)) });
@@ -120,5 +121,43 @@ describe("switch-on runs", () => {
     const run = solveTransientNow(rc(1e-6), { stopTime: 1e-2, timeStep: 1e-5 });
     if (!dc.ok || !run.ok) throw new Error("no solve");
     expect(settleTime(run.solution, dc.solution)).toBeCloseTo(1e-3 * Math.log(500), 4);
+  });
+});
+
+describe("AC sweep", () => {
+  const lowPass: Circuit = {
+    ground: "gnd",
+    elements: [
+      { id: "V1", kind: "voltageSource", nodes: ["in", "gnd"], voltage: 0 },
+      { id: "R1", kind: "resistor", nodes: ["in", "out"], resistance: 1000 },
+      { id: "C1", kind: "capacitor", nodes: ["out", "gnd"], capacitance: 1 / (2 * Math.PI * 1e6) },
+    ],
+  };
+
+  it("is 3 dB down and 45° behind at an RC filter's corner", () => {
+    const outcome = solveAcNow(lowPass, {
+      source: "V1",
+      startFrequency: 100,
+      stopFrequency: 1e4,
+      pointsPerDecade: 10,
+    });
+    if (!outcome.ok) throw new Error(outcome.error.code);
+    const { frequencies, nodeVoltages } = outcome.solution;
+    const corner = frequencies.findIndex((f) => Math.abs(f / 1000 - 1) < 1e-9);
+    const out = nodeVoltages.out?.[corner];
+    if (!out) throw new Error("no sample at 1 kHz");
+    expect(decibels(out)).toBeCloseTo(-3.0103, 3);
+    expect(phaseDegrees(out)).toBeCloseTo(-45, 6);
+  });
+
+  it("rejects a drive that is not a source", () => {
+    const outcome = solveAcNow(lowPass, {
+      source: "R1",
+      startFrequency: 1,
+      stopFrequency: 10,
+      pointsPerDecade: 1,
+    });
+    expect(outcome.ok).toBe(false);
+    if (!outcome.ok) expect(outcome.error.code).toBe("invalidAnalysis");
   });
 });

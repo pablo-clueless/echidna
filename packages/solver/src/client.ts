@@ -1,10 +1,15 @@
-import type { Circuit, SolveOutcome, SwitchOnOutcome } from "./types";
+import type { AcOptions, AcOutcome, Circuit, SolveOutcome, SwitchOnOutcome } from "./types";
 
-type Payload = { kind: "dc"; circuits: Circuit[] } | { kind: "switchOn"; circuit: Circuit };
+type Payload =
+  | { kind: "dc"; circuits: Circuit[] }
+  | { kind: "switchOn"; circuit: Circuit }
+  | { kind: "ac"; circuit: Circuit; options: AcOptions };
 
 export type SolveRequest = { id: number } & Payload;
 export type SolveResponse = { id: number } & (
-  { kind: "dc"; outcomes: SolveOutcome[] } | { kind: "switchOn"; outcome: SwitchOnOutcome }
+  | { kind: "dc"; outcomes: SolveOutcome[] }
+  | { kind: "switchOn"; outcome: SwitchOnOutcome }
+  | { kind: "ac"; outcome: AcOutcome }
 );
 
 export type SolverClient = {
@@ -14,6 +19,8 @@ export type SolverClient = {
   solveBatch: (circuits: Circuit[]) => Promise<SolveOutcome[] | null>;
   /** Runs the live circuit from switch-on. Resolves `null` if a newer `switchOn` call superseded this one. */
   switchOn: (circuit: Circuit) => Promise<SwitchOnOutcome | null>;
+  /** Sweeps the live circuit's frequency response. Resolves `null` if a newer `ac` call superseded this one. */
+  ac: (circuit: Circuit, options: AcOptions) => Promise<AcOutcome | null>;
   dispose: () => void;
 };
 
@@ -25,7 +32,7 @@ export type SolverClient = {
 export const createSolverClient = (): SolverClient => {
   const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
   const pending = new Map<number, (response: SolveResponse | null) => void>();
-  const live = { dc: new Set<number>(), switchOn: new Set<number>() };
+  const live = { dc: new Set<number>(), switchOn: new Set<number>(), ac: new Set<number>() };
   let nextId = 0;
 
   worker.addEventListener("message", (event: MessageEvent<SolveResponse>) => {
@@ -34,6 +41,7 @@ export const createSolverClient = (): SolverClient => {
     pending.delete(id);
     live.dc.delete(id);
     live.switchOn.delete(id);
+    live.ac.delete(id);
   });
 
   const send = (payload: Payload) => {
@@ -68,12 +76,17 @@ export const createSolverClient = (): SolverClient => {
       const response = await latest(live.switchOn, { kind: "switchOn", circuit });
       return response?.kind === "switchOn" ? response.outcome : null;
     },
+    ac: async (circuit, options) => {
+      const response = await latest(live.ac, { kind: "ac", circuit, options });
+      return response?.kind === "ac" ? response.outcome : null;
+    },
     dispose: () => {
       worker.terminate();
       for (const resolve of pending.values()) resolve(null);
       pending.clear();
       live.dc.clear();
       live.switchOn.clear();
+      live.ac.clear();
     },
   };
 };

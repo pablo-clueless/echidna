@@ -18,6 +18,7 @@ import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { applyMaskColour } from "./viewport/materials";
 import { CurrentFlow } from "./viewport/CurrentFlow";
 import { useProjectStore } from "@/stores/project";
+import { CHASSIS } from "@/lib/project/foundation";
 import { useLayoutStore } from "@/stores/layout";
 import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
@@ -25,6 +26,8 @@ import { CameraRig } from "./viewport/CameraRig";
 import { TraceGlow } from "./viewport/TraceGlow";
 import { PartMesh } from "./viewport/PartMesh";
 import { HeatGlow } from "./viewport/HeatGlow";
+import { seatOf } from "@/lib/project/slots";
+import { Chassis } from "./viewport/Chassis";
 import { Traces } from "./viewport/Traces";
 import { Board } from "./viewport/Board";
 
@@ -152,6 +155,8 @@ export const ViewportCanvas = () => {
   const components = useProjectStore((s) => s.components);
   const board = useProjectStore((s) => s.board);
   const boardSize = useProjectStore((s) => s.boardSize);
+  const foundation = useProjectStore((s) => s.foundation);
+  const onPcb = foundation === "pcb";
   const wires = useProjectStore((s) => s.wires);
   const projectName = useProjectStore((s) => s.name);
   const maskColour = useLayoutStore((s) => s.maskColour);
@@ -204,7 +209,8 @@ export const ViewportCanvas = () => {
     () => projectDrills({ components: placedParts, board }),
     [placedParts, board],
   );
-  const showCurrent = overlays.includes("current");
+  // A chassis has no copper for current to flow in.
+  const showCurrent = onPcb && overlays.includes("current");
   const showHeat = overlays.includes("heat") && settledPower !== undefined;
   // Follows the switch-on playhead like the LEDs do, so scrubbing shows current building up in the copper.
   const trackFlow = useMemo(
@@ -239,8 +245,11 @@ export const ViewportCanvas = () => {
     if (e.button !== 0 || e.nativeEvent.defaultPrevented) return;
     e.stopPropagation();
     select({ kind: "component", id });
-    const at = board[id];
-    if (at) setDragging({ id, dx: at.x - e.point.x, dz: at.z - e.point.z, from: board });
+    // A module seated in a slot is held by its host, so dragging it moves the host and everything seated in it.
+    const { components: parts, slots } = useProjectStore.getState();
+    const held = seatOf({ components: parts, slots }, partsById, id)?.hostId ?? id;
+    const at = board[held];
+    if (at) setDragging({ id: held, dx: at.x - e.point.x, dz: at.z - e.point.z, from: board });
   };
 
   const onPlaneMove = (e: ThreeEvent<PointerEvent>) => {
@@ -253,8 +262,12 @@ export const ViewportCanvas = () => {
     placeOnBoard(dragging.id, x, z);
   };
 
-  /** Half the board's diagonal, in metres: what the camera frames and the key light's shadows cover. */
-  const halfDiagonal = (Math.hypot(boardSize.width, boardSize.depth) / 2) * MM;
+  /**
+   * Half the board's diagonal, in metres: what the camera frames and the key light's shadows cover. A chassis counts
+   * its tallest part too, so the open lid or a tower cooler stays in view.
+   */
+  const headroom = foundation === "pcb" ? 0 : CHASSIS[foundation].headroom;
+  const halfDiagonal = (Math.hypot(boardSize.width, boardSize.depth, headroom) / 2) * MM;
 
   return (
     <Canvas
@@ -273,17 +286,27 @@ export const ViewportCanvas = () => {
       <DevHandle />
 
       <group scale={MM}>
-        <Board
-          {...boardSize}
-          thickness={BOARD.thickness}
-          drills={drills}
-          legend={legend}
-          fontFamily={fontFamily}
-        />
-        <Traces routing={copper.routing} thickness={BOARD.thickness} />
-        <TraceGlow routing={copper.routing} thickness={BOARD.thickness} />
-        {trackFlow && (
-          <CurrentFlow routing={copper.routing} thickness={BOARD.thickness} currents={trackFlow} />
+        {foundation === "pcb" ? (
+          <>
+            <Board
+              {...boardSize}
+              thickness={BOARD.thickness}
+              drills={drills}
+              legend={legend}
+              fontFamily={fontFamily}
+            />
+            <Traces routing={copper.routing} thickness={BOARD.thickness} />
+            <TraceGlow routing={copper.routing} thickness={BOARD.thickness} />
+            {trackFlow && (
+              <CurrentFlow
+                routing={copper.routing}
+                thickness={BOARD.thickness}
+                currents={trackFlow}
+              />
+            )}
+          </>
+        ) : (
+          <Chassis foundation={foundation} thickness={BOARD.thickness} />
         )}
       </group>
 
@@ -378,7 +401,7 @@ export const ViewportCanvas = () => {
       </AboveBoardOnly>
       <CameraRig
         enabled={!dragging}
-        centre={[0, TOP, 0]}
+        centre={[0, TOP + (headroom / 2) * MM, 0]}
         radius={halfDiagonal * FRAME_RADIUS}
         narrowRadius={halfDiagonal * NARROW_FRAME_RADIUS}
       />

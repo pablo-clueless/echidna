@@ -1,14 +1,16 @@
-//! Modified Nodal Analysis circuit solver: DC operating point and transient analysis, with AC to follow.
+//! Modified Nodal Analysis circuit solver: DC operating point, transient and AC small-signal analysis.
 
+mod ac;
 mod circuit;
 mod dc;
 mod devices;
 mod matrix;
 mod transient;
 
+pub use ac::{MAX_AC_POINTS, solve_ac};
 pub use circuit::{
-    BjtPolarity, Channel, Circuit, DcSolution, Element, ElementKind, SolveError, THERMAL_VOLTAGE,
-    TransientOptions, TransientSolution,
+    AcOptions, AcSolution, BjtPolarity, Channel, Circuit, DcSolution, Element, ElementKind, Phasor,
+    SolveError, THERMAL_VOLTAGE, TransientOptions, TransientSolution,
 };
 pub use dc::solve_dc;
 pub use transient::{MAX_TIME_STEPS, solve_transient};

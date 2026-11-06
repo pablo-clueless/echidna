@@ -49,6 +49,7 @@ export const regulatorExample = (): ProjectData => ({
     R1: { x: 0.01, z: 0, rotation: 0 },
     D1: { x: 0.03, z: 0, rotation: 0 },
   },
+  foundation: "pcb",
   boardSize: { width: 100, depth: 55 },
   ambientTemperature: DEFAULT_AMBIENT,
   slots: {},

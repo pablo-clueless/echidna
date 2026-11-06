@@ -13,7 +13,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Separate fill, label and text tokens for each status colour, so every status pairing meets WCAG AA in both themes.
 - `@echidna/core`: shared types for specs with provenance, netlists, layout (devices, boards, layer stacks, slots and rails), rule violations and projects.
 - `echidna-solver` and `echidna-solver-wasm` crate stubs.
-- `echidna-api` service stub with a `/health` endpoint.
 - README.
 - `@echidna/web`: Next.js 16 App Router app with localised routes for English, French, Spanish, Chinese, Japanese and Russian, falling back to English for missing strings.
 - Compact language menu and a sun / moon theme toggle, built with shadcn/ui. The theme follows the system until toggled, is remembered per user and applies before first paint.
@@ -72,6 +71,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Laptops: an ultrabook and a gaming laptop to start from the empty schematic. Their boards have the processors (and, on the ultrabook, the memory) soldered on, and slots for SO-DIMM memory, an M.2 SSD, an M.2 E-key Wi-Fi card, a 3- or 4-cell battery, an eDP display, a cooler and a USB-C or barrel charger. 22 laptop parts, each value with provenance.
 - Laptop checks: the charger's output against the laptop's full-load draw (warns from 100 %, as the battery makes up the difference for a while, and fails above 150 %), and the cooler against the heat of the soldered-on processors. The board's inspector estimates time on battery in light use from the battery's energy and each part's light-use draw. Swaps only offer parts made for the same kind of device, so a desktop PSU is never offered for a laptop.
 - Dev boards and sensors draw as boxed schematic symbols with a lead per pin, and as pin headers on the board.
+- Every project is built on the right foundation. Circuits, sensors and dev boards go on a bare PCB; a desktop build goes in a desktop case and a laptop build in a laptop chassis, with no copper, drill holes, fiducials or board legend. The first part into an empty project sets the foundation, and the library then greys out parts that belong elsewhere and says why, such as "Goes in a laptop chassis. Start a laptop build to use it." A chassis's size is fixed, and saved builds move off the PCB they were on.
+- Desktop and laptop builds at life size: an ATX board on the tray of a mid-tower laid on its side, with the PSU in the shroud below, and a laptop's mainboard in its bottom shell with the battery under the palm rest and the display in the open lid. Each module sits in its slot's seat on the board (`seat` in a host slot's spec), moves with the board when it is dragged, and is drawn in a material that suits it.
+- AC small-signal analysis (`solve_ac` / `solveAc`): a SPICE-style `.ac dec` sweep with one source driven at 1 V or 1 A, linearising diodes, transistors and regulators at the DC operating point. Available from the solver worker as `ac`, with golden RC, RLC, BJT and MOSFET amplifier and regulator circuits checked against ngspice in CI.
+- `GET /api/v1/healthz`, a Next.js route handler reporting the app as healthy, uncached.
+- Link previews and icons: every page has a canonical URL, language alternates, Open Graph and X (Twitter) cards with the home page hero as the image (alt text in each language), and the Echidna favicon. The site URL defaults to `https://echidna-one.vercel.app` and can be set with `NEXT_PUBLIC_SITE_URL`.
 
 ### Changed
 
@@ -92,3 +96,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - New parts land on the board where their footprint clears every placed part, the board edge and the mounting holes, instead of on a fixed grid.
 - Readouts show leftover leakage below a picoamp as zero, and unitless values such as current gain without an SI prefix.
 - Token font stacks now read `--font-*` variables first, so the app can supply self-hosted fonts.
+
+### Removed
+
+- The separate Rust / axum API service (`services/api`, `echidna-api`). The API is Next.js route handlers in the web app, so Echidna deploys as one unit.

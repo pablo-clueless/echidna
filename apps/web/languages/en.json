@@ -1,6 +1,7 @@
 {
   "Metadata": {
-    "description": "Compose circuit boards and devices in 3D, simulate them and see instantly whether every component will work."
+    "description": "Compose circuit boards and devices in 3D, simulate them and see instantly whether every component will work.",
+    "imageAlt": "The Echidna home page: “Know it works before you build it.” beside a 3D development board with all checks passed."
   },
   "Home": {
     "openStudio": "Open the studio",
@@ -220,7 +221,6 @@
     },
     "inspector": {
       "board": {
-        "title": "Board",
         "width": "Width",
         "depth": "Depth",
         "outOfRange": "Enter a size from {min} to {max} mm."
@@ -459,6 +459,19 @@
       "buildEmpty": "Plug in a PSU and a cooler to check power and cooling.",
       "batteryRuntime": "About {runtime} on battery in light use ({energy} at {draw}).",
       "buildEmptyLaptop": "Plug in a charger and a cooler to check power and cooling."
+    },
+    "foundation": {
+      "names": {
+        "pcb": "Circuit board",
+        "desktop": "Desktop case",
+        "laptop": "Laptop chassis"
+      },
+      "fixedSize": "{width} × {depth} mm, set by the chassis",
+      "refused": {
+        "pcb": "Goes on a circuit board, not in this chassis. Clear the project to start a circuit.",
+        "desktop": "Goes in a desktop case. Start a desktop build to use it.",
+        "laptop": "Goes in a laptop chassis. Start a laptop build to use it."
+      }
     }
   },
   "Parts": {

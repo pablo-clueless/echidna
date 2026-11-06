@@ -7,6 +7,8 @@ import {
   withVariant,
 } from "@echidna/core";
 
+import type { Foundation } from "./foundation";
+
 export type Rotation = 0 | 90 | 180 | 270;
 
 /** Schematic placement in grid units. */
@@ -28,6 +30,8 @@ export type SlotPlacement = { hostId: string; slotId: string; railId?: string; w
 
 export type ProjectData = {
   name: string;
+  /** What the parts are built on: a bare PCB, or a desktop or laptop chassis. */
+  foundation: Foundation;
   components: NetlistComponent[];
   wires: Wire[];
   schematic: Record<string, SchematicPlacement>;

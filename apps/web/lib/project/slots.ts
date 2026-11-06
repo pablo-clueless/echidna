@@ -1,7 +1,7 @@
 import { checkModuleFit, checkSlotFit, type SlotFit } from "@echidna/rules";
 import type { ComponentSpec, HostSlot, PinRef } from "@echidna/core";
 
-import type { ProjectData } from "./model";
+import type { BoardPlacement, ProjectData, Rotation } from "./model";
 
 type Project = Pick<ProjectData, "components" | "slots">;
 
@@ -247,4 +247,44 @@ export const slotSwaps = (
       }
       return { specId: c.id, fits: Object.values(byPart).every((f) => f.fits), byPart };
     });
+};
+
+/**
+ * Where a module sits once seated in a host's slot: the slot's seat, turned and moved with the host board.
+ * Placements are in metres, as the project stores them; seats are in millimetres.
+ * @param host - The host board's placement.
+ * @param seat - The slot's seat on the host.
+ * @returns The module's placement.
+ */
+export const seatPlacement = (
+  host: BoardPlacement,
+  seat: NonNullable<HostSlot["seat"]>,
+): BoardPlacement => {
+  // Placements turn clockwise seen from above, as the 3D view draws them.
+  const turn = (host.rotation * Math.PI) / 180;
+  const [x, z] = [seat.x / 1000, seat.z / 1000];
+  return {
+    x: host.x + x * Math.cos(turn) - z * Math.sin(turn),
+    z: host.z + x * Math.sin(turn) + z * Math.cos(turn),
+    rotation: ((host.rotation + (seat.rotation ?? 0)) % 360) as Rotation,
+  };
+};
+
+/**
+ * The seat of the slot a part is plugged into, if that slot has one.
+ * @param project - Parts and slot placements.
+ * @param specs - Part specs by ID.
+ * @param partId - The plugged-in part.
+ * @returns The host's ID and the seat, or `undefined` when the part is not seated.
+ */
+export const seatOf = (
+  project: Project,
+  specs: ReadonlyMap<string, ComponentSpec>,
+  partId: string,
+): { hostId: string; seat: NonNullable<HostSlot["seat"]> } | undefined => {
+  const placed = project.slots[partId];
+  if (!placed) return undefined;
+  const host = specs.get(project.components.find((c) => c.id === placed.hostId)?.specId ?? "");
+  const seat = host?.host?.slots.find((s) => s.id === placed.slotId)?.seat;
+  return seat && { hostId: placed.hostId, seat };
 };

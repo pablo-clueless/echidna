@@ -41,7 +41,11 @@
           {
             "protocol": "so-dimm-ddr5"
           }
-        ]
+        ],
+        "seat": {
+          "x": 20,
+          "z": 25
+        }
       },
       {
         "id": "m2",
@@ -49,7 +53,11 @@
           {
             "protocol": "m2-nvme"
           }
-        ]
+        ],
+        "seat": {
+          "x": 70,
+          "z": 25
+        }
       },
       {
         "id": "wifi",
@@ -57,7 +65,11 @@
           {
             "protocol": "m2-e-key"
           }
-        ]
+        ],
+        "seat": {
+          "x": 120,
+          "z": 30
+        }
       },
       {
         "id": "battery",
@@ -65,7 +77,11 @@
           {
             "protocol": "battery-4s"
           }
-        ]
+        ],
+        "seat": {
+          "x": 0,
+          "z": 115
+        }
       },
       {
         "id": "display",
@@ -73,7 +89,11 @@
           {
             "protocol": "edp"
           }
-        ]
+        ],
+        "seat": {
+          "x": 0,
+          "z": -68
+        }
       },
       {
         "id": "cooler",
@@ -81,7 +101,11 @@
           {
             "protocol": "gaming-laptop-cooling-mount"
           }
-        ]
+        ],
+        "seat": {
+          "x": -55,
+          "z": -10
+        }
       },
       {
         "id": "dc-in",
@@ -92,7 +116,12 @@
           {
             "protocol": "usb-c-pd"
           }
-        ]
+        ],
+        "seat": {
+          "x": -138,
+          "z": -45,
+          "rotation": 90
+        }
       }
     ]
   }

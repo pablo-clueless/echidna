@@ -20,6 +20,21 @@ pub fn solve_dc(circuit: JsValue) -> Result<JsValue, JsValue> {
     }
 }
 
+/// Sweeps a circuit's small-signal response. `options` is `{ source, startFrequency, stopFrequency, pointsPerDecade }`,
+/// with frequencies in hertz. Throws a `{ code, ... }` object on failure, as `solveDc` does.
+#[wasm_bindgen(js_name = solveAc)]
+pub fn solve_ac(circuit: JsValue, options: JsValue) -> Result<JsValue, JsValue> {
+    let serializer = serde_wasm_bindgen::Serializer::json_compatible();
+    let circuit: echidna_solver::Circuit =
+        serde_wasm_bindgen::from_value(circuit).map_err(|e| JsValue::from_str(&e.to_string()))?;
+    let options: echidna_solver::AcOptions =
+        serde_wasm_bindgen::from_value(options).map_err(|e| JsValue::from_str(&e.to_string()))?;
+    match echidna_solver::solve_ac(&circuit, &options) {
+        Ok(solution) => solution.serialize(&serializer).map_err(Into::into),
+        Err(error) => Err(error.serialize(&serializer)?),
+    }
+}
+
 /// Simulates a circuit from switch-on. `options` is `{ stopTime, timeStep }` in seconds. Throws a `{ code, ... }`
 /// object on failure, as `solveDc` does.
 #[wasm_bindgen(js_name = solveTransient)]

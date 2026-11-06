@@ -4,7 +4,7 @@ use crate::circuit::{Circuit, DcSolution, Element, ElementKind, SolveError, THER
 use crate::devices::{
     bjt, critical_voltage, junction, limit_drain_source, limit_fet, limit_junction, mosfet,
 };
-use crate::matrix::System;
+use crate::matrix::{ComplexSystem, System};
 
 const MAX_ITERATIONS: usize = 150;
 const RELTOL: f64 = 1e-6;
@@ -18,6 +18,9 @@ const GSHUNT: f64 = 1e-12;
 const REGULATOR_OFF_SCALE: f64 = 0.1;
 
 type Node = Option<usize>;
+
+/// Names paired with the index of their MNA unknown.
+pub(crate) type Indexed<'a> = Vec<(&'a str, usize)>;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) enum RegulatorMode {
@@ -264,6 +267,95 @@ impl<'a> Network<'a> {
                 _ => 0.0,
             })
             .collect()
+    }
+
+    /// The conductance matrix of the circuit linearised at the operating point `states` describes, with capacitors
+    /// open and inductors shorted, row-major over the MNA unknowns.
+    pub(crate) fn linearised(&self, states: &[State]) -> Vec<f64> {
+        let mut system = System::new(self.size);
+        for row in 0..self.external {
+            system.add(row, row, GSHUNT);
+        }
+        for (p, state) in self.prepared.iter().zip(states) {
+            stamp(&mut system, p, *state, Companion::default());
+        }
+        system.into_matrix()
+    }
+
+    /// The AC system at angular frequency `omega`: the linearised conductances, each capacitor's admittance `jωC`,
+    /// each inductor's impedance `jωL` in its branch equation, and a unit drive from the source `drive` indexes.
+    pub(crate) fn ac_system(
+        &self,
+        conductances: &[f64],
+        omega: f64,
+        drive: usize,
+    ) -> ComplexSystem {
+        let mut s = ComplexSystem::from_real(self.size, conductances);
+        for p in &self.prepared {
+            match p.element.kind {
+                ElementKind::Capacitor { capacitance } => {
+                    let b = omega * capacitance;
+                    let (a, n) = (p.pins[0], p.pins[1]);
+                    if let Some(a) = a {
+                        s.add_imag(a, a, b);
+                    }
+                    if let Some(n) = n {
+                        s.add_imag(n, n, b);
+                    }
+                    if let (Some(a), Some(n)) = (a, n) {
+                        s.add_imag(a, n, -b);
+                        s.add_imag(n, a, -b);
+                    }
+                }
+                ElementKind::Inductor { inductance } => {
+                    s.add_imag(p.branch, p.branch, -omega * inductance)
+                }
+                _ => {}
+            }
+        }
+        let p = &self.prepared[drive];
+        match p.element.kind {
+            ElementKind::VoltageSource { .. } => s.add_rhs(p.branch, 1.0),
+            ElementKind::CurrentSource { .. } => {
+                // 1 A from + through the source to −, stamped as the DC current is.
+                if let Some(plus) = p.pins[0] {
+                    s.add_rhs(plus, -1.0);
+                }
+                if let Some(minus) = p.pins[1] {
+                    s.add_rhs(minus, 1.0);
+                }
+            }
+            _ => unreachable!("only sources are driven"),
+        }
+        s
+    }
+
+    /// The index of the voltage or current source with ID `id`.
+    pub(crate) fn source(&self, id: &str) -> Option<usize> {
+        self.prepared.iter().position(|p| {
+            p.element.id == id
+                && matches!(
+                    p.element.kind,
+                    ElementKind::VoltageSource { .. } | ElementKind::CurrentSource { .. }
+                )
+        })
+    }
+
+    /// External node names with their unknown's index, and each voltage source's and inductor's branch unknown.
+    pub(crate) fn ac_outputs(&self) -> (Indexed<'a>, Indexed<'a>) {
+        let nodes = self.names.iter().copied().zip(0..self.external).collect();
+        let branches = self
+            .prepared
+            .iter()
+            .filter(|p| {
+                matches!(
+                    p.element.kind,
+                    ElementKind::VoltageSource { .. } | ElementKind::Inductor { .. }
+                )
+            })
+            .map(|p| (p.element.id.as_str(), p.branch))
+            .collect();
+        (nodes, branches)
     }
 
     pub(crate) fn report(

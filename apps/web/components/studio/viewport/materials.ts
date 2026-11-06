@@ -66,6 +66,12 @@ export const materials = {
   }),
   terminal: new MeshStandardMaterial({ color: "#1F7A4D", roughness: 0.5 }),
   cavity: new MeshStandardMaterial({ color: "#07080A", roughness: 1 }),
+  /** Powder-coated steel, for a desktop case. */
+  caseSteel: new MeshStandardMaterial({ color: "#2A2C31", metalness: 0.55, roughness: 0.55 }),
+  /** Bead-blasted anodised aluminium, for a laptop's bottom shell. */
+  anodised: new MeshStandardMaterial({ color: "#A7ABB2", metalness: 0.85, roughness: 0.42 }),
+  /** Rubber feet and hinge covers. */
+  rubber: new MeshStandardMaterial({ color: "#16171A", roughness: 0.9 }),
   fallback: new MeshStandardMaterial({ color: "#4A4D55", roughness: 0.6 }),
 } as const;
 

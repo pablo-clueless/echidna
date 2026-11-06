@@ -33,7 +33,11 @@
           {
             "protocol": "lga1700"
           }
-        ]
+        ],
+        "seat": {
+          "x": 20,
+          "z": -45
+        }
       },
       {
         "id": "cooler",
@@ -41,7 +45,11 @@
           {
             "protocol": "lga1700-cooler-mount"
           }
-        ]
+        ],
+        "seat": {
+          "x": 20,
+          "z": -45
+        }
       },
       {
         "id": "pcie-x16",
@@ -49,7 +57,11 @@
           {
             "protocol": "pcie-x16"
           }
-        ]
+        ],
+        "seat": {
+          "x": -25,
+          "z": 45
+        }
       },
       {
         "id": "memory",
@@ -57,7 +69,12 @@
           {
             "protocol": "ddr5-dimm"
           }
-        ]
+        ],
+        "seat": {
+          "x": 95,
+          "z": -45,
+          "rotation": 90
+        }
       },
       {
         "id": "m2",
@@ -65,7 +82,11 @@
           {
             "protocol": "m2-nvme"
           }
-        ]
+        ],
+        "seat": {
+          "x": 20,
+          "z": 5
+        }
       },
       {
         "id": "power",
@@ -73,7 +94,11 @@
           {
             "protocol": "atx-psu"
           }
-        ]
+        ],
+        "seat": {
+          "x": -60,
+          "z": 205
+        }
       }
     ]
   }

@@ -1,6 +1,7 @@
 {
   "Metadata": {
-    "description": "Composez des circuits imprimés et des appareils en 3D, simulez-les et voyez instantanément si chaque composant fonctionnera."
+    "description": "Composez des circuits imprimés et des appareils en 3D, simulez-les et voyez instantanément si chaque composant fonctionnera.",
+    "imageAlt": "La page d’accueil d’Echidna : « Sachez que ça marche avant de le construire. » à côté d’une carte de développement en 3D dont toutes les vérifications sont réussies."
   },
   "Home": {
     "openStudio": "Ouvrir le studio",
@@ -220,7 +221,6 @@
     },
     "inspector": {
       "board": {
-        "title": "Carte",
         "width": "Largeur",
         "depth": "Profondeur",
         "outOfRange": "Saisissez une taille de {min} à {max} mm."
@@ -459,6 +459,19 @@
       "buildEmpty": "Branchez une alimentation et un refroidisseur pour vérifier l’alimentation et le refroidissement.",
       "batteryRuntime": "Environ {runtime} sur batterie en usage léger ({energy} à {draw}).",
       "buildEmptyLaptop": "Branchez un chargeur et un refroidisseur pour vérifier l’alimentation et le refroidissement."
+    },
+    "foundation": {
+      "names": {
+        "pcb": "Circuit imprimé",
+        "desktop": "Boîtier de PC",
+        "laptop": "Châssis de portable"
+      },
+      "fixedSize": "{width} × {depth} mm, fixé par le châssis",
+      "refused": {
+        "pcb": "Se monte sur un circuit imprimé, pas dans ce châssis. Videz le projet pour commencer un circuit.",
+        "desktop": "Se monte dans un boîtier de PC. Commencez une configuration de bureau pour l’utiliser.",
+        "laptop": "Se monte dans un châssis de portable. Commencez une configuration de portable pour l’utiliser."
+      }
     }
   },
   "Parts": {

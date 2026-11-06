@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
+export const solveAc: (a: any, b: any) => [number, number, number];
 export const solveDc: (a: any) => [number, number, number];
 export const solveTransient: (a: any, b: any) => [number, number, number];
 export const solverVersion: () => [number, number];
