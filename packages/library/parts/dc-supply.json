@@ -5,15 +5,31 @@
   "kind": "supply",
   "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
   "pins": [
-    { "id": "pos", "name": "+" },
-    { "id": "neg", "name": "−" }
+    {
+      "id": "pos",
+      "name": "+"
+    },
+    {
+      "id": "neg",
+      "name": "−"
+    }
   ],
   "params": {
-    "voltage": { "value": 5, "unit": "V", "source": "datasheet", "reference": "Nominal setting" }
+    "voltage": {
+      "value": 5,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Nominal setting"
+    }
   },
   "ratings": {},
   "interfaces": [],
   "model": "voltageSource",
   "footprintId": "generic/terminal-2",
-  "meshUrl": "generic/terminal-2"
+  "meshUrl": "generic/terminal-2",
+  "sourcing": {
+    "manufacturer": "Phoenix Contact",
+    "mpn": "1729128",
+    "reference": "Phoenix Contact 1729128, MKDS 1,5/ 2-5,08: the 2-way 5.08 mm screw terminal the supply connects to (element14, Bürklin)"
+  }
 }

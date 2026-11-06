@@ -5,9 +5,18 @@
   "kind": "nmos",
   "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
   "pins": [
-    { "id": "d", "name": "Drain" },
-    { "id": "g", "name": "Gate" },
-    { "id": "s", "name": "Source" }
+    {
+      "id": "d",
+      "name": "Drain"
+    },
+    {
+      "id": "g",
+      "name": "Gate"
+    },
+    {
+      "id": "s",
+      "name": "Source"
+    }
   ],
   "params": {
     "thresholdVoltage": {
@@ -68,5 +77,11 @@
   "interfaces": [],
   "model": "nmos",
   "footprintId": "generic/to-92-sgd",
-  "meshUrl": "generic/to-92"
+  "meshUrl": "generic/to-92",
+  "sourcing": {
+    "manufacturer": "onsemi",
+    "mpn": "2N7000",
+    "lcsc": "C232838",
+    "reference": "LCSC C232838: onsemi 2N7000, TO-92-3"
+  }
 }

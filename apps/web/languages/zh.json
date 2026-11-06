@@ -615,6 +615,12 @@
       "railVoltage": "{rail}供电轨电压",
       "railCurrent": "{rail}供电轨电流",
       "rail": "供电来自"
+    },
+    "export": {
+      "label": "导出",
+      "pcb": "以 zip 下载电路板的 Gerber 文件、钻孔文件、物料清单和贴片坐标文件。",
+      "modules": "下载此构建的物料清单。",
+      "unrouted": "{count} 条连接尚未布铜：请查看 zip 中的 README。"
     }
   },
   "Parts": {

@@ -615,6 +615,12 @@
       "railVoltage": "{rail}レールの電圧",
       "railCurrent": "{rail}レールの電流",
       "rail": "電源"
+    },
+    "export": {
+      "label": "エクスポート",
+      "pcb": "基板のガーバー、ドリルファイル、部品表、実装座標ファイルを zip でダウンロードします。",
+      "modules": "構成の部品表をダウンロードします。",
+      "unrouted": "{count} 本の接続にまだ銅箔がありません。zip 内の README を参照してください。"
     }
   },
   "Parts": {

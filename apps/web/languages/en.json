@@ -615,6 +615,12 @@
       "railVoltage": "{rail} rail voltage",
       "railCurrent": "{rail} rail current",
       "rail": "Draws from"
+    },
+    "export": {
+      "label": "Export",
+      "pcb": "Download the board's Gerbers, drill file, bill of materials and pick-and-place file as a zip.",
+      "modules": "Download the build's bill of materials.",
+      "unrouted": "{count, plural, one {# connection has} other {# connections have}} no copper yet: see the README in the zip."
     }
   },
   "Parts": {

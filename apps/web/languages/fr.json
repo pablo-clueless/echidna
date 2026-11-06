@@ -615,6 +615,12 @@
       "railVoltage": "Tension du rail {rail}",
       "railCurrent": "Courant du rail {rail}",
       "rail": "Alimenté par"
+    },
+    "export": {
+      "label": "Exporter",
+      "pcb": "Télécharger les Gerber, le fichier de perçage, la nomenclature et le fichier de placement de la carte dans un zip.",
+      "modules": "Télécharger la nomenclature du montage.",
+      "unrouted": "{count, plural, one {# connexion n’a} other {# connexions n’ont}} pas encore de cuivre : voir le README du zip."
     }
   },
   "Parts": {

@@ -541,6 +541,26 @@
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
         }
       }
+    },
+    "sourcing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manufacturer", "mpn", "reference"],
+      "properties": {
+        "manufacturer": {
+          "type": "string"
+        },
+        "mpn": {
+          "type": "string"
+        },
+        "lcsc": {
+          "type": "string",
+          "pattern": "^C[0-9]+$"
+        },
+        "reference": {
+          "type": "string"
+        }
+      }
     }
   },
   "$defs": {

@@ -57,6 +57,20 @@ export type Attribution = {
   url?: string;
 };
 
+/** What to buy to fit a part on a board, for the bill of materials. */
+export type Sourcing = {
+  manufacturer: string;
+  /**
+   * Manufacturer part number. A part whose number depends on its value, such as a resistor, writes the value as a
+   * placeholder, `{resistance}`, filled with the value in the maker's code.
+   */
+  mpn: string;
+  /** LCSC's part number, which JLCPCB assembly takes. Only for a fixed part number. */
+  lcsc?: string;
+  /** Where the part number was checked. */
+  reference: string;
+};
+
 /**
  * How a switch is operated: `latching` stays where it is set, like a slide or toggle switch; `momentary` changes
  * only while it is held, like a push button, and returns to its first variant when let go.
@@ -288,6 +302,8 @@ export type ComponentSpec = {
   footprintId: string;
   meshUrl: string;
   attribution?: Attribution;
+  /** For parts soldered to a board: what to buy, for the bill of materials. */
+  sourcing?: Sourcing;
 };
 
 /**

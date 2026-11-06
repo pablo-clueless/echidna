@@ -5,8 +5,14 @@
   "kind": "capacitor",
   "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
   "pins": [
-    { "id": "1", "name": "1" },
-    { "id": "2", "name": "2" }
+    {
+      "id": "1",
+      "name": "1"
+    },
+    {
+      "id": "2",
+      "name": "2"
+    }
   ],
   "params": {
     "capacitance": {
@@ -17,10 +23,21 @@
     }
   },
   "ratings": {
-    "maxVoltage": { "value": 16, "unit": "V", "source": "datasheet", "reference": "Rated voltage" }
+    "maxVoltage": {
+      "value": 16,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Rated voltage"
+    }
   },
   "interfaces": [],
   "model": "capacitor",
   "footprintId": "generic/0805",
-  "meshUrl": "generic/chip-0805"
+  "meshUrl": "generic/chip-0805",
+  "sourcing": {
+    "manufacturer": "Samsung Electro-Mechanics",
+    "mpn": "CL21A106KOQNNNE",
+    "lcsc": "C1713",
+    "reference": "LCSC C1713: 10 µF ±10 % 16 V X5R 0805"
+  }
 }

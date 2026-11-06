@@ -5,9 +5,18 @@
   "kind": "pnp",
   "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
   "pins": [
-    { "id": "c", "name": "Collector" },
-    { "id": "b", "name": "Base" },
-    { "id": "e", "name": "Emitter" }
+    {
+      "id": "c",
+      "name": "Collector"
+    },
+    {
+      "id": "b",
+      "name": "Base"
+    },
+    {
+      "id": "e",
+      "name": "Emitter"
+    }
   ],
   "params": {
     "saturationCurrent": {
@@ -74,5 +83,11 @@
   "interfaces": [],
   "model": "pnp",
   "footprintId": "generic/to-92-ebc",
-  "meshUrl": "generic/to-92"
+  "meshUrl": "generic/to-92",
+  "sourcing": {
+    "manufacturer": "onsemi",
+    "mpn": "2N3906BU",
+    "lcsc": "C124483",
+    "reference": "LCSC C124483: onsemi 2N3906BU, TO-92-3, bulk"
+  }
 }

@@ -615,6 +615,12 @@
       "railVoltage": "Tensión del raíl {rail}",
       "railCurrent": "Corriente del raíl {rail}",
       "rail": "Se alimenta de"
+    },
+    "export": {
+      "label": "Exportar",
+      "pcb": "Descarga los Gerber, el archivo de taladrado, la lista de materiales y el archivo de colocación de la placa en un zip.",
+      "modules": "Descarga la lista de materiales del montaje.",
+      "unrouted": "{count, plural, one {# conexión aún no tiene} other {# conexiones aún no tienen}} cobre: consulta el README del zip."
     }
   },
   "Parts": {

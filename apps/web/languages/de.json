@@ -615,6 +615,12 @@
       "railVoltage": "Spannung der {rail}-Schiene",
       "railCurrent": "Strom der {rail}-Schiene",
       "rail": "Versorgt über"
+    },
+    "export": {
+      "label": "Exportieren",
+      "pcb": "Gerber-Dateien, Bohrdatei, Stückliste und Bestückungsdatei der Platine als Zip herunterladen.",
+      "modules": "Die Stückliste des Builds herunterladen.",
+      "unrouted": "{count, plural, one {# Verbindung hat} other {# Verbindungen haben}} noch kein Kupfer: siehe README im Zip."
     }
   },
   "Parts": {
