@@ -28,6 +28,11 @@ const categories = [
   { key: "pcParts", kinds: ["cpu", "gpu", "memory", "storage", "cooler", "psu"] },
   { key: "laptops", kinds: ["laptopBoard"] },
   { key: "laptopParts", kinds: ["battery", "wifi", "display", "charger"] },
+  { key: "drones", kinds: ["droneFrame"] },
+  {
+    key: "droneParts",
+    kinds: ["droneMotors", "droneProps", "droneBattery", "esc", "flightController", "droneCamera"],
+  },
 ] as const;
 
 /** How far a symbol reaches either side of its origin, leads included, turned as placed. */

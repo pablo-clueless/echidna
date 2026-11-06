@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "props-5in-triblade",
+  "name": "5.1-inch tri-blade propellers (set of 4)",
+  "kind": "droneProps",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "prop-5in"
+    }
+  ],
+  "module": {
+    "role": "propellers",
+    "mass": {
+      "value": 0.0172,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "About 4.3 g a propeller, typical of 5.1-inch tri-blades"
+    },
+    "diameter": {
+      "value": 0.1295,
+      "unit": "m",
+      "source": "datasheet",
+      "reference": "5.1 inches"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/props-fpv5",
+  "meshUrl": "generic/droneProps"
+}

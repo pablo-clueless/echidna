@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-2-gimbal",
+  "name": "DJI Mini 2 3-axis gimbal camera (12 MP, 4K)",
+  "kind": "droneCamera",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "dji-mini-2-gimbal"
+    }
+  ],
+  "module": {
+    "role": "camera",
+    "mass": {
+      "value": 0.03,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "From teardowns; DJI doesn't publish it"
+    },
+    "typical": {
+      "value": 1.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Recording 4K with the gimbal holding steady"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/gimbal",
+  "meshUrl": "generic/gimbal"
+}

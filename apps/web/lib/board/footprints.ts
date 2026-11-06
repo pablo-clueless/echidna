@@ -104,7 +104,77 @@ const moduleOutline = (w: number, h: number, label: string): Footprint => ({
   ref: { x: 0, z: -h / 2 - 2.5 },
 });
 
+/**
+ * The shape of a family of drones, in millimetres, shared by its frame, motor set and propeller set so the three
+ * line up wherever they are seated: each motor sits `arm` from the frame's centre along both axes, on an arm
+ * `armHeight` tall.
+ */
+export type DroneLayout = {
+  arm: number;
+  armHeight: number;
+  /** The frame's central body, x across and z front to back. */
+  body: { w: number; d: number; h: number };
+  motor: { radius: number; height: number };
+  /** Propeller tip-to-tip diameter, and how many blades each has. */
+  prop: { diameter: number; blades: number };
+  /** Moulded plastic, like a DJI Mini, or a carbon plate frame with standoffs, like an FPV quad. */
+  build: "moulded" | "carbon";
+};
+
+/**
+ * Drone families by footprint suffix: the DJI Mini 2 (213 mm diagonal), the Mini 3 Pro and Mini 4 Pro (about
+ * 247 mm), and a 5-inch FPV frame (220 mm).
+ */
+export const DRONE_LAYOUTS: Record<string, DroneLayout> = {
+  mini2: {
+    arm: 75,
+    armHeight: 7,
+    body: { w: 58, d: 138, h: 24 },
+    motor: { radius: 6.5, height: 9 },
+    prop: { diameter: 119, blades: 2 },
+    build: "moulded",
+  },
+  mini3: {
+    arm: 87,
+    armHeight: 8,
+    body: { w: 62, d: 148, h: 26 },
+    motor: { radius: 7, height: 10 },
+    prop: { diameter: 152, blades: 2 },
+    build: "moulded",
+  },
+  fpv5: {
+    arm: 78,
+    armHeight: 5,
+    body: { w: 42, d: 128, h: 30 },
+    motor: { radius: 14, height: 17 },
+    prop: { diameter: 130, blades: 3 },
+    build: "carbon",
+  },
+};
+
+/**
+ * The layout a drone footprint, such as `drone/motors-mini2`, belongs to.
+ * @param footprintId - A `drone/` footprint ID.
+ * @returns Its family's layout, or undefined for any other footprint.
+ */
+export const droneLayoutOf = (footprintId: string): DroneLayout | undefined =>
+  footprintId.startsWith("drone/") ? DRONE_LAYOUTS[footprintId.split("-").at(-1) ?? ""] : undefined;
+
+/** Outlines for a drone family's frame, motor set and propeller set, each covering what it reaches. */
+const droneFootprints = Object.fromEntries(
+  Object.entries(DRONE_LAYOUTS).flatMap(([family, layout]) => {
+    const motors = 2 * (layout.arm + layout.motor.radius);
+    const props = 2 * layout.arm + layout.prop.diameter;
+    return [
+      [`drone/frame-${family}`, moduleOutline(motors, motors, "FRAME")],
+      [`drone/motors-${family}`, moduleOutline(motors, motors, "MOTORS")],
+      [`drone/props-${family}`, moduleOutline(props, props, "PROPS")],
+    ];
+  }),
+);
+
 export const footprints: Record<string, Footprint> = {
+  ...droneFootprints,
   // Life-size outlines, from the form-factor standards: ATX is 305 × 244 mm, a DIMM 133 mm long, M.2 2280 is
   // 80 × 22 mm and 2230 is 30 × 22 mm, an ATX PSU 150 × 140 mm. A graphics card stands on edge, so it covers its
   // length by its two-slot thickness.
@@ -124,6 +194,12 @@ export const footprints: Record<string, Footprint> = {
   // The panel stands in the open lid, so it covers only its thickness along the hinge.
   "module/display": moduleOutline(320, 6, "eDP"),
   "module/charger": moduleOutline(14, 9, "DC IN"),
+  // A slim 2S pack or an FPV LiPo, a 30 × 30 mm flight stack, a gimbal camera and an FPV camera.
+  "module/droneBattery": moduleOutline(36, 72, "BATT"),
+  "module/esc": moduleOutline(36, 36, "ESC"),
+  "module/flightController": moduleOutline(36, 36, "FC"),
+  "module/gimbal": moduleOutline(30, 28, "CAM"),
+  "module/fpvCamera": moduleOutline(20, 20, "CAM"),
   "header/raspberry-pi": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio23", "gpio24"], "RPI"),
   "header/esp32-devkitc": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio4", "gpio5"], "ESP32"),
   "header/arduino-uno-r4": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "d2", "d3"], "UNO R4"),

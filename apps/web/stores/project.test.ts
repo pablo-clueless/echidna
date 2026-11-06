@@ -176,6 +176,21 @@ describe("the project's foundation", () => {
     expect(store().components.some((c) => c.specId === "resistor")).toBe(false);
   });
 
+  it("stands a drone on its landing pad, with every part seated on the frame", () => {
+    store().loadBuild("drone-fpv-5in");
+    expect(store().foundation).toBe("drone");
+    expect(store().boardSize).toEqual({ width: CHASSIS.drone.width, depth: CHASSIS.drone.depth });
+    expect(store().board.FR1).toMatchObject({ x: 0, z: 0 });
+    expect(
+      Object.values(store().slots)
+        .map((at) => at.slotId)
+        .sort(),
+    ).toEqual(["battery", "camera", "esc", "fc", "motors", "propellers"]);
+    // A 30 A ESC can't carry the motors' 32 A, so it is left out of its slot.
+    store().swapInSlots("ESC1", "esc-4in1-30a");
+    expect(store().slots.ESC1).toBeUndefined();
+  });
+
   it("lets the first part into an empty project choose its foundation", () => {
     store().addComponent("gaming-laptop-board", { x: 8, y: 0 });
     expect(store().foundation).toBe("laptop");

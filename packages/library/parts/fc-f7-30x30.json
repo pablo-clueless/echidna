@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "fc-f7-30x30",
+  "name": "F7 flight controller, 30 × 30 mm",
+  "kind": "flightController",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "stack-30x30-fc"
+    }
+  ],
+  "module": {
+    "role": "flightController",
+    "mass": {
+      "value": 0.008,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "Typical of 30 × 30 mm flight controllers"
+    },
+    "typical": {
+      "value": 0.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Processor and gyro"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/flightController",
+  "meshUrl": "generic/flightController"
+}

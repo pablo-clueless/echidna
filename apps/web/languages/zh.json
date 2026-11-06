@@ -175,7 +175,9 @@
         "motherboards": "主板",
         "pcParts": "电脑配件",
         "laptops": "笔记本主板",
-        "laptopParts": "笔记本配件"
+        "laptopParts": "笔记本配件",
+        "drones": "无人机",
+        "droneParts": "无人机配件"
       }
     },
     "viewport": {
@@ -375,6 +377,18 @@
       "chargerBudget": {
         "name": "充电器功率",
         "explain": "满载时笔记本耗电为充电器输出的 {percent}。超过 100% 时由电池补足差额，即使插着电也会掉电；超过 150% 时高负载下无法维持。"
+      },
+      "thrustToWeight": {
+        "name": "推重比",
+        "explain": "无人机的重量是电机满油门推力的 {percent}。超过 50% 时反应迟缓、抗风能力差；超过 80% 时几乎无法爬升或保持位置。"
+      },
+      "escCurrent": {
+        "name": "电调电流",
+        "explain": "满油门时，每个电机的电流达到其电调持续额定电流的 {percent}。超过 80% 电调会发热；超过 100% 可能在飞行中烧毁。"
+      },
+      "batteryDischarge": {
+        "name": "电池放电",
+        "explain": "满油门时，电机的总电流达到电池额定放电电流（容量 × C 数）的 {percent}。超过 80% 电压会下降、电池发热；超过 100% 可能损坏电池或断电。"
       }
     },
     "slots": {
@@ -392,7 +406,12 @@
         "wifi": "Wi-Fi 插槽（M.2）",
         "battery": "电池接口",
         "display": "屏幕接口",
-        "dc-in": "充电接口"
+        "dc-in": "充电接口",
+        "motors": "电机座",
+        "propellers": "桨轴",
+        "esc": "电调安装位",
+        "fc": "飞控安装位",
+        "camera": "相机安装位"
       },
       "protocols": {
         "i2c": "I²C",
@@ -416,7 +435,22 @@
         "ultrabook-cooling-mount": "轻薄本散热模组位",
         "gaming-laptop-cooling-mount": "游戏本散热模组位",
         "usb-c-pd": "USB-C PD",
-        "dc-barrel": "圆口插头"
+        "dc-barrel": "圆口插头",
+        "dji-mini2-motor-mount": "DJI Mini 2 电机座",
+        "dji-mini3-motor-mount": "DJI Mini 3 Pro / Mini 4 Pro 电机座",
+        "dji-mini2-prop-mount": "DJI Mini 2 桨座",
+        "dji-mini3-prop-mount": "DJI Mini 3 Pro / Mini 4 Pro 桨座",
+        "dji-mini-2-battery": "DJI Mini 2 电池",
+        "dji-mini-3-battery": "DJI Mini 3 系列电池",
+        "dji-mini-2-gimbal": "DJI Mini 2 云台",
+        "dji-mini-3-pro-gimbal": "DJI Mini 3 Pro 云台",
+        "dji-mini-4-pro-gimbal": "DJI Mini 4 Pro 云台",
+        "motor-mount-16x16": "16 × 16 mm 电机座",
+        "prop-5in": "5 英寸桨",
+        "xt60-4s": "XT60 接口 4S 电池",
+        "stack-30x30-esc": "30 × 30 mm 电调",
+        "stack-30x30-fc": "30 × 30 mm 飞控",
+        "fpv-camera-mount": "FPV 相机安装位"
       },
       "slotLabel": "{host} 的{slot}",
       "pluggedIn": "已插入，由 {rail} 供电",
@@ -436,7 +470,10 @@
         "psuBudget": "整机最高耗电 {actual}；电源额定 {limit}。",
         "powerConnectors": "需要 {actual} 个 {connector}；电源提供 {limit} 个。",
         "cooling": "最高需散热 {actual}；散热器额定 {limit}。",
-        "chargerBudget": "笔记本最高耗电 {actual}；充电器输出 {limit}。"
+        "chargerBudget": "笔记本最高耗电 {actual}；充电器输出 {limit}。",
+        "thrustToWeight": "重 {actual}；电机最多可提升 {limit}。",
+        "escCurrent": "每个电机最多 {actual}；其电调额定 {limit}。",
+        "batteryDischarge": "电机最多消耗 {actual}；电池可提供 {limit}。"
       },
       "railsTitle": "电源轨",
       "hostTitle": "接口",
@@ -458,19 +495,25 @@
       "buildTitle": "供电与散热",
       "buildEmpty": "插入电源和散热器即可检查供电与散热。",
       "batteryRuntime": "轻度使用时电池续航约 {runtime}（{energy}，{draw}）。",
-      "buildEmptyLaptop": "插入充电器和散热器即可检查供电与散热。"
+      "buildEmptyLaptop": "插入充电器和散热器即可检查供电与散热。",
+      "buildTitleDrone": "升力与功率",
+      "buildEmptyDrone": "装上电机和电池即可检查升力与功率。",
+      "flightTime": "无风悬停约 {time}（{weight}，从 {energy} 中消耗 {power}）。",
+      "flightTimePublished": "厂商标称 {time}（低速前飞测得）。"
     },
     "foundation": {
       "names": {
         "pcb": "电路板",
         "desktop": "台式机机箱",
-        "laptop": "笔记本机身"
+        "laptop": "笔记本机身",
+        "drone": "停机坪"
       },
       "fixedSize": "{width} × {depth} mm，由机身决定",
       "refused": {
         "pcb": "用于电路板，不能装进这个机身。清空项目即可开始电路。",
         "desktop": "用于台式机机箱。开始一个台式机配置即可使用。",
-        "laptop": "用于笔记本机身。开始一个笔记本配置即可使用。"
+        "laptop": "用于笔记本机身。开始一个笔记本配置即可使用。",
+        "drone": "用于无人机。开始一个无人机项目即可使用。"
       }
     }
   },
@@ -740,6 +783,114 @@
     "charger-barrel-240w": {
       "name": "240 W 圆口充电器",
       "summary": "适用于带圆口插座的游戏本"
+    },
+    "dji-mini-2-frame": {
+      "name": "DJI Mini 2 机身",
+      "summary": "内置飞控、电调和图传"
+    },
+    "dji-mini-3-pro-frame": {
+      "name": "DJI Mini 3 Pro 机身",
+      "summary": "内置飞控、电调和图传"
+    },
+    "dji-mini-4-pro-frame": {
+      "name": "DJI Mini 4 Pro 机身",
+      "summary": "内置飞控、电调和图传"
+    },
+    "fpv-frame-5in": {
+      "name": "5 英寸 FPV 机架",
+      "summary": "碳纤维花飞机架，30 × 30 mm 飞塔"
+    },
+    "dji-mini-2-motors": {
+      "name": "DJI Mini 2 电机",
+      "summary": "4 个一套"
+    },
+    "dji-mini-3-motors": {
+      "name": "DJI Mini 3 Pro / Mini 4 Pro 电机",
+      "summary": "4 个一套"
+    },
+    "motors-2207-1950kv": {
+      "name": "2207 1950 KV 电机",
+      "summary": "4 个一套，适用于 4S 5 英寸机"
+    },
+    "motors-2306-2450kv": {
+      "name": "2306 2450 KV 电机",
+      "summary": "4 个一套；动力更猛，电流更大"
+    },
+    "dji-mini-2-propellers": {
+      "name": "DJI Mini 2 螺旋桨",
+      "summary": "4726F，4 片一套"
+    },
+    "dji-mini-3-propellers": {
+      "name": "DJI Mini 3 Pro / Mini 4 Pro 螺旋桨",
+      "summary": "6030F，4 片一套"
+    },
+    "props-5in-triblade": {
+      "name": "5.1 英寸三叶桨",
+      "summary": "4 个一套"
+    },
+    "dji-mini-2-battery": {
+      "name": "DJI Mini 2 电池，2250 mAh",
+      "summary": "智能飞行电池"
+    },
+    "dji-mini-3-battery": {
+      "name": "DJI Mini 3 电池，2453 mAh",
+      "summary": "适用于 Mini 3 Pro 和 Mini 4 Pro"
+    },
+    "dji-mini-4-pro-battery": {
+      "name": "DJI Mini 4 Pro 电池，2590 mAh",
+      "summary": "适用于 Mini 3 Pro 和 Mini 4 Pro"
+    },
+    "dji-mini-3-battery-plus": {
+      "name": "DJI Mini 3 长续航电池，3850 mAh",
+      "summary": "续航更长，总重超过 249 g"
+    },
+    "lipo-4s-1500-120c": {
+      "name": "4S 锂聚合物电池，1500 mAh，120C",
+      "summary": "5 英寸花飞常用电池"
+    },
+    "lipo-4s-1300-120c": {
+      "name": "4S 锂聚合物电池，1300 mAh，120C",
+      "summary": "更轻，续航更短"
+    },
+    "liion-4s-4000": {
+      "name": "4S 锂离子电池，4000 mAh",
+      "summary": "续航长，但放电电流小"
+    },
+    "esc-4in1-55a": {
+      "name": "四合一电调，55 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-45a": {
+      "name": "四合一电调，45 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-30a": {
+      "name": "四合一电调，30 A",
+      "summary": "30 × 30 mm，适合较轻的电机"
+    },
+    "fc-f7-30x30": {
+      "name": "F7 飞控",
+      "summary": "30 × 30 mm"
+    },
+    "dji-mini-2-gimbal": {
+      "name": "DJI Mini 2 云台相机",
+      "summary": "1200 万像素，4K，三轴"
+    },
+    "dji-mini-3-pro-gimbal": {
+      "name": "DJI Mini 3 Pro 云台相机",
+      "summary": "4800 万像素，1/1.3 英寸，三轴"
+    },
+    "dji-mini-4-pro-gimbal": {
+      "name": "DJI Mini 4 Pro 云台相机",
+      "summary": "4800 万像素，1/1.3 英寸，三轴"
+    },
+    "fpv-camera-analog": {
+      "name": "模拟 FPV 相机与图传",
+      "summary": "600 mW 图传"
+    },
+    "dji-o3-air-unit": {
+      "name": "DJI O3 Air Unit",
+      "summary": "数字 FPV 相机与图传"
     }
   },
   "Builds": {
@@ -757,6 +908,18 @@
     },
     "laptop-gaming": {
       "name": "游戏本"
+    },
+    "drone-dji-mini-2": {
+      "name": "DJI Mini 2"
+    },
+    "drone-dji-mini-3-pro": {
+      "name": "DJI Mini 3 Pro"
+    },
+    "drone-dji-mini-4-pro": {
+      "name": "DJI Mini 4 Pro"
+    },
+    "drone-fpv-5in": {
+      "name": "5 英寸 FPV 四轴"
     }
   }
 }

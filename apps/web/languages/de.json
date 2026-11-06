@@ -175,7 +175,9 @@
         "motherboards": "Mainboards",
         "pcParts": "PC-Komponenten",
         "laptops": "Laptop-Mainboards",
-        "laptopParts": "Laptop-Komponenten"
+        "laptopParts": "Laptop-Komponenten",
+        "drones": "Drohnen",
+        "droneParts": "Drohnenteile"
       }
     },
     "viewport": {
@@ -375,6 +377,18 @@
       "chargerBudget": {
         "name": "Ladegerätleistung",
         "explain": "Unter Volllast zieht der Laptop {percent} dessen, was das Ladegerät liefert. Über 100 % gleicht der Akku die Differenz aus und entlädt sich selbst am Netz; über 150 % kommt er unter Last nicht mehr hinterher."
+      },
+      "thrustToWeight": {
+        "name": "Schub-Gewicht-Verhältnis",
+        "explain": "Die Drohne wiegt {percent} dessen, was ihre Motoren bei Vollgas heben. Über 50 % ist sie träge und kämpft mit Wind; über 80 % steigt sie kaum und hält ihre Position schlecht."
+      },
+      "escCurrent": {
+        "name": "ESC-Strom",
+        "explain": "Bei Vollgas zieht jeder Motor {percent} des Dauerstroms, für den sein ESC ausgelegt ist. Über 80 % wird der ESC heiß; über 100 % kann er im Flug durchbrennen."
+      },
+      "batteryDischarge": {
+        "name": "Akku-Entladestrom",
+        "explain": "Bei Vollgas ziehen die Motoren {percent} des Stroms, den der Akku liefern darf: Kapazität mal C-Rate. Über 80 % bricht die Spannung ein und der Akku wird warm; über 100 % kann er Schaden nehmen oder abschalten."
       }
     },
     "slots": {
@@ -392,7 +406,12 @@
         "wifi": "WLAN-Steckplatz (M.2)",
         "battery": "Akkuanschluss",
         "display": "Displayanschluss",
-        "dc-in": "Ladeanschluss"
+        "dc-in": "Ladeanschluss",
+        "motors": "Motorhalterungen",
+        "propellers": "Propellerwellen",
+        "esc": "ESC-Halterung",
+        "fc": "Flugcontroller-Halterung",
+        "camera": "Kamerahalterung"
       },
       "protocols": {
         "i2c": "I²C",
@@ -416,7 +435,22 @@
         "ultrabook-cooling-mount": "Ultrabook-Kühlerhalterung",
         "gaming-laptop-cooling-mount": "Gaming-Laptop-Kühlerhalterung",
         "usb-c-pd": "USB-C Power Delivery",
-        "dc-barrel": "Hohlstecker"
+        "dc-barrel": "Hohlstecker",
+        "dji-mini2-motor-mount": "DJI-Mini-2-Motorhalterung",
+        "dji-mini3-motor-mount": "DJI-Mini-3-Pro-/Mini-4-Pro-Motorhalterung",
+        "dji-mini2-prop-mount": "DJI-Mini-2-Propelleraufnahme",
+        "dji-mini3-prop-mount": "DJI-Mini-3-Pro-/Mini-4-Pro-Propelleraufnahme",
+        "dji-mini-2-battery": "DJI-Mini-2-Akku",
+        "dji-mini-3-battery": "Akku der DJI-Mini-3-Serie",
+        "dji-mini-2-gimbal": "DJI-Mini-2-Gimbal",
+        "dji-mini-3-pro-gimbal": "DJI-Mini-3-Pro-Gimbal",
+        "dji-mini-4-pro-gimbal": "DJI-Mini-4-Pro-Gimbal",
+        "motor-mount-16x16": "Motorhalterung 16 × 16 mm",
+        "prop-5in": "5-Zoll-Propeller",
+        "xt60-4s": "4S-Akku mit XT60",
+        "stack-30x30-esc": "ESC 30 × 30 mm",
+        "stack-30x30-fc": "Flugcontroller 30 × 30 mm",
+        "fpv-camera-mount": "FPV-Kamerahalterung"
       },
       "slotLabel": "{slot} an {host}",
       "pluggedIn": "Angeschlossen, versorgt über {rail}",
@@ -436,7 +470,10 @@
         "psuBudget": "Das System zieht bis zu {actual}; das Netzteil ist für {limit} ausgelegt.",
         "powerConnectors": "Braucht {actual} × {connector}; das Netzteil hat {limit}.",
         "cooling": "Bis zu {actual} Wärme abzuführen; der Kühler ist für {limit} ausgelegt.",
-        "chargerBudget": "Der Laptop zieht bis zu {actual}; das Ladegerät liefert {limit}."
+        "chargerBudget": "Der Laptop zieht bis zu {actual}; das Ladegerät liefert {limit}.",
+        "thrustToWeight": "Wiegt {actual}; die Motoren heben bis zu {limit}.",
+        "escCurrent": "Jeder Motor zieht bis zu {actual}; sein ESC ist für {limit} ausgelegt.",
+        "batteryDischarge": "Die Motoren ziehen bis zu {actual}; der Akku liefert {limit}."
       },
       "railsTitle": "Versorgungsschienen",
       "hostTitle": "Anschlüsse",
@@ -458,19 +495,25 @@
       "buildTitle": "Strom und Kühlung",
       "buildEmpty": "Stecke ein Netzteil und einen Kühler ein, um Strom und Kühlung zu prüfen.",
       "batteryRuntime": "Etwa {runtime} Akkulaufzeit bei leichter Nutzung ({energy} bei {draw}).",
-      "buildEmptyLaptop": "Stecke ein Ladegerät und einen Kühler ein, um Strom und Kühlung zu prüfen."
+      "buildEmptyLaptop": "Stecke ein Ladegerät und einen Kühler ein, um Strom und Kühlung zu prüfen.",
+      "buildTitleDrone": "Auftrieb und Leistung",
+      "buildEmptyDrone": "Motoren und Akku einstecken, um Auftrieb und Leistung zu prüfen.",
+      "flightTime": "Etwa {time} Schwebeflug bei Windstille ({weight}, {power} aus {energy}).",
+      "flightTimePublished": "Der Hersteller nennt {time}, langsam vorwärts fliegend."
     },
     "foundation": {
       "names": {
         "pcb": "Leiterplatte",
         "desktop": "Desktop-Gehäuse",
-        "laptop": "Laptop-Gehäuse"
+        "laptop": "Laptop-Gehäuse",
+        "drone": "Landeplatz"
       },
       "fixedSize": "{width} × {depth} mm, vom Gehäuse vorgegeben",
       "refused": {
         "pcb": "Gehört auf eine Leiterplatte, nicht in dieses Gehäuse. Leere das Projekt, um eine Schaltung zu beginnen.",
         "desktop": "Gehört in ein Desktop-Gehäuse. Starte einen Desktop-Aufbau, um es zu verwenden.",
-        "laptop": "Gehört in ein Laptop-Gehäuse. Starte einen Laptop-Aufbau, um es zu verwenden."
+        "laptop": "Gehört in ein Laptop-Gehäuse. Starte einen Laptop-Aufbau, um es zu verwenden.",
+        "drone": "Gehört an eine Drohne. Starte eine Drohne, um es zu verwenden."
       }
     }
   },
@@ -740,6 +783,114 @@
     "charger-barrel-240w": {
       "name": "Ladegerät mit Hohlstecker, 240 W",
       "summary": "Für Gaming-Laptops mit Hohlstecker-Buchse"
+    },
+    "dji-mini-2-frame": {
+      "name": "DJI Mini 2 Rumpf",
+      "summary": "Flugcontroller, ESCs und Funk eingebaut"
+    },
+    "dji-mini-3-pro-frame": {
+      "name": "DJI Mini 3 Pro Rumpf",
+      "summary": "Flugcontroller, ESCs und Funk eingebaut"
+    },
+    "dji-mini-4-pro-frame": {
+      "name": "DJI Mini 4 Pro Rumpf",
+      "summary": "Flugcontroller, ESCs und Funk eingebaut"
+    },
+    "fpv-frame-5in": {
+      "name": "5-Zoll-FPV-Rahmen",
+      "summary": "Freestyle-Rahmen aus Carbon, 30 × 30 mm Stack"
+    },
+    "dji-mini-2-motors": {
+      "name": "DJI Mini 2 Motoren",
+      "summary": "4er-Satz"
+    },
+    "dji-mini-3-motors": {
+      "name": "DJI Mini 3 Pro / Mini 4 Pro Motoren",
+      "summary": "4er-Satz"
+    },
+    "motors-2207-1950kv": {
+      "name": "2207-Motoren, 1950 KV",
+      "summary": "4er-Satz, für 5-Zoll-Quads an 4S"
+    },
+    "motors-2306-2450kv": {
+      "name": "2306-Motoren, 2450 KV",
+      "summary": "4er-Satz; mehr Punch, mehr Strom"
+    },
+    "dji-mini-2-propellers": {
+      "name": "DJI Mini 2 Propeller",
+      "summary": "4726F, 4er-Satz"
+    },
+    "dji-mini-3-propellers": {
+      "name": "DJI Mini 3 Pro / Mini 4 Pro Propeller",
+      "summary": "6030F, 4er-Satz"
+    },
+    "props-5in-triblade": {
+      "name": "5,1-Zoll-Dreiblattpropeller",
+      "summary": "4er-Satz"
+    },
+    "dji-mini-2-battery": {
+      "name": "DJI Mini 2 Akku, 2250 mAh",
+      "summary": "Intelligent Flight Battery"
+    },
+    "dji-mini-3-battery": {
+      "name": "DJI Mini 3 Akku, 2453 mAh",
+      "summary": "Passt an Mini 3 Pro und Mini 4 Pro"
+    },
+    "dji-mini-4-pro-battery": {
+      "name": "DJI Mini 4 Pro Akku, 2590 mAh",
+      "summary": "Passt an Mini 3 Pro und Mini 4 Pro"
+    },
+    "dji-mini-3-battery-plus": {
+      "name": "DJI Mini 3 Akku Plus, 3850 mAh",
+      "summary": "Längere Flüge, über 249 g"
+    },
+    "lipo-4s-1500-120c": {
+      "name": "4S-LiPo, 1500 mAh, 120C",
+      "summary": "Der übliche 5-Zoll-Freestyle-Akku"
+    },
+    "lipo-4s-1300-120c": {
+      "name": "4S-LiPo, 1300 mAh, 120C",
+      "summary": "Leichter, kürzere Flugzeit"
+    },
+    "liion-4s-4000": {
+      "name": "4S-Li-Ion, 4000 mAh",
+      "summary": "Lange Flüge, aber geringer Entladestrom"
+    },
+    "esc-4in1-55a": {
+      "name": "4-in-1-ESC, 55 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-45a": {
+      "name": "4-in-1-ESC, 45 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-30a": {
+      "name": "4-in-1-ESC, 30 A",
+      "summary": "30 × 30 mm, für leichtere Motoren"
+    },
+    "fc-f7-30x30": {
+      "name": "F7-Flugcontroller",
+      "summary": "30 × 30 mm"
+    },
+    "dji-mini-2-gimbal": {
+      "name": "DJI Mini 2 Gimbal-Kamera",
+      "summary": "12 MP, 4K, 3 Achsen"
+    },
+    "dji-mini-3-pro-gimbal": {
+      "name": "DJI Mini 3 Pro Gimbal-Kamera",
+      "summary": "48 MP, 1/1,3 Zoll, 3 Achsen"
+    },
+    "dji-mini-4-pro-gimbal": {
+      "name": "DJI Mini 4 Pro Gimbal-Kamera",
+      "summary": "48 MP, 1/1,3 Zoll, 3 Achsen"
+    },
+    "fpv-camera-analog": {
+      "name": "Analoge FPV-Kamera mit Sender",
+      "summary": "600-mW-Videosender"
+    },
+    "dji-o3-air-unit": {
+      "name": "DJI O3 Air Unit",
+      "summary": "Digitale FPV-Kamera mit Sender"
     }
   },
   "Builds": {
@@ -757,6 +908,18 @@
     },
     "laptop-gaming": {
       "name": "Gaming-Laptop"
+    },
+    "drone-dji-mini-2": {
+      "name": "DJI Mini 2"
+    },
+    "drone-dji-mini-3-pro": {
+      "name": "DJI Mini 3 Pro"
+    },
+    "drone-dji-mini-4-pro": {
+      "name": "DJI Mini 4 Pro"
+    },
+    "drone-fpv-5in": {
+      "name": "5-Zoll-FPV-Quad"
     }
   }
 }

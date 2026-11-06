@@ -22,7 +22,10 @@ export type FitCheckId =
   | "chargerBudget"
   | "psuBudget"
   | "powerConnectors"
-  | "cooling";
+  | "cooling"
+  | "thrustToWeight"
+  | "escCurrent"
+  | "batteryDischarge";
 
 /**
  * One check of a part against a slot. `actual` and `limit` are set for the checks that compare two quantities;

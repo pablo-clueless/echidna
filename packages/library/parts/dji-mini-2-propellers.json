@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-2-propellers",
+  "name": "DJI Mini 2 propellers, 4726F (set of 4)",
+  "kind": "droneProps",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "dji-mini2-prop-mount"
+    }
+  ],
+  "module": {
+    "role": "propellers",
+    "mass": {
+      "value": 0.0036,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "About 0.9 g a propeller"
+    },
+    "diameter": {
+      "value": 0.1194,
+      "unit": "m",
+      "source": "datasheet",
+      "reference": "4.7 inches, from the 4726 model number"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/props-mini2",
+  "meshUrl": "generic/droneProps"
+}

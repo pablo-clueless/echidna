@@ -10,6 +10,7 @@ export type Unit =
   | "K"
   | "m"
   | "kg"
+  | "g"
   | "s"
   | "Hz"
   | "N"
@@ -126,7 +127,10 @@ export type SupplySpec = {
   signals: Record<string, string>;
 };
 
-/** What a desktop or laptop module does in the build: the role decides which device-level checks apply to it. */
+/**
+ * What a desktop, laptop or drone module does in the build: the role decides which device-level checks apply to it.
+ * A drone's `frame` is its host, as a motherboard is a desktop's.
+ */
 export type ModuleRole =
   | "motherboard"
   | "cpu"
@@ -138,12 +142,29 @@ export type ModuleRole =
   | "battery"
   | "wifi"
   | "display"
-  | "charger";
+  | "charger"
+  | "frame"
+  | "motors"
+  | "propellers"
+  | "esc"
+  | "flightController"
+  | "camera";
+
+/** The roles of host modules, which the others plug into: a desktop's or laptop's motherboard, a drone's frame. */
+export const HOST_ROLES: readonly ModuleRole[] = ["motherboard", "frame"];
+
+/**
+ * Whether a part is the host of a desktop, laptop or drone build.
+ * @param spec - Part spec.
+ * @returns `true` for a motherboard or drone frame.
+ */
+export const isHostModule = (spec: Pick<ComponentSpec, "module"> | undefined): boolean =>
+  Boolean(spec?.module && HOST_ROLES.includes(spec.module.role));
 
 /** A PSU power connector, such as the 12V-2x6 connector newer graphics cards take. */
 export type PowerConnector = "atx-24pin" | "eps-8pin" | "pcie-8pin" | "12v-2x6";
 
-/** A module of a desktop or laptop build, checked at the device level rather than solved as a circuit. */
+/** A module of a desktop, laptop or drone build, checked at the device level rather than solved as a circuit. */
 export type ModuleSpec = {
   role: ModuleRole;
   /** Most power the module draws from the PSU under full load, such as a CPU's package power limit. */
@@ -165,6 +186,27 @@ export type ModuleSpec = {
   needs?: Partial<Record<PowerConnector, number>>;
   /** For PSUs: the connectors they have, by connector. */
   provides?: Partial<Record<PowerConnector, number>>;
+  /** For drone parts: mass, in kilograms. A set, such as four motors, gives the mass of the whole set. */
+  mass?: SpecValue;
+  /** For drone frames: how many motors and propellers they carry. */
+  rotors?: number;
+  /** For drone motors: the most static thrust one motor makes with its propeller, in newtons. */
+  thrust?: SpecValue;
+  /** For drone motors: the current one motor draws at full throttle. */
+  current?: SpecValue;
+  /**
+   * For drone motors: the share of the electrical power going in that does useful work lifting the drone in a hover,
+   * the propeller's figure of merit times the motor's and ESC's efficiency.
+   */
+  efficiency?: SpecValue;
+  /** For ESCs, and drone frames with them built in: the continuous current each motor's channel is rated for. */
+  maxCurrent?: SpecValue;
+  /** For drone propellers: tip-to-tip diameter, in metres. */
+  diameter?: SpecValue;
+  /** For drone batteries: charge stored, in coulombs (1 mAh = 3.6 C). */
+  capacity?: SpecValue;
+  /** For drone batteries: the C-rating, the continuous discharge current as a multiple of the capacity in amp-hours. */
+  cRating?: SpecValue;
 };
 
 export type ComponentSpec = {
@@ -186,7 +228,7 @@ export type ComponentSpec = {
   host?: HostSpec;
   /** For parts that plug into a host's slot: how they are powered and their signal levels. */
   supply?: SupplySpec;
-  /** For desktop and laptop modules: what they draw, cool or supply in the build. */
+  /** For desktop, laptop and drone modules: what they draw, cool, lift or supply in the build. */
   module?: ModuleSpec;
   model: string;
   footprintId: string;

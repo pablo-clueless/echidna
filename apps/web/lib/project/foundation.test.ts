@@ -2,7 +2,13 @@ import type { ComponentSpec } from "@echidna/core";
 import { describe, expect, it } from "vitest";
 import { partsById } from "@echidna/library";
 
-import { acceptsPart, fitsFoundation, foundationOf, foundationsFor } from "./foundation";
+import {
+  acceptsPart,
+  fitsFoundation,
+  foundationForDevice,
+  foundationOf,
+  foundationsFor,
+} from "./foundation";
 
 const spec = (id: string) => partsById.get(id) as ComponentSpec;
 
@@ -13,6 +19,15 @@ describe("foundations", () => {
     expect(foundationsFor(spec("b760-atx"))).toEqual(["desktop"]);
     expect(foundationsFor(spec("ultrabook-board"))).toEqual(["laptop"]);
     expect(foundationsFor(spec("nvme-ssd-1tb"))).toEqual(["desktop", "laptop"]);
+    expect(foundationsFor(spec("fpv-frame-5in"))).toEqual(["drone"]);
+    expect(foundationsFor(spec("esc-4in1-45a"))).toEqual(["drone"]);
+  });
+
+  it("puts each kind of ready-made build on its own foundation", () => {
+    expect(foundationForDevice("desktop")).toBe("desktop");
+    expect(foundationForDevice("laptop")).toBe("laptop");
+    expect(foundationForDevice("drone")).toBe("drone");
+    expect(foundationForDevice("iot")).toBe("pcb");
   });
 
   it("never puts a laptop board on a PCB, or a resistor in a laptop", () => {
@@ -36,6 +51,7 @@ describe("foundations", () => {
     expect(foundationOf([spec("resistor"), spec("led-5mm")])).toBe("pcb");
     expect(foundationOf([spec("nvme-ssd-1tb"), spec("ultrabook-board")])).toBe("laptop");
     expect(foundationOf([spec("nvme-ssd-1tb")])).toBe("desktop");
+    expect(foundationOf([spec("dji-mini-2-battery")])).toBe("drone");
     expect(foundationOf([])).toBe("pcb");
   });
 });

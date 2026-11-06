@@ -1,5 +1,5 @@
+import { type ComponentSpec, type HostSlot, isHostModule, type PinRef } from "@echidna/core";
 import { checkModuleFit, checkSlotFit, type SlotFit } from "@echidna/rules";
-import type { ComponentSpec, HostSlot, PinRef } from "@echidna/core";
 
 import type { BoardPlacement, ProjectData, Rotation } from "./model";
 
@@ -56,9 +56,12 @@ export const modulesIn = (
       : [];
   });
 
-/** Whether a part plugs into a host's slots: a sensor module, or any desktop module but the motherboard itself. */
+/**
+ * Whether a part plugs into a host's slots: a sensor module, or any desktop, laptop or drone module but the
+ * motherboard or frame itself.
+ */
 export const isPluggable = (spec: ComponentSpec | undefined): boolean =>
-  Boolean(spec?.supply || (spec?.module && spec.module.role !== "motherboard"));
+  Boolean(spec?.supply || (spec?.module && !isHostModule(spec)));
 
 /**
  * Checks a part against a slot as the project stands: a sensor against the rail loads of what else is plugged into

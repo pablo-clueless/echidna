@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "esc-4in1-30a",
+  "name": "4-in-1 ESC, 30 A, 30 × 30 mm",
+  "kind": "esc",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "stack-30x30-esc"
+    }
+  ],
+  "module": {
+    "role": "esc",
+    "mass": {
+      "value": 0.009,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "Typical of 30 × 30 mm 4-in-1 ESCs"
+    },
+    "maxCurrent": {
+      "value": 30,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "Continuous rating a motor, as sold"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/esc",
+  "meshUrl": "generic/esc"
+}

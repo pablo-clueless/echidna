@@ -38,12 +38,62 @@ const roundedRect = <T extends Shape | Path>(
   return path;
 };
 
+/** The ring and letter painted on a landing pad, in millimetres. */
+const PAD = { ring: 6, inset: 14, letter: { height: 110, stroke: 16, width: 70 } } as const;
+
 /**
- * The inside of a desktop case or a laptop's bottom shell, in millimetres: a floor the modules stand on, walls round
+ * A round rubber landing pad a drone stands on, in millimetres, with a ring round its edge and a large H in the
+ * middle like a helipad's. It has no walls, so the propellers are never hidden.
+ */
+const LandingPad = ({ diameter, thickness }: { diameter: number; thickness: number }) => {
+  const r = diameter / 2;
+  const { letter } = PAD;
+  // Far enough above the pad that the markings never flicker into it at a distance.
+  const top = thickness + 0.4;
+  return (
+    <group>
+      <mesh position={[0, thickness / 2, 0]} material={materials.rubber} receiveShadow castShadow>
+        <cylinderGeometry args={[r, r, thickness, 96]} />
+      </mesh>
+      <mesh position={[0, top, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.padMarking}>
+        <ringGeometry args={[r - PAD.inset - PAD.ring, r - PAD.inset, 96]} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <mesh
+          key={side}
+          position={[(side * (letter.width - letter.stroke)) / 2, top, 0]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          material={materials.padMarking}
+        >
+          <planeGeometry args={[letter.stroke, letter.height]} />
+        </mesh>
+      ))}
+      <mesh position={[0, top, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.padMarking}>
+        <planeGeometry args={[letter.width - letter.stroke, letter.stroke]} />
+      </mesh>
+    </group>
+  );
+};
+
+/**
+ * The inside of a desktop case or a laptop's bottom shell, or a drone's landing pad, in millimetres: a floor the modules stand on, walls round
  * it, screw bosses in the corners and, for a laptop, the hinge along the back and rubber feet underneath. Unlike a
  * PCB it carries no copper, holes or fiducials, and its size is fixed by the chassis.
  */
-export const Chassis = ({ foundation, thickness }: Props) => {
+export const Chassis = (props: Props) =>
+  props.foundation === "drone" ? (
+    <LandingPad diameter={CHASSIS.drone.width} thickness={props.thickness} />
+  ) : (
+    <Case {...props} foundation={props.foundation} />
+  );
+
+const Case = ({
+  foundation,
+  thickness,
+}: {
+  foundation: Exclude<Foundation, "pcb" | "drone">;
+  thickness: number;
+}) => {
   const { width, depth, wall } = CHASSIS[foundation];
   const material = foundation === "laptop" ? materials.anodised : materials.caseSteel;
   const corner = foundation === "laptop" ? 8 : 3;

@@ -1,0 +1,107 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "fpv-frame-5in",
+  "name": "5-inch FPV freestyle frame (with receiver and wiring)",
+  "kind": "droneFrame",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "frame",
+    "rotors": 4,
+    "mass": {
+      "value": 0.105,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "A typical 5-inch carbon frame with its standoffs, receiver, battery strap and wiring"
+    },
+    "typical": {
+      "value": 0.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Radio receiver and LEDs"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/frame-fpv5",
+  "meshUrl": "generic/droneFrame",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "motors",
+        "accepts": [
+          {
+            "protocol": "motor-mount-16x16"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 0
+        }
+      },
+      {
+        "id": "propellers",
+        "accepts": [
+          {
+            "protocol": "prop-5in"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 0
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "xt60-4s"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": -30
+        }
+      },
+      {
+        "id": "esc",
+        "accepts": [
+          {
+            "protocol": "stack-30x30-esc"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 0
+        }
+      },
+      {
+        "id": "fc",
+        "accepts": [
+          {
+            "protocol": "stack-30x30-fc"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 0
+        }
+      },
+      {
+        "id": "camera",
+        "accepts": [
+          {
+            "protocol": "fpv-camera-mount"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 52
+        }
+      }
+    ]
+  }
+}

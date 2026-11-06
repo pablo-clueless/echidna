@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-o3-air-unit",
+  "name": "DJI O3 Air Unit (digital video)",
+  "kind": "droneCamera",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "fpv-camera-mount"
+    }
+  ],
+  "module": {
+    "role": "camera",
+    "mass": {
+      "value": 0.0364,
+      "unit": "kg",
+      "source": "datasheet",
+      "reference": "DJI O3 Air Unit specifications"
+    },
+    "typical": {
+      "value": 8.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Transmitting and recording, from pilots' measurements"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/fpvCamera",
+  "meshUrl": "generic/fpvCamera"
+}

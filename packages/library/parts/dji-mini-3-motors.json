@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-3-motors",
+  "name": "DJI Mini 3 Pro / Mini 4 Pro motors (set of 4)",
+  "kind": "droneMotors",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "dji-mini3-motor-mount"
+    }
+  ],
+  "module": {
+    "role": "motors",
+    "mass": {
+      "value": 0.024,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "About 6 g a motor, from teardowns of similar sub-250 g drones"
+    },
+    "thrust": {
+      "value": 1.86,
+      "unit": "N",
+      "source": "estimated",
+      "reference": "About 190 g of thrust a motor at full throttle on 2S with 6-inch propellers"
+    },
+    "current": {
+      "value": 4.5,
+      "unit": "A",
+      "source": "estimated",
+      "reference": "Full-throttle draw a motor on 2S; DJI doesn't publish it"
+    },
+    "efficiency": {
+      "value": 0.36,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "Rotor figure of merit of about 0.55 times about 0.65 for motor and ESC; large, slow plastic propellers at this size"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/motors-mini3",
+  "meshUrl": "generic/droneMotors"
+}

@@ -23,6 +23,7 @@ import { LED_LIT_CURRENT, LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState"
 import { DEFAULT_LED_COLOUR, ledColours } from "@/lib/parts/ledColours";
 import { bandMaterial, materials } from "./materials";
 import { footprints } from "@/lib/board/footprints";
+import { DroneMesh } from "./DroneMesh";
 
 /** Generic part bodies in millimetres, y up from the board surface. Sized like the real packages; no brand artwork. */
 type Props = {
@@ -542,6 +543,22 @@ const moduleHeights: Record<string, number> = {
   "module/wifi": 2.4,
   "module/display": 210,
   "module/charger": 5,
+  "module/droneBattery": 22,
+  "module/esc": 5,
+  "module/flightController": 4,
+  "module/gimbal": 28,
+  "module/fpvCamera": 20,
+};
+
+/**
+ * How far a module is raised off what it sits on, in millimetres: a flight controller stacks on standoffs above the
+ * ESC, and a drone's battery and camera sit on its body rather than the pad.
+ */
+const moduleLifts: Record<string, number> = {
+  "module/flightController": 9,
+  "module/droneBattery": 6,
+  "module/gimbal": 4,
+  "module/fpvCamera": 8,
 };
 
 /**
@@ -559,18 +576,24 @@ const moduleMaterials: Record<string, keyof typeof materials> = {
   "module/laptopCooler": "plating",
   "module/psu": "caseSteel",
   "module/gpu": "fallback",
+  "module/esc": "mask",
+  "module/flightController": "mask",
+  "module/gimbal": "epoxy",
+  "module/fpvCamera": "epoxy",
+  "module/droneBattery": "fallback",
 };
 
-/** A desktop or laptop module as a plain block the size of its outline. */
+/** A desktop, laptop or drone module as a plain block the size of its outline. */
 const ModuleBlock = ({ footprintId }: { footprintId: string }) => {
   const courtyard = footprints[footprintId]?.courtyard ?? { w: 10, h: 10 };
   const height = moduleHeights[footprintId] ?? 4;
+  const lift = moduleLifts[footprintId] ?? 0;
   return (
     <RoundedBox
       args={[courtyard.w - 1, height, courtyard.h - 1]}
       radius={Math.min(0.4, height / 3)}
       smoothness={2}
-      position={[0, height / 2, 0]}
+      position={[0, lift + height / 2, 0]}
       material={materials[moduleMaterials[footprintId] ?? "epoxy"]}
       castShadow
       receiveShadow
@@ -605,6 +628,7 @@ export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed 
   if (footprintId.startsWith("header/"))
     return <PinHeader count={footprints[footprintId]?.pads.length ?? 1} />;
   if (footprintId.startsWith("module/")) return <ModuleBlock footprintId={footprintId} />;
+  if (footprintId.startsWith("drone/")) return <DroneMesh footprintId={footprintId} />;
   switch (footprintId) {
     case "generic/axial-0.4in":
       return <Resistor bands={bands} />;

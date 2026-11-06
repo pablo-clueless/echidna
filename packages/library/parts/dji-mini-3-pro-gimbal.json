@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-3-pro-gimbal",
+  "name": "DJI Mini 3 Pro 3-axis gimbal camera (48 MP, 1/1.3-inch)",
+  "kind": "droneCamera",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "dji-mini-3-pro-gimbal"
+    }
+  ],
+  "module": {
+    "role": "camera",
+    "mass": {
+      "value": 0.035,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "From teardowns; DJI doesn't publish it"
+    },
+    "typical": {
+      "value": 2,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Recording 4K with the gimbal holding steady"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/gimbal",
+  "meshUrl": "generic/gimbal"
+}

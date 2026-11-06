@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "motors-2306-2450kv",
+  "name": "2306 2450 KV brushless motors (set of 4)",
+  "kind": "droneMotors",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "motor-mount-16x16"
+    }
+  ],
+  "module": {
+    "role": "motors",
+    "mass": {
+      "value": 0.132,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "About 33 g a motor with its wires, typical of 2306-size motors"
+    },
+    "thrust": {
+      "value": 15.7,
+      "unit": "N",
+      "source": "estimated",
+      "reference": "About 1.6 kg of thrust a motor on 4S with 5.1-inch tri-blade propellers, typical of makers' thrust tables"
+    },
+    "current": {
+      "value": 42,
+      "unit": "A",
+      "source": "estimated",
+      "reference": "Full-throttle draw a motor on 4S with 5.1-inch tri-blades, typical of makers' thrust tables"
+    },
+    "efficiency": {
+      "value": 0.28,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "Higher KV trades hover efficiency for top-end thrust"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/motors-fpv5",
+  "meshUrl": "generic/droneMotors"
+}

@@ -57,7 +57,14 @@
         "battery",
         "wifi",
         "display",
-        "charger"
+        "charger",
+        "droneFrame",
+        "droneMotors",
+        "droneProps",
+        "droneBattery",
+        "esc",
+        "flightController",
+        "droneCamera"
       ]
     },
     "deviceTypes": {
@@ -356,7 +363,13 @@
             "battery",
             "wifi",
             "display",
-            "charger"
+            "charger",
+            "frame",
+            "motors",
+            "propellers",
+            "esc",
+            "flightController",
+            "camera"
           ]
         },
         "power": {
@@ -396,6 +409,34 @@
         },
         "energy": {
           "$ref": "#/$defs/specValue"
+        },
+        "mass": {
+          "$ref": "#/$defs/specValue"
+        },
+        "thrust": {
+          "$ref": "#/$defs/specValue"
+        },
+        "current": {
+          "$ref": "#/$defs/specValue"
+        },
+        "efficiency": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxCurrent": {
+          "$ref": "#/$defs/specValue"
+        },
+        "diameter": {
+          "$ref": "#/$defs/specValue"
+        },
+        "capacity": {
+          "$ref": "#/$defs/specValue"
+        },
+        "cRating": {
+          "$ref": "#/$defs/specValue"
+        },
+        "rotors": {
+          "type": "integer",
+          "minimum": 1
         }
       }
     }
@@ -420,6 +461,7 @@
             "K",
             "m",
             "kg",
+            "g",
             "s",
             "Hz",
             "N",

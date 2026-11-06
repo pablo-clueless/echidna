@@ -1,5 +1,5 @@
+import { type ComponentSpec, isHostModule, type PinRef } from "@echidna/core";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { ComponentSpec, PinRef } from "@echidna/core";
 import { builds, partsById } from "@echidna/library";
 import { DEFAULT_AMBIENT } from "@echidna/rules";
 import type { SlotFit } from "@echidna/rules";
@@ -21,6 +21,7 @@ import {
   fitsFoundation,
   foundationOf,
   foundationsFor,
+  foundationForDevice,
 } from "@/lib/project/foundation";
 import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
 import { seatOf, seatPlacement, slotConnections, slotOptions } from "@/lib/project/slots";
@@ -165,7 +166,7 @@ const landingSpot = (
   spec: ComponentSpec,
   project: Pick<ProjectData, "components" | "board" | "boardSize" | "foundation">,
 ) => {
-  const mainboard = spec.host && spec.module?.role === "motherboard";
+  const mainboard = spec.host && isHostModule(spec);
   if (mainboard && project.foundation !== "pcb") {
     const { mount } = CHASSIS[project.foundation];
     return { x: mount.x / 1000, z: mount.z / 1000 };
@@ -342,7 +343,7 @@ export const useProjectStore = create<ProjectState>()(
         const host = partsById.get(s.components.find((c) => c.id === hostId)?.specId ?? "");
         if (!option || !part || !host) return null;
         const railId = option.fit.railId;
-        // A sensor needs a rail to draw from; a desktop module is powered from the PSU.
+        // A sensor needs a rail to draw from; a desktop module is powered from the PSU, a drone's from its battery.
         if (!option.fit.fits || option.occupant || (part.supply && !railId)) return option.fit;
         set((state) => {
           const freed = withoutSlot(state, partId);
@@ -391,7 +392,7 @@ export const useProjectStore = create<ProjectState>()(
         const build = builds.find((b) => b.id === buildId);
         if (!build) return;
         // A build goes in its device's chassis, never on a PCB.
-        const foundation: Foundation = build.deviceType === "laptop" ? "laptop" : "desktop";
+        const foundation = foundationForDevice(build.deviceType);
         set({ ...empty(), foundation, boardSize: sizeOf(foundation) });
         const hostId = get().addComponent(build.hostId, { x: 8, y: 12 });
         if (!hostId) return;

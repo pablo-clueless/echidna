@@ -1,4 +1,4 @@
-import type { ComponentSpec, ModuleRole, Violation } from "@echidna/core";
+import { type ComponentSpec, isHostModule, type ModuleRole, type Violation } from "@echidna/core";
 import { checkBuild, type FitCheck } from "@echidna/rules";
 
 import type { ProjectData } from "./model";
@@ -7,14 +7,29 @@ import { modulesIn } from "./slots";
 type Project = Pick<ProjectData, "components" | "slots">;
 
 /** The rules a desktop build is checked against, each with a name and explanation in `Studio.rules`. */
-export const BUILD_RULE_IDS = ["psuBudget", "chargerBudget", "powerConnectors", "cooling"] as const;
+export const BUILD_RULE_IDS = [
+  "psuBudget",
+  "chargerBudget",
+  "powerConnectors",
+  "cooling",
+  "thrustToWeight",
+  "escCurrent",
+  "batteryDischarge",
+] as const;
 
-/** The part each build check is about: the PSU or charger for power, the cooler for cooling. */
+/**
+ * The part each build check is about: the PSU or charger for power, the cooler for cooling, and on a drone the motors
+ * for lift, the ESC for its current and the battery for its discharge. A drone with ESCs built into its frame has no
+ * ESC part, so that check falls back to the frame.
+ */
 const ownerRole: Record<string, ModuleRole> = {
   psuBudget: "psu",
   chargerBudget: "charger",
   powerConnectors: "psu",
   cooling: "cooler",
+  thrustToWeight: "motors",
+  escCurrent: "esc",
+  batteryDischarge: "battery",
 };
 
 /**
@@ -30,7 +45,7 @@ export const buildViolations = (
 ): Violation[] =>
   project.components.flatMap((host) => {
     const spec = specs.get(host.specId);
-    if (spec?.module?.role !== "motherboard") return [];
+    if (!spec || !isHostModule(spec)) return [];
     const ownerOf = (check: FitCheck) =>
       project.components.find(
         (c) =>

@@ -1,9 +1,9 @@
 "use client";
 
+import { batteryRuntime, checkBuild, flightTime } from "@echidna/rules";
 import type { ComponentSpec, NetlistComponent } from "@echidna/core";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
-import { batteryRuntime, checkBuild } from "@echidna/rules";
-import { partsById } from "@echidna/library";
+import { builds, partsById } from "@echidna/library";
 import { useMemo } from "react";
 
 import { dotClass, railName, textClass, useCheckReason } from "./SlotPicker";
@@ -20,7 +20,9 @@ const HOUR = 3600;
 
 /**
  * A host board's rails, with the current drawn from each, and what is plugged into each of its slots. A desktop's or
- * laptop's board also shows its power and cooling checks and, for a laptop, the estimated time on battery.
+ * laptop's board also shows its power and cooling checks and, for a laptop, the estimated time on battery. A drone's
+ * frame shows its lift, ESC and battery checks and its estimated hover time, beside the maker's figure while the
+ * drone is still as it ships.
  */
 export const HostSlots = ({
   component,
@@ -48,7 +50,32 @@ export const HostSlots = ({
     () => (spec.module ? batteryRuntime(spec, modules) : null),
     [spec, modules],
   );
+  const flight = useMemo(() => (spec.module ? flightTime(spec, modules) : null), [spec, modules]);
+  // The maker's flight time applies only while every slot holds the part the drone ships with.
+  const published = useMemo(() => {
+    const occupants = new Map(
+      Object.entries(slots).flatMap(([id, at]) => {
+        const specId = components.find((c) => c.id === id)?.specId;
+        return at.hostId === component.id && specId ? [[at.slotId, specId] as const] : [];
+      }),
+    );
+    return builds.find(
+      (b) =>
+        b.hostId === spec.id &&
+        b.flightTime &&
+        Object.keys(b.modules).length === occupants.size &&
+        Object.entries(b.modules).every(([slot, id]) => occupants.get(slot) === id),
+    )?.flightTime;
+  }, [slots, components, component.id, spec.id]);
   const isLaptop = spec.deviceTypes.includes("laptop");
+  const isDrone = spec.module?.role === "frame";
+  const minutes = (seconds: number) =>
+    format.number(seconds / 60, {
+      style: "unit",
+      unit: "minute",
+      unitDisplay: "long",
+      maximumFractionDigits: 0,
+    });
   if (!spec.host) return null;
 
   return (
@@ -56,8 +83,25 @@ export const HostSlots = ({
       {spec.module && (
         <section aria-labelledby="build-heading" className="grid gap-1">
           <h3 id="build-heading" className="text-muted-foreground text-xs font-medium">
-            {t("buildTitle")}
+            {t(isDrone ? "buildTitleDrone" : "buildTitle")}
           </h3>
+          {flight && (
+            <p className="text-xs">
+              {t("flightTime", {
+                time: minutes(flight.time),
+                weight: formatQuantity(flight.weight, "g", locale),
+                energy: formatQuantity(flight.energy / HOUR, "Wh", locale),
+                power: formatQuantity(flight.power, "W", locale),
+              })}
+              {flight.estimated && ` ${t("estimated")}`}
+            </p>
+          )}
+          {flight && published && (
+            <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
+              {t("flightTimePublished", { time: minutes(published.value) })}
+              <ProvenanceBadge source={published.source} />
+            </p>
+          )}
           {runtime && (
             <p className="text-xs">
               {t("batteryRuntime", {
@@ -75,7 +119,7 @@ export const HostSlots = ({
           )}
           {buildChecks.length === 0 ? (
             <p className="text-muted-foreground text-xs">
-              {t(isLaptop ? "buildEmptyLaptop" : "buildEmpty")}
+              {t(isDrone ? "buildEmptyDrone" : isLaptop ? "buildEmptyLaptop" : "buildEmpty")}
             </p>
           ) : (
             <ul className="grid gap-1">

@@ -175,7 +175,9 @@
         "motherboards": "Cartes mères",
         "pcParts": "Composants PC",
         "laptops": "Cartes mères de portable",
-        "laptopParts": "Composants de portable"
+        "laptopParts": "Composants de portable",
+        "drones": "Drones",
+        "droneParts": "Pièces de drone"
       }
     },
     "viewport": {
@@ -375,6 +377,18 @@
       "chargerBudget": {
         "name": "Puissance du chargeur",
         "explain": "À pleine charge, l’ordinateur consomme {percent} de ce que fournit le chargeur. Au-delà de 100 %, la batterie compense et se vide même branchée ; au-delà de 150 %, elle ne suit plus en charge."
+      },
+      "thrustToWeight": {
+        "name": "Rapport poussée / poids",
+        "explain": "Le drone pèse {percent} de ce que ses moteurs soulèvent à plein gaz. Au-delà de 50 %, il est mou et peine dans le vent ; au-delà de 80 %, il monte à peine et tient mal sa position."
+      },
+      "escCurrent": {
+        "name": "Courant de l’ESC",
+        "explain": "À plein gaz, chaque moteur tire {percent} du courant continu nominal de son ESC. Au-delà de 80 %, l’ESC chauffe ; au-delà de 100 %, il peut griller en vol."
+      },
+      "batteryDischarge": {
+        "name": "Décharge de la batterie",
+        "explain": "À plein gaz, les moteurs tirent {percent} du courant que la batterie peut fournir, sa capacité multipliée par son indice C. Au-delà de 80 %, la tension chute et la batterie chauffe ; au-delà de 100 %, elle peut s’abîmer ou couper."
       }
     },
     "slots": {
@@ -392,7 +406,12 @@
         "wifi": "Port Wi-Fi (M.2)",
         "battery": "Connecteur de batterie",
         "display": "Connecteur d’écran",
-        "dc-in": "Port de charge"
+        "dc-in": "Port de charge",
+        "motors": "Supports moteurs",
+        "propellers": "Axes des hélices",
+        "esc": "Support d’ESC",
+        "fc": "Support du contrôleur de vol",
+        "camera": "Support de caméra"
       },
       "protocols": {
         "i2c": "I²C",
@@ -416,7 +435,22 @@
         "ultrabook-cooling-mount": "fixation de refroidisseur d’ultrabook",
         "gaming-laptop-cooling-mount": "fixation de refroidisseur de PC portable gaming",
         "usb-c-pd": "USB-C Power Delivery",
-        "dc-barrel": "fiche jack"
+        "dc-barrel": "fiche jack",
+        "dji-mini2-motor-mount": "support moteur DJI Mini 2",
+        "dji-mini3-motor-mount": "support moteur DJI Mini 3 Pro / Mini 4 Pro",
+        "dji-mini2-prop-mount": "fixation d’hélice DJI Mini 2",
+        "dji-mini3-prop-mount": "fixation d’hélice DJI Mini 3 Pro / Mini 4 Pro",
+        "dji-mini-2-battery": "batterie DJI Mini 2",
+        "dji-mini-3-battery": "batterie DJI série Mini 3",
+        "dji-mini-2-gimbal": "nacelle DJI Mini 2",
+        "dji-mini-3-pro-gimbal": "nacelle DJI Mini 3 Pro",
+        "dji-mini-4-pro-gimbal": "nacelle DJI Mini 4 Pro",
+        "motor-mount-16x16": "support moteur 16 × 16 mm",
+        "prop-5in": "hélices de 5 pouces",
+        "xt60-4s": "batterie 4S sur XT60",
+        "stack-30x30-esc": "ESC 30 × 30 mm",
+        "stack-30x30-fc": "contrôleur de vol 30 × 30 mm",
+        "fpv-camera-mount": "support de caméra FPV"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Branché, alimenté par {rail}",
@@ -436,7 +470,10 @@
         "psuBudget": "La configuration consomme jusqu’à {actual} ; l’alimentation est prévue pour {limit}.",
         "powerConnectors": "Nécessite {actual} × {connector} ; l’alimentation en a {limit}.",
         "cooling": "Jusqu’à {actual} de chaleur à évacuer ; le refroidisseur est prévu pour {limit}.",
-        "chargerBudget": "L’ordinateur consomme jusqu’à {actual} ; le chargeur fournit {limit}."
+        "chargerBudget": "L’ordinateur consomme jusqu’à {actual} ; le chargeur fournit {limit}.",
+        "thrustToWeight": "Pèse {actual} ; les moteurs soulèvent jusqu’à {limit}.",
+        "escCurrent": "Chaque moteur tire jusqu’à {actual} ; son ESC est prévu pour {limit}.",
+        "batteryDischarge": "Les moteurs tirent jusqu’à {actual} ; la batterie peut fournir {limit}."
       },
       "railsTitle": "Rails d’alimentation",
       "hostTitle": "Connecteurs",
@@ -458,19 +495,25 @@
       "buildTitle": "Alimentation et refroidissement",
       "buildEmpty": "Branchez une alimentation et un refroidisseur pour vérifier l’alimentation et le refroidissement.",
       "batteryRuntime": "Environ {runtime} sur batterie en usage léger ({energy} à {draw}).",
-      "buildEmptyLaptop": "Branchez un chargeur et un refroidisseur pour vérifier l’alimentation et le refroidissement."
+      "buildEmptyLaptop": "Branchez un chargeur et un refroidisseur pour vérifier l’alimentation et le refroidissement.",
+      "buildTitleDrone": "Portance et puissance",
+      "buildEmptyDrone": "Branchez des moteurs et une batterie pour vérifier la portance et la puissance.",
+      "flightTime": "Environ {time} en vol stationnaire par air calme ({weight}, {power} tirés de {energy}).",
+      "flightTimePublished": "Le fabricant annonce {time}, en vol lent vers l’avant."
     },
     "foundation": {
       "names": {
         "pcb": "Circuit imprimé",
         "desktop": "Boîtier de PC",
-        "laptop": "Châssis de portable"
+        "laptop": "Châssis de portable",
+        "drone": "Aire d’atterrissage"
       },
       "fixedSize": "{width} × {depth} mm, fixé par le châssis",
       "refused": {
         "pcb": "Se monte sur un circuit imprimé, pas dans ce châssis. Videz le projet pour commencer un circuit.",
         "desktop": "Se monte dans un boîtier de PC. Commencez une configuration de bureau pour l’utiliser.",
-        "laptop": "Se monte dans un châssis de portable. Commencez une configuration de portable pour l’utiliser."
+        "laptop": "Se monte dans un châssis de portable. Commencez une configuration de portable pour l’utiliser.",
+        "drone": "Se monte sur un drone. Commencez un drone pour l’utiliser."
       }
     }
   },
@@ -740,6 +783,114 @@
     "charger-barrel-240w": {
       "name": "Chargeur à fiche jack 240 W",
       "summary": "Pour PC portables gaming à prise jack"
+    },
+    "dji-mini-2-frame": {
+      "name": "Châssis DJI Mini 2",
+      "summary": "Contrôleur de vol, ESC et radio intégrés"
+    },
+    "dji-mini-3-pro-frame": {
+      "name": "Châssis DJI Mini 3 Pro",
+      "summary": "Contrôleur de vol, ESC et radio intégrés"
+    },
+    "dji-mini-4-pro-frame": {
+      "name": "Châssis DJI Mini 4 Pro",
+      "summary": "Contrôleur de vol, ESC et radio intégrés"
+    },
+    "fpv-frame-5in": {
+      "name": "Châssis FPV 5 pouces",
+      "summary": "Châssis freestyle en carbone, stack 30 × 30 mm"
+    },
+    "dji-mini-2-motors": {
+      "name": "Moteurs DJI Mini 2",
+      "summary": "Lot de 4"
+    },
+    "dji-mini-3-motors": {
+      "name": "Moteurs DJI Mini 3 Pro / Mini 4 Pro",
+      "summary": "Lot de 4"
+    },
+    "motors-2207-1950kv": {
+      "name": "Moteurs 2207 1950 KV",
+      "summary": "Lot de 4, pour quads 5 pouces en 4S"
+    },
+    "motors-2306-2450kv": {
+      "name": "Moteurs 2306 2450 KV",
+      "summary": "Lot de 4 ; plus nerveux, plus gourmands"
+    },
+    "dji-mini-2-propellers": {
+      "name": "Hélices DJI Mini 2",
+      "summary": "4726F, lot de 4"
+    },
+    "dji-mini-3-propellers": {
+      "name": "Hélices DJI Mini 3 Pro / Mini 4 Pro",
+      "summary": "6030F, lot de 4"
+    },
+    "props-5in-triblade": {
+      "name": "Hélices tripales 5,1 pouces",
+      "summary": "Lot de 4"
+    },
+    "dji-mini-2-battery": {
+      "name": "Batterie DJI Mini 2, 2250 mAh",
+      "summary": "Batterie de vol intelligente"
+    },
+    "dji-mini-3-battery": {
+      "name": "Batterie DJI Mini 3, 2453 mAh",
+      "summary": "Pour Mini 3 Pro et Mini 4 Pro"
+    },
+    "dji-mini-4-pro-battery": {
+      "name": "Batterie DJI Mini 4 Pro, 2590 mAh",
+      "summary": "Pour Mini 3 Pro et Mini 4 Pro"
+    },
+    "dji-mini-3-battery-plus": {
+      "name": "Batterie DJI Mini 3 Plus, 3850 mAh",
+      "summary": "Vols plus longs, au-delà de 249 g"
+    },
+    "lipo-4s-1500-120c": {
+      "name": "LiPo 4S, 1500 mAh, 120C",
+      "summary": "La batterie freestyle 5 pouces courante"
+    },
+    "lipo-4s-1300-120c": {
+      "name": "LiPo 4S, 1300 mAh, 120C",
+      "summary": "Plus légère, vols plus courts"
+    },
+    "liion-4s-4000": {
+      "name": "Li-ion 4S, 4000 mAh",
+      "summary": "Vols longs, mais faible courant de décharge"
+    },
+    "esc-4in1-55a": {
+      "name": "ESC 4-en-1, 55 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-45a": {
+      "name": "ESC 4-en-1, 45 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-30a": {
+      "name": "ESC 4-en-1, 30 A",
+      "summary": "30 × 30 mm, pour moteurs plus légers"
+    },
+    "fc-f7-30x30": {
+      "name": "Contrôleur de vol F7",
+      "summary": "30 × 30 mm"
+    },
+    "dji-mini-2-gimbal": {
+      "name": "Caméra sur nacelle DJI Mini 2",
+      "summary": "12 MP, 4K, 3 axes"
+    },
+    "dji-mini-3-pro-gimbal": {
+      "name": "Caméra sur nacelle DJI Mini 3 Pro",
+      "summary": "48 MP, 1/1,3 pouce, 3 axes"
+    },
+    "dji-mini-4-pro-gimbal": {
+      "name": "Caméra sur nacelle DJI Mini 4 Pro",
+      "summary": "48 MP, 1/1,3 pouce, 3 axes"
+    },
+    "fpv-camera-analog": {
+      "name": "Caméra et émetteur FPV analogiques",
+      "summary": "Émetteur vidéo 600 mW"
+    },
+    "dji-o3-air-unit": {
+      "name": "DJI O3 Air Unit",
+      "summary": "Caméra et émetteur FPV numériques"
     }
   },
   "Builds": {
@@ -757,6 +908,18 @@
     },
     "laptop-gaming": {
       "name": "PC portable gaming"
+    },
+    "drone-dji-mini-2": {
+      "name": "DJI Mini 2"
+    },
+    "drone-dji-mini-3-pro": {
+      "name": "DJI Mini 3 Pro"
+    },
+    "drone-dji-mini-4-pro": {
+      "name": "DJI Mini 4 Pro"
+    },
+    "drone-fpv-5in": {
+      "name": "Quad FPV 5 pouces"
     }
   }
 }

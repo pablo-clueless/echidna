@@ -34,8 +34,8 @@ const pinOffsets: Record<string, Point[]> = {
 };
 
 /**
- * Kinds drawn as a box with a lead per pin, such as dev boards and sensor modules, whose pin counts vary. Desktop
- * modules are boxes with no leads, as they plug into slots rather than being wired.
+ * Kinds drawn as a box with a lead per pin, such as dev boards and sensor modules, whose pin counts vary. Desktop,
+ * laptop and drone modules are boxes with no leads, as they plug into slots rather than being wired.
  */
 export const BOX_KINDS: ReadonlySet<string> = new Set([
   "devBoard",
@@ -52,6 +52,13 @@ export const BOX_KINDS: ReadonlySet<string> = new Set([
   "wifi",
   "display",
   "charger",
+  "droneFrame",
+  "droneMotors",
+  "droneProps",
+  "droneBattery",
+  "esc",
+  "flightController",
+  "droneCamera",
 ]);
 
 /** Half the width of a box symbol's body, in grid units; its leads run one unit further out. */

@@ -23,6 +23,20 @@
       "failAbove": 1
     }
   },
+  "drone": {
+    "thrustToWeight": {
+      "warnAt": 0.5,
+      "failAbove": 0.8
+    },
+    "escCurrent": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    "batteryDischarge": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    }
+  },
   "rules": [
     {
       "id": "voltageRating",

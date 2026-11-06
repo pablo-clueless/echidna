@@ -70,6 +70,12 @@ export const materials = {
   caseSteel: new MeshStandardMaterial({ color: "#2A2C31", metalness: 0.55, roughness: 0.55 }),
   /** Bead-blasted anodised aluminium, for a laptop's bottom shell. */
   anodised: new MeshStandardMaterial({ color: "#A7ABB2", metalness: 0.85, roughness: 0.42 }),
+  /** Light grey moulded plastic, for a camera drone's shell. */
+  dronePlastic: new MeshStandardMaterial({ color: "#C9CCD1", roughness: 0.6 }),
+  /** Woven carbon fibre, for an FPV frame's plates and arms. */
+  carbon: new MeshStandardMaterial({ color: "#1A1B1E", metalness: 0.2, roughness: 0.35 }),
+  /** The painted markings on a drone's landing pad. */
+  padMarking: new MeshStandardMaterial({ color: "#E8E2D4", roughness: 0.85 }),
   /** Rubber feet and hinge covers. */
   rubber: new MeshStandardMaterial({ color: "#16171A", roughness: 0.9 }),
   fallback: new MeshStandardMaterial({ color: "#4A4D55", roughness: 0.6 }),
