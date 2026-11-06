@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "galaxy-s26-display",
+  "name": "Galaxy S26 display",
+  "kind": "phoneDisplay",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-dsi",
+      "connector": "galaxy-s26"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "rail": "display",
+    "power": {
+      "value": 4.6,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Full screen at peak outdoor brightness; Samsung doesn't publish it"
+    },
+    "typical": {
+      "value": 0.32,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/display-galaxy-s26",
+  "meshUrl": "generic/display-galaxy-s26"
+}

@@ -6,6 +6,8 @@ import { modulesIn } from "./slots";
 
 type Project = Pick<ProjectData, "components" | "slots">;
 
+const RANK = { fail: 2, warn: 1, pass: 0 } as const;
+
 /** The rules a desktop build is checked against, each with a name and explanation in `Studio.rules`. */
 export const BUILD_RULE_IDS = [
   "psuBudget",
@@ -15,11 +17,13 @@ export const BUILD_RULE_IDS = [
   "thrustToWeight",
   "escCurrent",
   "batteryDischarge",
+  "pmicRail",
 ] as const;
 
 /**
  * The part each build check is about: the PSU or charger for power, the cooler for cooling, and on a drone the motors
- * for lift, the ESC for its current and the battery for its discharge. A drone with ESCs built into its frame has no
+ * for lift, the ESC for its current and the battery for its discharge, and on a phone or wearable the PMIC for its
+ * rails. A drone with ESCs built into its frame has no
  * ESC part, so that check falls back to the frame.
  */
 const ownerRole: Record<string, ModuleRole> = {
@@ -30,10 +34,11 @@ const ownerRole: Record<string, ModuleRole> = {
   thrustToWeight: "motors",
   escCurrent: "esc",
   batteryDischarge: "battery",
+  pmicRail: "pmic",
 };
 
 /**
- * The device-level checks of every desktop and laptop build in the project, as rule violations on the part each is about, so
+ * The device-level checks of every build in the project, as rule violations on the part each is about, so
  * the validator and inspector show them alongside the circuit's. Passes are included, as the rule engine's are.
  * @param project - Parts and slot placements.
  * @param specs - Part specs by ID.
@@ -53,11 +58,17 @@ export const buildViolations = (
           specs.get(c.specId)?.module?.role === ownerRole[check.id],
       )?.id ?? host.id;
     const checks = checkBuild(spec, modulesIn(project, specs, host.id));
-    // One connector verdict per build, the worst, as each rule gives one verdict per part.
-    const connectors = checks.filter((c) => c.id === "powerConnectors");
-    const worstConnector = connectors.find((c) => c.severity === "fail") ?? connectors[0];
+    // One connector verdict and one PMIC rail verdict per build, the worst, as each rule gives one verdict per part.
+    const worstOf = (id: FitCheck["id"]) =>
+      checks
+        .filter((c) => c.id === id)
+        .reduce<FitCheck | undefined>(
+          (worst, c) => (!worst || RANK[c.severity] > RANK[worst.severity] ? c : worst),
+          undefined,
+        );
+    const kept = new Set([worstOf("powerConnectors"), worstOf("pmicRail")]);
     return checks
-      .filter((c) => c.id !== "powerConnectors" || c === worstConnector)
+      .filter((c) => (c.id !== "powerConnectors" && c.id !== "pmicRail") || kept.has(c))
       .map((check): Violation => ({
         componentId: ownerOf(check),
         ruleId: check.id,

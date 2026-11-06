@@ -37,6 +37,12 @@
       "failAbove": 1
     }
   },
+  "phone": {
+    "pmicRail": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    }
+  },
   "rules": [
     {
       "id": "voltageRating",

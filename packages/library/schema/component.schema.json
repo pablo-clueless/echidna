@@ -64,7 +64,19 @@
         "droneBattery",
         "esc",
         "flightController",
-        "droneCamera"
+        "droneCamera",
+        "phoneBoard",
+        "wearableBoard",
+        "soc",
+        "modem",
+        "pmic",
+        "phoneBattery",
+        "phoneDisplay",
+        "phoneCamera",
+        "chargingCoil",
+        "wearableSensor",
+        "haptics",
+        "radio"
       ]
     },
     "deviceTypes": {
@@ -277,6 +289,62 @@
                     "enum": [0, 90, 180, 270]
                   }
                 }
+              },
+              "board": {
+                "type": "string"
+              },
+              "flex": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x", "z"],
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "z": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "boards": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "width", "depth", "x", "z", "y", "thickness"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "width": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "depth": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "x": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number",
+                "minimum": 0
+              },
+              "thickness": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "joint": {
+                "enum": ["interposer", "flex"]
               }
             }
           }
@@ -369,7 +437,16 @@
             "propellers",
             "esc",
             "flightController",
-            "camera"
+            "camera",
+            "logicBoard",
+            "soc",
+            "modem",
+            "pmic",
+            "chargingCoil",
+            "heartRate",
+            "motion",
+            "haptics",
+            "radio"
           ]
         },
         "power": {
@@ -437,6 +514,31 @@
         "rotors": {
           "type": "integer",
           "minimum": 1
+        },
+        "rails": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "voltage", "maxCurrent"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "voltage": {
+                "$ref": "#/$defs/specValue"
+              },
+              "maxCurrent": {
+                "$ref": "#/$defs/specValue"
+              }
+            }
+          }
+        },
+        "rail": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
         }
       }
     }

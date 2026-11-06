@@ -4,7 +4,6 @@
     "imageAlt": "Echidna 首页：“先确认能用，再动手搭建。”旁边是一块全部检查均已通过的 3D 开发板。"
   },
   "Home": {
-    "openStudio": "打开工作室",
     "footer": "Echidna 仍处于早期开发阶段。",
     "hero": {
       "eyebrow": "面向电路板和设备的 3D 工作室",
@@ -91,8 +90,8 @@
     },
     "cta": {
       "heading": "从空白电路板开始",
-      "body": "打开工作室，从元件库中选一个元件，放置时即可看到判定结果。",
-      "eyebrow": "开始搭建"
+      "body": "工作室即将推出。届时从元件库中选一个元件，放置时即可看到判定结果。",
+      "eyebrow": "即将推出"
     },
     "assembly": {
       "label": "所有元件均已就位的开发板；按下电源按钮后，元件会随着电流到达依次点亮",
@@ -146,7 +145,8 @@
     "languages": {
       "heading": "说你的语言",
       "lead": "每个标签、判定和解释，都有七种语言。"
-    }
+    },
+    "comingSoon": "即将推出"
   },
   "Preferences": {
     "language": "语言",
@@ -177,7 +177,11 @@
         "laptops": "笔记本主板",
         "laptopParts": "笔记本配件",
         "drones": "无人机",
-        "droneParts": "无人机配件"
+        "droneParts": "无人机配件",
+        "phones": "手机",
+        "phoneParts": "手机部件",
+        "wearables": "可穿戴设备",
+        "wearableParts": "可穿戴设备部件"
       }
     },
     "viewport": {
@@ -219,7 +223,14 @@
       "canvasRole": "原理图",
       "partLabel": "{id}，{name}",
       "hint": "从一个引脚拖到另一个引脚以连线 · <key>R</key> 旋转 · <key>Del</key> 删除 · 双击适应视图",
-      "startFromBoard": "从 {board} 开始"
+      "startFromBoard": "从 {board} 开始",
+      "deviceTypes": {
+        "desktop": "台式机",
+        "laptop": "笔记本电脑",
+        "drone": "无人机",
+        "smartphone": "手机",
+        "wearable": "可穿戴设备"
+      }
     },
     "inspector": {
       "board": {
@@ -389,6 +400,10 @@
       "batteryDischarge": {
         "name": "电池放电",
         "explain": "满油门时，电机的总电流达到电池额定放电电流（容量 × C 数）的 {percent}。超过 80% 电压会下降、电池发热；超过 100% 可能损坏电池或断电。"
+      },
+      "pmicRail": {
+        "name": "PMIC 供电轨预算",
+        "explain": "峰值时，这条 PMIC 供电轨上的部件消耗其可供电流的 {percent}。超过 80% 时供电轨发热、带载电压下降；超过 100% 时 PMIC 断电，或手机降频并重启。"
       }
     },
     "slots": {
@@ -411,7 +426,16 @@
         "propellers": "桨轴",
         "esc": "电调安装位",
         "fc": "飞控安装位",
-        "camera": "相机安装位"
+        "camera": "相机安装位",
+        "soc": "SoC",
+        "modem": "基带",
+        "pmic": "PMIC",
+        "rear-camera": "后置摄像头接口",
+        "coil": "无线充电线圈接口",
+        "radio": "射频",
+        "imu": "运动传感器",
+        "heart-rate": "心率传感器接口",
+        "haptics": "振动马达接口"
       },
       "protocols": {
         "i2c": "I²C",
@@ -450,7 +474,21 @@
         "xt60-4s": "XT60 接口 4S 电池",
         "stack-30x30-esc": "30 × 30 mm 电调",
         "stack-30x30-fc": "30 × 30 mm 飞控",
-        "fpv-camera-mount": "FPV 相机安装位"
+        "fpv-camera-mount": "FPV 相机安装位",
+        "soc-package": "SoC 封装",
+        "modem-package": "基带封装",
+        "pmic-package": "PMIC 封装",
+        "phone-battery": "电池接口",
+        "mipi-dsi": "MIPI DSI 屏幕",
+        "mipi-csi": "MIPI CSI-2 摄像头",
+        "magsafe-coil": "MagSafe 线圈",
+        "qi-coil": "Qi 线圈",
+        "wearable-soc": "可穿戴 SoC 封装",
+        "wearable-pmic": "可穿戴 PMIC 封装",
+        "wearable-radio": "可穿戴射频模块",
+        "li-po-1s": "单节锂聚合物电池",
+        "ppg": "光学心率传感器",
+        "haptic": "振动马达驱动"
       },
       "slotLabel": "{host} 的{slot}",
       "pluggedIn": "已插入，由 {rail} 供电",
@@ -473,7 +511,8 @@
         "chargerBudget": "笔记本最高耗电 {actual}；充电器输出 {limit}。",
         "thrustToWeight": "重 {actual}；电机最多可提升 {limit}。",
         "escCurrent": "每个电机最多 {actual}；其电调额定 {limit}。",
-        "batteryDischarge": "电机最多消耗 {actual}；电池可提供 {limit}。"
+        "batteryDischarge": "电机最多消耗 {actual}；电池可提供 {limit}。",
+        "pmicRail": "PMIC {rail}供电轨上的部件最多消耗 {actual}；它可提供 {limit}。"
       },
       "railsTitle": "电源轨",
       "hostTitle": "接口",
@@ -499,22 +538,83 @@
       "buildTitleDrone": "升力与功率",
       "buildEmptyDrone": "装上电机和电池即可检查升力与功率。",
       "flightTime": "无风悬停约 {time}（{weight}，从 {energy} 中消耗 {power}）。",
-      "flightTimePublished": "厂商标称 {time}（低速前飞测得）。"
+      "flightTimePublished": "厂商标称 {time}（低速前飞测得）。",
+      "protocolFor": "{device} 专用{protocol}",
+      "devices": {
+        "iphone-13": "iPhone 13",
+        "iphone-14": "iPhone 14",
+        "iphone-15": "iPhone 15",
+        "iphone-16": "iPhone 16",
+        "iphone-17": "iPhone 17",
+        "iphone-18-pro": "iPhone 18 Pro",
+        "iphone-18-pro-max": "iPhone 18 Pro Max",
+        "galaxy-s21": "Galaxy S21",
+        "galaxy-s22": "Galaxy S22",
+        "galaxy-s23": "Galaxy S23",
+        "galaxy-s24": "Galaxy S24",
+        "galaxy-s25": "Galaxy S25",
+        "galaxy-s26": "Galaxy S26"
+      },
+      "pmicRails": {
+        "core": "SoC 核心",
+        "display": "屏幕",
+        "camera": "摄像头",
+        "sys": "系统",
+        "io": "1.8 V I/O"
+      },
+      "boards": {
+        "main": "主板",
+        "upper": "上层板（叠放）",
+        "sub": "副板（排线连接）"
+      },
+      "onFlex": "排线连接",
+      "likelyBlocked": "很可能插不上",
+      "swapLikelyFails": "很可能装不上",
+      "likely": "很可能：{reason}",
+      "buildTitlePhone": "供电与电池",
+      "buildEmptyPhone": "插入 PMIC 以检查其供电轨。",
+      "videoRuntime": "看视频约 {runtime}（{energy}，{draw}）。",
+      "wearableRuntime": "日常使用约 {runtime}（{energy}，{draw}）。",
+      "batteryLifePublished": "厂商标称视频播放最长 {time}。"
     },
     "foundation": {
       "names": {
         "pcb": "电路板",
         "desktop": "台式机机箱",
         "laptop": "笔记本机身",
-        "drone": "停机坪"
+        "drone": "停机坪",
+        "phone": "维修垫",
+        "wearable": "维修垫"
       },
       "fixedSize": "{width} × {depth} mm，由机身决定",
       "refused": {
         "pcb": "用于电路板，不能装进这个机身。清空项目即可开始电路。",
         "desktop": "用于台式机机箱。开始一个台式机配置即可使用。",
         "laptop": "用于笔记本机身。开始一个笔记本配置即可使用。",
-        "drone": "用于无人机。开始一个无人机项目即可使用。"
+        "drone": "用于无人机。开始一个无人机项目即可使用。",
+        "phone": "用于手机。开始手机组装即可使用。",
+        "wearable": "用于可穿戴设备。开始可穿戴设备组装即可使用。"
       }
+    },
+    "moduleSpecs": {
+      "title": "规格",
+      "power": "峰值功率",
+      "typical": "日常功率",
+      "heat": "发热",
+      "cooling": "散热能力",
+      "output": "输出功率",
+      "energy": "能量",
+      "capacity": "容量",
+      "cRating": "放电倍率",
+      "mass": "质量",
+      "thrust": "单电机推力",
+      "current": "单电机电流",
+      "efficiency": "悬停效率",
+      "maxCurrent": "额定电流",
+      "diameter": "直径",
+      "railVoltage": "{rail}供电轨电压",
+      "railCurrent": "{rail}供电轨电流",
+      "rail": "供电来自"
     }
   },
   "Parts": {
@@ -891,6 +991,414 @@
     "dji-o3-air-unit": {
       "name": "DJI O3 Air Unit",
       "summary": "数字 FPV 相机与图传"
+    },
+    "iphone-13-board": {
+      "name": "iPhone 13 主板",
+      "summary": "两块板通过转接板叠放"
+    },
+    "iphone-13-battery": {
+      "name": "iPhone 13 电池",
+      "summary": "3227 mAh，12.41 Wh"
+    },
+    "iphone-13-display": {
+      "name": "iPhone 13 屏幕",
+      "summary": "6.1 英寸 OLED，60 Hz"
+    },
+    "iphone-13-camera": {
+      "name": "iPhone 13 后置摄像头模组",
+      "summary": "12 MP 主摄"
+    },
+    "iphone-13-pmic": {
+      "name": "iPhone 13 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "iphone-14-board": {
+      "name": "iPhone 14 主板",
+      "summary": "两块板通过转接板叠放"
+    },
+    "iphone-14-battery": {
+      "name": "iPhone 14 电池",
+      "summary": "3279 mAh，12.68 Wh"
+    },
+    "iphone-14-display": {
+      "name": "iPhone 14 屏幕",
+      "summary": "6.1 英寸 OLED，60 Hz"
+    },
+    "iphone-14-camera": {
+      "name": "iPhone 14 后置摄像头模组",
+      "summary": "12 MP 主摄"
+    },
+    "iphone-14-pmic": {
+      "name": "iPhone 14 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "iphone-15-board": {
+      "name": "iPhone 15 主板",
+      "summary": "两块板通过转接板叠放"
+    },
+    "iphone-15-battery": {
+      "name": "iPhone 15 电池",
+      "summary": "3349 mAh，12.98 Wh"
+    },
+    "iphone-15-display": {
+      "name": "iPhone 15 屏幕",
+      "summary": "6.1 英寸 OLED，60 Hz"
+    },
+    "iphone-15-camera": {
+      "name": "iPhone 15 后置摄像头模组",
+      "summary": "48 MP 主摄"
+    },
+    "iphone-15-pmic": {
+      "name": "iPhone 15 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "iphone-16-board": {
+      "name": "iPhone 16 主板",
+      "summary": "两块板通过转接板叠放"
+    },
+    "iphone-16-battery": {
+      "name": "iPhone 16 电池",
+      "summary": "3561 mAh，13.83 Wh"
+    },
+    "iphone-16-display": {
+      "name": "iPhone 16 屏幕",
+      "summary": "6.1 英寸 OLED，60 Hz"
+    },
+    "iphone-16-camera": {
+      "name": "iPhone 16 后置摄像头模组",
+      "summary": "48 MP 主摄"
+    },
+    "iphone-16-pmic": {
+      "name": "iPhone 16 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "iphone-17-board": {
+      "name": "iPhone 17 主板",
+      "summary": "两块板通过转接板叠放"
+    },
+    "iphone-17-battery": {
+      "name": "iPhone 17 电池",
+      "summary": "3692 mAh，14.35 Wh"
+    },
+    "iphone-17-display": {
+      "name": "iPhone 17 屏幕",
+      "summary": "6.3 英寸 OLED，120 Hz"
+    },
+    "iphone-17-camera": {
+      "name": "iPhone 17 后置摄像头模组",
+      "summary": "48 MP 主摄"
+    },
+    "iphone-17-pmic": {
+      "name": "iPhone 17 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "iphone-18-pro-board": {
+      "name": "iPhone 18 Pro 主板",
+      "summary": "两块板通过转接板叠放"
+    },
+    "iphone-18-pro-battery": {
+      "name": "iPhone 18 Pro 电池",
+      "summary": "4288 mAh，16.68 Wh"
+    },
+    "iphone-18-pro-display": {
+      "name": "iPhone 18 Pro 屏幕",
+      "summary": "6.3 英寸 OLED，120 Hz"
+    },
+    "iphone-18-pro-camera": {
+      "name": "iPhone 18 Pro 后置摄像头模组",
+      "summary": "48 MP 主摄"
+    },
+    "iphone-18-pro-pmic": {
+      "name": "iPhone 18 Pro PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "iphone-18-pro-max-board": {
+      "name": "iPhone 18 Pro Max 主板",
+      "summary": "两块板通过转接板叠放"
+    },
+    "iphone-18-pro-max-battery": {
+      "name": "iPhone 18 Pro Max 电池",
+      "summary": "5567 mAh，21.66 Wh"
+    },
+    "iphone-18-pro-max-display": {
+      "name": "iPhone 18 Pro Max 屏幕",
+      "summary": "6.9 英寸 OLED，120 Hz"
+    },
+    "iphone-18-pro-max-camera": {
+      "name": "iPhone 18 Pro Max 后置摄像头模组",
+      "summary": "48 MP 主摄"
+    },
+    "iphone-18-pro-max-pmic": {
+      "name": "iPhone 18 Pro Max PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "galaxy-s21-board": {
+      "name": "Galaxy S21 主板",
+      "summary": "主板加一块经排线连接的副板"
+    },
+    "galaxy-s21-battery": {
+      "name": "Galaxy S21 电池",
+      "summary": "4000 mAh，15.52 Wh"
+    },
+    "galaxy-s21-display": {
+      "name": "Galaxy S21 屏幕",
+      "summary": "6.2 英寸 OLED，120 Hz"
+    },
+    "galaxy-s21-camera": {
+      "name": "Galaxy S21 后置摄像头模组",
+      "summary": "12 MP 主摄"
+    },
+    "galaxy-s21-pmic": {
+      "name": "Galaxy S21 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "galaxy-s22-board": {
+      "name": "Galaxy S22 主板",
+      "summary": "主板加一块经排线连接的副板"
+    },
+    "galaxy-s22-battery": {
+      "name": "Galaxy S22 电池",
+      "summary": "3700 mAh，14.36 Wh"
+    },
+    "galaxy-s22-display": {
+      "name": "Galaxy S22 屏幕",
+      "summary": "6.1 英寸 OLED，120 Hz"
+    },
+    "galaxy-s22-camera": {
+      "name": "Galaxy S22 后置摄像头模组",
+      "summary": "50 MP 主摄"
+    },
+    "galaxy-s22-pmic": {
+      "name": "Galaxy S22 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "galaxy-s23-board": {
+      "name": "Galaxy S23 主板",
+      "summary": "主板加一块经排线连接的副板"
+    },
+    "galaxy-s23-battery": {
+      "name": "Galaxy S23 电池",
+      "summary": "3900 mAh，15.13 Wh"
+    },
+    "galaxy-s23-display": {
+      "name": "Galaxy S23 屏幕",
+      "summary": "6.1 英寸 OLED，120 Hz"
+    },
+    "galaxy-s23-camera": {
+      "name": "Galaxy S23 后置摄像头模组",
+      "summary": "50 MP 主摄"
+    },
+    "galaxy-s23-pmic": {
+      "name": "Galaxy S23 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "galaxy-s24-board": {
+      "name": "Galaxy S24 主板",
+      "summary": "主板加一块经排线连接的副板"
+    },
+    "galaxy-s24-battery": {
+      "name": "Galaxy S24 电池",
+      "summary": "4000 mAh，15.52 Wh"
+    },
+    "galaxy-s24-display": {
+      "name": "Galaxy S24 屏幕",
+      "summary": "6.2 英寸 OLED，120 Hz"
+    },
+    "galaxy-s24-camera": {
+      "name": "Galaxy S24 后置摄像头模组",
+      "summary": "50 MP 主摄"
+    },
+    "galaxy-s24-pmic": {
+      "name": "Galaxy S24 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "galaxy-s25-board": {
+      "name": "Galaxy S25 主板",
+      "summary": "主板加一块经排线连接的副板"
+    },
+    "galaxy-s25-battery": {
+      "name": "Galaxy S25 电池",
+      "summary": "4000 mAh，15.52 Wh"
+    },
+    "galaxy-s25-display": {
+      "name": "Galaxy S25 屏幕",
+      "summary": "6.2 英寸 OLED，120 Hz"
+    },
+    "galaxy-s25-camera": {
+      "name": "Galaxy S25 后置摄像头模组",
+      "summary": "50 MP 主摄"
+    },
+    "galaxy-s25-pmic": {
+      "name": "Galaxy S25 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "galaxy-s26-board": {
+      "name": "Galaxy S26 主板",
+      "summary": "主板加一块经排线连接的副板"
+    },
+    "galaxy-s26-battery": {
+      "name": "Galaxy S26 电池",
+      "summary": "4300 mAh，16.68 Wh"
+    },
+    "galaxy-s26-display": {
+      "name": "Galaxy S26 屏幕",
+      "summary": "6.3 英寸 OLED，120 Hz"
+    },
+    "galaxy-s26-camera": {
+      "name": "Galaxy S26 后置摄像头模组",
+      "summary": "50 MP 主摄"
+    },
+    "galaxy-s26-pmic": {
+      "name": "Galaxy S26 PMIC",
+      "summary": "电源管理芯片；数值为估算"
+    },
+    "apple-a15": {
+      "name": "Apple A15 Bionic",
+      "summary": "SoC；功耗为估算"
+    },
+    "apple-a16": {
+      "name": "Apple A16 Bionic",
+      "summary": "SoC；功耗为估算"
+    },
+    "apple-a18": {
+      "name": "Apple A18",
+      "summary": "SoC；功耗为估算"
+    },
+    "apple-a19": {
+      "name": "Apple A19",
+      "summary": "SoC；功耗为估算"
+    },
+    "apple-a20-pro": {
+      "name": "Apple A20 Pro",
+      "summary": "SoC；功耗为估算"
+    },
+    "snapdragon-888": {
+      "name": "Snapdragon 888 5G",
+      "summary": "内置 5G 基带的 SoC；功耗为估算"
+    },
+    "snapdragon-8-gen-1": {
+      "name": "Snapdragon 8 Gen 1",
+      "summary": "内置 5G 基带的 SoC；功耗为估算"
+    },
+    "snapdragon-8-gen-2-galaxy": {
+      "name": "Snapdragon 8 Gen 2 for Galaxy",
+      "summary": "内置 5G 基带的 SoC；功耗为估算"
+    },
+    "snapdragon-8-gen-3-galaxy": {
+      "name": "Snapdragon 8 Gen 3 for Galaxy",
+      "summary": "内置 5G 基带的 SoC；功耗为估算"
+    },
+    "snapdragon-8-elite-galaxy": {
+      "name": "Snapdragon 8 Elite for Galaxy",
+      "summary": "内置 5G 基带的 SoC；功耗为估算"
+    },
+    "snapdragon-8-elite-gen-5-galaxy": {
+      "name": "Snapdragon 8 Elite Gen 5 for Galaxy",
+      "summary": "内置 5G 基带的 SoC；功耗为估算"
+    },
+    "qualcomm-x60": {
+      "name": "Qualcomm Snapdragon X60",
+      "summary": "5G 基带"
+    },
+    "qualcomm-x65": {
+      "name": "Qualcomm Snapdragon X65",
+      "summary": "5G 基带"
+    },
+    "qualcomm-x70": {
+      "name": "Qualcomm Snapdragon X70",
+      "summary": "5G 基带"
+    },
+    "qualcomm-x71": {
+      "name": "Qualcomm Snapdragon X71",
+      "summary": "5G 基带"
+    },
+    "qualcomm-x80": {
+      "name": "Qualcomm Snapdragon X80",
+      "summary": "5G 基带"
+    },
+    "apple-c2": {
+      "name": "Apple C2",
+      "summary": "5G 基带"
+    },
+    "magsafe-coil-15w": {
+      "name": "MagSafe coil, 15 W",
+      "summary": "无线充电最高 15 W"
+    },
+    "magsafe-coil-25w": {
+      "name": "MagSafe coil, 25 W",
+      "summary": "无线充电最高 25 W"
+    },
+    "galaxy-qi-coil-15w": {
+      "name": "Galaxy Qi coil, 15 W",
+      "summary": "无线充电最高 15 W"
+    },
+    "watch-board": {
+      "name": "通用智能手表主板",
+      "summary": "单板，其余经排线连接"
+    },
+    "watch-battery": {
+      "name": "通用智能手表电池，310 mAh",
+      "summary": "通用部件；数值为估算"
+    },
+    "watch-display": {
+      "name": "通用智能手表屏幕，1.9 英寸 AMOLED",
+      "summary": "通用部件；数值为估算"
+    },
+    "watch-soc": {
+      "name": "通用智能手表 SoC",
+      "summary": "通用部件；数值为估算"
+    },
+    "watch-pmic": {
+      "name": "通用智能手表 PMIC",
+      "summary": "通用部件；数值为估算"
+    },
+    "band-board": {
+      "name": "通用运动手环主板",
+      "summary": "单板，其余经排线连接"
+    },
+    "band-battery": {
+      "name": "通用运动手环电池，190 mAh",
+      "summary": "通用部件；数值为估算"
+    },
+    "band-display": {
+      "name": "通用运动手环屏幕，1.1 英寸 AMOLED",
+      "summary": "通用部件；数值为估算"
+    },
+    "band-soc": {
+      "name": "通用运动手环 SoC",
+      "summary": "通用部件；数值为估算"
+    },
+    "band-pmic": {
+      "name": "通用运动手环 PMIC",
+      "summary": "通用部件；数值为估算"
+    },
+    "ppg-sensor-4led": {
+      "name": "心率与血氧传感器，4 颗 LED",
+      "summary": "通用部件；数值为估算"
+    },
+    "ppg-sensor-2led": {
+      "name": "心率与血氧传感器，2 颗 LED",
+      "summary": "通用部件；数值为估算"
+    },
+    "imu-6axis": {
+      "name": "六轴运动传感器",
+      "summary": "通用部件；数值为估算"
+    },
+    "linear-actuator-haptic": {
+      "name": "线性振动马达",
+      "summary": "通用部件；数值为估算"
+    },
+    "coin-vibration-motor": {
+      "name": "扁平振动马达",
+      "summary": "通用部件；数值为估算"
+    },
+    "wifi-bluetooth-radio": {
+      "name": "Wi-Fi 与蓝牙射频",
+      "summary": "通用部件；数值为估算"
+    },
+    "bluetooth-le-radio": {
+      "name": "低功耗蓝牙射频",
+      "summary": "通用部件；数值为估算"
     }
   },
   "Builds": {
@@ -920,6 +1428,51 @@
     },
     "drone-fpv-5in": {
       "name": "5 英寸 FPV 四轴"
+    },
+    "phone-iphone-13": {
+      "name": "iPhone 13"
+    },
+    "phone-iphone-14": {
+      "name": "iPhone 14"
+    },
+    "phone-iphone-15": {
+      "name": "iPhone 15"
+    },
+    "phone-iphone-16": {
+      "name": "iPhone 16"
+    },
+    "phone-iphone-17": {
+      "name": "iPhone 17"
+    },
+    "phone-iphone-18-pro": {
+      "name": "iPhone 18 Pro"
+    },
+    "phone-iphone-18-pro-max": {
+      "name": "iPhone 18 Pro Max"
+    },
+    "phone-galaxy-s21": {
+      "name": "Galaxy S21"
+    },
+    "phone-galaxy-s22": {
+      "name": "Galaxy S22"
+    },
+    "phone-galaxy-s23": {
+      "name": "Galaxy S23"
+    },
+    "phone-galaxy-s24": {
+      "name": "Galaxy S24"
+    },
+    "phone-galaxy-s25": {
+      "name": "Galaxy S25"
+    },
+    "phone-galaxy-s26": {
+      "name": "Galaxy S26"
+    },
+    "wearable-smartwatch": {
+      "name": "智能手表（通用）"
+    },
+    "wearable-fitness-band": {
+      "name": "运动手环（通用）"
     }
   }
 }

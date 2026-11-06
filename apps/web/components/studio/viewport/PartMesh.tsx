@@ -23,6 +23,7 @@ import { LED_LIT_CURRENT, LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState"
 import { DEFAULT_LED_COLOUR, ledColours } from "@/lib/parts/ledColours";
 import { bandMaterial, materials } from "./materials";
 import { footprints } from "@/lib/board/footprints";
+import { PhoneMesh } from "./PhoneMesh";
 import { DroneMesh } from "./DroneMesh";
 
 /** Generic part bodies in millimetres, y up from the board surface. Sized like the real packages; no brand artwork. */
@@ -548,6 +549,16 @@ const moduleHeights: Record<string, number> = {
   "module/flightController": 4,
   "module/gimbal": 28,
   "module/fpvCamera": 20,
+  "module/soc": 1.1,
+  "module/modem": 0.9,
+  "module/pmic": 0.7,
+  "module/coil": 0.5,
+  "module/wearableSoc": 0.8,
+  "module/wearablePmic": 0.5,
+  "module/hrSensor": 1.6,
+  "module/imu": 0.8,
+  "module/haptics": 3,
+  "module/radio": 0.8,
 };
 
 /**
@@ -559,6 +570,8 @@ const moduleLifts: Record<string, number> = {
   "module/droneBattery": 6,
   "module/gimbal": 4,
   "module/fpvCamera": 8,
+  // A phone's charging coil lies on the inside of the back glass, under the battery.
+  "module/coil": 0.8,
 };
 
 /**
@@ -581,6 +594,16 @@ const moduleMaterials: Record<string, keyof typeof materials> = {
   "module/gimbal": "epoxy",
   "module/fpvCamera": "epoxy",
   "module/droneBattery": "fallback",
+  "module/soc": "epoxy",
+  "module/modem": "epoxy",
+  "module/pmic": "epoxy",
+  "module/coil": "plating",
+  "module/wearableSoc": "epoxy",
+  "module/wearablePmic": "epoxy",
+  "module/hrSensor": "glass",
+  "module/imu": "epoxy",
+  "module/haptics": "lead",
+  "module/radio": "solder",
 };
 
 /** A desktop, laptop or drone module as a plain block the size of its outline. */
@@ -629,6 +652,7 @@ export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed 
     return <PinHeader count={footprints[footprintId]?.pads.length ?? 1} />;
   if (footprintId.startsWith("module/")) return <ModuleBlock footprintId={footprintId} />;
   if (footprintId.startsWith("drone/")) return <DroneMesh footprintId={footprintId} />;
+  if (footprintId.startsWith("phone/")) return <PhoneMesh footprintId={footprintId} />;
   switch (footprintId) {
     case "generic/axial-0.4in":
       return <Resistor bands={bands} />;

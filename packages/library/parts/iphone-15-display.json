@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-15-display",
+  "name": "iPhone 15 display",
+  "kind": "phoneDisplay",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-dsi",
+      "connector": "iphone-15"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "rail": "display",
+    "power": {
+      "value": 4.0,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Full screen at peak outdoor brightness; Apple doesn't publish it"
+    },
+    "typical": {
+      "value": 0.35,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/display-iphone-15",
+  "meshUrl": "generic/display-iphone-15"
+}

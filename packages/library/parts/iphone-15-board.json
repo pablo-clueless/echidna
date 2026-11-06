@@ -1,0 +1,158 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-15-board",
+  "name": "iPhone 15 logic board",
+  "kind": "phoneBoard",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "logicBoard",
+    "typical": {
+      "value": 0.07,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Memory, audio and sensors while watching video; Apple doesn't publish it"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/housing-iphone-15",
+  "meshUrl": "generic/housing-iphone-15",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "soc",
+        "accepts": [
+          {
+            "protocol": "soc-package",
+            "connector": "iphone-15"
+          }
+        ],
+        "board": "upper",
+        "seat": {
+          "x": 5.5,
+          "z": -54.7
+        }
+      },
+      {
+        "id": "modem",
+        "accepts": [
+          {
+            "protocol": "modem-package",
+            "connector": "iphone-15"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 6.7,
+          "z": -28.6
+        }
+      },
+      {
+        "id": "pmic",
+        "accepts": [
+          {
+            "protocol": "pmic-package",
+            "connector": "iphone-15"
+          }
+        ],
+        "board": "upper",
+        "seat": {
+          "x": 22.4,
+          "z": -58.8
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "phone-battery",
+            "connector": "iphone-15"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.4
+        },
+        "flex": {
+          "x": 22.4,
+          "z": -19.6
+        }
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "mipi-dsi",
+            "connector": "iphone-15"
+          }
+        ],
+        "seat": {
+          "x": 79.6,
+          "z": 0
+        },
+        "flex": {
+          "x": 31.8,
+          "z": -44.7
+        }
+      },
+      {
+        "id": "rear-camera",
+        "accepts": [
+          {
+            "protocol": "mipi-csi",
+            "connector": "iphone-15"
+          }
+        ],
+        "seat": {
+          "x": -19.8,
+          "z": -56.8
+        },
+        "flex": {
+          "x": -5.8,
+          "z": -56.8
+        }
+      },
+      {
+        "id": "coil",
+        "accepts": [
+          {
+            "protocol": "magsafe-coil"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.4
+        },
+        "flex": {
+          "x": 3.6,
+          "z": -19.6
+        }
+      }
+    ],
+    "boards": [
+      {
+        "id": "main",
+        "width": 37.6,
+        "depth": 50.2,
+        "x": 13.0,
+        "z": -44.7,
+        "y": 0.8,
+        "thickness": 0.8
+      },
+      {
+        "id": "upper",
+        "width": 31.6,
+        "depth": 31.1,
+        "x": 13.0,
+        "z": -53.2,
+        "y": 3.4,
+        "thickness": 0.8,
+        "joint": "interposer"
+      }
+    ]
+  }
+}

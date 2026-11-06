@@ -1,6 +1,7 @@
-import type { ComponentSpec, PowerConnector, SpecValue } from "@echidna/core";
+import type { ComponentSpec, Interface, PowerConnector, SpecValue } from "@echidna/core";
 
 import { check, type FitCheck, type SlotFit } from "./slots";
+import { checkPhone, phoneChecksFor } from "./phone";
 import { checkDrone, droneChecksFor } from "./drone";
 import defaults from "../rules.json";
 import { grade } from "./engine";
@@ -27,17 +28,18 @@ const heatOf = (build: readonly ComponentSpec[]) =>
   build.find((m) => m.module?.heat)?.module?.heat;
 
 /**
- * The device-level checks of a desktop, laptop or drone build. A drone's are `checkDrone`'s. A desktop's or
+ * The device-level checks of a build. A drone's are `checkDrone`'s, a phone's or wearable's `checkPhone`'s. A desktop's or
  * laptop's are the PSU's or charger's output against everything it powers at full load, the PSU's connectors against
  * what the motherboard and cards need, and the cooler against the processors' heat. A check is left out when the build lacks a part it compares, such as a PSU before one is plugged
  * in. A charger short of the load only warns until it is far short, as the battery makes up the difference for a
  * while.
- * @param host - The motherboard, or a drone's frame.
+ * @param host - The motherboard, a drone's frame, or a phone's or wearable's logic board.
  * @param modules - Everything plugged into it.
- * @returns The checks, one per PSU connector needed.
+ * @returns The checks, one per PSU connector needed, or one per PMIC rail in use.
  */
 export const checkBuild = (host: ComponentSpec, modules: readonly ComponentSpec[]): FitCheck[] => {
   if (roleOf(host) === "frame") return checkDrone(host, modules);
+  if (roleOf(host) === "logicBoard") return checkPhone(host, modules);
   const build = [host, ...modules];
   const checks: FitCheck[] = [];
   const supply = build.find(isSupply);
@@ -100,10 +102,23 @@ export const checkBuild = (host: ComponentSpec, modules: readonly ComponentSpec[
 };
 
 /**
+ * How an interface is named in an interface check: its protocol, and the device its connector is made for when it has
+ * one, as `protocol@connector`.
+ */
+export const interfaceKey = (i: Interface): string =>
+  i.connector ? `${i.protocol}@${i.connector}` : i.protocol;
+
+/** Whether a part's interface goes in a slot: the same protocol, on the connector the slot has, if it names one. */
+const mates = (slot: Interface, part: Interface) =>
+  slot.protocol === part.protocol && (!slot.connector || slot.connector === part.connector);
+
+/**
  * Checks whether a module can go in one of a motherboard's slots: whether the slot takes its socket or interface,
- * and the build checks it bears on once it is in. On a drone, those are the `droneChecksFor` its role. Power drawn counts against the PSU, a part needing PSU connectors
+ * and the build checks it bears on once it is in. On a drone, those are the `droneChecksFor` its role; on a phone or
+ * wearable, the PMIC rail it draws from, or every rail for a PMIC. A slot whose interface names a connector, such as
+ * a phone's display connector, takes only parts made for that connector. Power drawn counts against the PSU, a part needing PSU connectors
  * is checked for them (only the worst connector is reported), and a CPU or cooler is checked against the other.
- * @param host - The motherboard, or a drone's frame.
+ * @param host - The motherboard, a drone's frame, or a logic board.
  * @param slotId - The slot on it.
  * @param part - The module to plug in.
  * @param others - What else is plugged into the motherboard, not counting anything the part would replace.
@@ -117,9 +132,9 @@ export const checkModuleFit = (
 ): SlotFit => {
   const slot = host.host?.slots.find((s) => s.id === slotId);
   const role = roleOf(part);
-  const accepts = slot?.accepts.map((i) => i.protocol) ?? [];
-  const protocols = part.interfaces.map((i) => i.protocol);
-  const shared = protocols.some((p) => accepts.includes(p));
+  const accepts = slot?.accepts.map(interfaceKey) ?? [];
+  const protocols = part.interfaces.map(interfaceKey);
+  const shared = part.interfaces.some((i) => slot?.accepts.some((a) => mates(a, i)));
   const checks: FitCheck[] = [
     check("interface", slot && role && shared ? "pass" : "fail", [], { protocols, accepts }),
   ];
@@ -127,6 +142,8 @@ export const checkModuleFit = (
   if (slot && role && shared && roleOf(host) === "frame") {
     const relevant = droneChecksFor[role] ?? [];
     checks.push(...checkDrone(host, [...others, part]).filter((c) => relevant.includes(c.id)));
+  } else if (slot && role && shared && roleOf(host) === "logicBoard") {
+    checks.push(...phoneChecksFor(part, checkPhone(host, [...others, part])));
   } else if (slot && role && shared) {
     const build = checkBuild(host, [...others, part]);
     const isPsu = role === "psu";
@@ -147,7 +164,7 @@ export const checkModuleFit = (
   return { fits: checks.every((c) => c.severity !== "fail"), checks };
 };
 
-/** A laptop's estimated time on battery in light use, and what it is worked out from. */
+/** A laptop's, phone's or wearable's estimated time on battery in light use, and what it is worked out from. */
 export type BatteryRuntime = {
   /** Seconds. */
   runtime: number;
@@ -159,8 +176,8 @@ export type BatteryRuntime = {
 };
 
 /**
- * Estimates how long a laptop runs on battery in light everyday use: the battery's energy over what the board and
- * every part draw in light use.
+ * Estimates how long a laptop, phone or wearable runs on battery in light everyday use, such as watching video on a
+ * phone: the battery's energy over what the board and every part draw in that use.
  * @param host - The laptop's board.
  * @param modules - Everything plugged into it.
  * @returns The estimate, or null without a battery or anything drawing from it.

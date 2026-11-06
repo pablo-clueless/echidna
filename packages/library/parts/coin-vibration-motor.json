@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "coin-vibration-motor",
+  "name": "Coin vibration motor",
+  "kind": "haptics",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "haptic"
+    }
+  ],
+  "module": {
+    "role": "haptics",
+    "rail": "sys",
+    "power": {
+      "value": 0.25,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "At its most active; Generic part; figures in line with current models, estimated"
+    },
+    "typical": {
+      "value": 0.0002,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Everyday use; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/haptics",
+  "meshUrl": "generic/haptics"
+}

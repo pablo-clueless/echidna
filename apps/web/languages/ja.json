@@ -4,7 +4,6 @@
     "imageAlt": "Echidna のホームページ：「作る前に、動くと分かる。」の横に、すべてのチェックに合格した 3D の開発ボード。"
   },
   "Home": {
-    "openStudio": "スタジオを開く",
     "footer": "Echidna は開発の初期段階です。",
     "hero": {
       "eyebrow": "回路基板とデバイスのための 3D スタジオ",
@@ -91,8 +90,8 @@
     },
     "cta": {
       "heading": "空の基板から始めましょう",
-      "body": "スタジオを開き、ライブラリから部品を選んで配置すると、その場で判定が表示されます。",
-      "eyebrow": "組み立てを始める"
+      "body": "スタジオは近日公開予定です。ライブラリから部品を選んで配置すると、その場で判定が表示されます。",
+      "eyebrow": "近日公開"
     },
     "assembly": {
       "label": "すべての部品が実装済みの開発ボード。電源ボタンを押すと、電力が届いた部品から順に点灯する",
@@ -146,7 +145,8 @@
     "languages": {
       "heading": "あなたの言語で",
       "lead": "ラベル、判定、説明のすべてを 7 つの言語で。"
-    }
+    },
+    "comingSoon": "近日公開"
   },
   "Preferences": {
     "language": "言語",
@@ -177,7 +177,11 @@
         "laptops": "ノート用マザーボード",
         "laptopParts": "ノートパソコン用パーツ",
         "drones": "ドローン",
-        "droneParts": "ドローン部品"
+        "droneParts": "ドローン部品",
+        "phones": "スマートフォン",
+        "phoneParts": "スマートフォン部品",
+        "wearables": "ウェアラブル",
+        "wearableParts": "ウェアラブル部品"
       }
     },
     "viewport": {
@@ -219,7 +223,14 @@
       "canvasRole": "回路図",
       "partLabel": "{id}、{name}",
       "hint": "ピンからピンへドラッグして配線 · <key>R</key> 回転 · <key>Del</key> 削除 · ダブルクリックで全体表示",
-      "startFromBoard": "{board} から始める"
+      "startFromBoard": "{board} から始める",
+      "deviceTypes": {
+        "desktop": "デスクトップ",
+        "laptop": "ノート PC",
+        "drone": "ドローン",
+        "smartphone": "スマートフォン",
+        "wearable": "ウェアラブル"
+      }
     },
     "inspector": {
       "board": {
@@ -389,6 +400,10 @@
       "batteryDischarge": {
         "name": "バッテリーの放電",
         "explain": "フルスロットルでは、モーターがバッテリーの定格放電電流（容量 × C レート）の {percent} を流します。80% を超えると電圧が落ちて発熱し、100% を超えると劣化や電源断のおそれがあります。"
+      },
+      "pmicRail": {
+        "name": "PMIC レールの電流予算",
+        "explain": "ピーク時、この PMIC レールにつながる部品は、供給できる電流の {percent} を消費します。80% を超えるとレールが発熱して負荷で電圧が下がり、100% を超えると PMIC が遮断するか、電話が性能を落として再起動します。"
       }
     },
     "slots": {
@@ -411,7 +426,16 @@
         "propellers": "プロペラ軸",
         "esc": "ESC マウント",
         "fc": "フライトコントローラーマウント",
-        "camera": "カメラマウント"
+        "camera": "カメラマウント",
+        "soc": "SoC",
+        "modem": "モデム",
+        "pmic": "PMIC",
+        "rear-camera": "背面カメラコネクタ",
+        "coil": "ワイヤレス充電コイルのコネクタ",
+        "radio": "無線",
+        "imu": "モーションセンサー",
+        "heart-rate": "心拍センサーのコネクタ",
+        "haptics": "振動モーターのコネクタ"
       },
       "protocols": {
         "i2c": "I²C",
@@ -450,7 +474,21 @@
         "xt60-4s": "XT60 の 4S バッテリー",
         "stack-30x30-esc": "30 × 30 mm ESC",
         "stack-30x30-fc": "30 × 30 mm フライトコントローラー",
-        "fpv-camera-mount": "FPV カメラマウント"
+        "fpv-camera-mount": "FPV カメラマウント",
+        "soc-package": "SoC パッケージ",
+        "modem-package": "モデムパッケージ",
+        "pmic-package": "PMIC パッケージ",
+        "phone-battery": "バッテリーコネクタ",
+        "mipi-dsi": "MIPI DSI ディスプレイ",
+        "mipi-csi": "MIPI CSI-2 カメラ",
+        "magsafe-coil": "MagSafe コイル",
+        "qi-coil": "Qi コイル",
+        "wearable-soc": "ウェアラブル SoC パッケージ",
+        "wearable-pmic": "ウェアラブル PMIC パッケージ",
+        "wearable-radio": "ウェアラブル無線モジュール",
+        "li-po-1s": "1 セル LiPo",
+        "ppg": "光学式心拍センサー",
+        "haptic": "振動モータードライバー"
       },
       "slotLabel": "{host} の{slot}",
       "pluggedIn": "接続済み、{rail} から給電",
@@ -473,7 +511,8 @@
         "chargerBudget": "ノートパソコンの最大消費電力は {actual}、充電器の出力は {limit} です。",
         "thrustToWeight": "重量 {actual}、モーターの最大推力 {limit}。",
         "escCurrent": "各モーターは最大 {actual}、ESC の定格は {limit}。",
-        "batteryDischarge": "モーターは最大 {actual}、バッテリーの供給能力は {limit}。"
+        "batteryDischarge": "モーターは最大 {actual}、バッテリーの供給能力は {limit}。",
+        "pmicRail": "PMIC の{rail}レールの部品は最大 {actual} を消費し、レールは {limit} を供給します。"
       },
       "railsTitle": "電源レール",
       "hostTitle": "スロット",
@@ -499,22 +538,83 @@
       "buildTitleDrone": "揚力と電力",
       "buildEmptyDrone": "モーターとバッテリーを取り付けると、揚力と電力を確認できます。",
       "flightTime": "無風でのホバリングで約 {time}（{weight}、{energy} から {power}）。",
-      "flightTimePublished": "メーカー公称値は {time}（低速で前進飛行）。"
+      "flightTimePublished": "メーカー公称値は {time}（低速で前進飛行）。",
+      "protocolFor": "{device} 用 {protocol}",
+      "devices": {
+        "iphone-13": "iPhone 13",
+        "iphone-14": "iPhone 14",
+        "iphone-15": "iPhone 15",
+        "iphone-16": "iPhone 16",
+        "iphone-17": "iPhone 17",
+        "iphone-18-pro": "iPhone 18 Pro",
+        "iphone-18-pro-max": "iPhone 18 Pro Max",
+        "galaxy-s21": "Galaxy S21",
+        "galaxy-s22": "Galaxy S22",
+        "galaxy-s23": "Galaxy S23",
+        "galaxy-s24": "Galaxy S24",
+        "galaxy-s25": "Galaxy S25",
+        "galaxy-s26": "Galaxy S26"
+      },
+      "pmicRails": {
+        "core": "SoC コア",
+        "display": "ディスプレイ",
+        "camera": "カメラ",
+        "sys": "システム",
+        "io": "1.8 V I/O"
+      },
+      "boards": {
+        "main": "メインボード",
+        "upper": "上段ボード（積層）",
+        "sub": "サブボード（フレキ）"
+      },
+      "onFlex": "フレキケーブル",
+      "likelyBlocked": "ここには挿せない可能性が高い",
+      "swapLikelyFails": "合わない可能性が高い",
+      "likely": "おそらく：{reason}",
+      "buildTitlePhone": "電源とバッテリー",
+      "buildEmptyPhone": "PMIC を挿すとレールを確認できます。",
+      "videoRuntime": "ビデオ再生で約 {runtime}（{energy}、{draw}）。",
+      "wearableRuntime": "日常の使用で約 {runtime}（{energy}、{draw}）。",
+      "batteryLifePublished": "メーカー公称のビデオ再生は最大 {time}。"
     },
     "foundation": {
       "names": {
         "pcb": "回路基板",
         "desktop": "デスクトップケース",
         "laptop": "ノートPCシャーシ",
-        "drone": "ヘリパッド"
+        "drone": "ヘリパッド",
+        "phone": "修理用マット",
+        "wearable": "修理用マット"
       },
       "fixedSize": "{width} × {depth} mm（シャーシで固定）",
       "refused": {
         "pcb": "回路基板用の部品です。このシャーシには取り付けられません。回路を始めるにはプロジェクトをクリアしてください。",
         "desktop": "デスクトップケース用の部品です。使うにはデスクトップ構成を始めてください。",
         "laptop": "ノートPCシャーシ用の部品です。使うにはノートPC構成を始めてください。",
-        "drone": "ドローン用の部品です。ドローンを始めると使えます。"
+        "drone": "ドローン用の部品です。ドローンを始めると使えます。",
+        "phone": "スマートフォンに入る部品です。スマートフォンの構成を始めると使えます。",
+        "wearable": "ウェアラブルに入る部品です。ウェアラブルの構成を始めると使えます。"
       }
+    },
+    "moduleSpecs": {
+      "title": "仕様",
+      "power": "ピーク電力",
+      "typical": "通常時の電力",
+      "heat": "発熱",
+      "cooling": "冷却能力",
+      "output": "出力",
+      "energy": "エネルギー",
+      "capacity": "容量",
+      "cRating": "C レート",
+      "mass": "質量",
+      "thrust": "モーターあたりの推力",
+      "current": "モーターあたりの電流",
+      "efficiency": "ホバー効率",
+      "maxCurrent": "定格電流",
+      "diameter": "直径",
+      "railVoltage": "{rail}レールの電圧",
+      "railCurrent": "{rail}レールの電流",
+      "rail": "電源"
     }
   },
   "Parts": {
@@ -891,6 +991,414 @@
     "dji-o3-air-unit": {
       "name": "DJI O3 Air Unit",
       "summary": "デジタル FPV カメラと送信機"
+    },
+    "iphone-13-board": {
+      "name": "iPhone 13 ロジックボード",
+      "summary": "インターポーザーで 2 枚を積層"
+    },
+    "iphone-13-battery": {
+      "name": "iPhone 13 バッテリー",
+      "summary": "3227 mAh、12.41 Wh"
+    },
+    "iphone-13-display": {
+      "name": "iPhone 13 ディスプレイ",
+      "summary": "6.1 インチ OLED、60 Hz"
+    },
+    "iphone-13-camera": {
+      "name": "iPhone 13 背面カメラモジュール",
+      "summary": "12 MP メインカメラ"
+    },
+    "iphone-13-pmic": {
+      "name": "iPhone 13 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "iphone-14-board": {
+      "name": "iPhone 14 ロジックボード",
+      "summary": "インターポーザーで 2 枚を積層"
+    },
+    "iphone-14-battery": {
+      "name": "iPhone 14 バッテリー",
+      "summary": "3279 mAh、12.68 Wh"
+    },
+    "iphone-14-display": {
+      "name": "iPhone 14 ディスプレイ",
+      "summary": "6.1 インチ OLED、60 Hz"
+    },
+    "iphone-14-camera": {
+      "name": "iPhone 14 背面カメラモジュール",
+      "summary": "12 MP メインカメラ"
+    },
+    "iphone-14-pmic": {
+      "name": "iPhone 14 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "iphone-15-board": {
+      "name": "iPhone 15 ロジックボード",
+      "summary": "インターポーザーで 2 枚を積層"
+    },
+    "iphone-15-battery": {
+      "name": "iPhone 15 バッテリー",
+      "summary": "3349 mAh、12.98 Wh"
+    },
+    "iphone-15-display": {
+      "name": "iPhone 15 ディスプレイ",
+      "summary": "6.1 インチ OLED、60 Hz"
+    },
+    "iphone-15-camera": {
+      "name": "iPhone 15 背面カメラモジュール",
+      "summary": "48 MP メインカメラ"
+    },
+    "iphone-15-pmic": {
+      "name": "iPhone 15 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "iphone-16-board": {
+      "name": "iPhone 16 ロジックボード",
+      "summary": "インターポーザーで 2 枚を積層"
+    },
+    "iphone-16-battery": {
+      "name": "iPhone 16 バッテリー",
+      "summary": "3561 mAh、13.83 Wh"
+    },
+    "iphone-16-display": {
+      "name": "iPhone 16 ディスプレイ",
+      "summary": "6.1 インチ OLED、60 Hz"
+    },
+    "iphone-16-camera": {
+      "name": "iPhone 16 背面カメラモジュール",
+      "summary": "48 MP メインカメラ"
+    },
+    "iphone-16-pmic": {
+      "name": "iPhone 16 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "iphone-17-board": {
+      "name": "iPhone 17 ロジックボード",
+      "summary": "インターポーザーで 2 枚を積層"
+    },
+    "iphone-17-battery": {
+      "name": "iPhone 17 バッテリー",
+      "summary": "3692 mAh、14.35 Wh"
+    },
+    "iphone-17-display": {
+      "name": "iPhone 17 ディスプレイ",
+      "summary": "6.3 インチ OLED、120 Hz"
+    },
+    "iphone-17-camera": {
+      "name": "iPhone 17 背面カメラモジュール",
+      "summary": "48 MP メインカメラ"
+    },
+    "iphone-17-pmic": {
+      "name": "iPhone 17 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "iphone-18-pro-board": {
+      "name": "iPhone 18 Pro ロジックボード",
+      "summary": "インターポーザーで 2 枚を積層"
+    },
+    "iphone-18-pro-battery": {
+      "name": "iPhone 18 Pro バッテリー",
+      "summary": "4288 mAh、16.68 Wh"
+    },
+    "iphone-18-pro-display": {
+      "name": "iPhone 18 Pro ディスプレイ",
+      "summary": "6.3 インチ OLED、120 Hz"
+    },
+    "iphone-18-pro-camera": {
+      "name": "iPhone 18 Pro 背面カメラモジュール",
+      "summary": "48 MP メインカメラ"
+    },
+    "iphone-18-pro-pmic": {
+      "name": "iPhone 18 Pro PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "iphone-18-pro-max-board": {
+      "name": "iPhone 18 Pro Max ロジックボード",
+      "summary": "インターポーザーで 2 枚を積層"
+    },
+    "iphone-18-pro-max-battery": {
+      "name": "iPhone 18 Pro Max バッテリー",
+      "summary": "5567 mAh、21.66 Wh"
+    },
+    "iphone-18-pro-max-display": {
+      "name": "iPhone 18 Pro Max ディスプレイ",
+      "summary": "6.9 インチ OLED、120 Hz"
+    },
+    "iphone-18-pro-max-camera": {
+      "name": "iPhone 18 Pro Max 背面カメラモジュール",
+      "summary": "48 MP メインカメラ"
+    },
+    "iphone-18-pro-max-pmic": {
+      "name": "iPhone 18 Pro Max PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "galaxy-s21-board": {
+      "name": "Galaxy S21 ロジックボード",
+      "summary": "メインボードとフレキで繋いだサブボード"
+    },
+    "galaxy-s21-battery": {
+      "name": "Galaxy S21 バッテリー",
+      "summary": "4000 mAh、15.52 Wh"
+    },
+    "galaxy-s21-display": {
+      "name": "Galaxy S21 ディスプレイ",
+      "summary": "6.2 インチ OLED、120 Hz"
+    },
+    "galaxy-s21-camera": {
+      "name": "Galaxy S21 背面カメラモジュール",
+      "summary": "12 MP メインカメラ"
+    },
+    "galaxy-s21-pmic": {
+      "name": "Galaxy S21 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "galaxy-s22-board": {
+      "name": "Galaxy S22 ロジックボード",
+      "summary": "メインボードとフレキで繋いだサブボード"
+    },
+    "galaxy-s22-battery": {
+      "name": "Galaxy S22 バッテリー",
+      "summary": "3700 mAh、14.36 Wh"
+    },
+    "galaxy-s22-display": {
+      "name": "Galaxy S22 ディスプレイ",
+      "summary": "6.1 インチ OLED、120 Hz"
+    },
+    "galaxy-s22-camera": {
+      "name": "Galaxy S22 背面カメラモジュール",
+      "summary": "50 MP メインカメラ"
+    },
+    "galaxy-s22-pmic": {
+      "name": "Galaxy S22 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "galaxy-s23-board": {
+      "name": "Galaxy S23 ロジックボード",
+      "summary": "メインボードとフレキで繋いだサブボード"
+    },
+    "galaxy-s23-battery": {
+      "name": "Galaxy S23 バッテリー",
+      "summary": "3900 mAh、15.13 Wh"
+    },
+    "galaxy-s23-display": {
+      "name": "Galaxy S23 ディスプレイ",
+      "summary": "6.1 インチ OLED、120 Hz"
+    },
+    "galaxy-s23-camera": {
+      "name": "Galaxy S23 背面カメラモジュール",
+      "summary": "50 MP メインカメラ"
+    },
+    "galaxy-s23-pmic": {
+      "name": "Galaxy S23 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "galaxy-s24-board": {
+      "name": "Galaxy S24 ロジックボード",
+      "summary": "メインボードとフレキで繋いだサブボード"
+    },
+    "galaxy-s24-battery": {
+      "name": "Galaxy S24 バッテリー",
+      "summary": "4000 mAh、15.52 Wh"
+    },
+    "galaxy-s24-display": {
+      "name": "Galaxy S24 ディスプレイ",
+      "summary": "6.2 インチ OLED、120 Hz"
+    },
+    "galaxy-s24-camera": {
+      "name": "Galaxy S24 背面カメラモジュール",
+      "summary": "50 MP メインカメラ"
+    },
+    "galaxy-s24-pmic": {
+      "name": "Galaxy S24 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "galaxy-s25-board": {
+      "name": "Galaxy S25 ロジックボード",
+      "summary": "メインボードとフレキで繋いだサブボード"
+    },
+    "galaxy-s25-battery": {
+      "name": "Galaxy S25 バッテリー",
+      "summary": "4000 mAh、15.52 Wh"
+    },
+    "galaxy-s25-display": {
+      "name": "Galaxy S25 ディスプレイ",
+      "summary": "6.2 インチ OLED、120 Hz"
+    },
+    "galaxy-s25-camera": {
+      "name": "Galaxy S25 背面カメラモジュール",
+      "summary": "50 MP メインカメラ"
+    },
+    "galaxy-s25-pmic": {
+      "name": "Galaxy S25 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "galaxy-s26-board": {
+      "name": "Galaxy S26 ロジックボード",
+      "summary": "メインボードとフレキで繋いだサブボード"
+    },
+    "galaxy-s26-battery": {
+      "name": "Galaxy S26 バッテリー",
+      "summary": "4300 mAh、16.68 Wh"
+    },
+    "galaxy-s26-display": {
+      "name": "Galaxy S26 ディスプレイ",
+      "summary": "6.3 インチ OLED、120 Hz"
+    },
+    "galaxy-s26-camera": {
+      "name": "Galaxy S26 背面カメラモジュール",
+      "summary": "50 MP メインカメラ"
+    },
+    "galaxy-s26-pmic": {
+      "name": "Galaxy S26 PMIC",
+      "summary": "電源管理 IC。値は推定"
+    },
+    "apple-a15": {
+      "name": "Apple A15 Bionic",
+      "summary": "SoC。電力は推定"
+    },
+    "apple-a16": {
+      "name": "Apple A16 Bionic",
+      "summary": "SoC。電力は推定"
+    },
+    "apple-a18": {
+      "name": "Apple A18",
+      "summary": "SoC。電力は推定"
+    },
+    "apple-a19": {
+      "name": "Apple A19",
+      "summary": "SoC。電力は推定"
+    },
+    "apple-a20-pro": {
+      "name": "Apple A20 Pro",
+      "summary": "SoC。電力は推定"
+    },
+    "snapdragon-888": {
+      "name": "Snapdragon 888 5G",
+      "summary": "5G モデム内蔵 SoC。電力は推定"
+    },
+    "snapdragon-8-gen-1": {
+      "name": "Snapdragon 8 Gen 1",
+      "summary": "5G モデム内蔵 SoC。電力は推定"
+    },
+    "snapdragon-8-gen-2-galaxy": {
+      "name": "Snapdragon 8 Gen 2 for Galaxy",
+      "summary": "5G モデム内蔵 SoC。電力は推定"
+    },
+    "snapdragon-8-gen-3-galaxy": {
+      "name": "Snapdragon 8 Gen 3 for Galaxy",
+      "summary": "5G モデム内蔵 SoC。電力は推定"
+    },
+    "snapdragon-8-elite-galaxy": {
+      "name": "Snapdragon 8 Elite for Galaxy",
+      "summary": "5G モデム内蔵 SoC。電力は推定"
+    },
+    "snapdragon-8-elite-gen-5-galaxy": {
+      "name": "Snapdragon 8 Elite Gen 5 for Galaxy",
+      "summary": "5G モデム内蔵 SoC。電力は推定"
+    },
+    "qualcomm-x60": {
+      "name": "Qualcomm Snapdragon X60",
+      "summary": "5G モデム"
+    },
+    "qualcomm-x65": {
+      "name": "Qualcomm Snapdragon X65",
+      "summary": "5G モデム"
+    },
+    "qualcomm-x70": {
+      "name": "Qualcomm Snapdragon X70",
+      "summary": "5G モデム"
+    },
+    "qualcomm-x71": {
+      "name": "Qualcomm Snapdragon X71",
+      "summary": "5G モデム"
+    },
+    "qualcomm-x80": {
+      "name": "Qualcomm Snapdragon X80",
+      "summary": "5G モデム"
+    },
+    "apple-c2": {
+      "name": "Apple C2",
+      "summary": "5G モデム"
+    },
+    "magsafe-coil-15w": {
+      "name": "MagSafe coil, 15 W",
+      "summary": "最大 15 W のワイヤレス充電"
+    },
+    "magsafe-coil-25w": {
+      "name": "MagSafe coil, 25 W",
+      "summary": "最大 25 W のワイヤレス充電"
+    },
+    "galaxy-qi-coil-15w": {
+      "name": "Galaxy Qi coil, 15 W",
+      "summary": "最大 15 W のワイヤレス充電"
+    },
+    "watch-board": {
+      "name": "汎用スマートウォッチロジックボード",
+      "summary": "1 枚のボード、ほかはフレキで接続"
+    },
+    "watch-battery": {
+      "name": "汎用スマートウォッチバッテリー、310 mAh",
+      "summary": "汎用部品。値は推定"
+    },
+    "watch-display": {
+      "name": "汎用スマートウォッチディスプレイ、1.9 インチ AMOLED",
+      "summary": "汎用部品。値は推定"
+    },
+    "watch-soc": {
+      "name": "汎用スマートウォッチ SoC",
+      "summary": "汎用部品。値は推定"
+    },
+    "watch-pmic": {
+      "name": "汎用スマートウォッチ PMIC",
+      "summary": "汎用部品。値は推定"
+    },
+    "band-board": {
+      "name": "汎用フィットネスバンドロジックボード",
+      "summary": "1 枚のボード、ほかはフレキで接続"
+    },
+    "band-battery": {
+      "name": "汎用フィットネスバンドバッテリー、190 mAh",
+      "summary": "汎用部品。値は推定"
+    },
+    "band-display": {
+      "name": "汎用フィットネスバンドディスプレイ、1.1 インチ AMOLED",
+      "summary": "汎用部品。値は推定"
+    },
+    "band-soc": {
+      "name": "汎用フィットネスバンド SoC",
+      "summary": "汎用部品。値は推定"
+    },
+    "band-pmic": {
+      "name": "汎用フィットネスバンド PMIC",
+      "summary": "汎用部品。値は推定"
+    },
+    "ppg-sensor-4led": {
+      "name": "心拍・SpO₂ センサー、LED 4 個",
+      "summary": "汎用部品。値は推定"
+    },
+    "ppg-sensor-2led": {
+      "name": "心拍・SpO₂ センサー、LED 2 個",
+      "summary": "汎用部品。値は推定"
+    },
+    "imu-6axis": {
+      "name": "6 軸モーションセンサー",
+      "summary": "汎用部品。値は推定"
+    },
+    "linear-actuator-haptic": {
+      "name": "リニア振動アクチュエーター",
+      "summary": "汎用部品。値は推定"
+    },
+    "coin-vibration-motor": {
+      "name": "コイン形振動モーター",
+      "summary": "汎用部品。値は推定"
+    },
+    "wifi-bluetooth-radio": {
+      "name": "Wi-Fi・Bluetooth 無線",
+      "summary": "汎用部品。値は推定"
+    },
+    "bluetooth-le-radio": {
+      "name": "Bluetooth Low Energy 無線",
+      "summary": "汎用部品。値は推定"
     }
   },
   "Builds": {
@@ -920,6 +1428,51 @@
     },
     "drone-fpv-5in": {
       "name": "5 インチ FPV クアッド"
+    },
+    "phone-iphone-13": {
+      "name": "iPhone 13"
+    },
+    "phone-iphone-14": {
+      "name": "iPhone 14"
+    },
+    "phone-iphone-15": {
+      "name": "iPhone 15"
+    },
+    "phone-iphone-16": {
+      "name": "iPhone 16"
+    },
+    "phone-iphone-17": {
+      "name": "iPhone 17"
+    },
+    "phone-iphone-18-pro": {
+      "name": "iPhone 18 Pro"
+    },
+    "phone-iphone-18-pro-max": {
+      "name": "iPhone 18 Pro Max"
+    },
+    "phone-galaxy-s21": {
+      "name": "Galaxy S21"
+    },
+    "phone-galaxy-s22": {
+      "name": "Galaxy S22"
+    },
+    "phone-galaxy-s23": {
+      "name": "Galaxy S23"
+    },
+    "phone-galaxy-s24": {
+      "name": "Galaxy S24"
+    },
+    "phone-galaxy-s25": {
+      "name": "Galaxy S25"
+    },
+    "phone-galaxy-s26": {
+      "name": "Galaxy S26"
+    },
+    "wearable-smartwatch": {
+      "name": "スマートウォッチ（汎用）"
+    },
+    "wearable-fitness-band": {
+      "name": "フィットネスバンド（汎用）"
     }
   }
 }

@@ -21,12 +21,17 @@ describe("foundations", () => {
     expect(foundationsFor(spec("nvme-ssd-1tb"))).toEqual(["desktop", "laptop"]);
     expect(foundationsFor(spec("fpv-frame-5in"))).toEqual(["drone"]);
     expect(foundationsFor(spec("esc-4in1-45a"))).toEqual(["drone"]);
+    expect(foundationsFor(spec("iphone-15-board"))).toEqual(["phone"]);
+    expect(foundationsFor(spec("magsafe-coil-25w"))).toEqual(["phone"]);
+    expect(foundationsFor(spec("watch-display"))).toEqual(["wearable"]);
   });
 
   it("puts each kind of ready-made build on its own foundation", () => {
     expect(foundationForDevice("desktop")).toBe("desktop");
     expect(foundationForDevice("laptop")).toBe("laptop");
     expect(foundationForDevice("drone")).toBe("drone");
+    expect(foundationForDevice("smartphone")).toBe("phone");
+    expect(foundationForDevice("wearable")).toBe("wearable");
     expect(foundationForDevice("iot")).toBe("pcb");
   });
 

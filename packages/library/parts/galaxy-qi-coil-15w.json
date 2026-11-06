@@ -1,0 +1,27 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "galaxy-qi-coil-15w",
+  "name": "Galaxy Qi coil, 15 W",
+  "kind": "chargingCoil",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "qi-coil"
+    }
+  ],
+  "module": {
+    "role": "chargingCoil",
+    "output": {
+      "value": 15,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Samsung: Fast Wireless Charging 2.0, 15 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/coil",
+  "meshUrl": "generic/coil"
+}

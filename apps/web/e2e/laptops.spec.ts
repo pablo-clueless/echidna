@@ -70,7 +70,8 @@ for (const { locale, messages } of locales) {
       // A desktop PSU is never offered, and a 100 W USB-C charger is refused with both figures.
       await expect(swaps.getByRole("listitem", { name: partName("psu-1000w") })).toHaveCount(0);
       const usbc100 = swaps.getByRole("listitem", { name: partName("charger-usbc-100w") });
-      await expect(usbc100).toContainText(slots.swapFails);
+      // The laptop's draw is an estimate, so the refusal is worded as likely.
+      await expect(usbc100).toContainText(slots.swapLikelyFails);
       await expect(usbc100).toContainText(/227/);
       await expect(usbc100).toContainText(/100/);
       await expect(usbc100.getByRole("button", { name: slots.swap })).toBeDisabled();

@@ -6,13 +6,13 @@ import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { builds, partsById } from "@echidna/library";
 import { useMemo } from "react";
 
-import { dotClass, railName, textClass, useCheckReason } from "./SlotPicker";
+import { dotClass, failsOnEstimates, railName, textClass, useCheckReason } from "./SlotPicker";
+import { boardKey, slotKey } from "@/lib/messageKeys";
 import { ProvenanceBadge } from "./ProvenanceBadge";
 import { useProjectStore } from "@/stores/project";
 import { useStudioStore } from "@/stores/studio";
 import { modulesIn } from "@/lib/project/slots";
 import { formatQuantity } from "@/lib/units";
-import { slotKey } from "@/lib/messageKeys";
 import { cn } from "@/lib/utils";
 
 /** Seconds in an hour, and so joules in a watt-hour, the unit battery capacity is printed in. */
@@ -22,7 +22,8 @@ const HOUR = 3600;
  * A host board's rails, with the current drawn from each, and what is plugged into each of its slots. A desktop's or
  * laptop's board also shows its power and cooling checks and, for a laptop, the estimated time on battery. A drone's
  * frame shows its lift, ESC and battery checks and its estimated hover time, beside the maker's figure while the
- * drone is still as it ships.
+ * drone is still as it ships. A phone's or wearable's board shows its PMIC rail checks and its estimated battery life,
+ * beside the maker's figure while the phone is still as it ships, and which of its boards each slot is on.
  */
 export const HostSlots = ({
   component,
@@ -51,8 +52,8 @@ export const HostSlots = ({
     [spec, modules],
   );
   const flight = useMemo(() => (spec.module ? flightTime(spec, modules) : null), [spec, modules]);
-  // The maker's flight time applies only while every slot holds the part the drone ships with.
-  const published = useMemo(() => {
+  // The maker's figures apply only while every slot holds the part the device ships with.
+  const stock = useMemo(() => {
     const occupants = new Map(
       Object.entries(slots).flatMap(([id, at]) => {
         const specId = components.find((c) => c.id === id)?.specId;
@@ -62,13 +63,32 @@ export const HostSlots = ({
     return builds.find(
       (b) =>
         b.hostId === spec.id &&
-        b.flightTime &&
         Object.keys(b.modules).length === occupants.size &&
         Object.entries(b.modules).every(([slot, id]) => occupants.get(slot) === id),
-    )?.flightTime;
+    );
   }, [slots, components, component.id, spec.id]);
+  const published = stock?.flightTime;
+  const quoted = stock?.batteryLife;
   const isLaptop = spec.deviceTypes.includes("laptop");
   const isDrone = spec.module?.role === "frame";
+  const isPhone = spec.deviceTypes.includes("smartphone");
+  const isWearable = spec.deviceTypes.includes("wearable");
+  const isHandheld = isPhone || isWearable;
+  const hours = (seconds: number) =>
+    // A fitness band lasts days, so a week reads in days rather than a hundred and something hours.
+    seconds > 2 * 86_400
+      ? format.number(seconds / 86_400, {
+          style: "unit",
+          unit: "day",
+          unitDisplay: "long",
+          maximumFractionDigits: 1,
+        })
+      : format.number(seconds / HOUR, {
+          style: "unit",
+          unit: "hour",
+          unitDisplay: "long",
+          maximumFractionDigits: 1,
+        });
   const minutes = (seconds: number) =>
     format.number(seconds / 60, {
       style: "unit",
@@ -83,7 +103,7 @@ export const HostSlots = ({
       {spec.module && (
         <section aria-labelledby="build-heading" className="grid gap-1">
           <h3 id="build-heading" className="text-muted-foreground text-xs font-medium">
-            {t(isDrone ? "buildTitleDrone" : "buildTitle")}
+            {t(isDrone ? "buildTitleDrone" : isHandheld ? "buildTitlePhone" : "buildTitle")}
           </h3>
           {flight && (
             <p className="text-xs">
@@ -99,27 +119,36 @@ export const HostSlots = ({
           {flight && published && (
             <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
               {t("flightTimePublished", { time: minutes(published.value) })}
-              <ProvenanceBadge source={published.source} />
+              <ProvenanceBadge source={published.source} reference={published.reference} />
             </p>
           )}
           {runtime && (
             <p className="text-xs">
-              {t("batteryRuntime", {
-                runtime: format.number(runtime.runtime / HOUR, {
-                  style: "unit",
-                  unit: "hour",
-                  unitDisplay: "long",
-                  maximumFractionDigits: 1,
-                }),
+              {t(isPhone ? "videoRuntime" : isWearable ? "wearableRuntime" : "batteryRuntime", {
+                runtime: hours(runtime.runtime),
                 energy: formatQuantity(runtime.energy / HOUR, "Wh", locale),
                 draw: formatQuantity(runtime.draw, "W", locale),
               })}
               {runtime.estimated && ` ${t("estimated")}`}
             </p>
           )}
+          {runtime && quoted && (
+            <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
+              {t("batteryLifePublished", { time: hours(quoted.value) })}
+              <ProvenanceBadge source={quoted.source} reference={quoted.reference} />
+            </p>
+          )}
           {buildChecks.length === 0 ? (
             <p className="text-muted-foreground text-xs">
-              {t(isDrone ? "buildEmptyDrone" : isLaptop ? "buildEmptyLaptop" : "buildEmpty")}
+              {t(
+                isDrone
+                  ? "buildEmptyDrone"
+                  : isHandheld
+                    ? "buildEmptyPhone"
+                    : isLaptop
+                      ? "buildEmptyLaptop"
+                      : "buildEmpty",
+              )}
             </p>
           ) : (
             <ul className="grid gap-1">
@@ -133,7 +162,9 @@ export const HostSlots = ({
                     className={cn("mt-1 size-1.5 shrink-0", dotClass[check.severity])}
                   />
                   <span className={cn(check.severity !== "pass" && textClass[check.severity])}>
-                    {reasonFor(check, spec)}
+                    {failsOnEstimates([check])
+                      ? t("likely", { reason: reasonFor(check, spec) })
+                      : reasonFor(check, spec)}
                   </span>
                 </li>
               ))}
@@ -162,7 +193,10 @@ export const HostSlots = ({
                       actual: formatQuantity(drawn, "A", locale),
                       limit: formatQuantity(rail.maxCurrent.value, "A", locale),
                     })}
-                    <ProvenanceBadge source={rail.maxCurrent.source} />
+                    <ProvenanceBadge
+                      source={rail.maxCurrent.source}
+                      reference={rail.maxCurrent.reference}
+                    />
                   </dd>
                 </div>
               );
@@ -179,12 +213,21 @@ export const HostSlots = ({
             const occupant = Object.entries(slots).find(
               ([, at]) => at.hostId === component.id && at.slotId === slot.id,
             )?.[0];
+            // On a host of several boards, say where each slot is: on which board, or out on a flex cable.
+            const where = !spec.host?.boards
+              ? undefined
+              : slot.flex
+                ? t("onFlex")
+                : t(`boards.${boardKey(slot.board ?? spec.host.boards[0]?.id ?? "")}`);
             return (
               <div
                 key={slot.id}
                 className="flex items-baseline justify-between gap-3 py-0.5 text-xs"
               >
-                <dt>{t(`names.${slotKey(slot.id)}`)}</dt>
+                <dt>
+                  {t(`names.${slotKey(slot.id)}`)}
+                  {where && <span className="text-muted-foreground"> · {where}</span>}
+                </dt>
                 <dd className="font-mono">{occupant ?? t("empty")}</dd>
               </div>
             );

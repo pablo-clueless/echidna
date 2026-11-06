@@ -79,6 +79,23 @@ export const materials = {
   /** Rubber feet and hinge covers. */
   rubber: new MeshStandardMaterial({ color: "#16171A", roughness: 0.9 }),
   fallback: new MeshStandardMaterial({ color: "#4A4D55", roughness: 0.6 }),
+  /** Amber polyimide flex cable, joining a phone's boards and parts. */
+  flex: new MeshStandardMaterial({ color: "#C98A2E", roughness: 0.45, side: DoubleSide }),
+  /** The dark glass back of a phone, seen from inside, and a display panel lying face down. */
+  glass: new MeshPhysicalMaterial({ color: "#121316", roughness: 0.15, clearcoat: 1 }),
+  /** Graphite heat-spreading film on the back of a display or battery. */
+  graphite: new MeshStandardMaterial({ color: "#2D2F33", metalness: 0.3, roughness: 0.7 }),
+  /** A phone battery's printed wrap. */
+  pouch: new MeshStandardMaterial({ color: "#26282C", roughness: 0.5 }),
+  /** A camera's sapphire lens cover. */
+  lens: new MeshPhysicalMaterial({
+    color: "#0A0C14",
+    roughness: 0.05,
+    clearcoat: 1,
+    metalness: 0.2,
+  }),
+  /** Blue silicone repair mat. */
+  mat: new MeshStandardMaterial({ color: "#2E4B5E", roughness: 0.92 }),
 } as const;
 
 const bandCache = new Map<string, MeshPhysicalMaterial>();

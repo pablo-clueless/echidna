@@ -1,0 +1,90 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-14-pmic",
+  "name": "iPhone 14 PMIC",
+  "kind": "pmic",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "pmic-package",
+      "connector": "iphone-14"
+    }
+  ],
+  "module": {
+    "role": "pmic",
+    "rails": [
+      {
+        "id": "core",
+        "voltage": {
+          "value": 0.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Apple doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 16.0,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Apple doesn't publish it"
+        }
+      },
+      {
+        "id": "display",
+        "voltage": {
+          "value": 4.6,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Apple doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 1.0,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Apple doesn't publish it"
+        }
+      },
+      {
+        "id": "camera",
+        "voltage": {
+          "value": 2.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Apple doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 0.9,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Apple doesn't publish it"
+        }
+      },
+      {
+        "id": "sys",
+        "voltage": {
+          "value": 3.85,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Apple doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 1.4,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Apple doesn't publish it"
+        }
+      }
+    ],
+    "typical": {
+      "value": 0.02,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Conversion losses while watching video; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/pmic",
+  "meshUrl": "generic/pmic"
+}

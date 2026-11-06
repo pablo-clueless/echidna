@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "watch-battery",
+  "name": "Generic smartwatch battery, 310 mAh",
+  "kind": "phoneBattery",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "li-po-1s"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "energy": {
+      "value": 4297,
+      "unit": "J",
+      "source": "estimated",
+      "reference": "310 mAh at a nominal 3.85 V; Generic part; figures in line with current models, estimated"
+    },
+    "capacity": {
+      "value": 1116.0,
+      "unit": "C",
+      "source": "estimated",
+      "reference": "310 mAh; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/battery-watch",
+  "meshUrl": "generic/battery-watch"
+}

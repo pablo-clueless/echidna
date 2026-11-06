@@ -1,8 +1,8 @@
 "use client";
 
+import type { ComponentSpec, DeviceType } from "@echidna/core";
 import { ChevronRight, Package, Search } from "lucide-react";
 import { parts, partsById } from "@echidna/library";
-import type { ComponentSpec } from "@echidna/core";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -33,7 +33,19 @@ const categories = [
     key: "droneParts",
     kinds: ["droneMotors", "droneProps", "droneBattery", "esc", "flightController", "droneCamera"],
   },
-] as const;
+  { key: "phones", kinds: ["phoneBoard"] },
+  {
+    key: "phoneParts",
+    kinds: ["soc", "modem", "pmic", "phoneBattery", "phoneDisplay", "phoneCamera", "chargingCoil"],
+    device: "smartphone",
+  },
+  { key: "wearables", kinds: ["wearableBoard"] },
+  {
+    key: "wearableParts",
+    kinds: ["soc", "pmic", "phoneBattery", "phoneDisplay", "wearableSensor", "haptics", "radio"],
+    device: "wearable",
+  },
+] as const satisfies readonly { key: string; kinds: readonly string[]; device?: DeviceType }[];
 
 /** How far a symbol reaches either side of its origin, leads included, turned as placed. */
 const halfWidthOf = (spec: ComponentSpec, rotation: number) => {
@@ -96,6 +108,7 @@ export const LibrarySidebar = () => {
       parts: parts.filter(
         (p) =>
           (c.kinds as readonly string[]).includes(p.kind) &&
+          (!("device" in c) || p.deviceTypes.includes(c.device)) &&
           (!needle ||
             tParts(`${partKey(p.id)}.name`)
               .toLocaleLowerCase()

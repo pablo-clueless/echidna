@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "qualcomm-x70",
+  "name": "Qualcomm Snapdragon X70",
+  "kind": "modem",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "modem-package",
+      "connector": "iphone-15"
+    }
+  ],
+  "module": {
+    "role": "modem",
+    "rail": "sys",
+    "power": {
+      "value": 3.6,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Transmitting at full power at the edge of coverage; estimated"
+    },
+    "typical": {
+      "value": 0.04,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Idle on the network while watching downloaded video; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/modem",
+  "meshUrl": "generic/modem"
+}

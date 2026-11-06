@@ -25,6 +25,9 @@ const SchematicCanvas = dynamic(
 /** Dev boards a project can start from. */
 const hosts = parts.filter((p) => p.host && p.kind === "devBoard");
 
+/** The kinds of device with ready-made builds, in the order they are offered. */
+const BUILD_GROUPS = ["desktop", "laptop", "drone", "smartphone", "wearable"] as const;
+
 export const SchematicPanel = () => {
   const t = useTranslations("Studio.schematic");
   const tParts = useTranslations("Parts");
@@ -79,17 +82,34 @@ export const SchematicPanel = () => {
                   {t("startFromBoard", { board: tParts(`${partKey(host.id)}.name`) })}
                 </Button>
               ))}
-              {builds.map((build) => (
-                <Button
-                  key={build.id}
-                  size="xs"
-                  variant="ghost"
-                  onClick={() => loadBuild(build.id)}
-                >
-                  {t("startFromBoard", { board: tBuilds(`${buildKey(build.id)}.name`) })}
-                </Button>
-              ))}
             </div>
+            {/* Ready-made builds, a group per kind of device, so thirty-odd presets stay easy to scan. */}
+            {BUILD_GROUPS.map((device) => (
+              <div
+                key={device}
+                role="group"
+                aria-label={t(`deviceTypes.${device}`)}
+                className="grid gap-1"
+              >
+                <p className="text-muted-foreground text-xs font-medium">
+                  {t(`deviceTypes.${device}`)}
+                </p>
+                <div className="flex flex-wrap justify-center gap-1.5">
+                  {builds
+                    .filter((build) => build.deviceType === device)
+                    .map((build) => (
+                      <Button
+                        key={build.id}
+                        size="xs"
+                        variant="ghost"
+                        onClick={() => loadBuild(build.id)}
+                      >
+                        {t("startFromBoard", { board: tBuilds(`${buildKey(build.id)}.name`) })}
+                      </Button>
+                    ))}
+                </div>
+              </div>
+            ))}
           </EmptyContent>
         </PanelEmpty>
       )}

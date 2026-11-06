@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-18-pro-max-display",
+  "name": "iPhone 18 Pro Max display",
+  "kind": "phoneDisplay",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-dsi",
+      "connector": "iphone-18-pro-max"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "rail": "display",
+    "power": {
+      "value": 5.2,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Full screen at peak outdoor brightness; Apple doesn't publish it"
+    },
+    "typical": {
+      "value": 0.27,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/display-iphone-18-pro-max",
+  "meshUrl": "generic/display-iphone-18-pro-max"
+}

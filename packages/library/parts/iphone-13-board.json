@@ -1,0 +1,158 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-13-board",
+  "name": "iPhone 13 logic board",
+  "kind": "phoneBoard",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "logicBoard",
+    "typical": {
+      "value": 0.06,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Memory, audio and sensors while watching video; Apple doesn't publish it"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/housing-iphone-13",
+  "meshUrl": "generic/housing-iphone-13",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "soc",
+        "accepts": [
+          {
+            "protocol": "soc-package",
+            "connector": "iphone-13"
+          }
+        ],
+        "board": "upper",
+        "seat": {
+          "x": 5.5,
+          "z": -54.4
+        }
+      },
+      {
+        "id": "modem",
+        "accepts": [
+          {
+            "protocol": "modem-package",
+            "connector": "iphone-13"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 6.8,
+          "z": -28.4
+        }
+      },
+      {
+        "id": "pmic",
+        "accepts": [
+          {
+            "protocol": "pmic-package",
+            "connector": "iphone-13"
+          }
+        ],
+        "board": "upper",
+        "seat": {
+          "x": 22.4,
+          "z": -58.4
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "phone-battery",
+            "connector": "iphone-13"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.4
+        },
+        "flex": {
+          "x": 22.4,
+          "z": -19.4
+        }
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "mipi-dsi",
+            "connector": "iphone-13"
+          }
+        ],
+        "seat": {
+          "x": 79.5,
+          "z": 0
+        },
+        "flex": {
+          "x": 31.8,
+          "z": -44.4
+        }
+      },
+      {
+        "id": "rear-camera",
+        "accepts": [
+          {
+            "protocol": "mipi-csi",
+            "connector": "iphone-13"
+          }
+        ],
+        "seat": {
+          "x": -19.8,
+          "z": -57.3
+        },
+        "flex": {
+          "x": -5.8,
+          "z": -57.3
+        }
+      },
+      {
+        "id": "coil",
+        "accepts": [
+          {
+            "protocol": "magsafe-coil"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.4
+        },
+        "flex": {
+          "x": 3.6,
+          "z": -19.4
+        }
+      }
+    ],
+    "boards": [
+      {
+        "id": "main",
+        "width": 37.5,
+        "depth": 49.9,
+        "x": 13.0,
+        "z": -44.4,
+        "y": 0.8,
+        "thickness": 0.8
+      },
+      {
+        "id": "upper",
+        "width": 31.5,
+        "depth": 30.9,
+        "x": 13.0,
+        "z": -52.9,
+        "y": 3.4,
+        "thickness": 0.8,
+        "joint": "interposer"
+      }
+    ]
+  }
+}

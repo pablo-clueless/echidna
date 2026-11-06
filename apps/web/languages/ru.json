@@ -4,7 +4,6 @@
     "imageAlt": "Главная страница Echidna: «Узнайте, что всё работает, ещё до сборки» рядом с 3D-моделью отладочной платы, прошедшей все проверки."
   },
   "Home": {
-    "openStudio": "Открыть студию",
     "footer": "Echidna находится на ранней стадии разработки.",
     "hero": {
       "eyebrow": "3D-студия для печатных плат и устройств",
@@ -91,8 +90,8 @@
     },
     "cta": {
       "heading": "Начните с пустой платы",
-      "body": "Откройте студию, выберите деталь в библиотеке и увидите её вердикт сразу при размещении.",
-      "eyebrow": "Начать сборку"
+      "body": "Студия скоро откроется. Вы выберете деталь в библиотеке и увидите её вердикт сразу при размещении.",
+      "eyebrow": "Скоро"
     },
     "assembly": {
       "label": "Отладочная плата со всеми установленными деталями; кнопка питания по очереди зажигает детали по мере подачи тока",
@@ -146,7 +145,8 @@
     "languages": {
       "heading": "Говорит на вашем языке",
       "lead": "Все подписи, вердикты и пояснения — на семи языках."
-    }
+    },
+    "comingSoon": "Скоро"
   },
   "Preferences": {
     "language": "Язык",
@@ -177,7 +177,11 @@
         "laptops": "Платы ноутбуков",
         "laptopParts": "Комплектующие ноутбуков",
         "drones": "Дроны",
-        "droneParts": "Детали дронов"
+        "droneParts": "Детали дронов",
+        "phones": "Смартфоны",
+        "phoneParts": "Детали смартфонов",
+        "wearables": "Носимые устройства",
+        "wearableParts": "Детали носимых устройств"
       }
     },
     "viewport": {
@@ -219,7 +223,14 @@
       "canvasRole": "схема",
       "partLabel": "{id}, {name}",
       "hint": "Тяните от вывода к выводу, чтобы соединить · <key>R</key> повернуть · <key>Del</key> удалить · двойной щелчок — показать всё",
-      "startFromBoard": "Начать с {board}"
+      "startFromBoard": "Начать с {board}",
+      "deviceTypes": {
+        "desktop": "Настольные ПК",
+        "laptop": "Ноутбуки",
+        "drone": "Дроны",
+        "smartphone": "Смартфоны",
+        "wearable": "Носимые устройства"
+      }
     },
     "inspector": {
       "board": {
@@ -389,6 +400,10 @@
       "batteryDischarge": {
         "name": "Разряд аккумулятора",
         "explain": "На полном газу моторы берут {percent} тока, который может отдать аккумулятор: ёмкость, умноженная на токоотдачу C. Выше 80 % напряжение проседает и аккумулятор греется; выше 100 % он может повредиться или отключиться."
+      },
+      "pmicRail": {
+        "name": "Бюджет шин PMIC",
+        "explain": "На пике детали на этой шине PMIC потребляют {percent} тока, который она может дать. Выше 80 % шина греется, а напряжение проседает под нагрузкой; выше 100 % PMIC отключается или телефон сбрасывает частоты и перезагружается."
       }
     },
     "slots": {
@@ -411,7 +426,16 @@
         "propellers": "Валы пропеллеров",
         "esc": "Место регулятора",
         "fc": "Место полётного контроллера",
-        "camera": "Крепление камеры"
+        "camera": "Крепление камеры",
+        "soc": "SoC",
+        "modem": "Модем",
+        "pmic": "PMIC",
+        "rear-camera": "Разъём основной камеры",
+        "coil": "Разъём катушки беспроводной зарядки",
+        "radio": "Радиомодуль",
+        "imu": "Датчик движения",
+        "heart-rate": "Разъём датчика пульса",
+        "haptics": "Разъём вибромотора"
       },
       "protocols": {
         "i2c": "I²C",
@@ -450,7 +474,21 @@
         "xt60-4s": "аккумулятор 4S с XT60",
         "stack-30x30-esc": "регулятор 30 × 30 мм",
         "stack-30x30-fc": "полётный контроллер 30 × 30 мм",
-        "fpv-camera-mount": "крепление FPV-камеры"
+        "fpv-camera-mount": "крепление FPV-камеры",
+        "soc-package": "корпус SoC",
+        "modem-package": "корпус модема",
+        "pmic-package": "корпус PMIC",
+        "phone-battery": "разъём аккумулятора",
+        "mipi-dsi": "дисплей MIPI DSI",
+        "mipi-csi": "камера MIPI CSI-2",
+        "magsafe-coil": "катушка MagSafe",
+        "qi-coil": "катушка Qi",
+        "wearable-soc": "корпус SoC носимого устройства",
+        "wearable-pmic": "корпус PMIC носимого устройства",
+        "wearable-radio": "радиомодуль носимого устройства",
+        "li-po-1s": "одноячеечный LiPo",
+        "ppg": "оптический датчик пульса",
+        "haptic": "драйвер вибромотора"
       },
       "slotLabel": "{slot} на {host}",
       "pluggedIn": "Подключено, питание от {rail}",
@@ -473,7 +511,8 @@
         "chargerBudget": "Ноутбук потребляет до {actual}, а зарядное устройство выдаёт {limit}.",
         "thrustToWeight": "Весит {actual}; моторы поднимают до {limit}.",
         "escCurrent": "Каждый мотор берёт до {actual}; его регулятор рассчитан на {limit}.",
-        "batteryDischarge": "Моторы берут до {actual}; аккумулятор отдаёт {limit}."
+        "batteryDischarge": "Моторы берут до {actual}; аккумулятор отдаёт {limit}.",
+        "pmicRail": "Детали на шине {rail} PMIC потребляют до {actual}; шина даёт {limit}."
       },
       "railsTitle": "Шины питания",
       "hostTitle": "Разъёмы",
@@ -499,22 +538,83 @@
       "buildTitleDrone": "Тяга и питание",
       "buildEmptyDrone": "Установите моторы и аккумулятор, чтобы проверить тягу и питание.",
       "flightTime": "Около {time} висения в безветрие ({weight}, {power} от {energy}).",
-      "flightTimePublished": "Производитель заявляет {time} при медленном полёте вперёд."
+      "flightTimePublished": "Производитель заявляет {time} при медленном полёте вперёд.",
+      "protocolFor": "{protocol} для {device}",
+      "devices": {
+        "iphone-13": "iPhone 13",
+        "iphone-14": "iPhone 14",
+        "iphone-15": "iPhone 15",
+        "iphone-16": "iPhone 16",
+        "iphone-17": "iPhone 17",
+        "iphone-18-pro": "iPhone 18 Pro",
+        "iphone-18-pro-max": "iPhone 18 Pro Max",
+        "galaxy-s21": "Galaxy S21",
+        "galaxy-s22": "Galaxy S22",
+        "galaxy-s23": "Galaxy S23",
+        "galaxy-s24": "Galaxy S24",
+        "galaxy-s25": "Galaxy S25",
+        "galaxy-s26": "Galaxy S26"
+      },
+      "pmicRails": {
+        "core": "ядра SoC",
+        "display": "дисплея",
+        "camera": "камеры",
+        "sys": "системная",
+        "io": "ввода-вывода 1,8 В"
+      },
+      "boards": {
+        "main": "основная плата",
+        "upper": "верхняя плата, в стопке",
+        "sub": "дополнительная плата, на шлейфе"
+      },
+      "onFlex": "на шлейфе",
+      "likelyBlocked": "Скорее всего, сюда не подключить",
+      "swapLikelyFails": "Скорее всего, не подойдёт",
+      "likely": "Вероятно: {reason}",
+      "buildTitlePhone": "Питание и аккумулятор",
+      "buildEmptyPhone": "Подключите PMIC, чтобы проверить его шины.",
+      "videoRuntime": "Около {runtime} просмотра видео ({energy} при {draw}).",
+      "wearableRuntime": "Около {runtime} в обычном использовании ({energy} при {draw}).",
+      "batteryLifePublished": "Производитель заявляет до {time} воспроизведения видео."
     },
     "foundation": {
       "names": {
         "pcb": "Печатная плата",
         "desktop": "Корпус ПК",
         "laptop": "Корпус ноутбука",
-        "drone": "Посадочная площадка"
+        "drone": "Посадочная площадка",
+        "phone": "Ремонтный коврик",
+        "wearable": "Ремонтный коврик"
       },
       "fixedSize": "{width} × {depth} мм, задано корпусом",
       "refused": {
         "pcb": "Ставится на печатную плату, а не в этот корпус. Очистите проект, чтобы начать схему.",
         "desktop": "Ставится в корпус ПК. Начните сборку ПК, чтобы использовать эту деталь.",
         "laptop": "Ставится в корпус ноутбука. Начните сборку ноутбука, чтобы использовать эту деталь.",
-        "drone": "Ставится на дрон. Начните сборку дрона, чтобы использовать."
+        "drone": "Ставится на дрон. Начните сборку дрона, чтобы использовать.",
+        "phone": "Ставится в смартфон. Начните сборку смартфона, чтобы использовать.",
+        "wearable": "Ставится в носимое устройство. Начните сборку носимого устройства, чтобы использовать."
       }
+    },
+    "moduleSpecs": {
+      "title": "Характеристики",
+      "power": "Пиковая мощность",
+      "typical": "Мощность в обычном режиме",
+      "heat": "Тепловыделение",
+      "cooling": "Охлаждение",
+      "output": "Выходная мощность",
+      "energy": "Энергия",
+      "capacity": "Ёмкость",
+      "cRating": "Токоотдача (C)",
+      "mass": "Масса",
+      "thrust": "Тяга на мотор",
+      "current": "Ток на мотор",
+      "efficiency": "КПД на висении",
+      "maxCurrent": "Номинальный ток",
+      "diameter": "Диаметр",
+      "railVoltage": "Напряжение шины {rail}",
+      "railCurrent": "Ток шины {rail}",
+      "rail": "Питается от шины"
     }
   },
   "Parts": {
@@ -891,6 +991,414 @@
     "dji-o3-air-unit": {
       "name": "DJI O3 Air Unit",
       "summary": "Цифровая FPV-камера с передатчиком"
+    },
+    "iphone-13-board": {
+      "name": "Системная плата iPhone 13",
+      "summary": "Две платы, сложенные на интерпозере"
+    },
+    "iphone-13-battery": {
+      "name": "Аккумулятор iPhone 13",
+      "summary": "3227 мА·ч, 12,41 Вт·ч"
+    },
+    "iphone-13-display": {
+      "name": "Дисплей iPhone 13",
+      "summary": "OLED 6,1 дюйма, 60 Гц"
+    },
+    "iphone-13-camera": {
+      "name": "Модуль основной камеры iPhone 13",
+      "summary": "Основная камера 12 Мп"
+    },
+    "iphone-13-pmic": {
+      "name": "PMIC iPhone 13",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "iphone-14-board": {
+      "name": "Системная плата iPhone 14",
+      "summary": "Две платы, сложенные на интерпозере"
+    },
+    "iphone-14-battery": {
+      "name": "Аккумулятор iPhone 14",
+      "summary": "3279 мА·ч, 12,68 Вт·ч"
+    },
+    "iphone-14-display": {
+      "name": "Дисплей iPhone 14",
+      "summary": "OLED 6,1 дюйма, 60 Гц"
+    },
+    "iphone-14-camera": {
+      "name": "Модуль основной камеры iPhone 14",
+      "summary": "Основная камера 12 Мп"
+    },
+    "iphone-14-pmic": {
+      "name": "PMIC iPhone 14",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "iphone-15-board": {
+      "name": "Системная плата iPhone 15",
+      "summary": "Две платы, сложенные на интерпозере"
+    },
+    "iphone-15-battery": {
+      "name": "Аккумулятор iPhone 15",
+      "summary": "3349 мА·ч, 12,98 Вт·ч"
+    },
+    "iphone-15-display": {
+      "name": "Дисплей iPhone 15",
+      "summary": "OLED 6,1 дюйма, 60 Гц"
+    },
+    "iphone-15-camera": {
+      "name": "Модуль основной камеры iPhone 15",
+      "summary": "Основная камера 48 Мп"
+    },
+    "iphone-15-pmic": {
+      "name": "PMIC iPhone 15",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "iphone-16-board": {
+      "name": "Системная плата iPhone 16",
+      "summary": "Две платы, сложенные на интерпозере"
+    },
+    "iphone-16-battery": {
+      "name": "Аккумулятор iPhone 16",
+      "summary": "3561 мА·ч, 13,83 Вт·ч"
+    },
+    "iphone-16-display": {
+      "name": "Дисплей iPhone 16",
+      "summary": "OLED 6,1 дюйма, 60 Гц"
+    },
+    "iphone-16-camera": {
+      "name": "Модуль основной камеры iPhone 16",
+      "summary": "Основная камера 48 Мп"
+    },
+    "iphone-16-pmic": {
+      "name": "PMIC iPhone 16",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "iphone-17-board": {
+      "name": "Системная плата iPhone 17",
+      "summary": "Две платы, сложенные на интерпозере"
+    },
+    "iphone-17-battery": {
+      "name": "Аккумулятор iPhone 17",
+      "summary": "3692 мА·ч, 14,35 Вт·ч"
+    },
+    "iphone-17-display": {
+      "name": "Дисплей iPhone 17",
+      "summary": "OLED 6,3 дюйма, 120 Гц"
+    },
+    "iphone-17-camera": {
+      "name": "Модуль основной камеры iPhone 17",
+      "summary": "Основная камера 48 Мп"
+    },
+    "iphone-17-pmic": {
+      "name": "PMIC iPhone 17",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "iphone-18-pro-board": {
+      "name": "Системная плата iPhone 18 Pro",
+      "summary": "Две платы, сложенные на интерпозере"
+    },
+    "iphone-18-pro-battery": {
+      "name": "Аккумулятор iPhone 18 Pro",
+      "summary": "4288 мА·ч, 16,68 Вт·ч"
+    },
+    "iphone-18-pro-display": {
+      "name": "Дисплей iPhone 18 Pro",
+      "summary": "OLED 6,3 дюйма, 120 Гц"
+    },
+    "iphone-18-pro-camera": {
+      "name": "Модуль основной камеры iPhone 18 Pro",
+      "summary": "Основная камера 48 Мп"
+    },
+    "iphone-18-pro-pmic": {
+      "name": "PMIC iPhone 18 Pro",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "iphone-18-pro-max-board": {
+      "name": "Системная плата iPhone 18 Pro Max",
+      "summary": "Две платы, сложенные на интерпозере"
+    },
+    "iphone-18-pro-max-battery": {
+      "name": "Аккумулятор iPhone 18 Pro Max",
+      "summary": "5567 мА·ч, 21,66 Вт·ч"
+    },
+    "iphone-18-pro-max-display": {
+      "name": "Дисплей iPhone 18 Pro Max",
+      "summary": "OLED 6,9 дюйма, 120 Гц"
+    },
+    "iphone-18-pro-max-camera": {
+      "name": "Модуль основной камеры iPhone 18 Pro Max",
+      "summary": "Основная камера 48 Мп"
+    },
+    "iphone-18-pro-max-pmic": {
+      "name": "PMIC iPhone 18 Pro Max",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "galaxy-s21-board": {
+      "name": "Системная плата Galaxy S21",
+      "summary": "Основная плата и дополнительная на шлейфе"
+    },
+    "galaxy-s21-battery": {
+      "name": "Аккумулятор Galaxy S21",
+      "summary": "4000 мА·ч, 15,52 Вт·ч"
+    },
+    "galaxy-s21-display": {
+      "name": "Дисплей Galaxy S21",
+      "summary": "OLED 6,2 дюйма, 120 Гц"
+    },
+    "galaxy-s21-camera": {
+      "name": "Модуль основной камеры Galaxy S21",
+      "summary": "Основная камера 12 Мп"
+    },
+    "galaxy-s21-pmic": {
+      "name": "PMIC Galaxy S21",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "galaxy-s22-board": {
+      "name": "Системная плата Galaxy S22",
+      "summary": "Основная плата и дополнительная на шлейфе"
+    },
+    "galaxy-s22-battery": {
+      "name": "Аккумулятор Galaxy S22",
+      "summary": "3700 мА·ч, 14,36 Вт·ч"
+    },
+    "galaxy-s22-display": {
+      "name": "Дисплей Galaxy S22",
+      "summary": "OLED 6,1 дюйма, 120 Гц"
+    },
+    "galaxy-s22-camera": {
+      "name": "Модуль основной камеры Galaxy S22",
+      "summary": "Основная камера 50 Мп"
+    },
+    "galaxy-s22-pmic": {
+      "name": "PMIC Galaxy S22",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "galaxy-s23-board": {
+      "name": "Системная плата Galaxy S23",
+      "summary": "Основная плата и дополнительная на шлейфе"
+    },
+    "galaxy-s23-battery": {
+      "name": "Аккумулятор Galaxy S23",
+      "summary": "3900 мА·ч, 15,13 Вт·ч"
+    },
+    "galaxy-s23-display": {
+      "name": "Дисплей Galaxy S23",
+      "summary": "OLED 6,1 дюйма, 120 Гц"
+    },
+    "galaxy-s23-camera": {
+      "name": "Модуль основной камеры Galaxy S23",
+      "summary": "Основная камера 50 Мп"
+    },
+    "galaxy-s23-pmic": {
+      "name": "PMIC Galaxy S23",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "galaxy-s24-board": {
+      "name": "Системная плата Galaxy S24",
+      "summary": "Основная плата и дополнительная на шлейфе"
+    },
+    "galaxy-s24-battery": {
+      "name": "Аккумулятор Galaxy S24",
+      "summary": "4000 мА·ч, 15,52 Вт·ч"
+    },
+    "galaxy-s24-display": {
+      "name": "Дисплей Galaxy S24",
+      "summary": "OLED 6,2 дюйма, 120 Гц"
+    },
+    "galaxy-s24-camera": {
+      "name": "Модуль основной камеры Galaxy S24",
+      "summary": "Основная камера 50 Мп"
+    },
+    "galaxy-s24-pmic": {
+      "name": "PMIC Galaxy S24",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "galaxy-s25-board": {
+      "name": "Системная плата Galaxy S25",
+      "summary": "Основная плата и дополнительная на шлейфе"
+    },
+    "galaxy-s25-battery": {
+      "name": "Аккумулятор Galaxy S25",
+      "summary": "4000 мА·ч, 15,52 Вт·ч"
+    },
+    "galaxy-s25-display": {
+      "name": "Дисплей Galaxy S25",
+      "summary": "OLED 6,2 дюйма, 120 Гц"
+    },
+    "galaxy-s25-camera": {
+      "name": "Модуль основной камеры Galaxy S25",
+      "summary": "Основная камера 50 Мп"
+    },
+    "galaxy-s25-pmic": {
+      "name": "PMIC Galaxy S25",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "galaxy-s26-board": {
+      "name": "Системная плата Galaxy S26",
+      "summary": "Основная плата и дополнительная на шлейфе"
+    },
+    "galaxy-s26-battery": {
+      "name": "Аккумулятор Galaxy S26",
+      "summary": "4300 мА·ч, 16,68 Вт·ч"
+    },
+    "galaxy-s26-display": {
+      "name": "Дисплей Galaxy S26",
+      "summary": "OLED 6,3 дюйма, 120 Гц"
+    },
+    "galaxy-s26-camera": {
+      "name": "Модуль основной камеры Galaxy S26",
+      "summary": "Основная камера 50 Мп"
+    },
+    "galaxy-s26-pmic": {
+      "name": "PMIC Galaxy S26",
+      "summary": "Контроллер питания; значения оценочные"
+    },
+    "apple-a15": {
+      "name": "Apple A15 Bionic",
+      "summary": "SoC; мощность оценочная"
+    },
+    "apple-a16": {
+      "name": "Apple A16 Bionic",
+      "summary": "SoC; мощность оценочная"
+    },
+    "apple-a18": {
+      "name": "Apple A18",
+      "summary": "SoC; мощность оценочная"
+    },
+    "apple-a19": {
+      "name": "Apple A19",
+      "summary": "SoC; мощность оценочная"
+    },
+    "apple-a20-pro": {
+      "name": "Apple A20 Pro",
+      "summary": "SoC; мощность оценочная"
+    },
+    "snapdragon-888": {
+      "name": "Snapdragon 888 5G",
+      "summary": "SoC со встроенным 5G-модемом; мощность оценочная"
+    },
+    "snapdragon-8-gen-1": {
+      "name": "Snapdragon 8 Gen 1",
+      "summary": "SoC со встроенным 5G-модемом; мощность оценочная"
+    },
+    "snapdragon-8-gen-2-galaxy": {
+      "name": "Snapdragon 8 Gen 2 for Galaxy",
+      "summary": "SoC со встроенным 5G-модемом; мощность оценочная"
+    },
+    "snapdragon-8-gen-3-galaxy": {
+      "name": "Snapdragon 8 Gen 3 for Galaxy",
+      "summary": "SoC со встроенным 5G-модемом; мощность оценочная"
+    },
+    "snapdragon-8-elite-galaxy": {
+      "name": "Snapdragon 8 Elite for Galaxy",
+      "summary": "SoC со встроенным 5G-модемом; мощность оценочная"
+    },
+    "snapdragon-8-elite-gen-5-galaxy": {
+      "name": "Snapdragon 8 Elite Gen 5 for Galaxy",
+      "summary": "SoC со встроенным 5G-модемом; мощность оценочная"
+    },
+    "qualcomm-x60": {
+      "name": "Qualcomm Snapdragon X60",
+      "summary": "5G-модем"
+    },
+    "qualcomm-x65": {
+      "name": "Qualcomm Snapdragon X65",
+      "summary": "5G-модем"
+    },
+    "qualcomm-x70": {
+      "name": "Qualcomm Snapdragon X70",
+      "summary": "5G-модем"
+    },
+    "qualcomm-x71": {
+      "name": "Qualcomm Snapdragon X71",
+      "summary": "5G-модем"
+    },
+    "qualcomm-x80": {
+      "name": "Qualcomm Snapdragon X80",
+      "summary": "5G-модем"
+    },
+    "apple-c2": {
+      "name": "Apple C2",
+      "summary": "5G-модем"
+    },
+    "magsafe-coil-15w": {
+      "name": "MagSafe coil, 15 W",
+      "summary": "Беспроводная зарядка до 15 Вт"
+    },
+    "magsafe-coil-25w": {
+      "name": "MagSafe coil, 25 W",
+      "summary": "Беспроводная зарядка до 25 Вт"
+    },
+    "galaxy-qi-coil-15w": {
+      "name": "Galaxy Qi coil, 15 W",
+      "summary": "Беспроводная зарядка до 15 Вт"
+    },
+    "watch-board": {
+      "name": "Типовая системная плата смарт-часов",
+      "summary": "Одна плата, остальное на шлейфах"
+    },
+    "watch-battery": {
+      "name": "Типовой аккумулятор смарт-часов, 310 мА·ч",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "watch-display": {
+      "name": "Типовой дисплей смарт-часов, AMOLED 1,9 дюйма",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "watch-soc": {
+      "name": "Типовой SoC смарт-часов",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "watch-pmic": {
+      "name": "Типовой PMIC смарт-часов",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "band-board": {
+      "name": "Типовая системная плата фитнес-браслета",
+      "summary": "Одна плата, остальное на шлейфах"
+    },
+    "band-battery": {
+      "name": "Типовой аккумулятор фитнес-браслета, 190 мА·ч",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "band-display": {
+      "name": "Типовой дисплей фитнес-браслета, AMOLED 1,1 дюйма",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "band-soc": {
+      "name": "Типовой SoC фитнес-браслета",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "band-pmic": {
+      "name": "Типовой PMIC фитнес-браслета",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "ppg-sensor-4led": {
+      "name": "Датчик пульса и SpO₂, 4 светодиода",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "ppg-sensor-2led": {
+      "name": "Датчик пульса и SpO₂, 2 светодиода",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "imu-6axis": {
+      "name": "6-осевой датчик движения",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "linear-actuator-haptic": {
+      "name": "Линейный вибромотор",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "coin-vibration-motor": {
+      "name": "Плоский вибромотор",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "wifi-bluetooth-radio": {
+      "name": "Радиомодуль Wi-Fi и Bluetooth",
+      "summary": "Типовая деталь; значения оценочные"
+    },
+    "bluetooth-le-radio": {
+      "name": "Радиомодуль Bluetooth Low Energy",
+      "summary": "Типовая деталь; значения оценочные"
     }
   },
   "Builds": {
@@ -920,6 +1428,51 @@
     },
     "drone-fpv-5in": {
       "name": "5-дюймовый FPV-квадрокоптер"
+    },
+    "phone-iphone-13": {
+      "name": "iPhone 13"
+    },
+    "phone-iphone-14": {
+      "name": "iPhone 14"
+    },
+    "phone-iphone-15": {
+      "name": "iPhone 15"
+    },
+    "phone-iphone-16": {
+      "name": "iPhone 16"
+    },
+    "phone-iphone-17": {
+      "name": "iPhone 17"
+    },
+    "phone-iphone-18-pro": {
+      "name": "iPhone 18 Pro"
+    },
+    "phone-iphone-18-pro-max": {
+      "name": "iPhone 18 Pro Max"
+    },
+    "phone-galaxy-s21": {
+      "name": "Galaxy S21"
+    },
+    "phone-galaxy-s22": {
+      "name": "Galaxy S22"
+    },
+    "phone-galaxy-s23": {
+      "name": "Galaxy S23"
+    },
+    "phone-galaxy-s24": {
+      "name": "Galaxy S24"
+    },
+    "phone-galaxy-s25": {
+      "name": "Galaxy S25"
+    },
+    "phone-galaxy-s26": {
+      "name": "Galaxy S26"
+    },
+    "wearable-smartwatch": {
+      "name": "Смарт-часы (типовые)"
+    },
+    "wearable-fitness-band": {
+      "name": "Фитнес-браслет (типовой)"
     }
   }
 }

@@ -1,0 +1,144 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "galaxy-s26-board",
+  "name": "Galaxy S26 logic board",
+  "kind": "phoneBoard",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "logicBoard",
+    "typical": {
+      "value": 0.07,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Memory, audio and sensors while watching video; Samsung doesn't publish it"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/housing-galaxy-s26",
+  "meshUrl": "generic/housing-galaxy-s26",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "soc",
+        "accepts": [
+          {
+            "protocol": "soc-package",
+            "connector": "galaxy-s26"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": -0.1,
+          "z": -55.5
+        }
+      },
+      {
+        "id": "pmic",
+        "accepts": [
+          {
+            "protocol": "pmic-package",
+            "connector": "galaxy-s26"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 20.4,
+          "z": -40.3
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "phone-battery",
+            "connector": "galaxy-s26"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.5
+        },
+        "flex": {
+          "x": 20.4,
+          "z": -19.9
+        }
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "mipi-dsi",
+            "connector": "galaxy-s26"
+          }
+        ],
+        "seat": {
+          "x": 79.7,
+          "z": 0
+        },
+        "flex": {
+          "x": 31.9,
+          "z": -45.3
+        }
+      },
+      {
+        "id": "rear-camera",
+        "accepts": [
+          {
+            "protocol": "mipi-csi",
+            "connector": "galaxy-s26"
+          }
+        ],
+        "seat": {
+          "x": -23.9,
+          "z": -48.8
+        },
+        "flex": {
+          "x": -13.9,
+          "z": -48.8
+        }
+      },
+      {
+        "id": "coil",
+        "accepts": [
+          {
+            "protocol": "qi-coil"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.5
+        },
+        "flex": {
+          "x": -2.4,
+          "z": -19.9
+        }
+      }
+    ],
+    "boards": [
+      {
+        "id": "main",
+        "width": 45.7,
+        "depth": 50.9,
+        "x": 9.0,
+        "z": -45.3,
+        "y": 0.8,
+        "thickness": 0.8
+      },
+      {
+        "id": "sub",
+        "width": 57.7,
+        "depth": 11,
+        "x": 0,
+        "z": 65.3,
+        "y": 0.8,
+        "thickness": 0.8,
+        "joint": "flex"
+      }
+    ]
+  }
+}

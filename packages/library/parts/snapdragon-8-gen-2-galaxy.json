@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "snapdragon-8-gen-2-galaxy",
+  "name": "Snapdragon 8 Gen 2 for Galaxy",
+  "kind": "soc",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "soc-package",
+      "connector": "galaxy-s23"
+    }
+  ],
+  "module": {
+    "role": "soc",
+    "rail": "core",
+    "power": {
+      "value": 12.0,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "CPU and GPU flat out, before the phone throttles; Qualcomm doesn't publish it"
+    },
+    "typical": {
+      "value": 0.19,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/soc",
+  "meshUrl": "generic/soc"
+}

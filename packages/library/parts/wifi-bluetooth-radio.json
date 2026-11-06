@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "wifi-bluetooth-radio",
+  "name": "Wi-Fi and Bluetooth radio",
+  "kind": "radio",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "wearable-radio"
+    }
+  ],
+  "module": {
+    "role": "radio",
+    "rail": "sys",
+    "power": {
+      "value": 0.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "At its most active; Generic part; figures in line with current models, estimated"
+    },
+    "typical": {
+      "value": 0.005,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Everyday use; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/radio",
+  "meshUrl": "generic/radio"
+}

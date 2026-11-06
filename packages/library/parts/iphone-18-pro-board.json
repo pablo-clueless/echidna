@@ -1,0 +1,158 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-18-pro-board",
+  "name": "iPhone 18 Pro logic board",
+  "kind": "phoneBoard",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "logicBoard",
+    "typical": {
+      "value": 0.08,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Memory, audio and sensors while watching video; Apple doesn't publish it"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/housing-iphone-18-pro",
+  "meshUrl": "generic/housing-iphone-18-pro",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "soc",
+        "accepts": [
+          {
+            "protocol": "soc-package",
+            "connector": "iphone-18-pro"
+          }
+        ],
+        "board": "upper",
+        "seat": {
+          "x": 12.4,
+          "z": -55.7
+        }
+      },
+      {
+        "id": "modem",
+        "accepts": [
+          {
+            "protocol": "modem-package",
+            "connector": "iphone-18-pro"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 13.4,
+          "z": -29.2
+        }
+      },
+      {
+        "id": "pmic",
+        "accepts": [
+          {
+            "protocol": "pmic-package",
+            "connector": "iphone-18-pro"
+          }
+        ],
+        "board": "upper",
+        "seat": {
+          "x": 25.0,
+          "z": -59.8
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "phone-battery",
+            "connector": "iphone-18-pro"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.5
+        },
+        "flex": {
+          "x": 25.0,
+          "z": -20.0
+        }
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "mipi-dsi",
+            "connector": "iphone-18-pro"
+          }
+        ],
+        "seat": {
+          "x": 79.9,
+          "z": 0
+        },
+        "flex": {
+          "x": 32.0,
+          "z": -45.5
+        }
+      },
+      {
+        "id": "rear-camera",
+        "accepts": [
+          {
+            "protocol": "mipi-csi",
+            "connector": "iphone-18-pro"
+          }
+        ],
+        "seat": {
+          "x": -15.0,
+          "z": -54.0
+        },
+        "flex": {
+          "x": 4.0,
+          "z": -54.0
+        }
+      },
+      {
+        "id": "coil",
+        "accepts": [
+          {
+            "protocol": "magsafe-coil"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.5
+        },
+        "flex": {
+          "x": 11.0,
+          "z": -20.0
+        }
+      }
+    ],
+    "boards": [
+      {
+        "id": "main",
+        "width": 27.9,
+        "depth": 51.0,
+        "x": 18.0,
+        "z": -45.5,
+        "y": 0.8,
+        "thickness": 0.8
+      },
+      {
+        "id": "upper",
+        "width": 21.9,
+        "depth": 31.6,
+        "x": 18.0,
+        "z": -54.2,
+        "y": 3.4,
+        "thickness": 0.8,
+        "joint": "interposer"
+      }
+    ]
+  }
+}

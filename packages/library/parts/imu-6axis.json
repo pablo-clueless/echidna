@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "imu-6axis",
+  "name": "6-axis motion sensor",
+  "kind": "wearableSensor",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "i2c"
+    }
+  ],
+  "module": {
+    "role": "motion",
+    "rail": "io",
+    "power": {
+      "value": 0.003,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "At its most active; Generic part; figures in line with current models, estimated"
+    },
+    "typical": {
+      "value": 0.0004,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Everyday use; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/imu",
+  "meshUrl": "generic/imu"
+}

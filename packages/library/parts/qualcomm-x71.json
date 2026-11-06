@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "qualcomm-x71",
+  "name": "Qualcomm Snapdragon X71",
+  "kind": "modem",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "modem-package",
+      "connector": "iphone-16"
+    }
+  ],
+  "module": {
+    "role": "modem",
+    "rail": "sys",
+    "power": {
+      "value": 3.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Transmitting at full power at the edge of coverage; estimated"
+    },
+    "typical": {
+      "value": 0.035,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Idle on the network while watching downloaded video; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/modem",
+  "meshUrl": "generic/modem"
+}

@@ -1,0 +1,155 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "watch-board",
+  "name": "Generic smartwatch logic board",
+  "kind": "wearableBoard",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "logicBoard",
+    "typical": {
+      "value": 0.004,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Memory and sensors ticking over; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/housing-watch",
+  "meshUrl": "generic/housing-watch",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "soc",
+        "accepts": [
+          {
+            "protocol": "wearable-soc"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": -6,
+          "z": -6
+        }
+      },
+      {
+        "id": "pmic",
+        "accepts": [
+          {
+            "protocol": "wearable-pmic"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 8,
+          "z": -8
+        }
+      },
+      {
+        "id": "radio",
+        "accepts": [
+          {
+            "protocol": "wearable-radio"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 8,
+          "z": 6
+        }
+      },
+      {
+        "id": "imu",
+        "accepts": [
+          {
+            "protocol": "i2c"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": -6,
+          "z": 9
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "li-po-1s"
+          }
+        ],
+        "seat": {
+          "x": -38.0,
+          "z": 0
+        },
+        "flex": {
+          "x": -15.0,
+          "z": -4
+        }
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "mipi-dsi"
+          }
+        ],
+        "seat": {
+          "x": 43.0,
+          "z": 0
+        },
+        "flex": {
+          "x": 15.0,
+          "z": 0
+        }
+      },
+      {
+        "id": "heart-rate",
+        "accepts": [
+          {
+            "protocol": "ppg"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 36.5
+        },
+        "flex": {
+          "x": 0,
+          "z": 17.0
+        }
+      },
+      {
+        "id": "haptics",
+        "accepts": [
+          {
+            "protocol": "haptic"
+          }
+        ],
+        "seat": {
+          "x": -38.0,
+          "z": 34.5
+        },
+        "flex": {
+          "x": -15.0,
+          "z": 14.0
+        }
+      }
+    ],
+    "boards": [
+      {
+        "id": "main",
+        "width": 30,
+        "depth": 34,
+        "x": 0,
+        "z": 0,
+        "y": 0.8,
+        "thickness": 0.6
+      }
+    ]
+  }
+}

@@ -64,7 +64,8 @@ for (const { locale, messages } of locales) {
 
       // 32 A a motor through a 30 A ESC: refused, with both currents.
       const under = swaps.getByRole("listitem", { name: partName("esc-4in1-30a") });
-      await expect(under).toContainText(slots.swapFails);
+      // The motor current is an estimate, so the refusal is worded as likely.
+      await expect(under).toContainText(slots.swapLikelyFails);
       await expect(under).toContainText(template(slots.checks.escCurrent));
       await expect(under).toContainText(/32/);
       await expect(under).toContainText(/30/);

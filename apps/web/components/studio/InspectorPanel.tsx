@@ -16,6 +16,7 @@ import { SwitchControl } from "./inspector/SwitchControl";
 import { AmbientField } from "./inspector/AmbientField";
 import { RatingMeter } from "./inspector/RatingMeter";
 import { paramKey, partKey } from "@/lib/messageKeys";
+import { ModuleSpecs } from "./inspector/ModuleSpecs";
 import { ledState } from "@/lib/simulation/ledState";
 import { SlotPicker } from "./inspector/SlotPicker";
 import { ParamField } from "./inspector/ParamField";
@@ -144,6 +145,8 @@ const ComponentInspector = ({
             </div>
           </section>
         )}
+
+        <ModuleSpecs spec={spec} />
 
         {isPluggable(spec) && <SlotPicker component={component} />}
         {spec.host && <HostSlots component={component} spec={spec} />}
