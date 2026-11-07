@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-2-battery",
+  "name": "DJI Mini 2 Intelligent Flight Battery, 2250 mAh",
+  "kind": "droneBattery",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "dji-mini-2-battery"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "mass": {
+      "value": 0.0862,
+      "unit": "kg",
+      "source": "datasheet",
+      "reference": "DJI Mini 2 specifications"
+    },
+    "capacity": {
+      "value": 8100.0,
+      "unit": "C",
+      "source": "datasheet",
+      "reference": "2250 mAh, DJI Mini 2 specifications"
+    },
+    "energy": {
+      "value": 62352,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "17.32 Wh, DJI Mini 2 specifications"
+    },
+    "cRating": {
+      "value": 10,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "DJI doesn't publish a discharge rating; about 10C is typical of 2S Li-ion packs this size"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/droneBattery",
+  "meshUrl": "generic/droneBattery"
+}

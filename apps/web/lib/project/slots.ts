@@ -1,5 +1,5 @@
+import { type ComponentSpec, type HostSlot, isHostModule, type PinRef } from "@echidna/core";
 import { checkModuleFit, checkSlotFit, type SlotFit } from "@echidna/rules";
-import type { ComponentSpec, HostSlot, PinRef } from "@echidna/core";
 
 import type { BoardPlacement, ProjectData, Rotation } from "./model";
 
@@ -56,9 +56,12 @@ export const modulesIn = (
       : [];
   });
 
-/** Whether a part plugs into a host's slots: a sensor module, or any desktop module but the motherboard itself. */
+/**
+ * Whether a part plugs into a host's slots: a sensor module, or any desktop, laptop or drone module but the
+ * motherboard or frame itself.
+ */
 export const isPluggable = (spec: ComponentSpec | undefined): boolean =>
-  Boolean(spec?.supply || (spec?.module && spec.module.role !== "motherboard"));
+  Boolean(spec?.supply || (spec?.module && !isHostModule(spec)));
 
 /**
  * Checks a part against a slot as the project stands: a sensor against the rail loads of what else is plugged into
@@ -214,11 +217,18 @@ export const slotSwaps = (
         ? c.module?.role === current.module.role &&
           c.deviceTypes.some((d) => current.deviceTypes.includes(d))
         : Boolean(c.supply);
+    // A part made for another device's connector, such as another phone's display, is not offered at all: there
+    // are a dozen of them, and none would ever fit.
+    const madeForAnother = (c: ComponentSpec, fit: SlotFit) =>
+      c.interfaces.some((i) => i.connector) &&
+      fit.checks.some((check) => check.id === "interface" && check.severity === "fail");
     return candidates
       .filter((c) => sameFamily(c) && c.id !== current.id)
-      .map((c) => {
+      .flatMap((c) => {
         const fit = fitInSlot(project, specs, host, placed.hostId, placed.slotId, c, id);
-        return { specId: c.id, fits: fit.fits, byPart: { [id]: fit } };
+        return madeForAnother(c, fit)
+          ? []
+          : [{ specId: c.id, fits: fit.fits, byPart: { [id]: fit } }];
       });
   }
 
@@ -268,6 +278,29 @@ export const seatPlacement = (
     z: host.z + x * Math.sin(turn) + z * Math.cos(turn),
     rotation: ((host.rotation + (seat.rotation ?? 0)) % 360) as Rotation,
   };
+};
+
+/**
+ * How far a seated module is raised off what its host stands on, in millimetres: the top of the board its slot is
+ * on, for a host made of several boards such as a phone's stacked logic board. Anything else sits where it is drawn.
+ * @param project - Parts and slot placements.
+ * @param specs - Part specs by ID.
+ * @param partId - The part.
+ * @returns The lift, or 0 when the part is not on one of its host's boards.
+ */
+export const seatLift = (
+  project: Project,
+  specs: ReadonlyMap<string, ComponentSpec>,
+  partId: string,
+): number => {
+  const placed = project.slots[partId];
+  if (!placed) return 0;
+  const host = specs.get(
+    project.components.find((c) => c.id === placed.hostId)?.specId ?? "",
+  )?.host;
+  const slot = host?.slots.find((s) => s.id === placed.slotId);
+  const board = slot?.board && host?.boards?.find((b) => b.id === slot.board);
+  return board ? board.y + board.thickness : 0;
 };
 
 /**

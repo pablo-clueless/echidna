@@ -57,7 +57,26 @@
         "battery",
         "wifi",
         "display",
-        "charger"
+        "charger",
+        "droneFrame",
+        "droneMotors",
+        "droneProps",
+        "droneBattery",
+        "esc",
+        "flightController",
+        "droneCamera",
+        "phoneBoard",
+        "wearableBoard",
+        "soc",
+        "modem",
+        "pmic",
+        "phoneBattery",
+        "phoneDisplay",
+        "phoneCamera",
+        "chargingCoil",
+        "wearableSensor",
+        "haptics",
+        "radio"
       ]
     },
     "deviceTypes": {
@@ -270,6 +289,62 @@
                     "enum": [0, 90, 180, 270]
                   }
                 }
+              },
+              "board": {
+                "type": "string"
+              },
+              "flex": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x", "z"],
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "z": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "boards": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "width", "depth", "x", "z", "y", "thickness"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "width": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "depth": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "x": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number",
+                "minimum": 0
+              },
+              "thickness": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "joint": {
+                "enum": ["interposer", "flex"]
               }
             }
           }
@@ -356,7 +431,22 @@
             "battery",
             "wifi",
             "display",
-            "charger"
+            "charger",
+            "frame",
+            "motors",
+            "propellers",
+            "esc",
+            "flightController",
+            "camera",
+            "logicBoard",
+            "soc",
+            "modem",
+            "pmic",
+            "chargingCoil",
+            "heartRate",
+            "motion",
+            "haptics",
+            "radio"
           ]
         },
         "power": {
@@ -396,6 +486,79 @@
         },
         "energy": {
           "$ref": "#/$defs/specValue"
+        },
+        "mass": {
+          "$ref": "#/$defs/specValue"
+        },
+        "thrust": {
+          "$ref": "#/$defs/specValue"
+        },
+        "current": {
+          "$ref": "#/$defs/specValue"
+        },
+        "efficiency": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxCurrent": {
+          "$ref": "#/$defs/specValue"
+        },
+        "diameter": {
+          "$ref": "#/$defs/specValue"
+        },
+        "capacity": {
+          "$ref": "#/$defs/specValue"
+        },
+        "cRating": {
+          "$ref": "#/$defs/specValue"
+        },
+        "rotors": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rails": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "voltage", "maxCurrent"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "voltage": {
+                "$ref": "#/$defs/specValue"
+              },
+              "maxCurrent": {
+                "$ref": "#/$defs/specValue"
+              }
+            }
+          }
+        },
+        "rail": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        }
+      }
+    },
+    "sourcing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manufacturer", "mpn", "reference"],
+      "properties": {
+        "manufacturer": {
+          "type": "string"
+        },
+        "mpn": {
+          "type": "string"
+        },
+        "lcsc": {
+          "type": "string",
+          "pattern": "^C[0-9]+$"
+        },
+        "reference": {
+          "type": "string"
         }
       }
     }
@@ -420,6 +583,7 @@
             "K",
             "m",
             "kg",
+            "g",
             "s",
             "Hz",
             "N",

@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "galaxy-s24-display",
+  "name": "Galaxy S24 display",
+  "kind": "phoneDisplay",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-dsi",
+      "connector": "galaxy-s24"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "rail": "display",
+    "power": {
+      "value": 4.4,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Full screen at peak outdoor brightness; Samsung doesn't publish it"
+    },
+    "typical": {
+      "value": 0.34,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/display-galaxy-s24",
+  "meshUrl": "generic/display-galaxy-s24"
+}

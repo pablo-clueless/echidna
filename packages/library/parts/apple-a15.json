@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "apple-a15",
+  "name": "Apple A15 Bionic",
+  "kind": "soc",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "soc-package",
+      "connector": "iphone-13"
+    },
+    {
+      "protocol": "soc-package",
+      "connector": "iphone-14"
+    }
+  ],
+  "module": {
+    "role": "soc",
+    "rail": "core",
+    "power": {
+      "value": 9.0,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "CPU and GPU flat out, before the phone throttles; Apple doesn't publish it"
+    },
+    "typical": {
+      "value": 0.17,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/soc",
+  "meshUrl": "generic/soc"
+}

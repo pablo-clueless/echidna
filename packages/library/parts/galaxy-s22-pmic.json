@@ -1,0 +1,75 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "galaxy-s22-pmic",
+  "name": "Galaxy S22 PMIC",
+  "kind": "pmic",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "pmic-package",
+      "connector": "galaxy-s22"
+    }
+  ],
+  "module": {
+    "role": "pmic",
+    "rails": [
+      {
+        "id": "core",
+        "voltage": {
+          "value": 0.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Samsung doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 23.0,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Samsung doesn't publish it"
+        }
+      },
+      {
+        "id": "display",
+        "voltage": {
+          "value": 4.6,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Samsung doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 1.3,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Samsung doesn't publish it"
+        }
+      },
+      {
+        "id": "camera",
+        "voltage": {
+          "value": 2.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Samsung doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 1.05,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Samsung doesn't publish it"
+        }
+      }
+    ],
+    "typical": {
+      "value": 0.02,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Conversion losses while watching video; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/pmic",
+  "meshUrl": "generic/pmic"
+}

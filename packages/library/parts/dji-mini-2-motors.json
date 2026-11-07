@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-2-motors",
+  "name": "DJI Mini 2 motors (set of 4)",
+  "kind": "droneMotors",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "dji-mini2-motor-mount"
+    }
+  ],
+  "module": {
+    "role": "motors",
+    "mass": {
+      "value": 0.02,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "About 5 g a motor, from teardowns of similar sub-250 g drones"
+    },
+    "thrust": {
+      "value": 1.57,
+      "unit": "N",
+      "source": "estimated",
+      "reference": "About 160 g of thrust a motor at full throttle on 2S, enough for the published 5 m/s climb"
+    },
+    "current": {
+      "value": 3.5,
+      "unit": "A",
+      "source": "estimated",
+      "reference": "Full-throttle draw a motor on 2S; DJI doesn't publish it"
+    },
+    "efficiency": {
+      "value": 0.4,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "Rotor figure of merit of about 0.6 times about 0.65 for motor and ESC, typical of small brushless drives"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/motors-mini2",
+  "meshUrl": "generic/droneMotors"
+}

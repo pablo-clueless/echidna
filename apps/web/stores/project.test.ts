@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { partsById } from "@echidna/library";
 
 import { CHASSIS } from "@/lib/project/foundation";
 import { deriveNets } from "@/lib/project/model";
+import { seatLift } from "@/lib/project/slots";
 import { useProjectStore } from "./project";
 
 // The store persists to localStorage, which it looks up as it is created; Node has none to offer.
@@ -174,6 +176,45 @@ describe("the project's foundation", () => {
     store().loadBuild("laptop-ultrabook");
     expect(store().addComponent("resistor", { x: 0, y: 0 })).toBeNull();
     expect(store().components.some((c) => c.specId === "resistor")).toBe(false);
+  });
+
+  it("stands a drone on its landing pad, with every part seated on the frame", () => {
+    store().loadBuild("drone-fpv-5in");
+    expect(store().foundation).toBe("drone");
+    expect(store().boardSize).toEqual({ width: CHASSIS.drone.width, depth: CHASSIS.drone.depth });
+    expect(store().board.FR1).toMatchObject({ x: 0, z: 0 });
+    expect(
+      Object.values(store().slots)
+        .map((at) => at.slotId)
+        .sort(),
+    ).toEqual(["battery", "camera", "esc", "fc", "motors", "propellers"]);
+    // A 30 A ESC can't carry the motors' 32 A, so it is left out of its slot.
+    store().swapInSlots("ESC1", "esc-4in1-30a");
+    expect(store().slots.ESC1).toBeUndefined();
+  });
+
+  it("lays a phone out on its repair mat, with chips on the stacked board and the display opened out", () => {
+    store().loadBuild("phone-iphone-15");
+    expect(store().foundation).toBe("phone");
+    expect(store().boardSize).toEqual({ width: CHASSIS.phone.width, depth: CHASSIS.phone.depth });
+    const { mount } = CHASSIS.phone;
+    expect(store().board.MB1).toMatchObject({ x: mount.x / 1000, z: mount.z / 1000 });
+    expect(Object.keys(store().slots)).toHaveLength(7);
+    const idOf = (slotId: string) =>
+      Object.entries(store().slots).find(([, at]) => at.slotId === slotId)?.[0] ?? "";
+    // The SoC sits on the upper board of the sandwich, the modem on the main board below it.
+    expect(seatLift(store(), partsById, idOf("soc"))).toBeCloseTo(4.2, 6);
+    expect(seatLift(store(), partsById, idOf("modem"))).toBeCloseTo(1.6, 6);
+    expect(seatLift(store(), partsById, idOf("display"))).toBe(0);
+    expect(store().board[idOf("display")]?.x ?? 0).toBeGreaterThan(store().board.MB1?.x ?? 0);
+  });
+
+  it("leaves a smartwatch display out of a fitness band whose PMIC can't drive it", () => {
+    store().loadBuild("wearable-fitness-band");
+    expect(store().foundation).toBe("wearable");
+    const display = Object.entries(store().slots).find(([, at]) => at.slotId === "display")?.[0];
+    store().swapInSlots(display ?? "", "watch-display");
+    expect(store().slots[display ?? ""]).toBeUndefined();
   });
 
   it("lets the first part into an empty project choose its foundation", () => {

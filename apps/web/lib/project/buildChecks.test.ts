@@ -45,6 +45,32 @@ describe("buildViolations", () => {
     ]);
   });
 
+  it("puts one PMIC rail verdict on the PMIC, the worst rail's", () => {
+    const band = {
+      components: [
+        { id: "MB1", specId: "band-board" },
+        { id: "PMU1", specId: "band-pmic" },
+        { id: "U1", specId: "band-soc" },
+        { id: "LCD1", specId: "watch-display" },
+      ],
+      slots: {
+        PMU1: { hostId: "MB1", slotId: "pmic", wireIds: [] },
+        U1: { hostId: "MB1", slotId: "soc", wireIds: [] },
+        LCD1: { hostId: "MB1", slotId: "display", wireIds: [] },
+      },
+    };
+    const rails = buildViolations(band, partsById).filter((v) => v.ruleId === "pmicRail");
+    expect(rails).toEqual([
+      expect.objectContaining({
+        componentId: "PMU1",
+        severity: "fail",
+        estimated: true,
+        limit: 0.035,
+        unit: "A",
+      }),
+    ]);
+  });
+
   it("has nothing to say about a project with no motherboard", () => {
     expect(
       buildViolations({ components: [{ id: "R1", specId: "resistor" }], slots: {} }, partsById),

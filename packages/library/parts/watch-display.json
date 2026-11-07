@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "watch-display",
+  "name": "Generic smartwatch display, 1.9-inch AMOLED",
+  "kind": "phoneDisplay",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-dsi"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "rail": "display",
+    "power": {
+      "value": 0.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Full screen at peak brightness; Generic part; figures in line with current models, estimated"
+    },
+    "typical": {
+      "value": 0.022,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Always-on for a watch, woken on a glance for a band; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/display-watch",
+  "meshUrl": "generic/display-watch"
+}

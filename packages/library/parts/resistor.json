@@ -5,8 +5,14 @@
   "kind": "resistor",
   "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
   "pins": [
-    { "id": "1", "name": "1" },
-    { "id": "2", "name": "2" }
+    {
+      "id": "1",
+      "name": "1"
+    },
+    {
+      "id": "2",
+      "name": "2"
+    }
   ],
   "params": {
     "resistance": {
@@ -39,5 +45,10 @@
   "interfaces": [],
   "model": "resistor",
   "footprintId": "generic/axial-0.4in",
-  "meshUrl": "generic/resistor-axial"
+  "meshUrl": "generic/resistor-axial",
+  "sourcing": {
+    "manufacturer": "YAGEO",
+    "mpn": "CFR-25JB-52-{resistance}",
+    "reference": "YAGEO CFR series code: CFR-25 ¼ W, J ±5 %, B bulk, 52 mm lead spacing, then the value (CFR-25JB-52-1K, -1K5, -150K at element14, Octopart, Avnet). Only standard E24 values are made"
+  }
 }

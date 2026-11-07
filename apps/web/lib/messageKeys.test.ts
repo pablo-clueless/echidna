@@ -57,6 +57,22 @@ describe("data-driven message keys", () => {
     },
   );
 
+  it.each(parts.filter((p) => p.module).map((p) => [p.id, p] as const))(
+    "module %s names the devices, PMIC rails and boards it refers to",
+    (_, part) => {
+      const interfaces = [
+        ...part.interfaces,
+        ...(part.host?.slots.flatMap((s) => s.accepts) ?? []),
+      ];
+      for (const i of interfaces)
+        if (i.connector) expect(en.Studio.slots.devices).toHaveProperty([i.connector]);
+      const rails = [...(part.module?.rails ?? []).map((r) => r.id), part.module?.rail];
+      for (const rail of rails) if (rail) expect(en.Studio.slots.pmicRails).toHaveProperty([rail]);
+      for (const board of part.host?.boards ?? [])
+        expect(en.Studio.slots.boards).toHaveProperty([board.id]);
+    },
+  );
+
   it.each(builds.map((b) => b.id))("build %s has a name", (id) => {
     expect(en.Builds).toHaveProperty([id, "name"]);
   });

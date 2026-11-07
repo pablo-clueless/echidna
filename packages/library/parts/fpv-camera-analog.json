@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "fpv-camera-analog",
+  "name": "Analogue FPV camera and 600 mW video transmitter",
+  "kind": "droneCamera",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "fpv-camera-mount"
+    }
+  ],
+  "module": {
+    "role": "camera",
+    "mass": {
+      "value": 0.012,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "Typical of a micro camera and a 20 × 20 mm video transmitter"
+    },
+    "typical": {
+      "value": 4.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Video transmitter at 600 mW output, and the camera"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/fpvCamera",
+  "meshUrl": "generic/fpvCamera"
+}

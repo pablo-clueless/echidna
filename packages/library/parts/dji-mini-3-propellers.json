@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-3-propellers",
+  "name": "DJI Mini 3 Pro / Mini 4 Pro propellers, 6030F (set of 4)",
+  "kind": "droneProps",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "dji-mini3-prop-mount"
+    }
+  ],
+  "module": {
+    "role": "propellers",
+    "mass": {
+      "value": 0.0044,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "About 1.1 g a propeller"
+    },
+    "diameter": {
+      "value": 0.1524,
+      "unit": "m",
+      "source": "datasheet",
+      "reference": "6.0 inches, from the 6030 model number"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/props-mini3",
+  "meshUrl": "generic/droneProps"
+}

@@ -5,7 +5,7 @@ import { parts, partsById } from "@echidna/library";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
-import { dotClass, textClass, useCheckReason } from "./SlotPicker";
+import { dotClass, failsOnEstimates, textClass, useCheckReason } from "./SlotPicker";
 import { useProjectStore } from "@/stores/project";
 import { Button } from "@/components/ui/button";
 import { slotSwaps } from "@/lib/project/slots";
@@ -79,7 +79,11 @@ export const SlotSwaps = ({ component }: { component: NetlistComponent }) => {
               <p className="flex items-center gap-1.5">
                 <span aria-hidden className={cn("size-1.5 shrink-0", dotClass[severity])} />
                 <span className={cn("font-medium", textClass[severity])}>
-                  {swap.fits ? t("swapFits") : t("swapFails")}
+                  {swap.fits
+                    ? t("swapFits")
+                    : failsOnEstimates(checks)
+                      ? t("swapLikelyFails")
+                      : t("swapFails")}
                 </span>
               </p>
               {problems.length > 0 && (

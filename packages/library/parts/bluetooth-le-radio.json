@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "bluetooth-le-radio",
+  "name": "Bluetooth Low Energy radio",
+  "kind": "radio",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "wearable-radio"
+    }
+  ],
+  "module": {
+    "role": "radio",
+    "rail": "io",
+    "power": {
+      "value": 0.03,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "At its most active; Generic part; figures in line with current models, estimated"
+    },
+    "typical": {
+      "value": 0.0003,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Everyday use; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/radio",
+  "meshUrl": "generic/radio"
+}

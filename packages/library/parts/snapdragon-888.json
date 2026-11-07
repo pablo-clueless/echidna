@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "snapdragon-888",
+  "name": "Snapdragon 888 5G",
+  "kind": "soc",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "soc-package",
+      "connector": "galaxy-s21"
+    }
+  ],
+  "module": {
+    "role": "soc",
+    "rail": "core",
+    "power": {
+      "value": 11.5,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "CPU and GPU flat out, before the phone throttles; Qualcomm doesn't publish it"
+    },
+    "typical": {
+      "value": 0.25,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/soc",
+  "meshUrl": "generic/soc"
+}

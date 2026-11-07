@@ -22,7 +22,11 @@ export type FitCheckId =
   | "chargerBudget"
   | "psuBudget"
   | "powerConnectors"
-  | "cooling";
+  | "cooling"
+  | "thrustToWeight"
+  | "escCurrent"
+  | "batteryDischarge"
+  | "pmicRail";
 
 /**
  * One check of a part against a slot. `actual` and `limit` are set for the checks that compare two quantities;
@@ -42,7 +46,7 @@ export type FitCheck = {
   accepts?: string[];
   /** The rail voltages the slot offers, for the supply check. */
   offered?: number[];
-  /** The rail the part would draw from. */
+  /** The rail the part would draw from, or for a PMIC rail check, the PMIC's rail. */
   railId?: string;
   /** The PSU connector a power connector check counts, `actual` needed against `limit` offered. */
   connector?: PowerConnector;

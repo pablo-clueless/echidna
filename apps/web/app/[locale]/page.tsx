@@ -10,8 +10,8 @@ import { LogoMark, SiteHeader } from "@/components/home/SiteHeader";
 import { VerdictTicker } from "@/components/home/VerdictTicker";
 import { SmoothScroll } from "@/components/home/SmoothScroll";
 import { TypeHeading } from "@/components/home/TypeHeading";
+import { ComingSoon } from "@/components/home/ComingSoon";
 import { PixelField } from "@/components/home/PixelField";
-import { ArrowLink } from "@/components/home/ArrowLink";
 import { LineIcon } from "@/components/home/LineIcon";
 import { SwapDemo } from "@/components/home/SwapDemo";
 import { localeNames, routing } from "@/i18n/routing";
@@ -20,7 +20,6 @@ import { CountUp } from "@/components/home/CountUp";
 import { Reveal } from "@/components/home/Reveal";
 import { InView } from "@/components/home/InView";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const checks = ["connects", "powered", "cool"] as const;
@@ -155,27 +154,16 @@ const HomePage = async () => {
                 <ArrowDownRight className="size-6 transition-transform duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover/down:translate-x-1.5 group-hover/down:translate-y-1.5" />
                 <span className="text-sm font-medium">{t("hero.secondary")}</span>
               </a>
-              <Link
-                href="/studio"
-                className="group/go bg-signal text-signal-foreground! relative col-span-2 flex min-h-44 flex-col justify-between overflow-hidden p-5 no-underline lg:col-span-2 lg:col-start-1 lg:row-start-4"
-              >
+              {/* The studio isn't open to visitors yet, so this says so rather than linking there. */}
+              <div className="bg-signal text-signal-foreground col-span-2 flex min-h-44 flex-col justify-between p-5 lg:col-span-2 lg:col-start-1 lg:row-start-4">
                 <span className="max-w-56 text-lg leading-tight font-semibold tracking-tight">
                   {t("hero.slogan")}
                 </span>
-                <span className="flex items-center gap-2 text-sm font-medium">
-                  {t("openStudio")}
-                  <span
-                    aria-hidden
-                    className="transition-transform duration-300 group-hover/go:translate-x-1"
-                  >
-                    →
-                  </span>
+                <span className="flex items-center justify-between gap-2">
+                  <ComingSoon label={t("comingSoon")} />
+                  <span aria-hidden className="bg-signal-foreground size-3" />
                 </span>
-                <span
-                  aria-hidden
-                  className="bg-signal-foreground absolute right-5 bottom-5 size-3 transition-all duration-500 ease-[cubic-bezier(0.6,0,0.2,1)] group-hover/go:size-9 group-hover/go:rotate-90"
-                />
-              </Link>
+              </div>
               <div className="min-h-36 lg:col-start-4 lg:row-start-4">
                 <VerdictTicker />
               </div>
@@ -391,7 +379,6 @@ const HomePage = async () => {
             <p className="text-muted-foreground max-w-md text-lg leading-relaxed">
               {t("cta.body")}
             </p>
-            <ArrowLink href="/studio">{t("openStudio")}</ArrowLink>
           </div>
         </section>
       </main>

@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "qualcomm-x80",
+  "name": "Qualcomm Snapdragon X80",
+  "kind": "modem",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "modem-package",
+      "connector": "iphone-17"
+    },
+    {
+      "protocol": "modem-package",
+      "connector": "iphone-18-pro-max"
+    }
+  ],
+  "module": {
+    "role": "modem",
+    "rail": "sys",
+    "power": {
+      "value": 3.3,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Transmitting at full power at the edge of coverage; estimated. TechInsights' teardown found a Qualcomm X80; Apple's C2 is in the 18 Pro only"
+    },
+    "typical": {
+      "value": 0.03,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Idle on the network while watching downloaded video; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/modem",
+  "meshUrl": "generic/modem"
+}

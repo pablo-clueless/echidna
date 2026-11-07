@@ -2,8 +2,8 @@ import { getTranslations } from "next-intl/server";
 
 import { LocaleSelect } from "@/components/app/LocaleSelect";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
+import { ComingSoon } from "./ComingSoon";
 import { Link } from "@/i18n/navigation";
-import { ArrowLink } from "./ArrowLink";
 
 const sections = ["swap", "checks", "devices", "provenance"] as const;
 
@@ -49,13 +49,7 @@ export const SiteHeader = async () => {
         <div className="ml-auto flex items-center gap-1 pr-3 sm:pr-4">
           <LocaleSelect />
           <ThemeToggle />
-          <ArrowLink
-            href="/studio"
-            size="sm"
-            className="ml-2 hidden min-w-40 justify-between sm:inline-flex"
-          >
-            {t("openStudio")}
-          </ArrowLink>
+          <ComingSoon label={t("comingSoon")} className="ml-2 hidden sm:inline-flex" />
         </div>
       </div>
     </header>

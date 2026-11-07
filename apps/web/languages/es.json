@@ -4,7 +4,6 @@
     "imageAlt": "La página de inicio de Echidna: «Comprueba que funciona antes de construirlo.» junto a una placa de desarrollo en 3D con todas las comprobaciones superadas."
   },
   "Home": {
-    "openStudio": "Abrir el estudio",
     "footer": "Echidna está en una fase temprana de desarrollo.",
     "hero": {
       "eyebrow": "Un estudio 3D para placas de circuito y dispositivos",
@@ -91,8 +90,8 @@
     },
     "cta": {
       "heading": "Empieza con una placa en blanco",
-      "body": "Abre el estudio, elige una pieza de la biblioteca y mira su veredicto al colocarla.",
-      "eyebrow": "Empieza a construir"
+      "body": "El estudio llega pronto. Elegirás una pieza de la biblioteca y verás su veredicto al colocarla.",
+      "eyebrow": "Próximamente"
     },
     "assembly": {
       "label": "Placa de desarrollo con todas las piezas montadas; al pulsar el botón de encendido, cada pieza se ilumina a medida que le llega la corriente",
@@ -146,7 +145,8 @@
     "languages": {
       "heading": "Habla tu idioma",
       "lead": "Cada etiqueta, veredicto y explicación, en siete idiomas."
-    }
+    },
+    "comingSoon": "Próximamente"
   },
   "Preferences": {
     "language": "Idioma",
@@ -175,7 +175,13 @@
         "motherboards": "Placas base",
         "pcParts": "Componentes de PC",
         "laptops": "Placas de portátil",
-        "laptopParts": "Componentes de portátil"
+        "laptopParts": "Componentes de portátil",
+        "drones": "Drones",
+        "droneParts": "Piezas de dron",
+        "phones": "Teléfonos",
+        "phoneParts": "Piezas de teléfono",
+        "wearables": "Wearables",
+        "wearableParts": "Piezas de wearables"
       }
     },
     "viewport": {
@@ -217,7 +223,14 @@
       "canvasRole": "esquema",
       "partLabel": "{id}, {name}",
       "hint": "Arrastra de un pin a otro para cablear · <key>R</key> girar · <key>Supr</key> eliminar · doble clic para ajustar",
-      "startFromBoard": "Empezar con {board}"
+      "startFromBoard": "Empezar con {board}",
+      "deviceTypes": {
+        "desktop": "Ordenadores de sobremesa",
+        "laptop": "Portátiles",
+        "drone": "Drones",
+        "smartphone": "Teléfonos",
+        "wearable": "Wearables"
+      }
     },
     "inspector": {
       "board": {
@@ -375,6 +388,22 @@
       "chargerBudget": {
         "name": "Potencia del cargador",
         "explain": "A plena carga, el portátil consume el {percent} de lo que suministra el cargador. Por encima del 100 % la batería compensa la diferencia y se descarga aun enchufado; por encima del 150 % no da abasto con carga."
+      },
+      "thrustToWeight": {
+        "name": "Relación empuje / peso",
+        "explain": "El dron pesa el {percent} de lo que sus motores levantan a plena potencia. Por encima del 50 % va lento y sufre con el viento; por encima del 80 % apenas sube o mantiene la posición."
+      },
+      "escCurrent": {
+        "name": "Corriente del ESC",
+        "explain": "A plena potencia, cada motor consume el {percent} de la corriente continua nominal de su ESC. Por encima del 80 % el ESC se calienta; por encima del 100 % puede quemarse en vuelo."
+      },
+      "batteryDischarge": {
+        "name": "Descarga de la batería",
+        "explain": "A plena potencia, los motores consumen el {percent} de la corriente que la batería puede entregar: su capacidad por su índice C. Por encima del 80 % la tensión cae y la batería se calienta; por encima del 100 % puede dañarse o cortarse."
+      },
+      "pmicRail": {
+        "name": "Presupuesto de los raíles del PMIC",
+        "explain": "En el pico, las piezas de este raíl del PMIC consumen {percent} de la corriente que puede dar. Por encima del 80 %, el raíl se calienta y su tensión cae con la carga; por encima del 100 %, el PMIC corta o el teléfono reduce su rendimiento y se reinicia."
       }
     },
     "slots": {
@@ -392,7 +421,21 @@
         "wifi": "Ranura Wi-Fi (M.2)",
         "battery": "Conector de batería",
         "display": "Conector de pantalla",
-        "dc-in": "Puerto de carga"
+        "dc-in": "Puerto de carga",
+        "motors": "Soportes de motor",
+        "propellers": "Ejes de hélice",
+        "esc": "Soporte del ESC",
+        "fc": "Soporte de la controladora",
+        "camera": "Soporte de cámara",
+        "soc": "SoC",
+        "modem": "Módem",
+        "pmic": "PMIC",
+        "rear-camera": "Conector de la cámara trasera",
+        "coil": "Conector de la bobina de carga inalámbrica",
+        "radio": "Radio",
+        "imu": "Sensor de movimiento",
+        "heart-rate": "Conector del sensor de frecuencia cardiaca",
+        "haptics": "Conector del motor háptico"
       },
       "protocols": {
         "i2c": "I²C",
@@ -416,7 +459,36 @@
         "ultrabook-cooling-mount": "anclaje de refrigeración de ultrabook",
         "gaming-laptop-cooling-mount": "anclaje de refrigeración de portátil gaming",
         "usb-c-pd": "USB-C Power Delivery",
-        "dc-barrel": "conector de barril"
+        "dc-barrel": "conector de barril",
+        "dji-mini2-motor-mount": "soporte de motor DJI Mini 2",
+        "dji-mini3-motor-mount": "soporte de motor DJI Mini 3 Pro / Mini 4 Pro",
+        "dji-mini2-prop-mount": "anclaje de hélice DJI Mini 2",
+        "dji-mini3-prop-mount": "anclaje de hélice DJI Mini 3 Pro / Mini 4 Pro",
+        "dji-mini-2-battery": "batería DJI Mini 2",
+        "dji-mini-3-battery": "batería de la serie DJI Mini 3",
+        "dji-mini-2-gimbal": "estabilizador DJI Mini 2",
+        "dji-mini-3-pro-gimbal": "estabilizador DJI Mini 3 Pro",
+        "dji-mini-4-pro-gimbal": "estabilizador DJI Mini 4 Pro",
+        "motor-mount-16x16": "soporte de motor de 16 × 16 mm",
+        "prop-5in": "hélices de 5 pulgadas",
+        "xt60-4s": "batería 4S con XT60",
+        "stack-30x30-esc": "ESC de 30 × 30 mm",
+        "stack-30x30-fc": "controladora de vuelo de 30 × 30 mm",
+        "fpv-camera-mount": "soporte de cámara FPV",
+        "soc-package": "encapsulado de SoC",
+        "modem-package": "encapsulado de módem",
+        "pmic-package": "encapsulado de PMIC",
+        "phone-battery": "conector de batería",
+        "mipi-dsi": "pantalla MIPI DSI",
+        "mipi-csi": "cámara MIPI CSI-2",
+        "magsafe-coil": "bobina MagSafe",
+        "qi-coil": "bobina Qi",
+        "wearable-soc": "encapsulado de SoC de wearable",
+        "wearable-pmic": "encapsulado de PMIC de wearable",
+        "wearable-radio": "módulo de radio de wearable",
+        "li-po-1s": "LiPo de una celda",
+        "ppg": "sensor óptico de frecuencia cardiaca",
+        "haptic": "controlador de motor háptico"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Conectado, alimentado desde {rail}",
@@ -436,7 +508,11 @@
         "psuBudget": "El equipo consume hasta {actual}; la fuente está diseñada para {limit}.",
         "powerConnectors": "Necesita {actual} × {connector}; la fuente tiene {limit}.",
         "cooling": "Hasta {actual} de calor que evacuar; el disipador está diseñado para {limit}.",
-        "chargerBudget": "El portátil consume hasta {actual}; el cargador suministra {limit}."
+        "chargerBudget": "El portátil consume hasta {actual}; el cargador suministra {limit}.",
+        "thrustToWeight": "Pesa {actual}; los motores levantan hasta {limit}.",
+        "escCurrent": "Cada motor consume hasta {actual}; su ESC admite {limit}.",
+        "batteryDischarge": "Los motores consumen hasta {actual}; la batería puede entregar {limit}.",
+        "pmicRail": "Las piezas del raíl {rail} del PMIC consumen hasta {actual}; el raíl da {limit}."
       },
       "railsTitle": "Raíles de alimentación",
       "hostTitle": "Conectores",
@@ -458,20 +534,93 @@
       "buildTitle": "Alimentación y refrigeración",
       "buildEmpty": "Conecta una fuente y un disipador para comprobar la alimentación y la refrigeración.",
       "batteryRuntime": "Unas {runtime} con batería en uso ligero ({energy} a {draw}).",
-      "buildEmptyLaptop": "Conecta un cargador y un disipador para comprobar la alimentación y la refrigeración."
+      "buildEmptyLaptop": "Conecta un cargador y un disipador para comprobar la alimentación y la refrigeración.",
+      "buildTitleDrone": "Sustentación y potencia",
+      "buildEmptyDrone": "Conecta motores y una batería para comprobar la sustentación y la potencia.",
+      "flightTime": "Unos {time} en estacionario sin viento ({weight}, {power} de {energy}).",
+      "flightTimePublished": "El fabricante indica {time}, volando despacio hacia delante.",
+      "protocolFor": "{protocol} para el {device}",
+      "devices": {
+        "iphone-13": "iPhone 13",
+        "iphone-14": "iPhone 14",
+        "iphone-15": "iPhone 15",
+        "iphone-16": "iPhone 16",
+        "iphone-17": "iPhone 17",
+        "iphone-18-pro": "iPhone 18 Pro",
+        "iphone-18-pro-max": "iPhone 18 Pro Max",
+        "galaxy-s21": "Galaxy S21",
+        "galaxy-s22": "Galaxy S22",
+        "galaxy-s23": "Galaxy S23",
+        "galaxy-s24": "Galaxy S24",
+        "galaxy-s25": "Galaxy S25",
+        "galaxy-s26": "Galaxy S26"
+      },
+      "pmicRails": {
+        "core": "núcleo del SoC",
+        "display": "pantalla",
+        "camera": "cámara",
+        "sys": "sistema",
+        "io": "E/S de 1,8 V"
+      },
+      "boards": {
+        "main": "placa principal",
+        "upper": "placa superior, apilada",
+        "sub": "subplaca, en cable flexible"
+      },
+      "onFlex": "en cable flexible",
+      "likelyBlocked": "Probablemente no se puede conectar aquí",
+      "swapLikelyFails": "Probablemente no cabría",
+      "likely": "Probablemente: {reason}",
+      "buildTitlePhone": "Energía y batería",
+      "buildEmptyPhone": "Conecta un PMIC para comprobar sus raíles.",
+      "videoRuntime": "Unas {runtime} de reproducción de vídeo ({energy} a {draw}).",
+      "wearableRuntime": "Unas {runtime} de uso diario ({energy} a {draw}).",
+      "batteryLifePublished": "El fabricante indica hasta {time} de reproducción de vídeo."
     },
     "foundation": {
       "names": {
         "pcb": "Placa de circuito",
         "desktop": "Caja de sobremesa",
-        "laptop": "Chasis de portátil"
+        "laptop": "Chasis de portátil",
+        "drone": "Plataforma de aterrizaje",
+        "phone": "Alfombrilla de reparación",
+        "wearable": "Alfombrilla de reparación"
       },
       "fixedSize": "{width} × {depth} mm, fijado por el chasis",
       "refused": {
         "pcb": "Va en una placa de circuito, no en este chasis. Vacía el proyecto para empezar un circuito.",
         "desktop": "Va en una caja de sobremesa. Empieza un montaje de sobremesa para usarlo.",
-        "laptop": "Va en un chasis de portátil. Empieza un montaje de portátil para usarlo."
+        "laptop": "Va en un chasis de portátil. Empieza un montaje de portátil para usarlo.",
+        "drone": "Va en un dron. Empieza un dron para usarlo.",
+        "phone": "Va en un teléfono. Empieza un montaje de teléfono para usarla.",
+        "wearable": "Va en un wearable. Empieza un montaje de wearable para usarla."
       }
+    },
+    "moduleSpecs": {
+      "title": "Especificaciones",
+      "power": "Potencia máxima",
+      "typical": "Potencia en uso diario",
+      "heat": "Calor",
+      "cooling": "Refrigeración",
+      "output": "Potencia de salida",
+      "energy": "Energía",
+      "capacity": "Capacidad",
+      "cRating": "Índice C",
+      "mass": "Masa",
+      "thrust": "Empuje por motor",
+      "current": "Corriente por motor",
+      "efficiency": "Eficiencia en vuelo estacionario",
+      "maxCurrent": "Corriente nominal",
+      "diameter": "Diámetro",
+      "railVoltage": "Tensión del raíl {rail}",
+      "railCurrent": "Corriente del raíl {rail}",
+      "rail": "Se alimenta de"
+    },
+    "export": {
+      "label": "Exportar",
+      "pcb": "Descarga los Gerber, el archivo de taladrado, la lista de materiales y el archivo de colocación de la placa en un zip.",
+      "modules": "Descarga la lista de materiales del montaje.",
+      "unrouted": "{count, plural, one {# conexión aún no tiene} other {# conexiones aún no tienen}} cobre: consulta el README del zip."
     }
   },
   "Parts": {
@@ -740,6 +889,522 @@
     "charger-barrel-240w": {
       "name": "Cargador con conector de barril de 240 W",
       "summary": "Para portátiles gaming con toma de barril"
+    },
+    "dji-mini-2-frame": {
+      "name": "Fuselaje DJI Mini 2",
+      "summary": "Controladora, ESC y radio integrados"
+    },
+    "dji-mini-3-pro-frame": {
+      "name": "Fuselaje DJI Mini 3 Pro",
+      "summary": "Controladora, ESC y radio integrados"
+    },
+    "dji-mini-4-pro-frame": {
+      "name": "Fuselaje DJI Mini 4 Pro",
+      "summary": "Controladora, ESC y radio integrados"
+    },
+    "fpv-frame-5in": {
+      "name": "Chasis FPV de 5 pulgadas",
+      "summary": "Chasis freestyle de carbono, stack de 30 × 30 mm"
+    },
+    "dji-mini-2-motors": {
+      "name": "Motores DJI Mini 2",
+      "summary": "Juego de 4"
+    },
+    "dji-mini-3-motors": {
+      "name": "Motores DJI Mini 3 Pro / Mini 4 Pro",
+      "summary": "Juego de 4"
+    },
+    "motors-2207-1950kv": {
+      "name": "Motores 2207 1950 KV",
+      "summary": "Juego de 4, para quads de 5 pulgadas en 4S"
+    },
+    "motors-2306-2450kv": {
+      "name": "Motores 2306 2450 KV",
+      "summary": "Juego de 4; más empuje, más corriente"
+    },
+    "dji-mini-2-propellers": {
+      "name": "Hélices DJI Mini 2",
+      "summary": "4726F, juego de 4"
+    },
+    "dji-mini-3-propellers": {
+      "name": "Hélices DJI Mini 3 Pro / Mini 4 Pro",
+      "summary": "6030F, juego de 4"
+    },
+    "props-5in-triblade": {
+      "name": "Hélices tripala de 5,1 pulgadas",
+      "summary": "Juego de 4"
+    },
+    "dji-mini-2-battery": {
+      "name": "Batería DJI Mini 2, 2250 mAh",
+      "summary": "Batería de vuelo inteligente"
+    },
+    "dji-mini-3-battery": {
+      "name": "Batería DJI Mini 3, 2453 mAh",
+      "summary": "Para Mini 3 Pro y Mini 4 Pro"
+    },
+    "dji-mini-4-pro-battery": {
+      "name": "Batería DJI Mini 4 Pro, 2590 mAh",
+      "summary": "Para Mini 3 Pro y Mini 4 Pro"
+    },
+    "dji-mini-3-battery-plus": {
+      "name": "Batería DJI Mini 3 Plus, 3850 mAh",
+      "summary": "Vuelos más largos, más de 249 g"
+    },
+    "lipo-4s-1500-120c": {
+      "name": "LiPo 4S, 1500 mAh, 120C",
+      "summary": "La batería freestyle de 5 pulgadas habitual"
+    },
+    "lipo-4s-1300-120c": {
+      "name": "LiPo 4S, 1300 mAh, 120C",
+      "summary": "Más ligera, vuelos más cortos"
+    },
+    "liion-4s-4000": {
+      "name": "Li-ion 4S, 4000 mAh",
+      "summary": "Vuelos largos, pero poca corriente de descarga"
+    },
+    "esc-4in1-55a": {
+      "name": "ESC 4 en 1, 55 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-45a": {
+      "name": "ESC 4 en 1, 45 A",
+      "summary": "30 × 30 mm"
+    },
+    "esc-4in1-30a": {
+      "name": "ESC 4 en 1, 30 A",
+      "summary": "30 × 30 mm, para motores más ligeros"
+    },
+    "fc-f7-30x30": {
+      "name": "Controladora de vuelo F7",
+      "summary": "30 × 30 mm"
+    },
+    "dji-mini-2-gimbal": {
+      "name": "Cámara con estabilizador DJI Mini 2",
+      "summary": "12 MP, 4K, 3 ejes"
+    },
+    "dji-mini-3-pro-gimbal": {
+      "name": "Cámara con estabilizador DJI Mini 3 Pro",
+      "summary": "48 MP, 1/1,3 pulgadas, 3 ejes"
+    },
+    "dji-mini-4-pro-gimbal": {
+      "name": "Cámara con estabilizador DJI Mini 4 Pro",
+      "summary": "48 MP, 1/1,3 pulgadas, 3 ejes"
+    },
+    "fpv-camera-analog": {
+      "name": "Cámara y transmisor FPV analógicos",
+      "summary": "Transmisor de vídeo de 600 mW"
+    },
+    "dji-o3-air-unit": {
+      "name": "DJI O3 Air Unit",
+      "summary": "Cámara y transmisor FPV digitales"
+    },
+    "iphone-13-board": {
+      "name": "Placa lógica del iPhone 13",
+      "summary": "Dos placas apiladas sobre un interposer"
+    },
+    "iphone-13-battery": {
+      "name": "Batería del iPhone 13",
+      "summary": "3227 mAh, 12,41 Wh"
+    },
+    "iphone-13-display": {
+      "name": "Pantalla del iPhone 13",
+      "summary": "OLED de 6,1 pulgadas, 60 Hz"
+    },
+    "iphone-13-camera": {
+      "name": "Módulo de cámara trasera del iPhone 13",
+      "summary": "Cámara principal de 12 MP"
+    },
+    "iphone-13-pmic": {
+      "name": "PMIC del iPhone 13",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "iphone-14-board": {
+      "name": "Placa lógica del iPhone 14",
+      "summary": "Dos placas apiladas sobre un interposer"
+    },
+    "iphone-14-battery": {
+      "name": "Batería del iPhone 14",
+      "summary": "3279 mAh, 12,68 Wh"
+    },
+    "iphone-14-display": {
+      "name": "Pantalla del iPhone 14",
+      "summary": "OLED de 6,1 pulgadas, 60 Hz"
+    },
+    "iphone-14-camera": {
+      "name": "Módulo de cámara trasera del iPhone 14",
+      "summary": "Cámara principal de 12 MP"
+    },
+    "iphone-14-pmic": {
+      "name": "PMIC del iPhone 14",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "iphone-15-board": {
+      "name": "Placa lógica del iPhone 15",
+      "summary": "Dos placas apiladas sobre un interposer"
+    },
+    "iphone-15-battery": {
+      "name": "Batería del iPhone 15",
+      "summary": "3349 mAh, 12,98 Wh"
+    },
+    "iphone-15-display": {
+      "name": "Pantalla del iPhone 15",
+      "summary": "OLED de 6,1 pulgadas, 60 Hz"
+    },
+    "iphone-15-camera": {
+      "name": "Módulo de cámara trasera del iPhone 15",
+      "summary": "Cámara principal de 48 MP"
+    },
+    "iphone-15-pmic": {
+      "name": "PMIC del iPhone 15",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "iphone-16-board": {
+      "name": "Placa lógica del iPhone 16",
+      "summary": "Dos placas apiladas sobre un interposer"
+    },
+    "iphone-16-battery": {
+      "name": "Batería del iPhone 16",
+      "summary": "3561 mAh, 13,83 Wh"
+    },
+    "iphone-16-display": {
+      "name": "Pantalla del iPhone 16",
+      "summary": "OLED de 6,1 pulgadas, 60 Hz"
+    },
+    "iphone-16-camera": {
+      "name": "Módulo de cámara trasera del iPhone 16",
+      "summary": "Cámara principal de 48 MP"
+    },
+    "iphone-16-pmic": {
+      "name": "PMIC del iPhone 16",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "iphone-17-board": {
+      "name": "Placa lógica del iPhone 17",
+      "summary": "Dos placas apiladas sobre un interposer"
+    },
+    "iphone-17-battery": {
+      "name": "Batería del iPhone 17",
+      "summary": "3692 mAh, 14,35 Wh"
+    },
+    "iphone-17-display": {
+      "name": "Pantalla del iPhone 17",
+      "summary": "OLED de 6,3 pulgadas, 120 Hz"
+    },
+    "iphone-17-camera": {
+      "name": "Módulo de cámara trasera del iPhone 17",
+      "summary": "Cámara principal de 48 MP"
+    },
+    "iphone-17-pmic": {
+      "name": "PMIC del iPhone 17",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "iphone-18-pro-board": {
+      "name": "Placa lógica del iPhone 18 Pro",
+      "summary": "Dos placas apiladas sobre un interposer"
+    },
+    "iphone-18-pro-battery": {
+      "name": "Batería del iPhone 18 Pro",
+      "summary": "4288 mAh, 16,68 Wh"
+    },
+    "iphone-18-pro-display": {
+      "name": "Pantalla del iPhone 18 Pro",
+      "summary": "OLED de 6,3 pulgadas, 120 Hz"
+    },
+    "iphone-18-pro-camera": {
+      "name": "Módulo de cámara trasera del iPhone 18 Pro",
+      "summary": "Cámara principal de 48 MP"
+    },
+    "iphone-18-pro-pmic": {
+      "name": "PMIC del iPhone 18 Pro",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "iphone-18-pro-max-board": {
+      "name": "Placa lógica del iPhone 18 Pro Max",
+      "summary": "Dos placas apiladas sobre un interposer"
+    },
+    "iphone-18-pro-max-battery": {
+      "name": "Batería del iPhone 18 Pro Max",
+      "summary": "5567 mAh, 21,66 Wh"
+    },
+    "iphone-18-pro-max-display": {
+      "name": "Pantalla del iPhone 18 Pro Max",
+      "summary": "OLED de 6,9 pulgadas, 120 Hz"
+    },
+    "iphone-18-pro-max-camera": {
+      "name": "Módulo de cámara trasera del iPhone 18 Pro Max",
+      "summary": "Cámara principal de 48 MP"
+    },
+    "iphone-18-pro-max-pmic": {
+      "name": "PMIC del iPhone 18 Pro Max",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "galaxy-s21-board": {
+      "name": "Placa lógica del Galaxy S21",
+      "summary": "Placa principal con una subplaca en un cable flexible"
+    },
+    "galaxy-s21-battery": {
+      "name": "Batería del Galaxy S21",
+      "summary": "4000 mAh, 15,52 Wh"
+    },
+    "galaxy-s21-display": {
+      "name": "Pantalla del Galaxy S21",
+      "summary": "OLED de 6,2 pulgadas, 120 Hz"
+    },
+    "galaxy-s21-camera": {
+      "name": "Módulo de cámara trasera del Galaxy S21",
+      "summary": "Cámara principal de 12 MP"
+    },
+    "galaxy-s21-pmic": {
+      "name": "PMIC del Galaxy S21",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "galaxy-s22-board": {
+      "name": "Placa lógica del Galaxy S22",
+      "summary": "Placa principal con una subplaca en un cable flexible"
+    },
+    "galaxy-s22-battery": {
+      "name": "Batería del Galaxy S22",
+      "summary": "3700 mAh, 14,36 Wh"
+    },
+    "galaxy-s22-display": {
+      "name": "Pantalla del Galaxy S22",
+      "summary": "OLED de 6,1 pulgadas, 120 Hz"
+    },
+    "galaxy-s22-camera": {
+      "name": "Módulo de cámara trasera del Galaxy S22",
+      "summary": "Cámara principal de 50 MP"
+    },
+    "galaxy-s22-pmic": {
+      "name": "PMIC del Galaxy S22",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "galaxy-s23-board": {
+      "name": "Placa lógica del Galaxy S23",
+      "summary": "Placa principal con una subplaca en un cable flexible"
+    },
+    "galaxy-s23-battery": {
+      "name": "Batería del Galaxy S23",
+      "summary": "3900 mAh, 15,13 Wh"
+    },
+    "galaxy-s23-display": {
+      "name": "Pantalla del Galaxy S23",
+      "summary": "OLED de 6,1 pulgadas, 120 Hz"
+    },
+    "galaxy-s23-camera": {
+      "name": "Módulo de cámara trasera del Galaxy S23",
+      "summary": "Cámara principal de 50 MP"
+    },
+    "galaxy-s23-pmic": {
+      "name": "PMIC del Galaxy S23",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "galaxy-s24-board": {
+      "name": "Placa lógica del Galaxy S24",
+      "summary": "Placa principal con una subplaca en un cable flexible"
+    },
+    "galaxy-s24-battery": {
+      "name": "Batería del Galaxy S24",
+      "summary": "4000 mAh, 15,52 Wh"
+    },
+    "galaxy-s24-display": {
+      "name": "Pantalla del Galaxy S24",
+      "summary": "OLED de 6,2 pulgadas, 120 Hz"
+    },
+    "galaxy-s24-camera": {
+      "name": "Módulo de cámara trasera del Galaxy S24",
+      "summary": "Cámara principal de 50 MP"
+    },
+    "galaxy-s24-pmic": {
+      "name": "PMIC del Galaxy S24",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "galaxy-s25-board": {
+      "name": "Placa lógica del Galaxy S25",
+      "summary": "Placa principal con una subplaca en un cable flexible"
+    },
+    "galaxy-s25-battery": {
+      "name": "Batería del Galaxy S25",
+      "summary": "4000 mAh, 15,52 Wh"
+    },
+    "galaxy-s25-display": {
+      "name": "Pantalla del Galaxy S25",
+      "summary": "OLED de 6,2 pulgadas, 120 Hz"
+    },
+    "galaxy-s25-camera": {
+      "name": "Módulo de cámara trasera del Galaxy S25",
+      "summary": "Cámara principal de 50 MP"
+    },
+    "galaxy-s25-pmic": {
+      "name": "PMIC del Galaxy S25",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "galaxy-s26-board": {
+      "name": "Placa lógica del Galaxy S26",
+      "summary": "Placa principal con una subplaca en un cable flexible"
+    },
+    "galaxy-s26-battery": {
+      "name": "Batería del Galaxy S26",
+      "summary": "4300 mAh, 16,68 Wh"
+    },
+    "galaxy-s26-display": {
+      "name": "Pantalla del Galaxy S26",
+      "summary": "OLED de 6,3 pulgadas, 120 Hz"
+    },
+    "galaxy-s26-camera": {
+      "name": "Módulo de cámara trasera del Galaxy S26",
+      "summary": "Cámara principal de 50 MP"
+    },
+    "galaxy-s26-pmic": {
+      "name": "PMIC del Galaxy S26",
+      "summary": "Circuito de gestión de energía; valores estimados"
+    },
+    "apple-a15": {
+      "name": "Apple A15 Bionic",
+      "summary": "SoC; potencias estimadas"
+    },
+    "apple-a16": {
+      "name": "Apple A16 Bionic",
+      "summary": "SoC; potencias estimadas"
+    },
+    "apple-a18": {
+      "name": "Apple A18",
+      "summary": "SoC; potencias estimadas"
+    },
+    "apple-a19": {
+      "name": "Apple A19",
+      "summary": "SoC; potencias estimadas"
+    },
+    "apple-a20-pro": {
+      "name": "Apple A20 Pro",
+      "summary": "SoC; potencias estimadas"
+    },
+    "snapdragon-888": {
+      "name": "Snapdragon 888 5G",
+      "summary": "SoC con módem 5G integrado; potencias estimadas"
+    },
+    "snapdragon-8-gen-1": {
+      "name": "Snapdragon 8 Gen 1",
+      "summary": "SoC con módem 5G integrado; potencias estimadas"
+    },
+    "snapdragon-8-gen-2-galaxy": {
+      "name": "Snapdragon 8 Gen 2 for Galaxy",
+      "summary": "SoC con módem 5G integrado; potencias estimadas"
+    },
+    "snapdragon-8-gen-3-galaxy": {
+      "name": "Snapdragon 8 Gen 3 for Galaxy",
+      "summary": "SoC con módem 5G integrado; potencias estimadas"
+    },
+    "snapdragon-8-elite-galaxy": {
+      "name": "Snapdragon 8 Elite for Galaxy",
+      "summary": "SoC con módem 5G integrado; potencias estimadas"
+    },
+    "snapdragon-8-elite-gen-5-galaxy": {
+      "name": "Snapdragon 8 Elite Gen 5 for Galaxy",
+      "summary": "SoC con módem 5G integrado; potencias estimadas"
+    },
+    "qualcomm-x60": {
+      "name": "Qualcomm Snapdragon X60",
+      "summary": "Módem 5G"
+    },
+    "qualcomm-x65": {
+      "name": "Qualcomm Snapdragon X65",
+      "summary": "Módem 5G"
+    },
+    "qualcomm-x70": {
+      "name": "Qualcomm Snapdragon X70",
+      "summary": "Módem 5G"
+    },
+    "qualcomm-x71": {
+      "name": "Qualcomm Snapdragon X71",
+      "summary": "Módem 5G"
+    },
+    "qualcomm-x80": {
+      "name": "Qualcomm Snapdragon X80",
+      "summary": "Módem 5G"
+    },
+    "apple-c2": {
+      "name": "Apple C2",
+      "summary": "Módem 5G"
+    },
+    "magsafe-coil-15w": {
+      "name": "MagSafe coil, 15 W",
+      "summary": "Carga inalámbrica de hasta 15 W"
+    },
+    "magsafe-coil-25w": {
+      "name": "MagSafe coil, 25 W",
+      "summary": "Carga inalámbrica de hasta 25 W"
+    },
+    "galaxy-qi-coil-15w": {
+      "name": "Galaxy Qi coil, 15 W",
+      "summary": "Carga inalámbrica de hasta 15 W"
+    },
+    "watch-board": {
+      "name": "Placa lógica genérica de reloj inteligente",
+      "summary": "Una sola placa; lo demás, en cables flexibles"
+    },
+    "watch-battery": {
+      "name": "Batería genérica de reloj inteligente, 310 mAh",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "watch-display": {
+      "name": "Pantalla genérica de reloj inteligente, AMOLED de 1,9 pulgadas",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "watch-soc": {
+      "name": "SoC genérico de reloj inteligente",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "watch-pmic": {
+      "name": "PMIC genérico de reloj inteligente",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "band-board": {
+      "name": "Placa lógica genérica de pulsera de actividad",
+      "summary": "Una sola placa; lo demás, en cables flexibles"
+    },
+    "band-battery": {
+      "name": "Batería genérica de pulsera de actividad, 190 mAh",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "band-display": {
+      "name": "Pantalla genérica de pulsera de actividad, AMOLED de 1,1 pulgadas",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "band-soc": {
+      "name": "SoC genérico de pulsera de actividad",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "band-pmic": {
+      "name": "PMIC genérico de pulsera de actividad",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "ppg-sensor-4led": {
+      "name": "Sensor de frecuencia cardiaca y SpO₂, 4 LED",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "ppg-sensor-2led": {
+      "name": "Sensor de frecuencia cardiaca y SpO₂, 2 LED",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "imu-6axis": {
+      "name": "Sensor de movimiento de 6 ejes",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "linear-actuator-haptic": {
+      "name": "Actuador háptico lineal",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "coin-vibration-motor": {
+      "name": "Motor de vibración de moneda",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "wifi-bluetooth-radio": {
+      "name": "Radio wifi y Bluetooth",
+      "summary": "Pieza genérica; valores estimados"
+    },
+    "bluetooth-le-radio": {
+      "name": "Radio Bluetooth de baja energía",
+      "summary": "Pieza genérica; valores estimados"
     }
   },
   "Builds": {
@@ -757,6 +1422,63 @@
     },
     "laptop-gaming": {
       "name": "Portátil gaming"
+    },
+    "drone-dji-mini-2": {
+      "name": "DJI Mini 2"
+    },
+    "drone-dji-mini-3-pro": {
+      "name": "DJI Mini 3 Pro"
+    },
+    "drone-dji-mini-4-pro": {
+      "name": "DJI Mini 4 Pro"
+    },
+    "drone-fpv-5in": {
+      "name": "Quad FPV de 5 pulgadas"
+    },
+    "phone-iphone-13": {
+      "name": "iPhone 13"
+    },
+    "phone-iphone-14": {
+      "name": "iPhone 14"
+    },
+    "phone-iphone-15": {
+      "name": "iPhone 15"
+    },
+    "phone-iphone-16": {
+      "name": "iPhone 16"
+    },
+    "phone-iphone-17": {
+      "name": "iPhone 17"
+    },
+    "phone-iphone-18-pro": {
+      "name": "iPhone 18 Pro"
+    },
+    "phone-iphone-18-pro-max": {
+      "name": "iPhone 18 Pro Max"
+    },
+    "phone-galaxy-s21": {
+      "name": "Galaxy S21"
+    },
+    "phone-galaxy-s22": {
+      "name": "Galaxy S22"
+    },
+    "phone-galaxy-s23": {
+      "name": "Galaxy S23"
+    },
+    "phone-galaxy-s24": {
+      "name": "Galaxy S24"
+    },
+    "phone-galaxy-s25": {
+      "name": "Galaxy S25"
+    },
+    "phone-galaxy-s26": {
+      "name": "Galaxy S26"
+    },
+    "wearable-smartwatch": {
+      "name": "Reloj inteligente (genérico)"
+    },
+    "wearable-fitness-band": {
+      "name": "Pulsera de actividad (genérica)"
     }
   }
 }

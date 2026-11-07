@@ -6,7 +6,7 @@ import type { FitCheck } from "@echidna/rules";
 import { partsById } from "@echidna/library";
 import { useMemo } from "react";
 
-import { connectorKey, protocolKey, slotKey } from "@/lib/messageKeys";
+import { connectorKey, deviceKey, pmicRailKey, protocolKey, slotKey } from "@/lib/messageKeys";
 import { slotOptions, type SlotOption } from "@/lib/project/slots";
 import { useProjectStore } from "@/stores/project";
 import { Button } from "@/components/ui/button";
@@ -31,17 +31,33 @@ export const railName = (host: ComponentSpec | undefined, railId: string) => {
   return host?.pins.find((p) => p.id === pinId)?.name ?? railId;
 };
 
+/**
+ * Whether a set of checks fails only on estimates: every failing check rests on at least one estimated value, so
+ * the verdict is worded as likely rather than certain.
+ * @param checks - Checks of one fit or swap.
+ * @returns `true` when something fails and every failure is estimated.
+ */
+export const failsOnEstimates = (checks: readonly FitCheck[]): boolean => {
+  const fails = checks.filter((c) => c.severity === "fail");
+  return fails.length > 0 && fails.every((c) => c.estimated);
+};
+
 /** Words for one slot check that is not a pass: what the part needs and what the slot gives. */
 export const useCheckReason = () => {
   const t = useTranslations("Studio.slots");
   const format = useFormatter();
   const locale = useLocale();
   const q = (value: number | undefined, unit = "") => formatQuantity(value ?? 0, unit, locale);
+  // An interface made for one device's connector reads as such, such as `MIPI DSI display for the iPhone 15`.
+  const protocolName = (id: string) => {
+    const [protocol = "", connector] = id.split("@");
+    const name = t(`protocols.${protocolKey(protocol)}`);
+    return connector
+      ? t("protocolFor", { protocol: name, device: t(`devices.${deviceKey(connector)}`) })
+      : name;
+  };
   const protocols = (ids: readonly string[] = []) =>
-    format.list(
-      ids.map((p) => t(`protocols.${protocolKey(p)}`)),
-      { type: "disjunction" },
-    );
+    format.list(ids.map(protocolName), { type: "disjunction" });
 
   return (check: FitCheck, host: ComponentSpec | undefined): string => {
     const unit = check.unit ?? "";
@@ -66,6 +82,12 @@ export const useCheckReason = () => {
             actual: q(check.actual, unit),
             limit: q(check.limit, unit),
             rail: railName(host, check.railId ?? ""),
+          });
+        case "pmicRail":
+          return t("checks.pmicRail", {
+            actual: q(check.actual, unit),
+            limit: q(check.limit, unit),
+            rail: t(`pmicRails.${pmicRailKey(check.railId ?? "")}`),
           });
         case "powerConnectors":
           return t("checks.powerConnectors", {
@@ -140,7 +162,9 @@ export const SlotPicker = ({ component }: { component: NetlistComponent }) => {
                   ? powered
                     ? t("fits", { rail })
                     : t("fitsModule")
-                  : t("blocked");
+                  : failsOnEstimates(option.fit.checks)
+                    ? t("likelyBlocked")
+                    : t("blocked");
             return (
               <li
                 key={`${option.hostId}:${option.slot.id}`}

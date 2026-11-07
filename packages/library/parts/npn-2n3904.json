@@ -5,9 +5,18 @@
   "kind": "npn",
   "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
   "pins": [
-    { "id": "c", "name": "Collector" },
-    { "id": "b", "name": "Base" },
-    { "id": "e", "name": "Emitter" }
+    {
+      "id": "c",
+      "name": "Collector"
+    },
+    {
+      "id": "b",
+      "name": "Base"
+    },
+    {
+      "id": "e",
+      "name": "Emitter"
+    }
   ],
   "params": {
     "saturationCurrent": {
@@ -74,5 +83,11 @@
   "interfaces": [],
   "model": "npn",
   "footprintId": "generic/to-92-ebc",
-  "meshUrl": "generic/to-92"
+  "meshUrl": "generic/to-92",
+  "sourcing": {
+    "manufacturer": "onsemi",
+    "mpn": "2N3904BU",
+    "lcsc": "C124482",
+    "reference": "LCSC C124482: onsemi 2N3904BU, TO-92-3, bulk"
+  }
 }

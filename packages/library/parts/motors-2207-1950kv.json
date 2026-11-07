@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "motors-2207-1950kv",
+  "name": "2207 1950 KV brushless motors (set of 4)",
+  "kind": "droneMotors",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "motor-mount-16x16"
+    }
+  ],
+  "module": {
+    "role": "motors",
+    "mass": {
+      "value": 0.128,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "About 32 g a motor with its wires, typical of 2207-size motors"
+    },
+    "thrust": {
+      "value": 13.7,
+      "unit": "N",
+      "source": "estimated",
+      "reference": "About 1.4 kg of thrust a motor on 4S with 5.1-inch tri-blade propellers, typical of makers' thrust tables"
+    },
+    "current": {
+      "value": 32,
+      "unit": "A",
+      "source": "estimated",
+      "reference": "Full-throttle draw a motor on 4S with 5.1-inch tri-blades, typical of makers' thrust tables"
+    },
+    "efficiency": {
+      "value": 0.3,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "Tri-blade propellers and motors wound for punch rather than a long hover"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/motors-fpv5",
+  "meshUrl": "generic/droneMotors"
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-17-battery",
+  "name": "iPhone 17 battery",
+  "kind": "phoneBattery",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "phone-battery",
+      "connector": "iphone-17"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "energy": {
+      "value": 51664,
+      "unit": "J",
+      "source": "teardown",
+      "reference": "3692 mAh, 14.351 Wh, Chinese regulatory filing and EU energy label"
+    },
+    "capacity": {
+      "value": 13291.2,
+      "unit": "C",
+      "source": "teardown",
+      "reference": "3692 mAh, 14.351 Wh, Chinese regulatory filing and EU energy label"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/battery-iphone-17",
+  "meshUrl": "generic/battery-iphone-17"
+}

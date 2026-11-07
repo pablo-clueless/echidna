@@ -1,0 +1,89 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dji-mini-3-pro-frame",
+  "name": "DJI Mini 3 Pro airframe (flight controller, ESCs and radio built in)",
+  "kind": "droneFrame",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "frame",
+    "rotors": 4,
+    "mass": {
+      "value": 0.1051,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "DJI's 249 g take-off weight less the battery's published weight and the estimated motors, propellers and gimbal camera"
+    },
+    "typical": {
+      "value": 3,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Flight controller, O3 radio and forward, backward and downward sensing in a hover"
+    },
+    "maxCurrent": {
+      "value": 8,
+      "unit": "A",
+      "source": "estimated",
+      "reference": "ESCs built into the flight controller board; DJI doesn't publish a rating"
+    }
+  },
+  "model": "module",
+  "footprintId": "drone/frame-mini3",
+  "meshUrl": "generic/droneFrame",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "motors",
+        "accepts": [
+          {
+            "protocol": "dji-mini3-motor-mount"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 0
+        }
+      },
+      {
+        "id": "propellers",
+        "accepts": [
+          {
+            "protocol": "dji-mini3-prop-mount"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 0
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "dji-mini-3-battery"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": -38
+        }
+      },
+      {
+        "id": "camera",
+        "accepts": [
+          {
+            "protocol": "dji-mini-3-pro-gimbal"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 62
+        }
+      }
+    ]
+  }
+}

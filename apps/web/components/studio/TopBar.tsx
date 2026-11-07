@@ -1,9 +1,9 @@
 "use client";
 
-import { CircuitBoard, PanelLeft, Play } from "lucide-react";
+import { CircuitBoard, Download, PanelLeft, Play } from "lucide-react";
+import { useEffect, useId, useState } from "react";
 import { partsById } from "@echidna/library";
 import { useTranslations } from "next-intl";
-import { useId } from "react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { LocaleSelect } from "@/components/app/LocaleSelect";
@@ -12,6 +12,7 @@ import { usePreferencesStore } from "@/stores/preferences";
 import { IconButton } from "@/components/app/IconButton";
 import { Separator } from "@/components/ui/separator";
 import { useProjectStore } from "@/stores/project";
+import { fabricationZip } from "@/lib/fabrication";
 import { useStudioStore } from "@/stores/studio";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -19,6 +20,28 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { partKey } from "@/lib/messageKeys";
 import { Link } from "@/i18n/navigation";
+
+/** How long the note about unrouted connections stays after an export, in milliseconds. */
+const NOTICE_MS = 10_000;
+
+/** A file name made from the project's name: lower case, words joined by hyphens. */
+const fileBase = (name: string) =>
+  name
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "echidna";
+
+/** Hands the browser a file to save. */
+const saveFile = (bytes: Uint8Array, name: string) => {
+  const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: "application/zip" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  link.click();
+  // Give the download a moment to start before the URL goes.
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
 
 type Props = {
   libraryOpen?: boolean;
@@ -33,6 +56,23 @@ export const TopBar = ({ libraryOpen, onToggleLibrary }: Props) => {
   const simulating = useStudioStore((s) => s.simulating);
   const setSimulating = useStudioStore((s) => s.setSimulating);
   const tParts = useTranslations("Parts");
+  const onPcb = useProjectStore((s) => s.foundation === "pcb");
+  const hasParts = useProjectStore((s) =>
+    s.components.some((c) => partsById.get(c.specId)?.footprintId),
+  );
+  const [unrouted, setUnrouted] = useState(0);
+  useEffect(() => {
+    if (unrouted === 0) return;
+    const timer = setTimeout(() => setUnrouted(0), NOTICE_MS);
+    return () => clearTimeout(timer);
+  }, [unrouted]);
+  const exportFiles = () => {
+    const project = useProjectStore.getState();
+    const base = fileBase(project.name);
+    const { bytes, unrouted: missing } = fabricationZip(project, base);
+    saveFile(bytes, `${base}-fabrication.zip`);
+    setUnrouted(missing.length);
+  };
   const hostSpecId = useProjectStore(
     (s) => s.components.find((c) => partsById.get(c.specId)?.host)?.specId,
   );
@@ -70,6 +110,20 @@ export const TopBar = ({ libraryOpen, onToggleLibrary }: Props) => {
             {t("learnMode")}
           </Label>
         </div>
+        {unrouted > 0 && (
+          <span role="status" className="text-status-warn-text text-xs max-lg:hidden">
+            {t("export.unrouted", { count: unrouted })}
+          </span>
+        )}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="sm" variant="outline" onClick={exportFiles} disabled={!hasParts}>
+              <Download data-icon="inline-start" />
+              <span className="max-sm:sr-only">{t("export.label")}</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{onPcb ? t("export.pcb") : t("export.modules")}</TooltipContent>
+        </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

@@ -104,7 +104,242 @@ const moduleOutline = (w: number, h: number, label: string): Footprint => ({
   ref: { x: 0, z: -h / 2 - 2.5 },
 });
 
+/**
+ * The shape of a family of drones, in millimetres, shared by its frame, motor set and propeller set so the three
+ * line up wherever they are seated: each motor sits `arm` from the frame's centre along both axes, on an arm
+ * `armHeight` tall.
+ */
+export type DroneLayout = {
+  arm: number;
+  armHeight: number;
+  /** The frame's central body, x across and z front to back. */
+  body: { w: number; d: number; h: number };
+  motor: { radius: number; height: number };
+  /** Propeller tip-to-tip diameter, and how many blades each has. */
+  prop: { diameter: number; blades: number };
+  /** Moulded plastic, like a DJI Mini, or a carbon plate frame with standoffs, like an FPV quad. */
+  build: "moulded" | "carbon";
+};
+
+/**
+ * Drone families by footprint suffix: the DJI Mini 2 (213 mm diagonal), the Mini 3 Pro and Mini 4 Pro (about
+ * 247 mm), and a 5-inch FPV frame (220 mm).
+ */
+export const DRONE_LAYOUTS: Record<string, DroneLayout> = {
+  mini2: {
+    arm: 75,
+    armHeight: 7,
+    body: { w: 58, d: 138, h: 24 },
+    motor: { radius: 6.5, height: 9 },
+    prop: { diameter: 119, blades: 2 },
+    build: "moulded",
+  },
+  mini3: {
+    arm: 87,
+    armHeight: 8,
+    body: { w: 62, d: 148, h: 26 },
+    motor: { radius: 7, height: 10 },
+    prop: { diameter: 152, blades: 2 },
+    build: "moulded",
+  },
+  fpv5: {
+    arm: 78,
+    armHeight: 5,
+    body: { w: 42, d: 128, h: 30 },
+    motor: { radius: 14, height: 17 },
+    prop: { diameter: 130, blades: 3 },
+    build: "carbon",
+  },
+};
+
+/**
+ * The layout a drone footprint, such as `drone/motors-mini2`, belongs to.
+ * @param footprintId - A `drone/` footprint ID.
+ * @returns Its family's layout, or undefined for any other footprint.
+ */
+export const droneLayoutOf = (footprintId: string): DroneLayout | undefined =>
+  footprintId.startsWith("drone/") ? DRONE_LAYOUTS[footprintId.split("-").at(-1) ?? ""] : undefined;
+
+/** Outlines for a drone family's frame, motor set and propeller set, each covering what it reaches. */
+const droneFootprints = Object.fromEntries(
+  Object.entries(DRONE_LAYOUTS).flatMap(([family, layout]) => {
+    const motors = 2 * (layout.arm + layout.motor.radius);
+    const props = 2 * layout.arm + layout.prop.diameter;
+    return [
+      [`drone/frame-${family}`, moduleOutline(motors, motors, "FRAME")],
+      [`drone/motors-${family}`, moduleOutline(motors, motors, "MOTORS")],
+      [`drone/props-${family}`, moduleOutline(props, props, "PROPS")],
+    ];
+  }),
+);
+
+/**
+ * The shape of a phone or wearable, in millimetres, shared by its housing, battery, display and camera footprints:
+ * the housing's outline, and the outlines of the parts made for it. A wearable has no camera.
+ */
+export type PhoneLayout = {
+  width: number;
+  depth: number;
+  battery: { w: number; d: number };
+  display: { w: number; d: number };
+  camera: { w: number; d: number };
+  kind: "phone" | "wearable";
+};
+
+/** Phones by footprint suffix, at their published sizes, and the generic smartwatch and fitness band. */
+export const PHONE_LAYOUTS: Record<string, PhoneLayout> = {
+  "iphone-13": {
+    width: 71.5,
+    depth: 146.7,
+    battery: { w: 55.5, d: 61.6 },
+    display: { w: 69.5, d: 144.7 },
+    camera: { w: 24, d: 24 },
+    kind: "phone",
+  },
+  "iphone-14": {
+    width: 71.5,
+    depth: 146.7,
+    battery: { w: 55.5, d: 61.6 },
+    display: { w: 69.5, d: 144.7 },
+    camera: { w: 24, d: 24 },
+    kind: "phone",
+  },
+  "iphone-15": {
+    width: 71.6,
+    depth: 147.6,
+    battery: { w: 55.6, d: 62.0 },
+    display: { w: 69.6, d: 145.6 },
+    camera: { w: 24, d: 26 },
+    kind: "phone",
+  },
+  "iphone-16": {
+    width: 71.6,
+    depth: 147.6,
+    battery: { w: 55.6, d: 62.0 },
+    display: { w: 69.6, d: 145.6 },
+    camera: { w: 16, d: 30 },
+    kind: "phone",
+  },
+  "iphone-17": {
+    width: 71.5,
+    depth: 149.6,
+    battery: { w: 55.5, d: 62.8 },
+    display: { w: 69.5, d: 147.6 },
+    camera: { w: 16, d: 30 },
+    kind: "phone",
+  },
+  "iphone-18-pro": {
+    width: 71.9,
+    depth: 150.0,
+    battery: { w: 55.9, d: 63.0 },
+    display: { w: 69.9, d: 148.0 },
+    camera: { w: 34, d: 34 },
+    kind: "phone",
+  },
+  "iphone-18-pro-max": {
+    width: 78.0,
+    depth: 163.4,
+    battery: { w: 62.0, d: 68.6 },
+    display: { w: 76.0, d: 161.4 },
+    camera: { w: 36, d: 36 },
+    kind: "phone",
+  },
+  "galaxy-s21": {
+    width: 71.2,
+    depth: 151.7,
+    battery: { w: 55.2, d: 63.7 },
+    display: { w: 69.2, d: 149.7 },
+    camera: { w: 20, d: 46 },
+    kind: "phone",
+  },
+  "galaxy-s22": {
+    width: 70.6,
+    depth: 146.0,
+    battery: { w: 54.6, d: 61.3 },
+    display: { w: 68.6, d: 144.0 },
+    camera: { w: 18, d: 44 },
+    kind: "phone",
+  },
+  "galaxy-s23": {
+    width: 70.9,
+    depth: 146.3,
+    battery: { w: 54.9, d: 61.4 },
+    display: { w: 68.9, d: 144.3 },
+    camera: { w: 16, d: 44 },
+    kind: "phone",
+  },
+  "galaxy-s24": {
+    width: 70.6,
+    depth: 147.0,
+    battery: { w: 54.6, d: 61.7 },
+    display: { w: 68.6, d: 145.0 },
+    camera: { w: 16, d: 44 },
+    kind: "phone",
+  },
+  "galaxy-s25": {
+    width: 70.5,
+    depth: 146.9,
+    battery: { w: 54.5, d: 61.7 },
+    display: { w: 68.5, d: 144.9 },
+    camera: { w: 16, d: 44 },
+    kind: "phone",
+  },
+  "galaxy-s26": {
+    width: 71.7,
+    depth: 149.6,
+    battery: { w: 55.7, d: 62.8 },
+    display: { w: 69.7, d: 147.6 },
+    camera: { w: 16, d: 44 },
+    kind: "phone",
+  },
+  watch: {
+    width: 38,
+    depth: 45,
+    battery: { w: 26, d: 30 },
+    display: { w: 36, d: 42 },
+    camera: { w: 0, d: 0 },
+    kind: "wearable",
+  },
+  band: {
+    width: 19,
+    depth: 44,
+    battery: { w: 12, d: 30 },
+    display: { w: 17, d: 40 },
+    camera: { w: 0, d: 0 },
+    kind: "wearable",
+  },
+};
+
+/**
+ * The layout a phone footprint, such as `phone/battery-iphone-15`, belongs to, and which of its parts it is.
+ * @param footprintId - A `phone/` footprint ID.
+ * @returns The part and its family's layout, or undefined for any other footprint.
+ */
+export const phoneLayoutOf = (
+  footprintId: string,
+): { part: "housing" | "battery" | "display" | "camera"; layout: PhoneLayout } | undefined => {
+  const match = /^phone\/(housing|battery|display|camera)-(.+)$/.exec(footprintId);
+  const layout = match?.[2] ? PHONE_LAYOUTS[match[2]] : undefined;
+  return match && layout
+    ? { part: match[1] as "housing" | "battery" | "display" | "camera", layout }
+    : undefined;
+};
+
+/** Outlines for each phone's and wearable's housing, battery, display and camera. */
+const phoneFootprints = Object.fromEntries(
+  Object.entries(PHONE_LAYOUTS).flatMap(([family, l]) => [
+    [`phone/housing-${family}`, moduleOutline(l.width, l.depth, "")],
+    [`phone/battery-${family}`, moduleOutline(l.battery.w, l.battery.d, "BATT")],
+    [`phone/display-${family}`, moduleOutline(l.display.w, l.display.d, "")],
+    ...(l.camera.w > 0
+      ? [[`phone/camera-${family}`, moduleOutline(l.camera.w, l.camera.d, "")]]
+      : []),
+  ]),
+);
+
 export const footprints: Record<string, Footprint> = {
+  ...droneFootprints,
+  ...phoneFootprints,
   // Life-size outlines, from the form-factor standards: ATX is 305 × 244 mm, a DIMM 133 mm long, M.2 2280 is
   // 80 × 22 mm and 2230 is 30 × 22 mm, an ATX PSU 150 × 140 mm. A graphics card stands on edge, so it covers its
   // length by its two-slot thickness.
@@ -124,6 +359,23 @@ export const footprints: Record<string, Footprint> = {
   // The panel stands in the open lid, so it covers only its thickness along the hinge.
   "module/display": moduleOutline(320, 6, "eDP"),
   "module/charger": moduleOutline(14, 9, "DC IN"),
+  // A slim 2S pack or an FPV LiPo, a 30 × 30 mm flight stack, a gimbal camera and an FPV camera.
+  "module/droneBattery": moduleOutline(36, 72, "BATT"),
+  "module/esc": moduleOutline(36, 36, "ESC"),
+  "module/flightController": moduleOutline(36, 36, "FC"),
+  "module/gimbal": moduleOutline(30, 28, "CAM"),
+  "module/fpvCamera": moduleOutline(20, 20, "CAM"),
+  // A phone's SoC, modem and PMIC packages, its wireless charging coil, and a wearable's smaller parts.
+  "module/soc": moduleOutline(15, 15, "SOC"),
+  "module/modem": moduleOutline(11, 11, "MDM"),
+  "module/pmic": moduleOutline(8, 8, "PMU"),
+  "module/coil": moduleOutline(46, 46, "COIL"),
+  "module/wearableSoc": moduleOutline(8, 8, "SOC"),
+  "module/wearablePmic": moduleOutline(5, 5, "PMU"),
+  "module/hrSensor": moduleOutline(14, 14, "HR"),
+  "module/imu": moduleOutline(3, 3, ""),
+  "module/haptics": moduleOutline(10, 10, "LRA"),
+  "module/radio": moduleOutline(5, 5, "RF"),
   "header/raspberry-pi": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio23", "gpio24"], "RPI"),
   "header/esp32-devkitc": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio4", "gpio5"], "ESP32"),
   "header/arduino-uno-r4": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "d2", "d3"], "UNO R4"),

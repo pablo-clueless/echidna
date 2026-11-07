@@ -30,7 +30,7 @@ export type SlotPlacement = { hostId: string; slotId: string; railId?: string; w
 
 export type ProjectData = {
   name: string;
-  /** What the parts are built on: a bare PCB, or a desktop or laptop chassis. */
+  /** What the parts are built on: a bare PCB, a desktop or laptop chassis, a drone's landing pad, or a repair mat. */
   foundation: Foundation;
   components: NetlistComponent[];
   wires: Wire[];
@@ -71,6 +71,25 @@ const prefixes: Record<string, string> = {
   wifi: "WLAN",
   display: "LCD",
   charger: "CHG",
+  droneFrame: "FR",
+  droneMotors: "M",
+  droneProps: "P",
+  droneBattery: "BAT",
+  esc: "ESC",
+  flightController: "FC",
+  droneCamera: "CAM",
+  phoneBoard: "MB",
+  wearableBoard: "MB",
+  soc: "U",
+  modem: "MDM",
+  pmic: "PMU",
+  phoneBattery: "BAT",
+  phoneDisplay: "LCD",
+  phoneCamera: "CAM",
+  chargingCoil: "L",
+  wearableSensor: "S",
+  haptics: "M",
+  radio: "RF",
 };
 
 /**

@@ -1,0 +1,75 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "galaxy-s21-pmic",
+  "name": "Galaxy S21 PMIC",
+  "kind": "pmic",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "pmic-package",
+      "connector": "galaxy-s21"
+    }
+  ],
+  "module": {
+    "role": "pmic",
+    "rails": [
+      {
+        "id": "core",
+        "voltage": {
+          "value": 0.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Samsung doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 20.0,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Samsung doesn't publish it"
+        }
+      },
+      {
+        "id": "display",
+        "voltage": {
+          "value": 4.6,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Samsung doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 1.25,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Samsung doesn't publish it"
+        }
+      },
+      {
+        "id": "camera",
+        "voltage": {
+          "value": 2.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Samsung doesn't publish it"
+        },
+        "maxCurrent": {
+          "value": 1.0,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Sized from what the stock parts draw at peak, with the usual margin; Samsung doesn't publish it"
+        }
+      }
+    ],
+    "typical": {
+      "value": 0.02,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Conversion losses while watching video; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/pmic",
+  "meshUrl": "generic/pmic"
+}

@@ -45,7 +45,10 @@ export const ParamField = ({ name, label, spec, value, overridden, onCommit }: P
         <label htmlFor={id} className="text-xs font-medium">
           {label}
         </label>
-        <ProvenanceBadge source={overridden ? "user" : spec.source} />
+        <ProvenanceBadge
+          source={overridden ? "user" : spec.source}
+          reference={overridden ? undefined : spec.reference}
+        />
       </div>
       <div className="flex items-center gap-1">
         <InputGroup className="h-8">

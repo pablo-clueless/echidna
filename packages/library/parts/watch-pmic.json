@@ -1,0 +1,89 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "watch-pmic",
+  "name": "Generic smartwatch PMIC",
+  "kind": "pmic",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "wearable-pmic"
+    }
+  ],
+  "module": {
+    "role": "pmic",
+    "typical": {
+      "value": 0.001,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Quiescent and conversion losses; Generic part; figures in line with current models, estimated"
+    },
+    "rails": [
+      {
+        "id": "core",
+        "voltage": {
+          "value": 0.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Generic part; figures in line with current models, estimated"
+        },
+        "maxCurrent": {
+          "value": 1.1,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Typical of a PMIC for this class of device; Generic part; figures in line with current models, estimated"
+        }
+      },
+      {
+        "id": "display",
+        "voltage": {
+          "value": 4.6,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Generic part; figures in line with current models, estimated"
+        },
+        "maxCurrent": {
+          "value": 0.16,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Typical of a PMIC for this class of device; Generic part; figures in line with current models, estimated"
+        }
+      },
+      {
+        "id": "io",
+        "voltage": {
+          "value": 1.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Generic part; figures in line with current models, estimated"
+        },
+        "maxCurrent": {
+          "value": 0.1,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Typical of a PMIC for this class of device; Generic part; figures in line with current models, estimated"
+        }
+      },
+      {
+        "id": "sys",
+        "voltage": {
+          "value": 3.8,
+          "unit": "V",
+          "source": "estimated",
+          "reference": "Typical for this rail; Generic part; figures in line with current models, estimated"
+        },
+        "maxCurrent": {
+          "value": 0.45,
+          "unit": "A",
+          "source": "estimated",
+          "reference": "Typical of a PMIC for this class of device; Generic part; figures in line with current models, estimated"
+        }
+      }
+    ]
+  },
+  "model": "module",
+  "footprintId": "module/wearablePmic",
+  "meshUrl": "generic/wearablePmic"
+}

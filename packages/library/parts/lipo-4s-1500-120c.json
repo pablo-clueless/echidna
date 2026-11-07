@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "lipo-4s-1500-120c",
+  "name": "4S LiPo, 1500 mAh, 120C",
+  "kind": "droneBattery",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "xt60-4s"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "mass": {
+      "value": 0.18,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "Typical of 4S 1500 mAh packs with an XT60 lead"
+    },
+    "capacity": {
+      "value": 5400.0,
+      "unit": "C",
+      "source": "datasheet",
+      "reference": "1500 mAh, as printed on the pack"
+    },
+    "energy": {
+      "value": 79920,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "22.2 Wh: 1500 mAh at 14.8 V nominal"
+    },
+    "cRating": {
+      "value": 120,
+      "unit": "1",
+      "source": "datasheet",
+      "reference": "As printed on the pack; real packs rarely hold it for long"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/droneBattery",
+  "meshUrl": "generic/droneBattery"
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-14-display",
+  "name": "iPhone 14 display",
+  "kind": "phoneDisplay",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-dsi",
+      "connector": "iphone-14"
+    }
+  ],
+  "module": {
+    "role": "display",
+    "rail": "display",
+    "power": {
+      "value": 3.2,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Full screen at peak outdoor brightness; Apple doesn't publish it"
+    },
+    "typical": {
+      "value": 0.35,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Watching downloaded video, as makers test battery life; estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/display-iphone-14",
+  "meshUrl": "generic/display-iphone-14"
+}

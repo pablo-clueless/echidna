@@ -1,0 +1,144 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "galaxy-s21-board",
+  "name": "Galaxy S21 logic board",
+  "kind": "phoneBoard",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "logicBoard",
+    "typical": {
+      "value": 0.07,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Memory, audio and sensors while watching video; Samsung doesn't publish it"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/housing-galaxy-s21",
+  "meshUrl": "generic/housing-galaxy-s21",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "soc",
+        "accepts": [
+          {
+            "protocol": "soc-package",
+            "connector": "galaxy-s21"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 2.8,
+          "z": -56.4
+        }
+      },
+      {
+        "id": "pmic",
+        "accepts": [
+          {
+            "protocol": "pmic-package",
+            "connector": "galaxy-s21"
+          }
+        ],
+        "board": "main",
+        "seat": {
+          "x": 21.3,
+          "z": -40.9
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "phone-battery",
+            "connector": "galaxy-s21"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.6
+        },
+        "flex": {
+          "x": 21.3,
+          "z": -20.2
+        }
+      },
+      {
+        "id": "display",
+        "accepts": [
+          {
+            "protocol": "mipi-dsi",
+            "connector": "galaxy-s21"
+          }
+        ],
+        "seat": {
+          "x": 79.2,
+          "z": 0
+        },
+        "flex": {
+          "x": 31.6,
+          "z": -46.0
+        }
+      },
+      {
+        "id": "rear-camera",
+        "accepts": [
+          {
+            "protocol": "mipi-csi",
+            "connector": "galaxy-s21"
+          }
+        ],
+        "seat": {
+          "x": -21.6,
+          "z": -48.8
+        },
+        "flex": {
+          "x": -9.6,
+          "z": -48.8
+        }
+      },
+      {
+        "id": "coil",
+        "accepts": [
+          {
+            "protocol": "qi-coil"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 15.6
+        },
+        "flex": {
+          "x": 0.7,
+          "z": -20.2
+        }
+      }
+    ],
+    "boards": [
+      {
+        "id": "main",
+        "width": 41.2,
+        "depth": 51.6,
+        "x": 11.0,
+        "z": -46.0,
+        "y": 0.8,
+        "thickness": 0.8
+      },
+      {
+        "id": "sub",
+        "width": 57.2,
+        "depth": 11,
+        "x": 0,
+        "z": 66.3,
+        "y": 0.8,
+        "thickness": 0.8,
+        "joint": "flex"
+      }
+    ]
+  }
+}

@@ -5,9 +5,18 @@
   "kind": "regulator",
   "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"],
   "pins": [
-    { "id": "in", "name": "IN" },
-    { "id": "out", "name": "OUT" },
-    { "id": "gnd", "name": "GND" }
+    {
+      "id": "in",
+      "name": "IN"
+    },
+    {
+      "id": "out",
+      "name": "OUT"
+    },
+    {
+      "id": "gnd",
+      "name": "GND"
+    }
   ],
   "params": {
     "outputVoltage": {
@@ -68,5 +77,11 @@
   "interfaces": [],
   "model": "linearRegulator",
   "footprintId": "generic/sot-223",
-  "meshUrl": "generic/sot-223"
+  "meshUrl": "generic/sot-223",
+  "sourcing": {
+    "manufacturer": "Advanced Monolithic Systems",
+    "mpn": "AMS1117-3.3",
+    "lcsc": "C6186",
+    "reference": "LCSC C6186: AMS1117-3.3, 1 A LDO, SOT-223"
+  }
 }

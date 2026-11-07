@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "band-battery",
+  "name": "Generic fitness band battery, 190 mAh",
+  "kind": "phoneBattery",
+  "deviceTypes": ["wearable"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "li-po-1s"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "energy": {
+      "value": 2633,
+      "unit": "J",
+      "source": "estimated",
+      "reference": "190 mAh at a nominal 3.85 V; Generic part; figures in line with current models, estimated"
+    },
+    "capacity": {
+      "value": 684.0,
+      "unit": "C",
+      "source": "estimated",
+      "reference": "190 mAh; Generic part; figures in line with current models, estimated"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/battery-band",
+  "meshUrl": "generic/battery-band"
+}

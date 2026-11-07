@@ -38,12 +38,123 @@ const roundedRect = <T extends Shape | Path>(
   return path;
 };
 
+/** The ring and letter painted on a landing pad, in millimetres. */
+const PAD = { ring: 6, inset: 14, letter: { height: 110, stroke: 16, width: 70 } } as const;
+
 /**
- * The inside of a desktop case or a laptop's bottom shell, in millimetres: a floor the modules stand on, walls round
+ * A round rubber landing pad a drone stands on, in millimetres, with a ring round its edge and a large H in the
+ * middle like a helipad's. It has no walls, so the propellers are never hidden.
+ */
+const LandingPad = ({ diameter, thickness }: { diameter: number; thickness: number }) => {
+  const r = diameter / 2;
+  const { letter } = PAD;
+  // Far enough above the pad that the markings never flicker into it at a distance.
+  const top = thickness + 0.4;
+  return (
+    <group>
+      <mesh position={[0, thickness / 2, 0]} material={materials.rubber} receiveShadow castShadow>
+        <cylinderGeometry args={[r, r, thickness, 96]} />
+      </mesh>
+      <mesh position={[0, top, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.padMarking}>
+        <ringGeometry args={[r - PAD.inset - PAD.ring, r - PAD.inset, 96]} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <mesh
+          key={side}
+          position={[(side * (letter.width - letter.stroke)) / 2, top, 0]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          material={materials.padMarking}
+        >
+          <planeGeometry args={[letter.stroke, letter.height]} />
+        </mesh>
+      ))}
+      <mesh position={[0, top, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.padMarking}>
+        <planeGeometry args={[letter.width - letter.stroke, letter.stroke]} />
+      </mesh>
+    </group>
+  );
+};
+
+/**
+ * The inside of a desktop case or a laptop's bottom shell, a drone's landing pad, or a repair mat, in millimetres: a floor the modules stand on, walls round
  * it, screw bosses in the corners and, for a laptop, the hinge along the back and rubber feet underneath. Unlike a
  * PCB it carries no copper, holes or fiducials, and its size is fixed by the chassis.
  */
-export const Chassis = ({ foundation, thickness }: Props) => {
+export const Chassis = (props: Props) =>
+  props.foundation === "drone" ? (
+    <LandingPad diameter={CHASSIS.drone.width} thickness={props.thickness} />
+  ) : props.foundation === "phone" || props.foundation === "wearable" ? (
+    <RepairMat {...CHASSIS[props.foundation]} thickness={props.thickness} />
+  ) : (
+    <Case {...props} foundation={props.foundation} />
+  );
+
+/** Ruler ticks along a repair mat's front edge, in millimetres: a short tick each 5 mm, a long one each 10 mm. */
+const RULER = { inset: 6, short: 2, long: 4, stroke: 0.4 } as const;
+
+/**
+ * A silicone repair mat a phone or wearable lies on opened up, as in a teardown, with a millimetre ruler printed along
+ * its front edge.
+ */
+const RepairMat = ({
+  width,
+  depth,
+  thickness,
+}: {
+  width: number;
+  depth: number;
+  thickness: number;
+}) => {
+  const geometry = useMemo(
+    () =>
+      new ExtrudeGeometry(roundedRect(new Shape(), width, depth, 6), {
+        depth: thickness,
+        bevelEnabled: false,
+        curveSegments: 16,
+      }),
+    [width, depth, thickness],
+  );
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  const ticks = Array.from(
+    { length: Math.floor((width - RULER.inset * 4) / 5) + 1 },
+    (_, i) => i * 5,
+  );
+  const start = -(ticks.at(-1) ?? 0) / 2;
+  // Far enough above the mat that the markings never flicker into it at a distance.
+  const top = thickness + 0.2;
+  return (
+    <group>
+      <mesh
+        geometry={geometry}
+        rotation={[-Math.PI / 2, 0, 0]}
+        material={materials.mat}
+        receiveShadow
+      />
+      {ticks.map((mm) => {
+        const length = mm % 10 === 0 ? RULER.long : RULER.short;
+        return (
+          <mesh
+            key={mm}
+            position={[start + mm, top, depth / 2 - RULER.inset - length / 2]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            material={materials.padMarking}
+            raycast={() => null}
+          >
+            <planeGeometry args={[RULER.stroke, length]} />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+};
+
+const Case = ({
+  foundation,
+  thickness,
+}: {
+  foundation: Exclude<Foundation, "pcb" | "drone" | "phone" | "wearable">;
+  thickness: number;
+}) => {
   const { width, depth, wall } = CHASSIS[foundation];
   const material = foundation === "laptop" ? materials.anodised : materials.caseSteel;
   const corner = foundation === "laptop" ? 8 : 3;

@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-17-camera",
+  "name": "iPhone 17 rear camera module",
+  "kind": "phoneCamera",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-csi",
+      "connector": "iphone-17"
+    }
+  ],
+  "module": {
+    "role": "camera",
+    "rail": "camera",
+    "power": {
+      "value": 2.2,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Recording 4K video at 60 fps; Apple doesn't publish it"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/camera-iphone-17",
+  "meshUrl": "generic/camera-iphone-17"
+}

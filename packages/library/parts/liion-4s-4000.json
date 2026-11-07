@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "liion-4s-4000",
+  "name": "4S Li-ion pack, 4000 mAh (21700 cells)",
+  "kind": "droneBattery",
+  "deviceTypes": ["drone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "xt60-4s"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "mass": {
+      "value": 0.29,
+      "unit": "kg",
+      "source": "estimated",
+      "reference": "Four 21700 cells at about 70 g each, with wiring and an XT60 lead"
+    },
+    "capacity": {
+      "value": 14400.0,
+      "unit": "C",
+      "source": "datasheet",
+      "reference": "4000 mAh, from the cells' datasheet"
+    },
+    "energy": {
+      "value": 207360,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "57.6 Wh: 4000 mAh at 14.4 V nominal"
+    },
+    "cRating": {
+      "value": 11.25,
+      "unit": "1",
+      "source": "datasheet",
+      "reference": "45 A continuous, the cells' datasheet rating"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/droneBattery",
+  "meshUrl": "generic/droneBattery"
+}

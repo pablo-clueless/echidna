@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-14-battery",
+  "name": "iPhone 14 battery",
+  "kind": "phoneBattery",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "phone-battery",
+      "connector": "iphone-14"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "energy": {
+      "value": 45648,
+      "unit": "J",
+      "source": "teardown",
+      "reference": "3279 mAh, 12.68 Wh, printed on the cell (iFixit teardown)"
+    },
+    "capacity": {
+      "value": 11804.4,
+      "unit": "C",
+      "source": "teardown",
+      "reference": "3279 mAh, 12.68 Wh, printed on the cell (iFixit teardown)"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/battery-iphone-14",
+  "meshUrl": "generic/battery-iphone-14"
+}

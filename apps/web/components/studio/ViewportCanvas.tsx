@@ -16,7 +16,9 @@ import { BOARD, clampToBoard } from "@/lib/board/placement";
 import { pinCurrentsAt } from "@/lib/simulation/switchOn";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
 import { applyMaskColour } from "./viewport/materials";
+import { seatLift, seatOf } from "@/lib/project/slots";
 import { CurrentFlow } from "./viewport/CurrentFlow";
+import { StackedBoards } from "./viewport/PhoneMesh";
 import { useProjectStore } from "@/stores/project";
 import { CHASSIS } from "@/lib/project/foundation";
 import { useLayoutStore } from "@/stores/layout";
@@ -26,7 +28,6 @@ import { CameraRig } from "./viewport/CameraRig";
 import { TraceGlow } from "./viewport/TraceGlow";
 import { PartMesh } from "./viewport/PartMesh";
 import { HeatGlow } from "./viewport/HeatGlow";
-import { seatOf } from "@/lib/project/slots";
 import { Chassis } from "./viewport/Chassis";
 import { Traces } from "./viewport/Traces";
 import { Board } from "./viewport/Board";
@@ -165,6 +166,7 @@ export const ViewportCanvas = () => {
   const placeOnBoard = useProjectStore((s) => s.placeOnBoard);
   const selection = useStudioStore((s) => s.selection);
   const select = useStudioStore((s) => s.select);
+  const slots = useProjectStore((s) => s.slots);
   const violations = useStudioStore((s) => s.violations);
   const settledCurrents = useStudioStore((s) => s.simulation?.solution?.pinCurrents);
   const settledPower = useStudioStore((s) => s.simulation?.solution?.componentPower);
@@ -329,10 +331,15 @@ export const ViewportCanvas = () => {
           showHeat && thermalResistance
             ? partTemperature(settledPower?.[c.id] ?? 0, { resistance: thermalResistance, ambient })
             : undefined;
+        // A part on the upper board of a stacked logic board sits on top of it.
+        const lift = seatLift({ components, slots }, partsById, c.id) * MM;
+        const occupied = spec.host?.boards
+          ? new Set(Object.values(slots).flatMap((s) => (s.hostId === c.id ? [s.slotId] : [])))
+          : undefined;
         return (
           <group
             key={c.id}
-            position={[at.x, TOP, at.z]}
+            position={[at.x, TOP + lift, at.z]}
             rotation={[0, (-at.rotation * Math.PI) / 180, 0]}
             scale={MM}
             onPointerDown={startDrag(c.id)}
@@ -355,6 +362,9 @@ export const ViewportCanvas = () => {
                 temperature={temperature}
                 ambient={ambient}
               />
+            )}
+            {spec.host?.boards && occupied && (
+              <StackedBoards host={spec.host} occupied={occupied} footprintId={spec.footprintId} />
             )}
             <PartMesh
               footprintId={spec.footprintId}

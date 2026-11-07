@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-18-pro-max-camera",
+  "name": "iPhone 18 Pro Max rear camera module",
+  "kind": "phoneCamera",
+  "deviceTypes": ["smartphone"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "mipi-csi",
+      "connector": "iphone-18-pro-max"
+    }
+  ],
+  "module": {
+    "role": "camera",
+    "rail": "camera",
+    "power": {
+      "value": 2.9,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Recording 4K video at 60 fps; Apple doesn't publish it"
+    }
+  },
+  "model": "module",
+  "footprintId": "phone/camera-iphone-18-pro-max",
+  "meshUrl": "generic/camera-iphone-18-pro-max"
+}
