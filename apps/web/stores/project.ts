@@ -25,8 +25,8 @@ import {
 } from "@/lib/project/foundation";
 import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
 import { seatOf, seatPlacement, slotConnections, slotOptions } from "@/lib/project/slots";
+import { moduleBounds, nextRotation } from "@/lib/schematic/symbols";
 import { regulatorExample } from "@/lib/project/example";
-import { nextRotation } from "@/lib/schematic/symbols";
 import { footprints } from "@/lib/board/footprints";
 
 export const PROJECT_STORAGE_KEY = "echidna-project";
@@ -394,14 +394,35 @@ export const useProjectStore = create<ProjectState>()(
         // A build goes in its device's chassis, never on a PCB.
         const foundation = foundationForDevice(build.deviceType);
         set({ ...empty(), foundation, boardSize: sizeOf(foundation) });
-        const hostId = get().addComponent(build.hostId, { x: 8, y: 12 });
-        if (!hostId) return;
-        // Modules stack in a column beside the motherboard in the schematic: each box is two grid units tall, with
-        // room for its label. In the chassis, each is seated in its slot.
-        Object.entries(build.modules).forEach(([slotId, specId], i) => {
-          const id = get().addComponent(specId, { x: 22, y: 2 + i * 4 });
-          if (id) get().plugIn(id, hostId, slotId);
+        // In the schematic the host's box sits on the left and its modules stack in columns beside it, each box
+        // sized by its part, left edges lined up, with room above each for its designator. In the chassis, each
+        // module is seated in its slot.
+        const hostSpec = partsById.get(build.hostId);
+        const host = hostSpec ? moduleBounds(hostSpec) : { w: 4, h: 4 };
+        const hostId = get().addComponent(build.hostId, {
+          x: 2 + Math.ceil(host.w),
+          y: 2 + Math.ceil(host.h),
         });
+        if (!hostId) return;
+        // Columns wrap at about the host's height, so a build with many modules stays wide rather than tall.
+        const height = Math.max(Math.ceil(host.h) * 2 + 4, 24);
+        let column = 2 + Math.ceil(host.w) * 2 + 4;
+        let widest = 0;
+        let top = 2;
+        for (const [slotId, specId] of Object.entries(build.modules)) {
+          const spec = partsById.get(specId);
+          const box = spec ? moduleBounds(spec) : { w: 4, h: 1 };
+          if (top > 2 && top + Math.ceil(box.h) * 2 > height) {
+            column += widest * 2 + 4;
+            widest = 0;
+            top = 2;
+          }
+          widest = Math.max(widest, Math.ceil(box.w));
+          const at = { x: column + Math.ceil(box.w), y: top + Math.ceil(box.h) };
+          top = at.y + Math.ceil(box.h) + 2;
+          const id = get().addComponent(specId, at);
+          if (id) get().plugIn(id, hostId, slotId);
+        }
       },
 
       loadExample: () => set(regulatorExample()),

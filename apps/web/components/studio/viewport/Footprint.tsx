@@ -18,7 +18,13 @@ import { materials } from "./materials";
 const PAD_T = 0.05;
 /** Above the copper ridges of tracks, which the silkscreen is printed over. */
 const SILK_Y = 0.045;
+/** Silkscreen resolution: sharp for small parts, capped so a large module's texture stays within `MAX_TEXTURE`. */
 const PX_PER_MM = 40;
+/**
+ * Largest silkscreen texture side, in pixels. At 40 px/mm a 305 mm motherboard asked for 12 480 px, which the GPU
+ * shrank to 8192 (256 MB each) and software renderers lost the WebGL context over.
+ */
+const MAX_TEXTURE = 4096;
 
 type Props = {
   footprint: FootprintData;
@@ -32,15 +38,16 @@ type Props = {
 
 const silkTexture = (footprint: FootprintData, designator: string, fontFamily: string) => {
   const span = Math.max(footprint.courtyard.w, footprint.courtyard.h) + 6;
-  const size = Math.ceil(span * PX_PER_MM);
+  const scale = Math.min(PX_PER_MM, MAX_TEXTURE / span);
+  const size = Math.ceil(span * scale);
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext("2d");
   if (ctx) {
-    const px = (mm: number) => (mm + span / 2) * PX_PER_MM;
+    const px = (mm: number) => (mm + span / 2) * scale;
     ctx.strokeStyle = ctx.fillStyle = "#FFFFFF";
-    ctx.lineWidth = 0.15 * PX_PER_MM;
+    ctx.lineWidth = 0.15 * scale;
     ctx.lineCap = ctx.lineJoin = "round";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -48,10 +55,10 @@ const silkTexture = (footprint: FootprintData, designator: string, fontFamily: s
     for (const shape of footprint.silk) {
       ctx.beginPath();
       if (shape.kind === "rect") {
-        const [w, h] = [shape.w * PX_PER_MM, shape.h * PX_PER_MM];
+        const [w, h] = [shape.w * scale, shape.h * scale];
         ctx.strokeRect(px(shape.x) - w / 2, px(shape.z) - h / 2, w, h);
       } else if (shape.kind === "circle") {
-        const r = shape.r * PX_PER_MM;
+        const r = shape.r * scale;
         const a = shape.flatX === undefined ? 0 : Math.acos(Math.min(1, shape.flatX / shape.r));
         ctx.arc(px(shape.x), px(shape.z), r, a, Math.PI * 2 - a);
         if (shape.flatX !== undefined) ctx.closePath();
@@ -62,15 +69,15 @@ const silkTexture = (footprint: FootprintData, designator: string, fontFamily: s
         );
         ctx.stroke();
       } else if (shape.kind === "dot") {
-        ctx.arc(px(shape.x), px(shape.z), shape.r * PX_PER_MM, 0, Math.PI * 2);
+        ctx.arc(px(shape.x), px(shape.z), shape.r * scale, 0, Math.PI * 2);
         ctx.fill();
       } else {
-        ctx.font = `600 ${shape.size * PX_PER_MM}px ${fontFamily}`;
+        ctx.font = `600 ${shape.size * scale}px ${fontFamily}`;
         ctx.fillText(shape.text, px(shape.x), px(shape.z));
       }
     }
 
-    ctx.font = `600 ${1.15 * PX_PER_MM}px ${fontFamily}`;
+    ctx.font = `600 ${1.15 * scale}px ${fontFamily}`;
     ctx.fillText(designator, px(footprint.ref.x), px(footprint.ref.z));
   }
 

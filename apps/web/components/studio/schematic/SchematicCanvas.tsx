@@ -16,7 +16,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { partsById } from "@echidna/library";
 
 import {
-  boxBounds,
   GRID,
   PART_MIME,
   pinPositions,
@@ -97,11 +96,13 @@ export const SchematicCanvas = () => {
 
   /** Points the view fits around: every pin, and the corners of parts with none, such as desktop and laptop modules. */
   const extent = useMemo(() => {
-    const { w, h } = boxBounds(0);
-    const reach = Math.max(w, h);
     const corners = components.flatMap((c) => {
       const placement = schematic[c.id];
-      if (!placement || (partsById.get(c.specId)?.pins.length ?? 0) > 0) return [];
+      const spec = partsById.get(c.specId);
+      if (!placement || !spec || spec.pins.length > 0) return [];
+      const { w, h } = boundsOf(spec);
+      // Room above for the designator.
+      const reach = Math.max(w, h) + 1;
       return [
         { x: placement.x - reach, y: placement.y - reach },
         { x: placement.x + reach, y: placement.y + reach },
