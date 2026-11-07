@@ -1,7 +1,15 @@
 import type { ComponentSpec } from "@echidna/core";
 import type { ReactNode } from "react";
 
-import { BOX_HALF_WIDTH, BOX_KINDS, boxBounds, boxPins, GRID } from "@/lib/schematic/symbols";
+import {
+  BOX_HALF_WIDTH,
+  BOX_KINDS,
+  boxBounds,
+  boxPins,
+  GRID,
+  isModuleBox,
+  moduleBounds,
+} from "@/lib/schematic/symbols";
 import { switchClosed } from "@/lib/project/model";
 
 const g = (n: number) => n * GRID;
@@ -159,6 +167,18 @@ export const innerPinLabels: Record<
   ],
 };
 
+/** A module's box, sized by the part, with no leads: modules plug into slots rather than being wired. */
+const moduleBox = ({ w, h }: { w: number; h: number }) => (
+  <rect
+    x={g(-w)}
+    y={g(-h)}
+    width={g(w * 2)}
+    height={g(h * 2)}
+    rx={Math.min(2, g(Math.min(w, h)) / 4)}
+    className="fill-background"
+  />
+);
+
 /** A box with a lead to each pin, for dev boards and sensor modules. */
 const box = (count: number) => {
   const { w, h } = boxBounds(count);
@@ -256,6 +276,7 @@ export const SymbolGlyph = ({
   spec: ComponentSpec;
   variant?: string | undefined;
 }) => {
+  if (isModuleBox(spec)) return moduleBox(moduleBounds(spec));
   if (BOX_KINDS.has(spec.kind)) return box(spec.pins.length);
   if (spec.kind !== "switch") return glyphs[spec.kind] ?? glyphs.resistor;
   const closed = switchClosed(spec, variant);
@@ -268,9 +289,11 @@ export const SymbolGlyph = ({
  * @returns Half-width and half-height.
  */
 export const boundsOf = (spec: ComponentSpec): { w: number; h: number } =>
-  BOX_KINDS.has(spec.kind)
-    ? boxBounds(spec.pins.length)
-    : (symbolBounds[spec.kind] ?? { w: 2, h: 1 });
+  isModuleBox(spec)
+    ? moduleBounds(spec)
+    : BOX_KINDS.has(spec.kind)
+      ? boxBounds(spec.pins.length)
+      : (symbolBounds[spec.kind] ?? { w: 2, h: 1 });
 
 /** Half-extents of each symbol's body in grid units at rotation 0, for hit areas and selection outlines. */
 export const symbolBounds: Record<string, { w: number; h: number }> = {

@@ -1,4 +1,7 @@
+import type { ComponentSpec } from "@echidna/core";
+
 import type { Rotation, SchematicPlacement } from "@/lib/project/model";
+import { footprints } from "@/lib/board/footprints";
 
 export type Point = { x: number; y: number };
 
@@ -100,6 +103,41 @@ export const boxBounds = (count: number) => ({
   w: BOX_HALF_WIDTH,
   h: Math.max(1, Math.ceil(count / 2)),
 });
+
+/** Smallest and largest half-side of a module's box, in grid units: small enough to tell apart, large enough to read. */
+export const MODULE_BOX = { min: 1, max: 7 } as const;
+
+/**
+ * Half a module box's side, in grid units, for a part that side long: on a compressed scale, so a part twice the
+ * size draws a little under one grid unit larger, and a 3 mm sensor and a 305 mm motherboard both stay readable.
+ * @param mm - The part's length on that side, in millimetres.
+ * @returns The half-side, to the nearest half grid unit.
+ */
+export const moduleBoxSide = (mm: number): number =>
+  Math.min(
+    MODULE_BOX.max,
+    Math.max(MODULE_BOX.min, Math.round(1.8 * Math.log2(Math.max(mm, 1) / 2)) / 2),
+  );
+
+/**
+ * Whether a part draws as a module box: a box with no leads, sized by the part, for parts that plug into slots.
+ * @param spec - The part spec.
+ * @returns `true` for desktop, laptop, drone, phone and wearable modules.
+ */
+export const isModuleBox = (spec: Pick<ComponentSpec, "kind" | "pins">): boolean =>
+  BOX_KINDS.has(spec.kind) && spec.pins.length === 0;
+
+/**
+ * Half-extents of a module's box, from the outline it covers on the board or chassis.
+ * @param spec - The part spec.
+ * @returns Half-width and half-height in grid units.
+ */
+export const moduleBounds = (
+  spec: Pick<ComponentSpec, "footprintId">,
+): { w: number; h: number } => {
+  const outline = footprints[spec.footprintId]?.courtyard ?? { w: 40, h: 20 };
+  return { w: moduleBoxSide(outline.w), h: moduleBoxSide(outline.h) };
+};
 
 const twoPin: Point[] = [
   { x: -2, y: 0 },
