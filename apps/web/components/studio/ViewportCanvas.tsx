@@ -15,8 +15,10 @@ import { paramValue, switchClosed } from "@/lib/project/model";
 import { BOARD, clampToBoard } from "@/lib/board/placement";
 import { pinCurrentsAt } from "@/lib/simulation/switchOn";
 import { useResolvedTheme } from "@/lib/useResolvedTheme";
+import { moduleTop, PartMesh } from "./viewport/PartMesh";
 import { applyMaskColour } from "./viewport/materials";
 import { seatLift, seatOf } from "@/lib/project/slots";
+import { HostPopulation } from "./viewport/SmallParts";
 import { CurrentFlow } from "./viewport/CurrentFlow";
 import { StackedBoards } from "./viewport/PhoneMesh";
 import { useProjectStore } from "@/stores/project";
@@ -26,7 +28,6 @@ import { useStudioStore } from "@/stores/studio";
 import { Footprint } from "./viewport/Footprint";
 import { CameraRig } from "./viewport/CameraRig";
 import { TraceGlow } from "./viewport/TraceGlow";
-import { PartMesh } from "./viewport/PartMesh";
 import { HeatGlow } from "./viewport/HeatGlow";
 import { Chassis } from "./viewport/Chassis";
 import { Traces } from "./viewport/Traces";
@@ -366,6 +367,7 @@ export const ViewportCanvas = () => {
             {spec.host?.boards && occupied && (
               <StackedBoards host={spec.host} occupied={occupied} footprintId={spec.footprintId} />
             )}
+            {spec.host && <HostPopulation spec={spec} boardTop={moduleTop(spec.footprintId)} />}
             <PartMesh
               footprintId={spec.footprintId}
               bands={resistance === undefined ? undefined : resistorBands(resistance)}

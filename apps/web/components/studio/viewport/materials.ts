@@ -96,6 +96,14 @@ export const materials = {
   }),
   /** Blue silicone repair mat. */
   mat: new MeshStandardMaterial({ color: "#2E4B5E", roughness: 0.92 }),
+  /** Bare copper: heat pipes, cooler bases, charging coil windings. */
+  copper: new MeshStandardMaterial({ color: COPPER, metalness: 1, roughness: 0.32 }),
+  /** Green BT laminate of a chip package's substrate. */
+  substrate: new MeshStandardMaterial({ color: "#2F5A3A", roughness: 0.6 }),
+  /** Matte black plastic of fan blades, frames and connector housings. */
+  plastic: new MeshStandardMaterial({ color: "#1E2024", roughness: 0.75 }),
+  /** Ivory nylon of board-to-wire connectors. */
+  nylon: new MeshStandardMaterial({ color: "#E9E3D3", roughness: 0.7 }),
 } as const;
 
 const bandCache = new Map<string, MeshPhysicalMaterial>();

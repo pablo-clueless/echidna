@@ -23,6 +23,7 @@ import { LED_LIT_CURRENT, LED_NOMINAL_CURRENT } from "@/lib/simulation/ledState"
 import { DEFAULT_LED_COLOUR, ledColours } from "@/lib/parts/ledColours";
 import { bandMaterial, materials } from "./materials";
 import { footprints } from "@/lib/board/footprints";
+import { moduleForm } from "./ModuleForms";
 import { PhoneMesh } from "./PhoneMesh";
 import { DroneMesh } from "./DroneMesh";
 
@@ -606,11 +607,22 @@ const moduleMaterials: Record<string, keyof typeof materials> = {
   "module/radio": "solder",
 };
 
+/**
+ * How far a module's top stands above its origin, in millimetres: where a host board's face is, for the small parts
+ * drawn on it.
+ * @param footprintId - The module's footprint.
+ * @returns The top's height.
+ */
+export const moduleTop = (footprintId: string): number =>
+  (moduleLifts[footprintId] ?? 0) + (moduleHeights[footprintId] ?? 4);
+
 /** A desktop, laptop or drone module as a plain block the size of its outline. */
 const ModuleBlock = ({ footprintId }: { footprintId: string }) => {
   const courtyard = footprints[footprintId]?.courtyard ?? { w: 10, h: 10 };
   const height = moduleHeights[footprintId] ?? 4;
   const lift = moduleLifts[footprintId] ?? 0;
+  const form = moduleForm(footprintId, { w: courtyard.w - 1, d: courtyard.h - 1, h: height });
+  if (form) return <group position={[0, lift, 0]}>{form}</group>;
   return (
     <RoundedBox
       args={[courtyard.w - 1, height, courtyard.h - 1]}
