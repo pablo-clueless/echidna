@@ -376,12 +376,51 @@ export const footprints: Record<string, Footprint> = {
   "module/imu": moduleOutline(3, 3, ""),
   "module/haptics": moduleOutline(10, 10, "LRA"),
   "module/radio": moduleOutline(5, 5, "RF"),
+  // A solar system's parts are wall- or floor-mounted boxes, at the size of typical units: a 1 kW 12 V inverter
+  // about 290 × 220 mm, a 3 kW 24 V one 420 × 310 mm; a 12 V 100 Ah LiFePO4 battery 330 × 172 mm, 24 V packs
+  // 520 × 240 mm and, at 200 Ah, 650 × 300 mm; a PV isolator switch, the array's end of the cable, 125 × 100 mm; a
+  // consumer unit feeding the AC loads 280 × 120 mm; and a plug-in Wi-Fi monitor 60 × 25 mm.
+  "module/inverterSmall": moduleOutline(290, 220, "INVERTER"),
+  "module/inverter": moduleOutline(420, 310, "INVERTER"),
+  "module/solarBatterySmall": moduleOutline(330, 172, "LiFePO4"),
+  "module/solarBattery": moduleOutline(520, 240, "LiFePO4"),
+  "module/solarBatteryLarge": moduleOutline(650, 300, "LiFePO4"),
+  "module/pvIsolator": moduleOutline(125, 100, "PV DC"),
+  "module/consumerUnit": moduleOutline(280, 120, "AC"),
+  "module/wifiDongle": moduleOutline(60, 25, "WI-FI"),
   "header/raspberry-pi": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio23", "gpio24"], "RPI"),
   "header/esp32-devkitc": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "gpio4", "gpio5"], "ESP32"),
   "header/arduino-uno-r4": pinHeader(["3v3", "5v", "gnd", "sda", "scl", "d2", "d3"], "UNO R4"),
   "header/bme280": pinHeader(["vdd", "gnd", "sda", "scl"], "BME280"),
   "header/hc-sr04": pinHeader(["vcc", "trig", "echo", "gnd"], "HC-SR04"),
   "header/ds18b20": pinHeader(["vdd", "dq", "gnd"], "DS18B20"),
+  "header/hc-sr501": pinHeader(["vcc", "out", "gnd"], "HC-SR501"),
+  // A 12 mm round buzzer with its leads 7.6 mm apart, the positive one marked.
+  "generic/buzzer-12mm": {
+    pads: [tht("pos", -3.8, 1.8, 0.9, "rect"), tht("neg", 3.8, 1.8, 0.9)],
+    courtyard: { w: 12.6, h: 12.6 },
+    silk: [
+      { kind: "circle", x: 0, z: 0, r: 6 },
+      { kind: "text", x: -3.8, z: -2.4, text: "+", size: 1.4 },
+    ],
+    ref: { x: 0, z: -7.2 },
+  },
+  // TO-220 standing upright, pins 2.54 mm apart in the order gate, drain, source; the tab at the back.
+  "generic/to-220-gds": {
+    pads: [tht("g", -2.54, 1.9, 1.1, "rect"), tht("d", 0, 1.9, 1.1), tht("s", 2.54, 1.9, 1.1)],
+    courtyard: { w: 10.8, h: 5.4 },
+    silk: [
+      { kind: "rect", x: 0, z: 0.3, w: 10.2, h: 4.6 },
+      {
+        kind: "line",
+        points: [
+          [-5.1, -1.3],
+          [5.1, -1.3],
+        ],
+      },
+    ],
+    ref: { x: 0, z: -3.6 },
+  },
   "generic/axial-0.4in": {
     pads: [tht("1", -5.08, 2.0, 1.0), tht("2", 5.08, 2.0, 1.0)],
     courtyard: { w: 12.6, h: 3.4 },

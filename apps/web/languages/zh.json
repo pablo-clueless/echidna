@@ -455,7 +455,10 @@
         "radio": "射频",
         "imu": "运动传感器",
         "heart-rate": "心率传感器接口",
-        "haptics": "振动马达接口"
+        "haptics": "振动马达接口",
+        "pv": "光伏输入",
+        "ac-out": "交流输出",
+        "monitor": "监控端口"
       },
       "protocols": {
         "i2c": "I²C",
@@ -508,7 +511,12 @@
         "wearable-radio": "可穿戴射频模块",
         "li-po-1s": "单节锂聚合物电池",
         "ppg": "光学心率传感器",
-        "haptic": "振动马达驱动"
+        "haptic": "振动马达驱动",
+        "pv-input": "光伏输入",
+        "battery-12v": "12 V 电池",
+        "battery-24v": "24 V 电池",
+        "ac-230v": "230 V 交流",
+        "inverter-wifi": "逆变器 Wi-Fi 端口"
       },
       "slotLabel": "{host} 的{slot}",
       "pluggedIn": "已插入，由 {rail} 供电",
@@ -1430,6 +1438,75 @@
     "bluetooth-le-radio": {
       "name": "低功耗蓝牙射频",
       "summary": "通用部件；数值为估算"
+    },
+    "ac-loads-cabin": {
+      "name": "小屋电路：照明、路由器、笔记本、小冰箱",
+      "summary": "运行 300 W，启动 700 W"
+    },
+    "ac-loads-essentials": {
+      "name": "家庭基本电路：冰箱、照明、Wi-Fi、电视、风扇",
+      "summary": "运行 650 W，启动 1.5 kW"
+    },
+    "ac-loads-whole-home": {
+      "name": "全屋：另加洗衣机、水泵和微波炉",
+      "summary": "运行 2.6 kW，启动 5.5 kW"
+    },
+    "buzzer-12v": {
+      "name": "有源蜂鸣器，12 V",
+      "summary": "通电即响，30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "混合太阳能逆变器，1 kW 12 V",
+      "summary": "光伏最高 500 W、100 V，浪涌 2 kW"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "混合太阳能逆变器，3 kW 24 V",
+      "summary": "光伏最高 4 kW、500 V，浪涌 6 kW"
+    },
+    "lamp-12v-5w": {
+      "name": "12 V LED 灯，5 W",
+      "summary": "用于 12 V 照明电路"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "磷酸铁锂电池，12 V 100 Ah",
+      "summary": "1.28 kWh，BMS 允许 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "磷酸铁锂电池，24 V 100 Ah",
+      "summary": "2.56 kWh，BMS 允许 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "磷酸铁锂电池，24 V 200 Ah",
+      "summary": "5.12 kWh，BMS 允许 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "逻辑电平功率 MOSFET，IRLZ44N",
+      "summary": "低边开关，55 V，47 A，可由 3.3 V 或 5 V 驱动"
+    },
+    "pir-hc-sr501": {
+      "name": "HC-SR501 人体红外传感器",
+      "summary": "检测到移动时输出高电平；需 4.5 至 20 V 供电",
+      "variantLabel": "传感器",
+      "variants": {
+        "idle": "无移动（输出低）",
+        "motion": "有移动（输出高）"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "光伏阵列，10 × 450 W 串联",
+      "summary": "4.5 kW，开路 496 V"
+    },
+    "pv-array-2x200w": {
+      "name": "光伏阵列，2 × 200 W 串联",
+      "summary": "400 W，开路 48.6 V"
+    },
+    "pv-array-6x450w": {
+      "name": "光伏阵列，6 × 450 W 串联",
+      "summary": "2.7 kW，开路 298 V"
+    },
+    "solar-wifi-monitor": {
+      "name": "逆变器 Wi-Fi 监控器",
+      "summary": "上报发电量和电池电量，1 W"
     }
   },
   "Builds": {

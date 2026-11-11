@@ -470,7 +470,10 @@
         "radio": "Radio",
         "imu": "Capteur de mouvement",
         "heart-rate": "Connecteur du capteur cardiaque",
-        "haptics": "Connecteur du moteur haptique"
+        "haptics": "Connecteur du moteur haptique",
+        "pv": "Entrée PV",
+        "ac-out": "Sortie CA",
+        "monitor": "Port de supervision"
       },
       "protocols": {
         "i2c": "I²C",
@@ -523,7 +526,12 @@
         "wearable-radio": "module radio d’objet connecté",
         "li-po-1s": "LiPo à un élément",
         "ppg": "capteur cardiaque optique",
-        "haptic": "pilote de moteur haptique"
+        "haptic": "pilote de moteur haptique",
+        "pv-input": "Entrée PV",
+        "battery-12v": "Batterie 12 V",
+        "battery-24v": "Batterie 24 V",
+        "ac-230v": "230 V CA",
+        "inverter-wifi": "Port Wi-Fi de l’onduleur"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Branché, alimenté par {rail}",
@@ -1492,6 +1500,75 @@
     "bluetooth-le-radio": {
       "name": "Radio Bluetooth Low Energy",
       "summary": "Pièce générique ; valeurs estimées"
+    },
+    "ac-loads-cabin": {
+      "name": "Circuit de cabane : éclairage, box, ordinateur, petit réfrigérateur",
+      "summary": "300 W en marche, 700 W au démarrage"
+    },
+    "ac-loads-essentials": {
+      "name": "Circuit domestique essentiel : réfrigérateur, éclairage, Wi-Fi, TV, ventilateurs",
+      "summary": "650 W en marche, 1,5 kW au démarrage"
+    },
+    "ac-loads-whole-home": {
+      "name": "Toute la maison : avec lave-linge, pompe et micro-ondes",
+      "summary": "2,6 kW en marche, 5,5 kW au démarrage"
+    },
+    "buzzer-12v": {
+      "name": "Buzzer actif, 12 V",
+      "summary": "Sonne quand il est alimenté, 30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "Onduleur solaire hybride, 1 kW 12 V",
+      "summary": "Jusqu’à 500 W de PV sous 100 V, pointe de 2 kW"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "Onduleur solaire hybride, 3 kW 24 V",
+      "summary": "Jusqu’à 4 kW de PV sous 500 V, pointe de 6 kW"
+    },
+    "lamp-12v-5w": {
+      "name": "Lampe LED 12 V, 5 W",
+      "summary": "Pour un circuit d’éclairage 12 V"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "Batterie LiFePO4, 12 V 100 Ah",
+      "summary": "1,28 kWh, le BMS autorise 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "Batterie LiFePO4, 24 V 100 Ah",
+      "summary": "2,56 kWh, le BMS autorise 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "Batterie LiFePO4, 24 V 200 Ah",
+      "summary": "5,12 kWh, le BMS autorise 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "MOSFET de puissance niveau logique, IRLZ44N",
+      "summary": "Interrupteur côté masse, 55 V, 47 A, commandé en 3,3 V ou 5 V"
+    },
+    "pir-hc-sr501": {
+      "name": "Détecteur de mouvement PIR HC-SR501",
+      "summary": "Sortie à l’état haut au mouvement ; alimentation de 4,5 à 20 V",
+      "variantLabel": "Capteur",
+      "variants": {
+        "idle": "Aucun mouvement (sortie basse)",
+        "motion": "Mouvement (sortie haute)"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "Champ PV, 10 × 450 W en série",
+      "summary": "4,5 kW, 496 V à vide"
+    },
+    "pv-array-2x200w": {
+      "name": "Champ PV, 2 × 200 W en série",
+      "summary": "400 W, 48,6 V à vide"
+    },
+    "pv-array-6x450w": {
+      "name": "Champ PV, 6 × 450 W en série",
+      "summary": "2,7 kW, 298 V à vide"
+    },
+    "solar-wifi-monitor": {
+      "name": "Module Wi-Fi de supervision d’onduleur",
+      "summary": "Indique la production et la charge de la batterie, 1 W"
     }
   },
   "Builds": {

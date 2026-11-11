@@ -455,7 +455,10 @@
         "radio": "Radio",
         "imu": "Sensor de movimiento",
         "heart-rate": "Conector del sensor de frecuencia cardiaca",
-        "haptics": "Conector del motor háptico"
+        "haptics": "Conector del motor háptico",
+        "pv": "Entrada FV",
+        "ac-out": "Salida de CA",
+        "monitor": "Puerto de monitorización"
       },
       "protocols": {
         "i2c": "I²C",
@@ -508,7 +511,12 @@
         "wearable-radio": "módulo de radio de wearable",
         "li-po-1s": "LiPo de una celda",
         "ppg": "sensor óptico de frecuencia cardiaca",
-        "haptic": "controlador de motor háptico"
+        "haptic": "controlador de motor háptico",
+        "pv-input": "Entrada FV",
+        "battery-12v": "Batería de 12 V",
+        "battery-24v": "Batería de 24 V",
+        "ac-230v": "230 V CA",
+        "inverter-wifi": "Puerto wifi del inversor"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Conectado, alimentado desde {rail}",
@@ -1430,6 +1438,75 @@
     "bluetooth-le-radio": {
       "name": "Radio Bluetooth de baja energía",
       "summary": "Pieza genérica; valores estimados"
+    },
+    "ac-loads-cabin": {
+      "name": "Circuito de cabaña: luces, router, portátil, nevera pequeña",
+      "summary": "300 W en marcha, 700 W al arrancar"
+    },
+    "ac-loads-essentials": {
+      "name": "Circuito esencial de casa: nevera, luces, wifi, TV, ventiladores",
+      "summary": "650 W en marcha, 1,5 kW al arrancar"
+    },
+    "ac-loads-whole-home": {
+      "name": "Toda la casa: añade lavadora, bomba y microondas",
+      "summary": "2,6 kW en marcha, 5,5 kW al arrancar"
+    },
+    "buzzer-12v": {
+      "name": "Zumbador activo, 12 V",
+      "summary": "Suena al alimentarlo, 30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "Inversor solar híbrido, 1 kW 12 V",
+      "summary": "Hasta 500 W de FV a 100 V, pico de 2 kW"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "Inversor solar híbrido, 3 kW 24 V",
+      "summary": "Hasta 4 kW de FV a 500 V, pico de 6 kW"
+    },
+    "lamp-12v-5w": {
+      "name": "Lámpara LED de 12 V, 5 W",
+      "summary": "Para un circuito de iluminación de 12 V"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "Batería LiFePO4, 12 V 100 Ah",
+      "summary": "1,28 kWh, el BMS permite 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "Batería LiFePO4, 24 V 100 Ah",
+      "summary": "2,56 kWh, el BMS permite 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "Batería LiFePO4, 24 V 200 Ah",
+      "summary": "5,12 kWh, el BMS permite 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "MOSFET de potencia de nivel lógico, IRLZ44N",
+      "summary": "Interruptor del lado bajo, 55 V, 47 A, se controla con 3,3 V o 5 V"
+    },
+    "pir-hc-sr501": {
+      "name": "Sensor de movimiento PIR HC-SR501",
+      "summary": "La salida se activa con movimiento; necesita de 4,5 a 20 V",
+      "variantLabel": "Sensor",
+      "variants": {
+        "idle": "Sin movimiento (salida baja)",
+        "motion": "Movimiento (salida alta)"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "Campo FV, 10 × 450 W en serie",
+      "summary": "4,5 kW, 496 V en circuito abierto"
+    },
+    "pv-array-2x200w": {
+      "name": "Campo FV, 2 × 200 W en serie",
+      "summary": "400 W, 48,6 V en circuito abierto"
+    },
+    "pv-array-6x450w": {
+      "name": "Campo FV, 6 × 450 W en serie",
+      "summary": "2,7 kW, 298 V en circuito abierto"
+    },
+    "solar-wifi-monitor": {
+      "name": "Monitor wifi del inversor",
+      "summary": "Informa de la producción y la carga de la batería, 1 W"
     }
   },
   "Builds": {

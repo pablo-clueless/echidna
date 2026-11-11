@@ -8,6 +8,8 @@ import iphone18ProMaxDisplay from "../parts/iphone-18-pro-max-display.json";
 import snapdragon8Gen2Galaxy from "../parts/snapdragon-8-gen-2-galaxy.json";
 import snapdragon8Gen3Galaxy from "../parts/snapdragon-8-gen-3-galaxy.json";
 import iphone18ProMaxCamera from "../parts/iphone-18-pro-max-camera.json";
+import hybridInverter1kw12v from "../parts/hybrid-inverter-1kw-12v.json";
+import hybridInverter3kw24v from "../parts/hybrid-inverter-3kw-24v.json";
 import iphone18ProMaxBoard from "../parts/iphone-18-pro-max-board.json";
 import linearActuatorHaptic from "../parts/linear-actuator-haptic.json";
 import laptopCoolerHeatpipe from "../parts/laptop-cooler-heatpipe.json";
@@ -29,8 +31,10 @@ import gamingLaptopBoard from "../parts/gaming-laptop-board.json";
 import chargerBarrel240w from "../parts/charger-barrel-240w.json";
 import djiMini3ProFrame from "../parts/dji-mini-3-pro-frame.json";
 import djiMini4ProFrame from "../parts/dji-mini-4-pro-frame.json";
+import acLoadsEssentials from "../parts/ac-loads-essentials.json";
 import iphone18ProBoard from "../parts/iphone-18-pro-board.json";
 import display14Oled120 from "../parts/display-14-oled-120.json";
+import acLoadsWholeHome from "../parts/ac-loads-whole-home.json";
 import galaxyS21Battery from "../parts/galaxy-s21-battery.json";
 import galaxyS21Display from "../parts/galaxy-s21-display.json";
 import galaxyS22Battery from "../parts/galaxy-s22-battery.json";
@@ -48,6 +52,7 @@ import laptopCoolerThin from "../parts/laptop-cooler-thin.json";
 import motors22071950kv from "../parts/motors-2207-1950kv.json";
 import motors23062450kv from "../parts/motors-2306-2450kv.json";
 import props5inTriblade from "../parts/props-5in-triblade.json";
+import solarWifiMonitor from "../parts/solar-wifi-monitor.json";
 import iphone18ProPmic from "../parts/iphone-18-pro-pmic.json";
 import snapdragon8Gen1 from "../parts/snapdragon-8-gen-1.json";
 import galaxyQiCoil15w from "../parts/galaxy-qi-coil-15w.json";
@@ -74,6 +79,9 @@ import galaxyS26Camera from "../parts/galaxy-s26-camera.json";
 import towerCoolerDual from "../parts/tower-cooler-dual.json";
 import chargerUsbc100w from "../parts/charger-usbc-100w.json";
 import fpvCameraAnalog from "../parts/fpv-camera-analog.json";
+import lifepo412v100ah from "../parts/lifepo4-12v-100ah.json";
+import lifepo424v100ah from "../parts/lifepo4-24v-100ah.json";
+import lifepo424v200ah from "../parts/lifepo4-24v-200ah.json";
 import djiMini2Motors from "../parts/dji-mini-2-motors.json";
 import djiMini3Motors from "../parts/dji-mini-3-motors.json";
 import lipo4s1500120c from "../parts/lipo-4s-1500-120c.json";
@@ -97,6 +105,7 @@ import sodimmDdr532gb from "../parts/sodimm-ddr5-32gb.json";
 import sodimmDdr416gb from "../parts/sodimm-ddr4-16gb.json";
 import chargerUsbc45w from "../parts/charger-usbc-45w.json";
 import chargerUsbc65w from "../parts/charger-usbc-65w.json";
+import pvArray10x450w from "../parts/pv-array-10x450w.json";
 import ultrabookBoard from "../parts/ultrabook-board.json";
 import djiMini2Frame from "../parts/dji-mini-2-frame.json";
 import iphone13Board from "../parts/iphone-13-board.json";
@@ -117,6 +126,8 @@ import battery3s54wh from "../parts/battery-3s-54wh.json";
 import battery3s72wh from "../parts/battery-3s-72wh.json";
 import battery4s80wh from "../parts/battery-4s-80wh.json";
 import battery4s99wh from "../parts/battery-4s-99wh.json";
+import pvArray2x200w from "../parts/pv-array-2x200w.json";
+import pvArray6x450w from "../parts/pv-array-6x450w.json";
 import snapdragon888 from "../parts/snapdragon-888.json";
 import djiO3AirUnit from "../parts/dji-o3-air-unit.json";
 import iphone13Pmic from "../parts/iphone-13-pmic.json";
@@ -131,6 +142,7 @@ import coreI714700k from "../parts/core-i7-14700k.json";
 import rtx4070Super from "../parts/rtx-4070-super.json";
 import aioCooler360 from "../parts/aio-cooler-360.json";
 import display14Fhd from "../parts/display-14-fhd.json";
+import acLoadsCabin from "../parts/ac-loads-cabin.json";
 import watchBattery from "../parts/watch-battery.json";
 import watchDisplay from "../parts/watch-display.json";
 import esp32Devkitc from "../parts/esp32-devkitc.json";
@@ -148,23 +160,27 @@ import qualcommX71 from "../parts/qualcomm-x71.json";
 import qualcommX80 from "../parts/qualcomm-x80.json";
 import bandBattery from "../parts/band-battery.json";
 import bandDisplay from "../parts/band-display.json";
+import nmosIrlz44n from "../parts/nmos-irlz44n.json";
 import ryzen57600 from "../parts/ryzen-5-7600.json";
 import nvmeSsd1tb from "../parts/nvme-ssd-1tb.json";
 import wifi6eCard from "../parts/wifi-6e-card.json";
 import esc4in155a from "../parts/esc-4in1-55a.json";
 import esc4in145a from "../parts/esc-4in1-45a.json";
 import esc4in130a from "../parts/esc-4in1-30a.json";
+import pirHcSr501 from "../parts/pir-hc-sr501.json";
 import watchBoard from "../parts/watch-board.json";
 import nmos2n7000 from "../parts/nmos-2n7000.json";
 import switchSpst from "../parts/switch-spst.json";
 import switchPush from "../parts/switch-push.json";
 import wifi7Card from "../parts/wifi-7-card.json";
 import fcF730x30 from "../parts/fc-f7-30x30.json";
+import lamp12v5w from "../parts/lamp-12v-5w.json";
 import watchPmic from "../parts/watch-pmic.json";
 import bandBoard from "../parts/band-board.json";
 import npn2n3904 from "../parts/npn-2n3904.json";
 import pnp2n3906 from "../parts/pnp-2n3906.json";
 import pmosBs250 from "../parts/pmos-bs250.json";
+import buzzer12v from "../parts/buzzer-12v.json";
 import rx7800Xt from "../parts/rx-7800-xt.json";
 import appleA15 from "../parts/apple-a15.json";
 import appleA16 from "../parts/apple-a16.json";
@@ -385,6 +401,22 @@ export const parts = [
   coinVibrationMotor,
   wifiBluetoothRadio,
   bluetoothLeRadio,
+  acLoadsCabin,
+  acLoadsEssentials,
+  acLoadsWholeHome,
+  buzzer12v,
+  hybridInverter1kw12v,
+  hybridInverter3kw24v,
+  lamp12v5w,
+  lifepo412v100ah,
+  lifepo424v100ah,
+  lifepo424v200ah,
+  nmosIrlz44n,
+  pirHcSr501,
+  pvArray10x450w,
+  pvArray2x200w,
+  pvArray6x450w,
+  solarWifiMonitor,
 ] as unknown as ComponentSpec[];
 
 export const partsById: ReadonlyMap<string, ComponentSpec> = new Map(parts.map((p) => [p.id, p]));

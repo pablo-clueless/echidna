@@ -115,4 +115,35 @@ describe("toCircuit", () => {
     );
     expect(circuit.elements[0]).toMatchObject(expected);
   });
+  it.each([
+    [undefined, 0],
+    ["motion", 1],
+  ])("builds a PIR sensor from its regulator and an output closed %s", (variant, closed) => {
+    const { circuit } = toCircuit(
+      {
+        components: [{ id: "S1", specId: "pir-hc-sr501", ...(variant ? { variant } : {}) }],
+        nets: [
+          { id: "vcc", pins: [{ componentId: "S1", pinId: "vcc" }] },
+          { id: "out", pins: [{ componentId: "S1", pinId: "out" }] },
+          { id: "gnd", pins: [{ componentId: "S1", pinId: "gnd" }] },
+        ],
+        groundNetId: "gnd",
+      },
+      partsById,
+    );
+    expect(circuit.elements).toEqual([
+      expect.objectContaining({
+        id: "S1",
+        kind: "linearRegulator",
+        nodes: ["n:vcc", "i:S1/high", GROUND_NODE],
+        outputVoltage: 3.3,
+      }),
+      expect.objectContaining({
+        id: "S1:output",
+        kind: "switch",
+        nodes: ["i:S1/high", "n:out"],
+        closed,
+      }),
+    ]);
+  });
 });

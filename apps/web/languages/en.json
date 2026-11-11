@@ -492,7 +492,10 @@
         "radio": "Radio",
         "imu": "Motion sensor",
         "heart-rate": "Heart-rate sensor connector",
-        "haptics": "Haptic motor connector"
+        "haptics": "Haptic motor connector",
+        "pv": "PV input",
+        "ac-out": "AC output",
+        "monitor": "Monitor port"
       },
       "protocols": {
         "i2c": "I²C",
@@ -545,7 +548,12 @@
         "wearable-radio": "wearable radio module",
         "li-po-1s": "single-cell LiPo",
         "ppg": "optical heart-rate sensor",
-        "haptic": "haptic motor driver"
+        "haptic": "haptic motor driver",
+        "pv-input": "PV input",
+        "battery-12v": "12 V battery",
+        "battery-24v": "24 V battery",
+        "ac-230v": "230 V AC",
+        "inverter-wifi": "Inverter Wi-Fi port"
       },
       "slotLabel": "{slot} on {host}",
       "pluggedIn": "Plugged in, powered from {rail}",
@@ -1492,6 +1500,75 @@
     "bluetooth-le-radio": {
       "name": "Bluetooth Low Energy radio",
       "summary": "Generic part; figures estimated"
+    },
+    "ac-loads-cabin": {
+      "name": "Cabin circuit: lights, router, laptop, small fridge",
+      "summary": "300 W running, 700 W starting"
+    },
+    "ac-loads-essentials": {
+      "name": "Essential home circuit: fridge, lights, Wi-Fi, TV, fans",
+      "summary": "650 W running, 1.5 kW starting"
+    },
+    "ac-loads-whole-home": {
+      "name": "Whole home: adds a washing machine, pump and microwave",
+      "summary": "2.6 kW running, 5.5 kW starting"
+    },
+    "buzzer-12v": {
+      "name": "Active buzzer, 12 V",
+      "summary": "Beeps when powered, 30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "Hybrid solar inverter, 1 kW 12 V",
+      "summary": "Up to 500 W of PV at 100 V, 2 kW surge"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "Hybrid solar inverter, 3 kW 24 V",
+      "summary": "Up to 4 kW of PV at 500 V, 6 kW surge"
+    },
+    "lamp-12v-5w": {
+      "name": "12 V LED lamp, 5 W",
+      "summary": "For a 12 V lighting circuit"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "LiFePO4 battery, 12 V 100 Ah",
+      "summary": "1.28 kWh, BMS allows 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "LiFePO4 battery, 24 V 100 Ah",
+      "summary": "2.56 kWh, BMS allows 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "LiFePO4 battery, 24 V 200 Ah",
+      "summary": "5.12 kWh, BMS allows 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "Logic-level power MOSFET, IRLZ44N",
+      "summary": "Low-side switch, 55 V, 47 A, driven from 3.3 V or 5 V"
+    },
+    "pir-hc-sr501": {
+      "name": "HC-SR501 PIR motion sensor",
+      "summary": "Output goes high on motion; needs 4.5 to 20 V",
+      "variantLabel": "Sensor",
+      "variants": {
+        "idle": "No motion (output low)",
+        "motion": "Motion (output high)"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "PV array, 10 × 450 W in series",
+      "summary": "4.5 kW, 496 V open circuit"
+    },
+    "pv-array-2x200w": {
+      "name": "PV array, 2 × 200 W in series",
+      "summary": "400 W, 48.6 V open circuit"
+    },
+    "pv-array-6x450w": {
+      "name": "PV array, 6 × 450 W in series",
+      "summary": "2.7 kW, 298 V open circuit"
+    },
+    "solar-wifi-monitor": {
+      "name": "Inverter Wi-Fi monitor",
+      "summary": "Reports output and battery charge, 1 W"
     }
   },
   "Builds": {

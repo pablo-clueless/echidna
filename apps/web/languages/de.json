@@ -455,7 +455,10 @@
         "radio": "Funkmodul",
         "imu": "Bewegungssensor",
         "heart-rate": "Herzfrequenzsensor-Anschluss",
-        "haptics": "Vibrationsmotor-Anschluss"
+        "haptics": "Vibrationsmotor-Anschluss",
+        "pv": "PV-Eingang",
+        "ac-out": "AC-Ausgang",
+        "monitor": "Monitoranschluss"
       },
       "protocols": {
         "i2c": "I²C",
@@ -508,7 +511,12 @@
         "wearable-radio": "Wearable-Funkmodul",
         "li-po-1s": "einzelliger LiPo",
         "ppg": "optischer Herzfrequenzsensor",
-        "haptic": "Haptiktreiber"
+        "haptic": "Haptiktreiber",
+        "pv-input": "PV-Eingang",
+        "battery-12v": "12-V-Akku",
+        "battery-24v": "24-V-Akku",
+        "ac-230v": "230 V AC",
+        "inverter-wifi": "WLAN-Port des Wechselrichters"
       },
       "slotLabel": "{slot} an {host}",
       "pluggedIn": "Angeschlossen, versorgt über {rail}",
@@ -1430,6 +1438,75 @@
     "bluetooth-le-radio": {
       "name": "Bluetooth-Low-Energy-Funkmodul",
       "summary": "Generisches Teil; Werte geschätzt"
+    },
+    "ac-loads-cabin": {
+      "name": "Hüttenstromkreis: Licht, Router, Laptop, kleiner Kühlschrank",
+      "summary": "300 W im Betrieb, 700 W beim Anlauf"
+    },
+    "ac-loads-essentials": {
+      "name": "Grundversorgung im Haus: Kühlschrank, Licht, WLAN, TV, Ventilatoren",
+      "summary": "650 W im Betrieb, 1,5 kW beim Anlauf"
+    },
+    "ac-loads-whole-home": {
+      "name": "Ganzes Haus: dazu Waschmaschine, Pumpe und Mikrowelle",
+      "summary": "2,6 kW im Betrieb, 5,5 kW beim Anlauf"
+    },
+    "buzzer-12v": {
+      "name": "Aktiver Summer, 12 V",
+      "summary": "Piept, sobald er Strom hat, 30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "Hybrid-Solarwechselrichter, 1 kW 12 V",
+      "summary": "Bis 500 W PV bei 100 V, 2 kW Spitze"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "Hybrid-Solarwechselrichter, 3 kW 24 V",
+      "summary": "Bis 4 kW PV bei 500 V, 6 kW Spitze"
+    },
+    "lamp-12v-5w": {
+      "name": "12-V-LED-Lampe, 5 W",
+      "summary": "Für einen 12-V-Lichtstromkreis"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "LiFePO4-Akku, 12 V 100 Ah",
+      "summary": "1,28 kWh, BMS erlaubt 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "LiFePO4-Akku, 24 V 100 Ah",
+      "summary": "2,56 kWh, BMS erlaubt 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "LiFePO4-Akku, 24 V 200 Ah",
+      "summary": "5,12 kWh, BMS erlaubt 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "Logic-Level-Leistungs-MOSFET, IRLZ44N",
+      "summary": "Low-Side-Schalter, 55 V, 47 A, mit 3,3 V oder 5 V ansteuerbar"
+    },
+    "pir-hc-sr501": {
+      "name": "PIR-Bewegungsmelder HC-SR501",
+      "summary": "Ausgang wird bei Bewegung high; braucht 4,5 bis 20 V",
+      "variantLabel": "Sensor",
+      "variants": {
+        "idle": "Keine Bewegung (Ausgang low)",
+        "motion": "Bewegung (Ausgang high)"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "PV-Anlage, 10 × 450 W in Reihe",
+      "summary": "4,5 kW, 496 V Leerlauf"
+    },
+    "pv-array-2x200w": {
+      "name": "PV-Anlage, 2 × 200 W in Reihe",
+      "summary": "400 W, 48,6 V Leerlauf"
+    },
+    "pv-array-6x450w": {
+      "name": "PV-Anlage, 6 × 450 W in Reihe",
+      "summary": "2,7 kW, 298 V Leerlauf"
+    },
+    "solar-wifi-monitor": {
+      "name": "WLAN-Monitor für Wechselrichter",
+      "summary": "Meldet Leistung und Akkuladung, 1 W"
     }
   },
   "Builds": {
