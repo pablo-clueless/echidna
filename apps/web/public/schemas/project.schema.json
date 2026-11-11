@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "/schemas/project.schema.json",
+  "title": "Echidna project",
+  "description": "A project saved from the Echidna studio: its parts, the wires between their pins, where each part sits in the schematic and on the board, and which host-board slot each plugged-in part is in. Part IDs refer to Echidna's component library.",
+  "type": "object",
+  "required": ["format", "version", "project"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "format": { "const": "echidna-project" },
+    "version": { "const": 1 },
+    "project": { "$ref": "#/$defs/project" }
+  },
+  "$defs": {
+    "rotation": {
+      "description": "Quarter turns, in degrees, clockwise seen from above or on the page.",
+      "enum": [0, 90, 180, 270]
+    },
+    "pinRef": {
+      "type": "object",
+      "required": ["componentId", "pinId"],
+      "properties": {
+        "componentId": {
+          "type": "string",
+          "description": "Reference designator of the part, such as R1."
+        },
+        "pinId": { "type": "string", "description": "Pin ID from the part's library entry." }
+      },
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "required": ["id", "specId"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Reference designator, unique in the project, such as R1 or U2."
+        },
+        "specId": {
+          "type": "string",
+          "description": "Library part ID, such as resistor or esp32-devkitc."
+        },
+        "variant": { "type": "string", "description": "Chosen variant, such as an LED's colour." },
+        "paramOverrides": {
+          "type": "object",
+          "description": "Parameters set on this part, in SI units, by parameter name.",
+          "additionalProperties": { "type": "number" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "wire": {
+      "type": "object",
+      "required": ["id", "a", "b"],
+      "properties": {
+        "id": { "type": "string" },
+        "a": { "$ref": "#/$defs/pinRef" },
+        "b": { "$ref": "#/$defs/pinRef" }
+      },
+      "additionalProperties": false
+    },
+    "schematicPlacement": {
+      "type": "object",
+      "description": "Position in schematic grid units.",
+      "required": ["x", "y", "rotation"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "rotation": { "$ref": "#/$defs/rotation" }
+      },
+      "additionalProperties": false
+    },
+    "boardPlacement": {
+      "type": "object",
+      "description": "Position on the board, in metres from its centre: x across, z towards the viewer.",
+      "required": ["x", "z", "rotation"],
+      "properties": {
+        "x": { "type": "number" },
+        "z": { "type": "number" },
+        "rotation": { "$ref": "#/$defs/rotation" }
+      },
+      "additionalProperties": false
+    },
+    "slotPlacement": {
+      "type": "object",
+      "description": "The host-board slot a part is plugged into, the rail it draws from, and the wires plugging it in added.",
+      "required": ["hostId", "slotId", "wireIds"],
+      "properties": {
+        "hostId": { "type": "string" },
+        "slotId": { "type": "string" },
+        "railId": { "type": "string" },
+        "wireIds": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "name",
+        "foundation",
+        "components",
+        "wires",
+        "schematic",
+        "board",
+        "boardSize",
+        "ambientTemperature",
+        "slots"
+      ],
+      "properties": {
+        "name": { "type": "string" },
+        "foundation": {
+          "description": "What the parts are built on.",
+          "enum": ["pcb", "desktop", "laptop", "drone", "phone", "wearable"]
+        },
+        "components": { "type": "array", "items": { "$ref": "#/$defs/component" } },
+        "wires": { "type": "array", "items": { "$ref": "#/$defs/wire" } },
+        "schematic": {
+          "type": "object",
+          "description": "Schematic placement by designator.",
+          "additionalProperties": { "$ref": "#/$defs/schematicPlacement" }
+        },
+        "board": {
+          "type": "object",
+          "description": "Board placement by designator.",
+          "additionalProperties": { "$ref": "#/$defs/boardPlacement" }
+        },
+        "boardSize": {
+          "type": "object",
+          "description": "Board outline, in millimetres.",
+          "required": ["width", "depth"],
+          "properties": {
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "depth": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "ambientTemperature": {
+          "type": "number",
+          "description": "Air temperature round the board, in kelvin."
+        },
+        "slots": {
+          "type": "object",
+          "description": "Slot placement by the plugged-in part's designator.",
+          "additionalProperties": { "$ref": "#/$defs/slotPlacement" }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

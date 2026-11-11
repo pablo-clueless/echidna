@@ -1,0 +1,106 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "hybrid-inverter-3kw-24v",
+  "name": "Hybrid solar inverter, 3 kW 24 V",
+  "kind": "inverter",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "inverter",
+    "output": {
+      "value": 3000,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 3 kW 24 V hybrid inverters with a 500 V MPPT input: 3000 W continuous AC output"
+    },
+    "surge": {
+      "value": 6000,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 3 kW 24 V hybrid inverters with a 500 V MPPT input: twice the rated output for a few seconds"
+    },
+    "efficiency": {
+      "value": 0.93,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "Typical of generic 3 kW 24 V hybrid inverters with a 500 V MPPT input: peak battery-to-AC efficiency 93 %"
+    },
+    "maxPvVoltage": {
+      "value": 500,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "Typical of generic 3 kW 24 V hybrid inverters with a 500 V MPPT input: maximum PV open-circuit voltage 500 V"
+    },
+    "maxPvPower": {
+      "value": 4000,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 3 kW 24 V hybrid inverters with a 500 V MPPT input: maximum PV array power 4000 W"
+    },
+    "typical": {
+      "value": 30,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 3 kW 24 V hybrid inverters with a 500 V MPPT input: no-load self-consumption about 30 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/inverter",
+  "meshUrl": "generic/module",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "pv",
+        "accepts": [
+          {
+            "protocol": "pv-input"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": -290
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "battery-24v"
+          }
+        ],
+        "seat": {
+          "x": 450,
+          "z": 60
+        }
+      },
+      {
+        "id": "ac-out",
+        "accepts": [
+          {
+            "protocol": "ac-230v"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 320
+        }
+      },
+      {
+        "id": "monitor",
+        "accepts": [
+          {
+            "protocol": "inverter-wifi"
+          }
+        ],
+        "seat": {
+          "x": -230,
+          "z": 150
+        }
+      }
+    ]
+  }
+}

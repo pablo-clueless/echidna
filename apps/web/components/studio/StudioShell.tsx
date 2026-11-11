@@ -7,6 +7,7 @@ import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
 import { useSimulation } from "@/lib/simulation/useSimulation";
 import { ValidatorDrawer } from "./validator/ValidatorDrawer";
 import { PersistedPanelGroup } from "./PersistedPanelGroup";
+import { CodeOutputPanel } from "./CodeOutputPanel";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { InspectorPanel } from "./InspectorPanel";
 import { LibrarySidebar } from "./LibrarySidebar";
@@ -54,12 +55,16 @@ const DesktopStudio = () => {
               <ResizableHandle withHandle />
               <ResizablePanel id="right" defaultSize="50%" {...CLAMP}>
                 <PersistedPanelGroup id="right-column" orientation="vertical">
-                  <ResizablePanel id="schematic" defaultSize="50%" {...CLAMP}>
+                  <ResizablePanel id="schematic" defaultSize="40%" {...CLAMP}>
                     <SchematicPanel />
                   </ResizablePanel>
                   <ResizableHandle withHandle />
-                  <ResizablePanel id="inspector" defaultSize="50%" {...CLAMP}>
+                  <ResizablePanel id="inspector" defaultSize="30%" {...CLAMP}>
                     <InspectorPanel />
+                  </ResizablePanel>
+                  <ResizableHandle withHandle />
+                  <ResizablePanel id="output" defaultSize="30%" minSize="10%" maxSize="80%">
+                    <CodeOutputPanel />
                   </ResizablePanel>
                 </PersistedPanelGroup>
               </ResizablePanel>

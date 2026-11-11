@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "pv-array-10x450w",
+  "name": "PV array, 10 × 450 W in series",
+  "kind": "pvArray",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "pv-input"
+    }
+  ],
+  "module": {
+    "role": "pvArray",
+    "output": {
+      "value": 4500,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Typical 450 W panel datasheet: Voc 49.6 V, Pmax 450 W at STC; 10 wired in series"
+    },
+    "openCircuitVoltage": {
+      "value": 496.0,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Typical 450 W panel datasheet: Voc 49.6 V, Pmax 450 W at STC; 10 wired in series"
+    },
+    "voltageTempCoefficient": {
+      "value": 0.0027,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "Typical monocrystalline panel: Voc falls 0.27 % per kelvin above 25 °C, and rises as much below"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/pvIsolator",
+  "meshUrl": "generic/module"
+}

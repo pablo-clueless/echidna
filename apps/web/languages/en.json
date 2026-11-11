@@ -186,7 +186,7 @@
     },
     "viewport": {
       "label": "3D board view",
-      "help": "Drag to orbit, right-drag to pan, scroll to zoom. With the view focused, arrow keys pan.",
+      "help": "Drag to orbit, right-drag to pan, scroll to zoom. With the view focused, arrow keys pan, Q and E orbit, W and S tilt, and R turns the selected part.",
       "controls": {
         "label": "Camera",
         "zoomIn": "Zoom in",
@@ -194,7 +194,12 @@
         "fit": "Fit board",
         "top": "Top view",
         "angled": "3D view",
-        "underside": "Underside view"
+        "underside": "Underside view",
+        "orbitLeft": "Orbit left",
+        "orbitRight": "Orbit right",
+        "tiltUp": "Tilt up",
+        "tiltDown": "Tilt down",
+        "turnPart": "Turn selected part"
       },
       "overlays": {
         "label": "Overlays",
@@ -230,6 +235,38 @@
         "drone": "Drones",
         "smartphone": "Phones",
         "wearable": "Wearables"
+      },
+      "clear": "Clear schematic",
+      "clearConfirm": "Click again to clear everything",
+      "arrange": "Arrange in layers",
+      "layers": {
+        "onBoard": "On the board",
+        "board": "{board, select, main {Main board} upper {Upper board, on the interposer} other {Board {board}}}",
+        "stacked": "Layer {layer}, stacked on the one below",
+        "flex": "Off the board, on flex cables",
+        "header": "Plugged into the headers"
+      }
+    },
+    "output": {
+      "title": "Output",
+      "download": "Download",
+      "copy": "Copy",
+      "emptyTitle": "No output yet",
+      "emptyDescription": "Start from a dev board and plug sensors into it to get code for it in C, C++, Go, Rust and Java.",
+      "copied": "Copied",
+      "wiring": "Wiring",
+      "needsBoard": "Code is written for a dev board. Add an ESP32, Raspberry Pi or Arduino to the project and plug parts into it.",
+      "startFromBoard": "Start from {board}",
+      "table": {
+        "empty": "Nothing is wired yet.",
+        "slotsCaption": "Plugged into the board",
+        "netsCaption": "Nets",
+        "part": "Part",
+        "pin": "Pin",
+        "hostPin": "Board pin",
+        "signal": "Signal",
+        "net": "Net",
+        "pins": "Pins"
       }
     },
     "inspector": {
@@ -620,7 +657,32 @@
       "label": "Export",
       "pcb": "Download the board's Gerbers, drill file, bill of materials and pick-and-place file as a zip.",
       "modules": "Download the build's bill of materials.",
-      "unrouted": "{count, plural, one {# connection has} other {# connections have}} no copper yet: see the README in the zip."
+      "unrouted": "{count, plural, one {# connection has} other {# connections have}} no copper yet: see the README in the zip.",
+      "fabrication": "Fabrication files",
+      "schematicGroup": "Schematic and circuit",
+      "svg": "Schematic (SVG)",
+      "svgDetail": "The schematic as a vector image, as it looks on screen.",
+      "pdf": "Schematic (PDF)",
+      "pdfDetail": "The schematic on an A4 page, ready to print.",
+      "spice": "SPICE netlist",
+      "spiceDetail": "The circuit as Echidna solves it, for ngspice or LTspice.",
+      "spiceSkipped": "{count, plural, one {# part is} other {# parts are}} checked as a build, not a circuit, so left out of the netlist.",
+      "wiring": "Wiring table (CSV)",
+      "wiringDetail": "Every net and the pins on it, and which board pin each plugged-in part uses.",
+      "project": "Project (JSON)",
+      "projectDetail": "The whole project, to keep, share or open again.",
+      "schema": "Project file format",
+      "schemaDetail": "The JSON Schema that describes project files.",
+      "schematicClosed": "Open the schematic panel to export it.",
+      "open": {
+        "label": "Open project",
+        "done": "Opened {name}.",
+        "json": "That file isn’t JSON.",
+        "format": "That isn’t an Echidna project file.",
+        "version": "That project file is from a different version of Echidna.",
+        "invalid": "The project file has a bad value at {path}.",
+        "parts": "The project uses parts this version of Echidna doesn’t have: {parts}."
+      }
     }
   },
   "Parts": {

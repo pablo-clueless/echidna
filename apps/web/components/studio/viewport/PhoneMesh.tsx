@@ -6,6 +6,7 @@ import type { HostSpec } from "@echidna/core";
 import { useEffect, useMemo } from "react";
 
 import { phoneLayoutOf, type PhoneLayout } from "@/lib/board/footprints";
+import { PhoneKeysAndPorts, WearableKeys } from "./DevicePorts";
 import { materials } from "./materials";
 
 /** The housing's floor, the inside of the back glass, in millimetres; boards and parts inside stand on it. */
@@ -40,7 +41,7 @@ const roundedRect = <T extends Shape | Path>(path: T, w: number, d: number, r: n
  * A phone's or wearable's housing opened up from the front: the inside of the back glass, with the frame's rails
  * round it. The logic board and the rest sit inside, drawn by their own parts.
  */
-const Housing = ({ layout }: { layout: PhoneLayout }) => {
+const Housing = ({ layout, family }: { layout: PhoneLayout; family: string }) => {
   const { height, rail, corner } = HOUSING[layout.kind];
   const { width, depth } = layout;
   const rails = useMemo(() => {
@@ -79,6 +80,11 @@ const Housing = ({ layout }: { layout: PhoneLayout }) => {
         castShadow
         receiveShadow
       />
+      {layout.kind === "phone" ? (
+        <PhoneKeysAndPorts width={width} depth={depth} height={height} rail={rail} />
+      ) : (
+        <WearableKeys width={width} depth={depth} height={height} watch={family === "watch"} />
+      )}
     </group>
   );
 };
@@ -168,9 +174,10 @@ export const PhoneMesh = ({ footprintId }: { footprintId: string }) => {
   const found = phoneLayoutOf(footprintId);
   if (!found) return null;
   const { part, layout } = found;
+  const family = footprintId.slice(footprintId.indexOf("-") + 1);
   switch (part) {
     case "housing":
-      return <Housing layout={layout} />;
+      return <Housing layout={layout} family={family} />;
     case "battery":
       return <Battery layout={layout} />;
     case "display":
@@ -202,6 +209,50 @@ const FlexCable = ({ from, to, clear }: { from: Vector3; to: Vector3; clear: num
   }, [from, to, clear]);
   useEffect(() => () => geometry.dispose(), [geometry]);
   return <mesh geometry={geometry} material={materials.flex} castShadow raycast={() => null} />;
+};
+
+/** A board-to-board connector's receptacle and the plug on the cable's end, in millimetres. */
+const CONNECTOR = { width: FLEX.width + 1.8, length: 3.2, receptacle: 0.55, plug: 0.45 } as const;
+
+/**
+ * Where a flex cable plugs in: on the board, a black board-to-board receptacle with its row of gold contacts; on the
+ * cable's end, the stiffened plug pressed into it. Turned to face along the cable, from where it leaves.
+ */
+const FlexConnector = ({
+  at,
+  towards,
+  kind,
+}: {
+  at: Vector3;
+  towards: Vector3;
+  kind: "receptacle" | "plug";
+}) => {
+  const turn = Math.atan2(towards.x - at.x, towards.z - at.z);
+  const receptacle = kind === "receptacle";
+  const height = receptacle ? CONNECTOR.receptacle : CONNECTOR.plug;
+  // The receptacle stands on the board, under the cable's end; the plug sits on top of the cable's end.
+  const y = receptacle ? at.y - 0.1 + height / 2 : at.y + FLEX.thickness / 2 + height / 2;
+  return (
+    <group position={[at.x, y, at.z]} rotation={[0, turn, 0]}>
+      <RoundedBox
+        args={[CONNECTOR.width, height, CONNECTOR.length]}
+        radius={Math.min(0.2, height / 2 - 0.01)}
+        smoothness={2}
+        material={receptacle ? materials.epoxy : materials.caseSteel}
+        castShadow
+        raycast={() => null}
+      />
+      {receptacle && (
+        <mesh
+          position={[0, height / 2 + 0.005, -CONNECTOR.length / 2 + 0.4]}
+          material={materials.gold}
+          raycast={() => null}
+        >
+          <boxGeometry args={[CONNECTOR.width - 1, 0.01, 0.5]} />
+        </mesh>
+      )}
+    </group>
+  );
 };
 
 /** Height of a seated part's top above the housing floor, by slot, where its flex cable lands. */
@@ -288,7 +339,13 @@ export const StackedBoards = ({
         </group>
       ))}
       {cables.map((c) => (
-        <FlexCable key={c.key} from={c.from} to={c.to} clear={clearOf(c.to.x, c.to.z)} />
+        <group key={c.key}>
+          <FlexCable from={c.from} to={c.to} clear={clearOf(c.to.x, c.to.z)} />
+          <FlexConnector at={c.from} towards={c.to} kind="receptacle" />
+          <FlexConnector at={c.from} towards={c.to} kind="plug" />
+          <FlexConnector at={c.to} towards={c.from} kind="receptacle" />
+          <FlexConnector at={c.to} towards={c.from} kind="plug" />
+        </group>
       ))}
     </group>
   );

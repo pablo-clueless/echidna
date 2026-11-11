@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "lifepo4-24v-100ah",
+  "name": "LiFePO4 battery, 24 V 100 Ah",
+  "kind": "solarBattery",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "battery-24v"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "voltage": {
+      "value": 25.6,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Typical 25.6 V 100 Ah LiFePO4 battery with a 100 A BMS: nominal 25.6 V"
+    },
+    "energy": {
+      "value": 9216000,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "Typical 25.6 V 100 Ah LiFePO4 battery with a 100 A BMS: 2560 Wh"
+    },
+    "maxCurrent": {
+      "value": 100,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "Typical 25.6 V 100 Ah LiFePO4 battery with a 100 A BMS: continuous discharge 100 A"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/solarBattery",
+  "meshUrl": "generic/module"
+}

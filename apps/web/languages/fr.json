@@ -186,7 +186,7 @@
     },
     "viewport": {
       "label": "Vue 3D de la carte",
-      "help": "Faites glisser pour pivoter, clic droit pour déplacer, molette pour zoomer. Quand la vue est active, les flèches déplacent la caméra.",
+      "help": "Faites glisser pour tourner, clic droit pour déplacer, molette pour zoomer. Vue active : flèches pour déplacer, Q et E pour tourner, W et S pour incliner, R pour tourner le composant sélectionné.",
       "controls": {
         "label": "Caméra",
         "zoomIn": "Zoom avant",
@@ -194,7 +194,12 @@
         "fit": "Afficher toute la carte",
         "top": "Vue de dessus",
         "angled": "Vue 3D",
-        "underside": "Vue de dessous"
+        "underside": "Vue de dessous",
+        "orbitLeft": "Tourner à gauche",
+        "orbitRight": "Tourner à droite",
+        "tiltUp": "Incliner vers le haut",
+        "tiltDown": "Incliner vers le bas",
+        "turnPart": "Tourner le composant sélectionné"
       },
       "overlays": {
         "label": "Superpositions",
@@ -230,6 +235,16 @@
         "drone": "Drones",
         "smartphone": "Téléphones",
         "wearable": "Objets connectés"
+      },
+      "clear": "Effacer le schéma",
+      "clearConfirm": "Cliquez à nouveau pour tout effacer",
+      "arrange": "Ranger par couches",
+      "layers": {
+        "onBoard": "Sur la carte",
+        "board": "{board, select, main {Carte principale} upper {Carte supérieure, sur l’interposeur} other {Carte {board}}}",
+        "stacked": "Couche {layer}, posée sur celle du dessous",
+        "flex": "Hors de la carte, sur nappes souples",
+        "header": "Branché sur les connecteurs"
       }
     },
     "inspector": {
@@ -620,7 +635,54 @@
       "label": "Exporter",
       "pcb": "Télécharger les Gerber, le fichier de perçage, la nomenclature et le fichier de placement de la carte dans un zip.",
       "modules": "Télécharger la nomenclature du montage.",
-      "unrouted": "{count, plural, one {# connexion n’a} other {# connexions n’ont}} pas encore de cuivre : voir le README du zip."
+      "unrouted": "{count, plural, one {# connexion n’a} other {# connexions n’ont}} pas encore de cuivre : voir le README du zip.",
+      "fabrication": "Fichiers de fabrication",
+      "schematicGroup": "Schéma et circuit",
+      "svg": "Schéma (SVG)",
+      "svgDetail": "Le schéma en image vectorielle, tel qu’il s’affiche.",
+      "pdf": "Schéma (PDF)",
+      "pdfDetail": "Le schéma sur une page A4, prêt à imprimer.",
+      "spice": "Netlist SPICE",
+      "spiceDetail": "Le circuit tel qu’Echidna le résout, pour ngspice ou LTspice.",
+      "spiceSkipped": "{count, plural, one {# composant est vérifié} other {# composants sont vérifiés}} comme un montage, pas comme un circuit, et donc absent de la netlist.",
+      "wiring": "Tableau de câblage (CSV)",
+      "wiringDetail": "Chaque net et ses broches, et la broche de carte utilisée par chaque composant branché.",
+      "project": "Projet (JSON)",
+      "projectDetail": "Tout le projet, à garder, partager ou rouvrir.",
+      "schema": "Format de fichier projet",
+      "schemaDetail": "Le schéma JSON qui décrit les fichiers projet.",
+      "schematicClosed": "Ouvrez le panneau du schéma pour l’exporter.",
+      "open": {
+        "label": "Ouvrir un projet",
+        "done": "{name} ouvert.",
+        "json": "Ce fichier n’est pas du JSON.",
+        "format": "Ce n’est pas un fichier projet Echidna.",
+        "version": "Ce fichier projet vient d’une autre version d’Echidna.",
+        "invalid": "Le fichier projet contient une valeur incorrecte à {path}.",
+        "parts": "Le projet utilise des composants absents de cette version d’Echidna : {parts}."
+      }
+    },
+    "output": {
+      "title": "Sortie",
+      "download": "Télécharger",
+      "copy": "Copier",
+      "emptyTitle": "Pas encore de sortie",
+      "copied": "Copié",
+      "wiring": "Câblage",
+      "needsBoard": "Le code est écrit pour une carte de développement. Ajoutez un ESP32, un Raspberry Pi ou un Arduino au projet et branchez-y des composants.",
+      "emptyDescription": "Partez d’une carte de développement et branchez-y des capteurs pour obtenir son code en C, C++, Go, Rust et Java.",
+      "startFromBoard": "Partir de {board}",
+      "table": {
+        "empty": "Rien n’est encore câblé.",
+        "slotsCaption": "Branché sur la carte",
+        "netsCaption": "Nets",
+        "part": "Composant",
+        "pin": "Broche",
+        "hostPin": "Broche de la carte",
+        "signal": "Signal",
+        "net": "Net",
+        "pins": "Broches"
+      }
     }
   },
   "Parts": {

@@ -26,7 +26,12 @@ export type FitCheckId =
   | "thrustToWeight"
   | "escCurrent"
   | "batteryDischarge"
-  | "pmicRail";
+  | "pmicRail"
+  | "pvVoltage"
+  | "pvPower"
+  | "inverterLoad"
+  | "inverterSurge"
+  | "batteryCurrent";
 
 /**
  * One check of a part against a slot. `actual` and `limit` are set for the checks that compare two quantities;

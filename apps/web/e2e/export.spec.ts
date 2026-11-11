@@ -34,11 +34,12 @@ const unzip = (bytes: Buffer): Map<string, string> => {
   return files;
 };
 
-/** Clicks Export and reads the zip it downloads. */
-const exportZip = async (page: Page, label: string) => {
+/** Opens the Export menu, picks the fabrication files and reads the zip they download as. */
+const exportZip = async (page: Page, label: string, item: string) => {
+  await page.getByRole("button", { name: label }).click();
   const [download] = await Promise.all([
     page.waitForEvent("download"),
-    page.getByRole("button", { name: label }).click(),
+    page.getByRole("menuitem", { name: item }).click(),
   ]);
   const path = await download.path();
   return { name: download.suggestedFilename(), files: unzip(await readFile(path)) };
@@ -61,7 +62,7 @@ for (const { locale, messages } of locales) {
       await expect(page.getByRole("button", { name: s.export.label })).toBeDisabled();
       await page.getByRole("button", { name: s.schematic.openExample }).click();
 
-      const { name, files } = await exportZip(page, s.export.label);
+      const { name, files } = await exportZip(page, s.export.label, s.export.fabrication);
       expect(name).toBe("echidna-fabrication.zip");
       expect([...files.keys()]).toEqual([
         "README.txt",
@@ -90,7 +91,7 @@ for (const { locale, messages } of locales) {
           name: fill(s.schematic.startFromBoard, { board: messages.Builds["desktop-gaming"].name }),
         })
         .click();
-      const { files } = await exportZip(page, s.export.label);
+      const { files } = await exportZip(page, s.export.label, s.export.fabrication);
       expect([...files.keys()]).toEqual(["README.txt", "echidna-BOM.csv"]);
       expect(files.get("echidna-BOM.csv")?.split("\n")[0]).toBe(
         "Designator,Quantity,Part,Value,Footprint,Manufacturer,MPN,LCSC",

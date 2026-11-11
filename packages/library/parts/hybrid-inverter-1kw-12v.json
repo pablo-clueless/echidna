@@ -1,0 +1,106 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "hybrid-inverter-1kw-12v",
+  "name": "Hybrid solar inverter, 1 kW 12 V",
+  "kind": "inverter",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [],
+  "module": {
+    "role": "inverter",
+    "output": {
+      "value": 1000,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 1 kW 12 V hybrid inverters with a 40 A MPPT charger: 1000 W continuous AC output"
+    },
+    "surge": {
+      "value": 2000,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 1 kW 12 V hybrid inverters with a 40 A MPPT charger: twice the rated output for a few seconds"
+    },
+    "efficiency": {
+      "value": 0.9,
+      "unit": "1",
+      "source": "estimated",
+      "reference": "Typical of generic 1 kW 12 V hybrid inverters with a 40 A MPPT charger: peak battery-to-AC efficiency 90 %"
+    },
+    "maxPvVoltage": {
+      "value": 100,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "Typical of generic 1 kW 12 V hybrid inverters with a 40 A MPPT charger: maximum PV open-circuit voltage 100 V"
+    },
+    "maxPvPower": {
+      "value": 500,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 1 kW 12 V hybrid inverters with a 40 A MPPT charger: 40 A of charge at 12.8 V, about 500 W of PV"
+    },
+    "typical": {
+      "value": 15,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical of generic 1 kW 12 V hybrid inverters with a 40 A MPPT charger: no-load self-consumption about 15 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/inverterSmall",
+  "meshUrl": "generic/module",
+  "host": {
+    "rails": [],
+    "slots": [
+      {
+        "id": "pv",
+        "accepts": [
+          {
+            "protocol": "pv-input"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": -260
+        }
+      },
+      {
+        "id": "battery",
+        "accepts": [
+          {
+            "protocol": "battery-12v"
+          }
+        ],
+        "seat": {
+          "x": 340,
+          "z": 40
+        }
+      },
+      {
+        "id": "ac-out",
+        "accepts": [
+          {
+            "protocol": "ac-230v"
+          }
+        ],
+        "seat": {
+          "x": 0,
+          "z": 280
+        }
+      },
+      {
+        "id": "monitor",
+        "accepts": [
+          {
+            "protocol": "inverter-wifi"
+          }
+        ],
+        "seat": {
+          "x": -190,
+          "z": 130
+        }
+      }
+    ]
+  }
+}

@@ -294,3 +294,31 @@ describe("seating modules in their slots", () => {
     expect(store().board[gpu]).toEqual(seated);
   });
 });
+
+describe("turning a part on the board", () => {
+  beforeEach(() => store().loadExample());
+
+  it("turns a part a quarter turn at a time", () => {
+    const id = store().components.find((c) => store().board[c.id])?.id ?? "";
+    const before = store().board[id]?.rotation ?? 0;
+    store().rotateOnBoard(id);
+    expect(store().board[id]?.rotation).toBe((before + 90) % 360);
+    for (let i = 0; i < 3; i++) store().rotateOnBoard(id);
+    expect(store().board[id]?.rotation).toBe(before);
+  });
+
+  it("turns a seated module's host, taking the module with it", () => {
+    store().loadBuild("desktop-gaming");
+    const [moduleId, at] =
+      Object.entries(store().slots).find(([part]) => {
+        const spec = partsById.get(store().components.find((c) => c.id === part)?.specId ?? "");
+        return spec?.module?.role === "gpu";
+      }) ?? [];
+    if (!moduleId || !at) throw new Error("no seated graphics card");
+    const host = at.hostId;
+    const seatedBefore = store().board[moduleId];
+    store().rotateOnBoard(moduleId);
+    expect(store().board[host]?.rotation).toBe(90);
+    expect(store().board[moduleId]).not.toEqual(seatedBefore);
+  });
+});

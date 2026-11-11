@@ -23,6 +23,8 @@ const ANGLED = {
   polar: Math.acos(0.08 / Math.hypot(0.06, 0.08, 0.115)),
 };
 const ZOOM_STEP = 0.3;
+/** How far each orbit or tilt step turns the camera: 15°. */
+const TURN_STEP = Math.PI / 12;
 
 /**
  * Orbit, pan and zoom for the 3D view, with animated moves published to the viewport store for the toolbar.
@@ -54,6 +56,10 @@ export const CameraRig = ({ enabled, centre, radius, narrowRadius }: Props) => {
       top: () => frame(0, 0),
       angled: () => frame(ANGLED.azimuth, ANGLED.polar),
       underside: () => frame(ANGLED.azimuth, Math.PI - ANGLED.polar),
+      orbitLeft: () => void controls.rotate(-TURN_STEP, 0, true),
+      orbitRight: () => void controls.rotate(TURN_STEP, 0, true),
+      tiltUp: () => void controls.rotate(0, -TURN_STEP, true),
+      tiltDown: () => void controls.rotate(0, TURN_STEP, true),
       pan: (x, y) => void controls.truck(x * controls.distance, -y * controls.distance, true),
     });
     return () => setCamera(null);

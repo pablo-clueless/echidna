@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "solar-wifi-monitor",
+  "name": "Inverter Wi-Fi monitor",
+  "kind": "solarMonitor",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "inverter-wifi"
+    }
+  ],
+  "module": {
+    "role": "monitor",
+    "power": {
+      "value": 1,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical inverter Wi-Fi dongle: under 1 W"
+    },
+    "typical": {
+      "value": 0.8,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Typical inverter Wi-Fi dongle: under 1 W"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/wifiDongle",
+  "meshUrl": "generic/module"
+}

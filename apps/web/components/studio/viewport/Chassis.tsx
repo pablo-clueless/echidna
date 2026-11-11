@@ -4,6 +4,7 @@ import { ExtrudeGeometry, Path, Shape } from "three";
 import { useEffect, useMemo } from "react";
 
 import { CHASSIS, type Foundation } from "@/lib/project/foundation";
+import { DesktopPorts, LaptopPorts } from "./DevicePorts";
 import { mountingHoles } from "@/lib/board/placement";
 import { materials } from "./materials";
 
@@ -155,7 +156,7 @@ const Case = ({
   foundation: Exclude<Foundation, "pcb" | "drone" | "phone" | "wearable">;
   thickness: number;
 }) => {
-  const { width, depth, wall } = CHASSIS[foundation];
+  const { width, depth, wall, mount } = CHASSIS[foundation];
   const material = foundation === "laptop" ? materials.anodised : materials.caseSteel;
   const corner = foundation === "laptop" ? 8 : 3;
 
@@ -215,8 +216,19 @@ const Case = ({
           </mesh>
         </group>
       ))}
+      {foundation === "desktop" && (
+        <DesktopPorts
+          width={width}
+          depth={depth}
+          wall={WALL}
+          thickness={thickness}
+          height={wall}
+          mount={mount}
+        />
+      )}
       {foundation === "laptop" && (
         <>
+          <LaptopPorts width={width} wall={WALL} thickness={thickness} height={wall} />
           <mesh
             position={[0, wall / 2, -depth / 2]}
             rotation={[0, 0, Math.PI / 2]}

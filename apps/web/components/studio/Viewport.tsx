@@ -4,9 +4,11 @@ import { type KeyboardEvent, useId } from "react";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 
-import { cameraShortcuts, CameraToolbar } from "./viewport/CameraToolbar";
+import { cameraShortcuts, CameraToolbar, turnPartShortcuts } from "./viewport/CameraToolbar";
 import { OverlayLegend } from "./viewport/OverlayLegend";
 import { useViewportStore } from "@/stores/viewport";
+import { useProjectStore } from "@/stores/project";
+import { useStudioStore } from "@/stores/studio";
 
 /**
  * The 3D board, loaded in the browser only. End-to-end runs without a GPU set `window.__echidna.skip3d` before the
@@ -37,6 +39,14 @@ export const Viewport = () => {
     if (!camera || e.altKey || e.ctrlKey || e.metaKey) return;
     // Leave keys alone on the toolbar buttons, where Enter, Space and arrows already mean something.
     if (e.target instanceof Element && e.target.closest("button")) return;
+    if (turnPartShortcuts.includes(e.key)) {
+      const id = useStudioStore.getState().selectedComponentId;
+      if (id) {
+        e.preventDefault();
+        useProjectStore.getState().rotateOnBoard(id);
+      }
+      return;
+    }
     const pan = panKeys[e.key];
     if (pan) {
       e.preventDefault();

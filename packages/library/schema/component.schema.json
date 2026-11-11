@@ -76,13 +76,20 @@
         "chargingCoil",
         "wearableSensor",
         "haptics",
-        "radio"
+        "radio",
+        "lamp",
+        "buzzer",
+        "inverter",
+        "pvArray",
+        "solarBattery",
+        "acLoad",
+        "solarMonitor"
       ]
     },
     "deviceTypes": {
       "type": "array",
       "items": {
-        "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"]
+        "enum": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable", "solar"]
       },
       "uniqueItems": true
     },
@@ -205,7 +212,8 @@
         "pmos",
         "devBoard",
         "load",
-        "module"
+        "module",
+        "pirSensor"
       ]
     },
     "host": {
@@ -446,7 +454,11 @@
             "heartRate",
             "motion",
             "haptics",
-            "radio"
+            "radio",
+            "inverter",
+            "pvArray",
+            "acLoad",
+            "monitor"
           ]
         },
         "power": {
@@ -539,6 +551,27 @@
         "rail": {
           "type": "string",
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "voltage": {
+          "$ref": "#/$defs/specValue"
+        },
+        "openCircuitVoltage": {
+          "$ref": "#/$defs/specValue"
+        },
+        "voltageTempCoefficient": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxPvVoltage": {
+          "$ref": "#/$defs/specValue"
+        },
+        "maxPvPower": {
+          "$ref": "#/$defs/specValue"
+        },
+        "surge": {
+          "$ref": "#/$defs/specValue"
+        },
+        "startup": {
+          "$ref": "#/$defs/specValue"
         }
       }
     },

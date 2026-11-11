@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ac-loads-essentials",
+  "name": "Essential home circuit: fridge, lights, Wi-Fi, TV, fans",
+  "kind": "acLoad",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "ac-230v"
+    }
+  ],
+  "module": {
+    "role": "acLoad",
+    "power": {
+      "value": 650,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Fridge, LED lights, Wi-Fi router, TV and two fans: everything running at once"
+    },
+    "startup": {
+      "value": 1500,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Fridge, LED lights, Wi-Fi router, TV and two fans: with motors starting, such as a fridge compressor or pump"
+    },
+    "typical": {
+      "value": 180,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Fridge, LED lights, Wi-Fi router, TV and two fans: average over a day, with the fridge cycling"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/consumerUnit",
+  "meshUrl": "generic/module"
+}

@@ -1,8 +1,9 @@
 "use client";
 
-import { RotateCw, Spline, Trash2 } from "lucide-react";
+import { BrushCleaning, LayoutPanelLeft, RotateCw, Spline, Trash2 } from "lucide-react";
 import { builds, parts } from "@echidna/library";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 import { IconButton } from "@/components/app/IconButton";
@@ -22,6 +23,9 @@ const SchematicCanvas = dynamic(
   },
 );
 
+/** How long the clear button stays armed for its confirming second click, in milliseconds. */
+const CONFIRM_MS = 4000;
+
 /** Dev boards a project can start from. */
 const hosts = parts.filter((p) => p.host && p.kind === "devBoard");
 
@@ -32,11 +36,36 @@ export const SchematicPanel = () => {
   const t = useTranslations("Studio.schematic");
   const tParts = useTranslations("Parts");
   const hasParts = useProjectStore((s) => s.components.length > 0);
+  const hasPlugged = useProjectStore((s) => Object.keys(s.slots).length > 0);
   const selection = useStudioStore((s) => s.selection);
   const select = useStudioStore((s) => s.select);
   const tBuilds = useTranslations("Builds");
-  const { loadExample, loadPreset, loadBuild, rotateComponent, removeComponent, removeWire } =
-    useProjectStore.getState();
+  const {
+    loadExample,
+    loadPreset,
+    loadBuild,
+    rotateComponent,
+    removeComponent,
+    removeWire,
+    arrangeSchematic,
+    clear,
+  } = useProjectStore.getState();
+  // Clearing can't be undone, so the first click arms the button and a second, within a few seconds, clears.
+  const [confirming, setConfirming] = useState(false);
+  useEffect(() => {
+    if (!confirming) return;
+    const timer = setTimeout(() => setConfirming(false), CONFIRM_MS);
+    return () => clearTimeout(timer);
+  }, [confirming]);
+  const clearAll = () => {
+    if (!confirming) {
+      setConfirming(true);
+      return;
+    }
+    setConfirming(false);
+    select(null);
+    clear();
+  };
 
   const remove = () => {
     if (!selection) return;
@@ -57,8 +86,19 @@ export const SchematicPanel = () => {
             >
               <RotateCw />
             </IconButton>
+            <IconButton label={t("arrange")} disabled={!hasPlugged} onClick={arrangeSchematic}>
+              <LayoutPanelLeft />
+            </IconButton>
             <IconButton label={t("delete")} disabled={!selection} onClick={remove}>
               <Trash2 />
+            </IconButton>
+            <IconButton
+              label={confirming ? t("clearConfirm") : t("clear")}
+              variant={confirming ? "destructive" : "ghost"}
+              onClick={clearAll}
+              onBlur={() => setConfirming(false)}
+            >
+              <BrushCleaning />
             </IconButton>
           </div>
         )}

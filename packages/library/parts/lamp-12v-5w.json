@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "lamp-12v-5w",
+  "name": "12 V LED lamp, 5 W",
+  "kind": "lamp",
+  "deviceTypes": ["iot", "solar"],
+  "pins": [
+    {
+      "id": "pos",
+      "name": "+"
+    },
+    {
+      "id": "neg",
+      "name": "−"
+    }
+  ],
+  "params": {
+    "resistance": {
+      "value": 28.8,
+      "unit": "Ω",
+      "source": "estimated",
+      "reference": "Treated as resistive: 12 V² / 5 W. An LED lamp's driver draws closer to constant power"
+    }
+  },
+  "ratings": {
+    "maxVoltage": {
+      "value": 30,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "Typical of 12–24 V DC LED lamps with a built-in driver"
+    }
+  },
+  "interfaces": [],
+  "model": "resistor",
+  "footprintId": "generic/terminal-2",
+  "meshUrl": "generic/terminal-2",
+  "sourcing": {
+    "manufacturer": "Phoenix Contact",
+    "mpn": "1729128",
+    "reference": "Phoenix Contact 1729128, MKDS 1,5/ 2-5,08: the 2-way 5.08 mm screw terminal the lamp is wired to"
+  }
+}
