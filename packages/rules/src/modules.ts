@@ -1,9 +1,9 @@
 import type { ComponentSpec, Interface, PowerConnector, SpecValue } from "@echidna/core";
 
+import { checkSolar, solarChecksFor, solarRuntime } from "./solar";
 import { check, type FitCheck, type SlotFit } from "./slots";
 import { checkPhone, phoneChecksFor } from "./phone";
 import { checkDrone, droneChecksFor } from "./drone";
-import { checkSolar, solarChecksFor, solarRuntime } from "./solar";
 import defaults from "../rules.json";
 import { grade } from "./engine";
 
