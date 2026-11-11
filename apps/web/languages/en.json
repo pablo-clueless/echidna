@@ -441,6 +441,26 @@
       "pmicRail": {
         "name": "PMIC rail budget",
         "explain": "At peak, the parts on this PMIC rail draw {percent} of the current it can supply. Above 80% the rail runs hot and its voltage sags under load; above 100% the PMIC cuts out or the phone throttles and restarts."
+      },
+      "pvVoltage": {
+        "name": "PV string voltage",
+        "explain": "On a cold morning the panel string’s open-circuit voltage reaches {percent} of the most the charge controller takes. Above 90% there is little margin; above 100% the controller can be destroyed. Fewer panels in series lowers it."
+      },
+      "pvPower": {
+        "name": "PV array power",
+        "explain": "The array’s rated output is {percent} of the power the charge controller can use. A little over 100% is common and only clips the midday peak; above 130% much of the harvest is wasted."
+      },
+      "inverterLoad": {
+        "name": "Inverter load",
+        "explain": "Everything running at once draws {percent} of the inverter’s continuous rating. Above 80% it runs hot; above 100% it shuts down."
+      },
+      "inverterSurge": {
+        "name": "Inverter surge",
+        "explain": "Starting the loads together takes {percent} of the inverter’s surge rating. Above 100% motors such as fridges and pumps can trip it as they start."
+      },
+      "batteryCurrent": {
+        "name": "Battery current",
+        "explain": "At full load the inverter draws {percent} of the current the battery’s BMS allows. Above 80% the pack heats up; above 100% the BMS cuts the power."
       }
     },
     "slots": {
@@ -549,7 +569,12 @@
         "thrustToWeight": "Weighs {actual}; the motors lift up to {limit}.",
         "escCurrent": "Each motor draws up to {actual}; its ESC is rated for {limit}.",
         "batteryDischarge": "The motors draw up to {actual}; the battery can deliver {limit}.",
-        "pmicRail": "Parts on the PMIC’s {rail} rail draw up to {actual}; it supplies {limit}."
+        "pmicRail": "Parts on the PMIC’s {rail} rail draw up to {actual}; it supplies {limit}.",
+        "pvVoltage": "The string reaches {actual} on a cold morning; the controller takes at most {limit}.",
+        "pvPower": "The array makes up to {actual}; the controller uses {limit}.",
+        "inverterLoad": "The loads draw {actual}; the inverter supplies {limit} continuously.",
+        "inverterSurge": "The loads take {actual} starting up; the inverter surges to {limit}.",
+        "batteryCurrent": "The inverter draws up to {actual} from the battery; its BMS allows {limit}."
       },
       "railsTitle": "Rails",
       "hostTitle": "Slots",

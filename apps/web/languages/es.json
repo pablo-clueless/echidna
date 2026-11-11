@@ -404,6 +404,26 @@
       "pmicRail": {
         "name": "Presupuesto de los raíles del PMIC",
         "explain": "En el pico, las piezas de este raíl del PMIC consumen {percent} de la corriente que puede dar. Por encima del 80 %, el raíl se calienta y su tensión cae con la carga; por encima del 100 %, el PMIC corta o el teléfono reduce su rendimiento y se reinicia."
+      },
+      "pvVoltage": {
+        "name": "Tensión de la cadena FV",
+        "explain": "En una mañana fría, la tensión en circuito abierto de la cadena de paneles alcanza el {percent} del máximo que admite el regulador. Por encima del 90 % queda poco margen; por encima del 100 % el regulador puede destruirse. Menos paneles en serie la reducen."
+      },
+      "pvPower": {
+        "name": "Potencia del campo FV",
+        "explain": "La potencia nominal del campo es el {percent} de la que puede aprovechar el regulador. Algo más del 100 % es habitual y solo recorta el pico del mediodía; por encima del 130 % se desperdicia buena parte de la producción."
+      },
+      "inverterLoad": {
+        "name": "Carga del inversor",
+        "explain": "Todo lo que funciona a la vez consume el {percent} de la potencia continua del inversor. Por encima del 80 % se calienta; por encima del 100 % se apaga."
+      },
+      "inverterSurge": {
+        "name": "Pico del inversor",
+        "explain": "Arrancar las cargas a la vez requiere el {percent} de la potencia de pico del inversor. Por encima del 100 % los motores, como los de neveras y bombas, pueden hacerlo saltar al arrancar."
+      },
+      "batteryCurrent": {
+        "name": "Corriente de la batería",
+        "explain": "A plena carga el inversor toma el {percent} de la corriente que permite el BMS de la batería. Por encima del 80 % la batería se calienta; por encima del 100 % el BMS corta la alimentación."
       }
     },
     "slots": {
@@ -512,7 +532,12 @@
         "thrustToWeight": "Pesa {actual}; los motores levantan hasta {limit}.",
         "escCurrent": "Cada motor consume hasta {actual}; su ESC admite {limit}.",
         "batteryDischarge": "Los motores consumen hasta {actual}; la batería puede entregar {limit}.",
-        "pmicRail": "Las piezas del raíl {rail} del PMIC consumen hasta {actual}; el raíl da {limit}."
+        "pmicRail": "Las piezas del raíl {rail} del PMIC consumen hasta {actual}; el raíl da {limit}.",
+        "pvVoltage": "La cadena alcanza {actual} en una mañana fría; el regulador admite como máximo {limit}.",
+        "pvPower": "El campo produce hasta {actual}; el regulador aprovecha {limit}.",
+        "inverterLoad": "Las cargas consumen {actual}; el inversor suministra {limit} en continuo.",
+        "inverterSurge": "Las cargas piden {actual} al arrancar; el inversor llega a {limit} de pico.",
+        "batteryCurrent": "El inversor toma hasta {actual} de la batería; su BMS permite {limit}."
       },
       "railsTitle": "Raíles de alimentación",
       "hostTitle": "Conectores",

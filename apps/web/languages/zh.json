@@ -404,6 +404,26 @@
       "pmicRail": {
         "name": "PMIC 供电轨预算",
         "explain": "峰值时，这条 PMIC 供电轨上的部件消耗其可供电流的 {percent}。超过 80% 时供电轨发热、带载电压下降；超过 100% 时 PMIC 断电，或手机降频并重启。"
+      },
+      "pvVoltage": {
+        "name": "光伏组串电压",
+        "explain": "在寒冷的早晨，组串的开路电压达到充电控制器上限的 {percent}。超过 90% 余量很小；超过 100% 可能损坏控制器。减少串联的组件数量可以降低电压。"
+      },
+      "pvPower": {
+        "name": "光伏阵列功率",
+        "explain": "阵列的额定输出是充电控制器可用功率的 {percent}。略超 100% 很常见，只会削掉中午的峰值；超过 130% 会浪费大量发电量。"
+      },
+      "inverterLoad": {
+        "name": "逆变器负载",
+        "explain": "同时运行的所有负载消耗逆变器持续额定功率的 {percent}。超过 80% 会发热；超过 100% 会关机。"
+      },
+      "inverterSurge": {
+        "name": "逆变器浪涌",
+        "explain": "负载同时启动需要逆变器浪涌功率的 {percent}。超过 100% 时，冰箱、水泵等电机启动可能使其跳闸。"
+      },
+      "batteryCurrent": {
+        "name": "电池电流",
+        "explain": "满载时逆变器从电池抽取 BMS 允许电流的 {percent}。超过 80% 电池发热；超过 100% BMS 会切断供电。"
       }
     },
     "slots": {
@@ -512,7 +532,12 @@
         "thrustToWeight": "重 {actual}；电机最多可提升 {limit}。",
         "escCurrent": "每个电机最多 {actual}；其电调额定 {limit}。",
         "batteryDischarge": "电机最多消耗 {actual}；电池可提供 {limit}。",
-        "pmicRail": "PMIC {rail}供电轨上的部件最多消耗 {actual}；它可提供 {limit}。"
+        "pmicRail": "PMIC {rail}供电轨上的部件最多消耗 {actual}；它可提供 {limit}。",
+        "pvVoltage": "寒冷早晨组串电压达 {actual}；控制器最高承受 {limit}。",
+        "pvPower": "阵列最多输出 {actual}；控制器可用 {limit}。",
+        "inverterLoad": "负载消耗 {actual}；逆变器持续输出 {limit}。",
+        "inverterSurge": "负载启动需要 {actual}；逆变器浪涌可达 {limit}。",
+        "batteryCurrent": "逆变器从电池最多抽取 {actual}；其 BMS 允许 {limit}。"
       },
       "railsTitle": "电源轨",
       "hostTitle": "接口",

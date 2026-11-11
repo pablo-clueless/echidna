@@ -404,6 +404,26 @@
       "pmicRail": {
         "name": "PMIC-Schienenbudget",
         "explain": "Unter Spitzenlast ziehen die Teile an dieser PMIC-Schiene {percent} des Stroms, den sie liefern kann. Über 80 % wird die Schiene heiß und ihre Spannung bricht unter Last ein; über 100 % schaltet der PMIC ab oder das Telefon drosselt und startet neu."
+      },
+      "pvVoltage": {
+        "name": "PV-Strangspannung",
+        "explain": "An einem kalten Morgen erreicht die Leerlaufspannung des Modulstrangs {percent} des Höchstwerts des Ladereglers. Über 90 % bleibt wenig Reserve; über 100 % kann der Regler zerstört werden. Weniger Module in Reihe senken sie."
+      },
+      "pvPower": {
+        "name": "PV-Leistung",
+        "explain": "Die Nennleistung der Anlage beträgt {percent} dessen, was der Laderegler nutzen kann. Etwas über 100 % ist üblich und kappt nur die Mittagsspitze; über 130 % geht viel Ertrag verloren."
+      },
+      "inverterLoad": {
+        "name": "Wechselrichterlast",
+        "explain": "Alles gleichzeitig Laufende zieht {percent} der Dauerleistung des Wechselrichters. Über 80 % wird er heiß; über 100 % schaltet er ab."
+      },
+      "inverterSurge": {
+        "name": "Wechselrichter-Anlaufspitze",
+        "explain": "Der gemeinsame Anlauf der Lasten braucht {percent} der Spitzenleistung des Wechselrichters. Über 100 % können anlaufende Motoren wie Kühlschränke und Pumpen ihn auslösen."
+      },
+      "batteryCurrent": {
+        "name": "Batteriestrom",
+        "explain": "Bei Volllast zieht der Wechselrichter {percent} des Stroms, den das BMS der Batterie zulässt. Über 80 % erwärmt sich der Akku; über 100 % schaltet das BMS ab."
       }
     },
     "slots": {
@@ -512,7 +532,12 @@
         "thrustToWeight": "Wiegt {actual}; die Motoren heben bis zu {limit}.",
         "escCurrent": "Jeder Motor zieht bis zu {actual}; sein ESC ist für {limit} ausgelegt.",
         "batteryDischarge": "Die Motoren ziehen bis zu {actual}; der Akku liefert {limit}.",
-        "pmicRail": "Die Teile an der {rail}-Schiene des PMIC ziehen bis zu {actual}; sie liefert {limit}."
+        "pmicRail": "Die Teile an der {rail}-Schiene des PMIC ziehen bis zu {actual}; sie liefert {limit}.",
+        "pvVoltage": "Der Strang erreicht an einem kalten Morgen {actual}; der Regler verträgt höchstens {limit}.",
+        "pvPower": "Die Anlage liefert bis zu {actual}; der Regler nutzt {limit}.",
+        "inverterLoad": "Die Lasten ziehen {actual}; der Wechselrichter liefert dauerhaft {limit}.",
+        "inverterSurge": "Die Lasten brauchen beim Anlauf {actual}; der Wechselrichter schafft kurzzeitig {limit}.",
+        "batteryCurrent": "Der Wechselrichter zieht bis zu {actual} aus der Batterie; ihr BMS erlaubt {limit}."
       },
       "railsTitle": "Versorgungsschienen",
       "hostTitle": "Anschlüsse",
