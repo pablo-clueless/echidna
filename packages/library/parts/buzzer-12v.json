@@ -1,0 +1,37 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "buzzer-12v",
+  "name": "Active buzzer, 12 V",
+  "kind": "buzzer",
+  "deviceTypes": ["iot"],
+  "pins": [
+    {
+      "id": "pos",
+      "name": "+"
+    },
+    {
+      "id": "neg",
+      "name": "−"
+    }
+  ],
+  "params": {
+    "resistance": {
+      "value": 400,
+      "unit": "Ω",
+      "source": "estimated",
+      "reference": "Treated as resistive: 12 V at the 30 mA a 12 mm active buzzer is rated to draw"
+    }
+  },
+  "ratings": {
+    "maxVoltage": {
+      "value": 16,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "Typical of 12 V active buzzers: 8 V to 16 V"
+    }
+  },
+  "interfaces": [],
+  "model": "resistor",
+  "footprintId": "generic/buzzer-12mm",
+  "meshUrl": "generic/buzzer-12mm"
+}

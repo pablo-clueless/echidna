@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ac-loads-cabin",
+  "name": "Cabin circuit: lights, router, laptop, small fridge",
+  "kind": "acLoad",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "ac-230v"
+    }
+  ],
+  "module": {
+    "role": "acLoad",
+    "power": {
+      "value": 300,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Lights, Wi-Fi router, laptop charger and a small fridge: everything running at once"
+    },
+    "startup": {
+      "value": 700,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Lights, Wi-Fi router, laptop charger and a small fridge: with motors starting, such as a fridge compressor or pump"
+    },
+    "typical": {
+      "value": 80,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Lights, Wi-Fi router, laptop charger and a small fridge: average over a day, with the fridge cycling"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/consumerUnit",
+  "meshUrl": "generic/module"
+}

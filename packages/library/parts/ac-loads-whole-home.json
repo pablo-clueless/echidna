@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ac-loads-whole-home",
+  "name": "Whole home: adds a washing machine, pump and microwave",
+  "kind": "acLoad",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "ac-230v"
+    }
+  ],
+  "module": {
+    "role": "acLoad",
+    "power": {
+      "value": 2600,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Essential circuit plus washing machine, water pump and microwave: everything running at once"
+    },
+    "startup": {
+      "value": 5500,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Essential circuit plus washing machine, water pump and microwave: with motors starting, such as a fridge compressor or pump"
+    },
+    "typical": {
+      "value": 550,
+      "unit": "W",
+      "source": "estimated",
+      "reference": "Essential circuit plus washing machine, water pump and microwave: average over a day, with the fridge cycling"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/consumerUnit",
+  "meshUrl": "generic/module"
+}

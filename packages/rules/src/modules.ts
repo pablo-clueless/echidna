@@ -1,5 +1,6 @@
 import type { ComponentSpec, Interface, PowerConnector, SpecValue } from "@echidna/core";
 
+import { checkSolar, solarChecksFor, solarRuntime } from "./solar";
 import { check, type FitCheck, type SlotFit } from "./slots";
 import { checkPhone, phoneChecksFor } from "./phone";
 import { checkDrone, droneChecksFor } from "./drone";
@@ -28,7 +29,8 @@ const heatOf = (build: readonly ComponentSpec[]) =>
   build.find((m) => m.module?.heat)?.module?.heat;
 
 /**
- * The device-level checks of a build. A drone's are `checkDrone`'s, a phone's or wearable's `checkPhone`'s. A desktop's or
+ * The device-level checks of a build. A drone's are `checkDrone`'s, a phone's or wearable's `checkPhone`'s, a solar
+ * system's `checkSolar`'s. A desktop's or
  * laptop's are the PSU's or charger's output against everything it powers at full load, the PSU's connectors against
  * what the motherboard and cards need, and the cooler against the processors' heat. A check is left out when the build lacks a part it compares, such as a PSU before one is plugged
  * in. A charger short of the load only warns until it is far short, as the battery makes up the difference for a
@@ -40,6 +42,7 @@ const heatOf = (build: readonly ComponentSpec[]) =>
 export const checkBuild = (host: ComponentSpec, modules: readonly ComponentSpec[]): FitCheck[] => {
   if (roleOf(host) === "frame") return checkDrone(host, modules);
   if (roleOf(host) === "logicBoard") return checkPhone(host, modules);
+  if (roleOf(host) === "inverter") return checkSolar(host, modules);
   const build = [host, ...modules];
   const checks: FitCheck[] = [];
   const supply = build.find(isSupply);
@@ -142,6 +145,9 @@ export const checkModuleFit = (
   if (slot && role && shared && roleOf(host) === "frame") {
     const relevant = droneChecksFor[role] ?? [];
     checks.push(...checkDrone(host, [...others, part]).filter((c) => relevant.includes(c.id)));
+  } else if (slot && role && shared && roleOf(host) === "inverter") {
+    const relevant = solarChecksFor[role] ?? [];
+    checks.push(...checkSolar(host, [...others, part]).filter((c) => relevant.includes(c.id)));
   } else if (slot && role && shared && roleOf(host) === "logicBoard") {
     checks.push(...phoneChecksFor(part, checkPhone(host, [...others, part])));
   } else if (slot && role && shared) {
@@ -186,8 +192,9 @@ export const batteryRuntime = (
   host: ComponentSpec,
   modules: readonly ComponentSpec[],
 ): BatteryRuntime | null => {
-  // A drone's time in the air is `flightTime`'s.
+  // A drone's time in the air is `flightTime`'s; a solar system's battery runs AC loads through an inverter.
   if (roleOf(host) === "frame") return null;
+  if (roleOf(host) === "inverter") return solarRuntime(host, modules);
   const build = [host, ...modules];
   const energy = build.find((m) => roleOf(m) === "battery")?.module?.energy;
   const draws = build.flatMap((m) => m.module?.typical ?? []);

@@ -186,7 +186,7 @@
     },
     "viewport": {
       "label": "3D board view",
-      "help": "Drag to orbit, right-drag to pan, scroll to zoom. With the view focused, arrow keys pan.",
+      "help": "Drag to orbit, right-drag to pan, scroll to zoom. With the view focused, arrow keys pan, Q and E orbit, W and S tilt, and R turns the selected part.",
       "controls": {
         "label": "Camera",
         "zoomIn": "Zoom in",
@@ -194,7 +194,12 @@
         "fit": "Fit board",
         "top": "Top view",
         "angled": "3D view",
-        "underside": "Underside view"
+        "underside": "Underside view",
+        "orbitLeft": "Orbit left",
+        "orbitRight": "Orbit right",
+        "tiltUp": "Tilt up",
+        "tiltDown": "Tilt down",
+        "turnPart": "Turn selected part"
       },
       "overlays": {
         "label": "Overlays",
@@ -230,6 +235,38 @@
         "drone": "Drones",
         "smartphone": "Phones",
         "wearable": "Wearables"
+      },
+      "clear": "Clear schematic",
+      "clearConfirm": "Click again to clear everything",
+      "arrange": "Arrange in layers",
+      "layers": {
+        "onBoard": "On the board",
+        "board": "{board, select, main {Main board} upper {Upper board, on the interposer} other {Board {board}}}",
+        "stacked": "Layer {layer}, stacked on the one below",
+        "flex": "Off the board, on flex cables",
+        "header": "Plugged into the headers"
+      }
+    },
+    "output": {
+      "title": "Output",
+      "download": "Download",
+      "copy": "Copy",
+      "emptyTitle": "No output yet",
+      "emptyDescription": "Start from a dev board and plug sensors into it to get code for it in C, C++, Go, Rust and Java.",
+      "copied": "Copied",
+      "wiring": "Wiring",
+      "needsBoard": "Code is written for a dev board. Add an ESP32, Raspberry Pi or Arduino to the project and plug parts into it.",
+      "startFromBoard": "Start from {board}",
+      "table": {
+        "empty": "Nothing is wired yet.",
+        "slotsCaption": "Plugged into the board",
+        "netsCaption": "Nets",
+        "part": "Part",
+        "pin": "Pin",
+        "hostPin": "Board pin",
+        "signal": "Signal",
+        "net": "Net",
+        "pins": "Pins"
       }
     },
     "inspector": {
@@ -404,6 +441,26 @@
       "pmicRail": {
         "name": "PMIC rail budget",
         "explain": "At peak, the parts on this PMIC rail draw {percent} of the current it can supply. Above 80% the rail runs hot and its voltage sags under load; above 100% the PMIC cuts out or the phone throttles and restarts."
+      },
+      "pvVoltage": {
+        "name": "PV string voltage",
+        "explain": "On a cold morning the panel string’s open-circuit voltage reaches {percent} of the most the charge controller takes. Above 90% there is little margin; above 100% the controller can be destroyed. Fewer panels in series lowers it."
+      },
+      "pvPower": {
+        "name": "PV array power",
+        "explain": "The array’s rated output is {percent} of the power the charge controller can use. A little over 100% is common and only clips the midday peak; above 130% much of the harvest is wasted."
+      },
+      "inverterLoad": {
+        "name": "Inverter load",
+        "explain": "Everything running at once draws {percent} of the inverter’s continuous rating. Above 80% it runs hot; above 100% it shuts down."
+      },
+      "inverterSurge": {
+        "name": "Inverter surge",
+        "explain": "Starting the loads together takes {percent} of the inverter’s surge rating. Above 100% motors such as fridges and pumps can trip it as they start."
+      },
+      "batteryCurrent": {
+        "name": "Battery current",
+        "explain": "At full load the inverter draws {percent} of the current the battery’s BMS allows. Above 80% the pack heats up; above 100% the BMS cuts the power."
       }
     },
     "slots": {
@@ -435,7 +492,10 @@
         "radio": "Radio",
         "imu": "Motion sensor",
         "heart-rate": "Heart-rate sensor connector",
-        "haptics": "Haptic motor connector"
+        "haptics": "Haptic motor connector",
+        "pv": "PV input",
+        "ac-out": "AC output",
+        "monitor": "Monitor port"
       },
       "protocols": {
         "i2c": "I²C",
@@ -488,7 +548,12 @@
         "wearable-radio": "wearable radio module",
         "li-po-1s": "single-cell LiPo",
         "ppg": "optical heart-rate sensor",
-        "haptic": "haptic motor driver"
+        "haptic": "haptic motor driver",
+        "pv-input": "PV input",
+        "battery-12v": "12 V battery",
+        "battery-24v": "24 V battery",
+        "ac-230v": "230 V AC",
+        "inverter-wifi": "Inverter Wi-Fi port"
       },
       "slotLabel": "{slot} on {host}",
       "pluggedIn": "Plugged in, powered from {rail}",
@@ -512,7 +577,12 @@
         "thrustToWeight": "Weighs {actual}; the motors lift up to {limit}.",
         "escCurrent": "Each motor draws up to {actual}; its ESC is rated for {limit}.",
         "batteryDischarge": "The motors draw up to {actual}; the battery can deliver {limit}.",
-        "pmicRail": "Parts on the PMIC’s {rail} rail draw up to {actual}; it supplies {limit}."
+        "pmicRail": "Parts on the PMIC’s {rail} rail draw up to {actual}; it supplies {limit}.",
+        "pvVoltage": "The string reaches {actual} on a cold morning; the controller takes at most {limit}.",
+        "pvPower": "The array makes up to {actual}; the controller uses {limit}.",
+        "inverterLoad": "The loads draw {actual}; the inverter supplies {limit} continuously.",
+        "inverterSurge": "The loads take {actual} starting up; the inverter surges to {limit}.",
+        "batteryCurrent": "The inverter draws up to {actual} from the battery; its BMS allows {limit}."
       },
       "railsTitle": "Rails",
       "hostTitle": "Slots",
@@ -620,7 +690,32 @@
       "label": "Export",
       "pcb": "Download the board's Gerbers, drill file, bill of materials and pick-and-place file as a zip.",
       "modules": "Download the build's bill of materials.",
-      "unrouted": "{count, plural, one {# connection has} other {# connections have}} no copper yet: see the README in the zip."
+      "unrouted": "{count, plural, one {# connection has} other {# connections have}} no copper yet: see the README in the zip.",
+      "fabrication": "Fabrication files",
+      "schematicGroup": "Schematic and circuit",
+      "svg": "Schematic (SVG)",
+      "svgDetail": "The schematic as a vector image, as it looks on screen.",
+      "pdf": "Schematic (PDF)",
+      "pdfDetail": "The schematic on an A4 page, ready to print.",
+      "spice": "SPICE netlist",
+      "spiceDetail": "The circuit as Echidna solves it, for ngspice or LTspice.",
+      "spiceSkipped": "{count, plural, one {# part is} other {# parts are}} checked as a build, not a circuit, so left out of the netlist.",
+      "wiring": "Wiring table (CSV)",
+      "wiringDetail": "Every net and the pins on it, and which board pin each plugged-in part uses.",
+      "project": "Project (JSON)",
+      "projectDetail": "The whole project, to keep, share or open again.",
+      "schema": "Project file format",
+      "schemaDetail": "The JSON Schema that describes project files.",
+      "schematicClosed": "Open the schematic panel to export it.",
+      "open": {
+        "label": "Open project",
+        "done": "Opened {name}.",
+        "json": "That file isn’t JSON.",
+        "format": "That isn’t an Echidna project file.",
+        "version": "That project file is from a different version of Echidna.",
+        "invalid": "The project file has a bad value at {path}.",
+        "parts": "The project uses parts this version of Echidna doesn’t have: {parts}."
+      }
     }
   },
   "Parts": {
@@ -1405,6 +1500,75 @@
     "bluetooth-le-radio": {
       "name": "Bluetooth Low Energy radio",
       "summary": "Generic part; figures estimated"
+    },
+    "ac-loads-cabin": {
+      "name": "Cabin circuit: lights, router, laptop, small fridge",
+      "summary": "300 W running, 700 W starting"
+    },
+    "ac-loads-essentials": {
+      "name": "Essential home circuit: fridge, lights, Wi-Fi, TV, fans",
+      "summary": "650 W running, 1.5 kW starting"
+    },
+    "ac-loads-whole-home": {
+      "name": "Whole home: adds a washing machine, pump and microwave",
+      "summary": "2.6 kW running, 5.5 kW starting"
+    },
+    "buzzer-12v": {
+      "name": "Active buzzer, 12 V",
+      "summary": "Beeps when powered, 30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "Hybrid solar inverter, 1 kW 12 V",
+      "summary": "Up to 500 W of PV at 100 V, 2 kW surge"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "Hybrid solar inverter, 3 kW 24 V",
+      "summary": "Up to 4 kW of PV at 500 V, 6 kW surge"
+    },
+    "lamp-12v-5w": {
+      "name": "12 V LED lamp, 5 W",
+      "summary": "For a 12 V lighting circuit"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "LiFePO4 battery, 12 V 100 Ah",
+      "summary": "1.28 kWh, BMS allows 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "LiFePO4 battery, 24 V 100 Ah",
+      "summary": "2.56 kWh, BMS allows 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "LiFePO4 battery, 24 V 200 Ah",
+      "summary": "5.12 kWh, BMS allows 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "Logic-level power MOSFET, IRLZ44N",
+      "summary": "Low-side switch, 55 V, 47 A, driven from 3.3 V or 5 V"
+    },
+    "pir-hc-sr501": {
+      "name": "HC-SR501 PIR motion sensor",
+      "summary": "Output goes high on motion; needs 4.5 to 20 V",
+      "variantLabel": "Sensor",
+      "variants": {
+        "idle": "No motion (output low)",
+        "motion": "Motion (output high)"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "PV array, 10 × 450 W in series",
+      "summary": "4.5 kW, 496 V open circuit"
+    },
+    "pv-array-2x200w": {
+      "name": "PV array, 2 × 200 W in series",
+      "summary": "400 W, 48.6 V open circuit"
+    },
+    "pv-array-6x450w": {
+      "name": "PV array, 6 × 450 W in series",
+      "summary": "2.7 kW, 298 V open circuit"
+    },
+    "solar-wifi-monitor": {
+      "name": "Inverter Wi-Fi monitor",
+      "summary": "Reports output and battery charge, 1 W"
     }
   },
   "Builds": {

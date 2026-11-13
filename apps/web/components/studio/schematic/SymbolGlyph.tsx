@@ -6,9 +6,9 @@ import {
   BOX_KINDS,
   boxBounds,
   boxPins,
-  GRID,
   isModuleBox,
   moduleBounds,
+  GRID,
 } from "@/lib/schematic/symbols";
 import { switchClosed } from "@/lib/project/model";
 
@@ -283,31 +283,4 @@ export const SymbolGlyph = ({
   return spec.actuation === "momentary" ? pushButton(closed) : toggle(closed);
 };
 
-/**
- * Half-extents of a part's symbol body in grid units at rotation 0, for hit areas and selection outlines.
- * @param spec - The part spec.
- * @returns Half-width and half-height.
- */
-export const boundsOf = (spec: ComponentSpec): { w: number; h: number } =>
-  isModuleBox(spec)
-    ? moduleBounds(spec)
-    : BOX_KINDS.has(spec.kind)
-      ? boxBounds(spec.pins.length)
-      : (symbolBounds[spec.kind] ?? { w: 2, h: 1 });
-
-/** Half-extents of each symbol's body in grid units at rotation 0, for hit areas and selection outlines. */
-export const symbolBounds: Record<string, { w: number; h: number }> = {
-  resistor: { w: 2, h: 0.8 },
-  capacitor: { w: 2, h: 0.8 },
-  inductor: { w: 2, h: 0.6 },
-  switch: { w: 2, h: 0.9 },
-  diode: { w: 2, h: 0.8 },
-  led: { w: 2, h: 1.3 },
-  supply: { w: 1.1, h: 2 },
-  ground: { w: 0.8, h: 1 },
-  regulator: { w: 3, h: 2 },
-  npn: { w: 2, h: 2 },
-  pnp: { w: 2, h: 2 },
-  nmos: { w: 2, h: 2 },
-  pmos: { w: 2, h: 2 },
-};
+export { boundsOf } from "@/lib/schematic/symbols";

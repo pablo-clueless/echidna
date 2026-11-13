@@ -29,7 +29,15 @@ export type SpecValue = {
   reference?: string;
 };
 
-export const deviceTypes = ["smartphone", "desktop", "laptop", "drone", "iot", "wearable"] as const;
+export const deviceTypes = [
+  "smartphone",
+  "desktop",
+  "laptop",
+  "drone",
+  "iot",
+  "wearable",
+  "solar",
+] as const;
 
 export type DeviceType = (typeof deviceTypes)[number];
 
@@ -200,18 +208,22 @@ export type ModuleRole =
   | "heartRate"
   | "motion"
   | "haptics"
-  | "radio";
+  | "radio"
+  | "inverter"
+  | "pvArray"
+  | "acLoad"
+  | "monitor";
 
 /**
  * The roles of host modules, which the others plug into: a desktop's or laptop's motherboard, a drone's frame, a
- * phone's or wearable's logic board.
+ * phone's or wearable's logic board, a solar system's inverter.
  */
-export const HOST_ROLES: readonly ModuleRole[] = ["motherboard", "frame", "logicBoard"];
+export const HOST_ROLES: readonly ModuleRole[] = ["motherboard", "frame", "logicBoard", "inverter"];
 
 /**
- * Whether a part is the host of a desktop, laptop, drone, phone or wearable build.
+ * Whether a part is the host of a desktop, laptop, drone, phone, wearable or solar build.
  * @param spec - Part spec.
- * @returns `true` for a motherboard, drone frame or logic board.
+ * @returns `true` for a motherboard, drone frame, logic board or solar inverter.
  */
 export const isHostModule = (spec: Pick<ComponentSpec, "module"> | undefined): boolean =>
   Boolean(spec?.module && HOST_ROLES.includes(spec.module.role));
@@ -244,7 +256,7 @@ export type ModuleSpec = {
   heat?: SpecValue;
   /** For batteries: stored energy, in joules (1 Wh = 3600 J). */
   energy?: SpecValue;
-  /** For PSUs and chargers: rated continuous output. */
+  /** For PSUs and chargers: rated continuous output. For solar inverters: continuous AC output. For PV arrays: rated power at standard test conditions. */
   output?: SpecValue;
   /** PSU connectors the module needs plugged into it, by connector, such as a graphics card's 12V-2x6. */
   needs?: Partial<Record<PowerConnector, number>>;
@@ -260,10 +272,14 @@ export type ModuleSpec = {
   current?: SpecValue;
   /**
    * For drone motors: the share of the electrical power going in that does useful work lifting the drone in a hover,
-   * the propeller's figure of merit times the motor's and ESC's efficiency.
+   * the propeller's figure of merit times the motor's and ESC's efficiency. For solar inverters: the share of the
+   * battery's power that reaches the AC loads.
    */
   efficiency?: SpecValue;
-  /** For ESCs, and drone frames with them built in: the continuous current each motor's channel is rated for. */
+  /**
+   * For ESCs, and drone frames with them built in: the continuous current each motor's channel is rated for. For
+   * solar batteries: the continuous discharge current their BMS allows.
+   */
   maxCurrent?: SpecValue;
   /** For drone propellers: tip-to-tip diameter, in metres. */
   diameter?: SpecValue;
@@ -275,6 +291,23 @@ export type ModuleSpec = {
   rails?: PmicRail[];
   /** For phone and wearable parts: the PMIC rail they draw their `power` from at peak. */
   rail?: string;
+  /** For solar batteries: nominal voltage. */
+  voltage?: SpecValue;
+  /** For PV arrays: the string's open-circuit voltage at standard test conditions (25 °C). */
+  openCircuitVoltage?: SpecValue;
+  /**
+   * For PV arrays: how much the open-circuit voltage rises per kelvin below 25 °C, as a fraction of it, such as
+   * 0.0029 for −0.29 %/K.
+   */
+  voltageTempCoefficient?: SpecValue;
+  /** For solar inverters: the highest PV input voltage the charge controller survives. */
+  maxPvVoltage?: SpecValue;
+  /** For solar inverters: the most PV power the charge controller can use. */
+  maxPvPower?: SpecValue;
+  /** For solar inverters: the most AC power they deliver for a few seconds, such as a fridge compressor starting. */
+  surge?: SpecValue;
+  /** For AC loads: the highest power drawn for a few seconds when motors start. */
+  startup?: SpecValue;
 };
 
 export type ComponentSpec = {

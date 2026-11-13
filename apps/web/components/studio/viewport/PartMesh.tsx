@@ -326,6 +326,43 @@ const To92 = ({ marking }: { marking?: string | undefined }) => (
   </group>
 );
 
+/** A 12 mm round buzzer standing on the board, the sound hole in its top. */
+const Buzzer = () => (
+  <group>
+    <mesh position={[0, 4.75, 0]} material={materials.epoxy} castShadow>
+      <cylinderGeometry args={[6, 6, 9.5, 40]} />
+    </mesh>
+    <mesh position={[0, 9.51, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materials.cavity}>
+      <circleGeometry args={[1, 20]} />
+    </mesh>
+  </group>
+);
+
+/** A TO-220 standing upright: the moulded body, the metal tab behind it with its mounting hole, and three legs. */
+const To220 = ({ marking }: { marking?: string | undefined }) => (
+  <group>
+    <mesh position={[0, 3 + 4.5, 0.5]} material={materials.epoxy} castShadow>
+      <boxGeometry args={[10, 9, 4.4]} />
+    </mesh>
+    <mesh position={[0, 3 + 9 + 3, -1.05]} material={materials.lead} castShadow>
+      <boxGeometry args={[10, 15, 1.3]} />
+    </mesh>
+    <mesh
+      position={[0, 3 + 9 + 3.2, -1.05]}
+      rotation={[Math.PI / 2, 0, 0]}
+      material={materials.cavity}
+    >
+      <cylinderGeometry args={[1.8, 1.8, 1.4, 24]} />
+    </mesh>
+    {marking && <Marking text={marking} y={3 + 5} w={8} h={2.4} front={2.72} />}
+    {[-2.54, 0, 2.54].map((x) => (
+      <mesh key={x} position={[x, 1.5, 0]} material={materials.lead} castShadow>
+        <boxGeometry args={[0.8, 3, 0.5]} />
+      </mesh>
+    ))}
+  </group>
+);
+
 /** Soft radial falloff for the light around a lit LED, made once on first use. */
 let haloTexture: CanvasTexture | null = null;
 const halo = () => {
@@ -684,6 +721,10 @@ export const PartMesh = ({ footprintId, bands, marking, glow, ledColour, closed 
     case "generic/to-92-sgd":
     case "generic/to-92-dgs":
       return <To92 marking={marking} />;
+    case "generic/to-220-gds":
+      return <To220 marking={marking} />;
+    case "generic/buzzer-12mm":
+      return <Buzzer />;
     default:
       return (
         <RoundedBox

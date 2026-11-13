@@ -43,6 +43,29 @@
       "failAbove": 1
     }
   },
+  "solar": {
+    "pvVoltage": {
+      "warnAt": 0.9,
+      "failAbove": 1
+    },
+    "pvPower": {
+      "warnAt": 1.01,
+      "failAbove": 1.3
+    },
+    "inverterLoad": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    "inverterSurge": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    },
+    "batteryCurrent": {
+      "warnAt": 0.8,
+      "failAbove": 1
+    }
+  },
+  "solarDesignLowTemperature": 263.15,
   "rules": [
     {
       "id": "voltageRating",

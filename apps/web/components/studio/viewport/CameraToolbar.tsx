@@ -1,11 +1,16 @@
 "use client";
 
 import {
+  ArrowDownToLine,
+  ArrowUpToLine,
   Box,
+  RotateCwSquare,
   Flame,
   FlipVertical2,
   Minus,
   Plus,
+  RotateCcw,
+  RotateCw,
   Scan,
   SquareDashed,
   Zap,
@@ -18,6 +23,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { type CameraCommands, useViewportStore } from "@/stores/viewport";
 import { useProjectStore } from "@/stores/project";
+import { useStudioStore } from "@/stores/studio";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 
@@ -31,7 +37,14 @@ export const cameraShortcuts: Record<Command, string[]> = {
   top: ["t", "T"],
   angled: ["Home"],
   underside: ["b", "B"],
+  orbitLeft: ["q", "Q"],
+  orbitRight: ["e", "E"],
+  tiltUp: ["w", "W"],
+  tiltDown: ["s", "S"],
 };
+
+/** Keys that turn the selected part a quarter turn on the board. */
+export const turnPartShortcuts = ["r", "R"];
 
 /** Swatch shown for each solder-mask colour; matches the board's mask in the 3D view. */
 const swatches: Record<MaskColour, string> = {
@@ -51,6 +64,12 @@ const groups: { command: Command; icon: LucideIcon }[][] = [
     { command: "angled", icon: Box },
     { command: "top", icon: SquareDashed },
     { command: "underside", icon: FlipVertical2 },
+  ],
+  [
+    { command: "orbitLeft", icon: RotateCcw },
+    { command: "orbitRight", icon: RotateCw },
+    { command: "tiltUp", icon: ArrowUpToLine },
+    { command: "tiltDown", icon: ArrowDownToLine },
   ],
 ];
 
@@ -72,6 +91,8 @@ export const CameraToolbar = () => {
   const shownOverlays = useLayoutStore((s) => s.overlays);
   const setOverlays = useLayoutStore((s) => s.setOverlays);
   const onPcb = useProjectStore((s) => s.foundation === "pcb");
+  const selectedPart = useStudioStore((s) => s.selectedComponentId);
+  const onBoard = useProjectStore((s) => Boolean(selectedPart && s.board[selectedPart]));
   const overlays = (Object.keys(overlayIcons) as Overlay[]).filter((o) => onPcb || o !== "current");
 
   return (
@@ -79,7 +100,7 @@ export const CameraToolbar = () => {
       role="toolbar"
       aria-label={t("label")}
       aria-orientation="vertical"
-      className="absolute top-2 right-2 flex flex-col gap-1"
+      className="absolute top-2 right-2 flex max-h-[calc(100%-1rem)] flex-col gap-1 overflow-y-auto"
     >
       {groups.map((group, i) => (
         <div
@@ -108,6 +129,25 @@ export const CameraToolbar = () => {
           ))}
         </div>
       ))}
+      <div className="bg-background/85 flex flex-col rounded-lg border p-0.5 shadow-xs backdrop-blur-sm">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              aria-label={t("turnPart")}
+              aria-keyshortcuts={turnPartShortcuts[0]}
+              disabled={!selectedPart || !onBoard}
+              onClick={() => selectedPart && useProjectStore.getState().rotateOnBoard(selectedPart)}
+            >
+              <RotateCwSquare />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            {t("turnPart")} <Kbd>R</Kbd>
+          </TooltipContent>
+        </Tooltip>
+      </div>
       <ToggleGroup
         type="multiple"
         orientation="vertical"

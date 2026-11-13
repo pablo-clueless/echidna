@@ -1,0 +1,86 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "nmos-irlz44n",
+  "name": "Logic-level power MOSFET, IRLZ44N",
+  "kind": "nmos",
+  "deviceTypes": ["smartphone", "desktop", "laptop", "drone", "iot", "wearable", "solar"],
+  "pins": [
+    {
+      "id": "d",
+      "name": "Drain"
+    },
+    {
+      "id": "g",
+      "name": "Gate"
+    },
+    {
+      "id": "s",
+      "name": "Source"
+    }
+  ],
+  "params": {
+    "thresholdVoltage": {
+      "value": 1.5,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "Infineon IRLZ44N datasheet: VGS(th) 1.0 V to 2.0 V; the middle is taken"
+    },
+    "transconductance": {
+      "value": 11,
+      "unit": "A/V²",
+      "source": "estimated",
+      "reference": "Fitted to Infineon IRLZ44N datasheet: RDS(on) 35 mΩ at VGS = 4 V"
+    },
+    "channelLengthModulation": {
+      "value": 0.01,
+      "unit": "1/V",
+      "source": "estimated",
+      "reference": "Typical for power MOSFETs"
+    },
+    "thermalResistance": {
+      "value": 62,
+      "unit": "K/W",
+      "source": "datasheet",
+      "reference": "Infineon IRLZ44N datasheet: RθJA 62 °C/W, TO-220 in free air with no heatsink"
+    }
+  },
+  "ratings": {
+    "maxVoltage": {
+      "value": 55,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Infineon IRLZ44N datasheet: VDSS 55 V"
+    },
+    "maxCurrent": {
+      "value": 47,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "Infineon IRLZ44N datasheet: continuous drain current 47 A at 25 °C case, with a heatsink"
+    },
+    "maxPower": {
+      "value": 110,
+      "unit": "W",
+      "source": "datasheet",
+      "reference": "Infineon IRLZ44N datasheet: power dissipation 110 W at 25 °C case, with a heatsink"
+    },
+    "maxTemperature": {
+      "value": 448.15,
+      "unit": "K",
+      "source": "datasheet",
+      "reference": "Infineon IRLZ44N datasheet: operating junction temperature, 175 °C"
+    }
+  },
+  "ratingPins": {
+    "maxVoltage": ["d", "s"],
+    "maxCurrent": ["d"]
+  },
+  "interfaces": [],
+  "model": "nmos",
+  "footprintId": "generic/to-220-gds",
+  "meshUrl": "generic/to-220",
+  "sourcing": {
+    "manufacturer": "Infineon",
+    "mpn": "IRLZ44NPBF",
+    "reference": "Infineon IRLZ44N datasheet: IRLZ44NPBF, TO-220AB"
+  }
+}

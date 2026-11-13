@@ -186,7 +186,7 @@
     },
     "viewport": {
       "label": "Vue 3D de la carte",
-      "help": "Faites glisser pour pivoter, clic droit pour déplacer, molette pour zoomer. Quand la vue est active, les flèches déplacent la caméra.",
+      "help": "Faites glisser pour tourner, clic droit pour déplacer, molette pour zoomer. Vue active : flèches pour déplacer, Q et E pour tourner, W et S pour incliner, R pour tourner le composant sélectionné.",
       "controls": {
         "label": "Caméra",
         "zoomIn": "Zoom avant",
@@ -194,7 +194,12 @@
         "fit": "Afficher toute la carte",
         "top": "Vue de dessus",
         "angled": "Vue 3D",
-        "underside": "Vue de dessous"
+        "underside": "Vue de dessous",
+        "orbitLeft": "Tourner à gauche",
+        "orbitRight": "Tourner à droite",
+        "tiltUp": "Incliner vers le haut",
+        "tiltDown": "Incliner vers le bas",
+        "turnPart": "Tourner le composant sélectionné"
       },
       "overlays": {
         "label": "Superpositions",
@@ -230,6 +235,16 @@
         "drone": "Drones",
         "smartphone": "Téléphones",
         "wearable": "Objets connectés"
+      },
+      "clear": "Effacer le schéma",
+      "clearConfirm": "Cliquez à nouveau pour tout effacer",
+      "arrange": "Ranger par couches",
+      "layers": {
+        "onBoard": "Sur la carte",
+        "board": "{board, select, main {Carte principale} upper {Carte supérieure, sur l’interposeur} other {Carte {board}}}",
+        "stacked": "Couche {layer}, posée sur celle du dessous",
+        "flex": "Hors de la carte, sur nappes souples",
+        "header": "Branché sur les connecteurs"
       }
     },
     "inspector": {
@@ -404,6 +419,26 @@
       "pmicRail": {
         "name": "Budget des rails du PMIC",
         "explain": "En pointe, les pièces sur ce rail du PMIC tirent {percent} du courant qu’il peut fournir. Au-delà de 80 %, le rail chauffe et sa tension chute sous la charge ; au-delà de 100 %, le PMIC coupe, ou le téléphone bride ses performances et redémarre."
+      },
+      "pvVoltage": {
+        "name": "Tension de la chaîne PV",
+        "explain": "Par un matin froid, la tension à vide de la chaîne de panneaux atteint {percent} du maximum admis par le régulateur. Au-delà de 90 %, la marge est faible ; au-delà de 100 %, le régulateur peut être détruit. Moins de panneaux en série la réduit."
+      },
+      "pvPower": {
+        "name": "Puissance du champ PV",
+        "explain": "La puissance nominale du champ vaut {percent} de ce que le régulateur peut exploiter. Un peu plus de 100 % est courant et écrête seulement le pic de midi ; au-delà de 130 %, une grande part de la production est perdue."
+      },
+      "inverterLoad": {
+        "name": "Charge de l’onduleur",
+        "explain": "Tout ce qui fonctionne en même temps consomme {percent} de la puissance continue de l’onduleur. Au-delà de 80 %, il chauffe ; au-delà de 100 %, il se coupe."
+      },
+      "inverterSurge": {
+        "name": "Pointe de l’onduleur",
+        "explain": "Le démarrage simultané des charges demande {percent} de la puissance de pointe de l’onduleur. Au-delà de 100 %, les moteurs comme ceux des réfrigérateurs et des pompes peuvent le faire disjoncter."
+      },
+      "batteryCurrent": {
+        "name": "Courant de la batterie",
+        "explain": "À pleine charge, l’onduleur tire {percent} du courant autorisé par le BMS de la batterie. Au-delà de 80 %, la batterie chauffe ; au-delà de 100 %, le BMS coupe l’alimentation."
       }
     },
     "slots": {
@@ -435,7 +470,10 @@
         "radio": "Radio",
         "imu": "Capteur de mouvement",
         "heart-rate": "Connecteur du capteur cardiaque",
-        "haptics": "Connecteur du moteur haptique"
+        "haptics": "Connecteur du moteur haptique",
+        "pv": "Entrée PV",
+        "ac-out": "Sortie CA",
+        "monitor": "Port de supervision"
       },
       "protocols": {
         "i2c": "I²C",
@@ -488,7 +526,12 @@
         "wearable-radio": "module radio d’objet connecté",
         "li-po-1s": "LiPo à un élément",
         "ppg": "capteur cardiaque optique",
-        "haptic": "pilote de moteur haptique"
+        "haptic": "pilote de moteur haptique",
+        "pv-input": "Entrée PV",
+        "battery-12v": "Batterie 12 V",
+        "battery-24v": "Batterie 24 V",
+        "ac-230v": "230 V CA",
+        "inverter-wifi": "Port Wi-Fi de l’onduleur"
       },
       "slotLabel": "{slot} de {host}",
       "pluggedIn": "Branché, alimenté par {rail}",
@@ -512,7 +555,12 @@
         "thrustToWeight": "Pèse {actual} ; les moteurs soulèvent jusqu’à {limit}.",
         "escCurrent": "Chaque moteur tire jusqu’à {actual} ; son ESC est prévu pour {limit}.",
         "batteryDischarge": "Les moteurs tirent jusqu’à {actual} ; la batterie peut fournir {limit}.",
-        "pmicRail": "Les pièces sur le rail {rail} du PMIC tirent jusqu’à {actual} ; il fournit {limit}."
+        "pmicRail": "Les pièces sur le rail {rail} du PMIC tirent jusqu’à {actual} ; il fournit {limit}.",
+        "pvVoltage": "La chaîne atteint {actual} par un matin froid ; le régulateur admet au plus {limit}.",
+        "pvPower": "Le champ produit jusqu’à {actual} ; le régulateur en exploite {limit}.",
+        "inverterLoad": "Les charges consomment {actual} ; l’onduleur fournit {limit} en continu.",
+        "inverterSurge": "Les charges demandent {actual} au démarrage ; l’onduleur monte à {limit} en pointe.",
+        "batteryCurrent": "L’onduleur tire jusqu’à {actual} de la batterie ; son BMS autorise {limit}."
       },
       "railsTitle": "Rails d’alimentation",
       "hostTitle": "Connecteurs",
@@ -620,7 +668,54 @@
       "label": "Exporter",
       "pcb": "Télécharger les Gerber, le fichier de perçage, la nomenclature et le fichier de placement de la carte dans un zip.",
       "modules": "Télécharger la nomenclature du montage.",
-      "unrouted": "{count, plural, one {# connexion n’a} other {# connexions n’ont}} pas encore de cuivre : voir le README du zip."
+      "unrouted": "{count, plural, one {# connexion n’a} other {# connexions n’ont}} pas encore de cuivre : voir le README du zip.",
+      "fabrication": "Fichiers de fabrication",
+      "schematicGroup": "Schéma et circuit",
+      "svg": "Schéma (SVG)",
+      "svgDetail": "Le schéma en image vectorielle, tel qu’il s’affiche.",
+      "pdf": "Schéma (PDF)",
+      "pdfDetail": "Le schéma sur une page A4, prêt à imprimer.",
+      "spice": "Netlist SPICE",
+      "spiceDetail": "Le circuit tel qu’Echidna le résout, pour ngspice ou LTspice.",
+      "spiceSkipped": "{count, plural, one {# composant est vérifié} other {# composants sont vérifiés}} comme un montage, pas comme un circuit, et donc absent de la netlist.",
+      "wiring": "Tableau de câblage (CSV)",
+      "wiringDetail": "Chaque net et ses broches, et la broche de carte utilisée par chaque composant branché.",
+      "project": "Projet (JSON)",
+      "projectDetail": "Tout le projet, à garder, partager ou rouvrir.",
+      "schema": "Format de fichier projet",
+      "schemaDetail": "Le schéma JSON qui décrit les fichiers projet.",
+      "schematicClosed": "Ouvrez le panneau du schéma pour l’exporter.",
+      "open": {
+        "label": "Ouvrir un projet",
+        "done": "{name} ouvert.",
+        "json": "Ce fichier n’est pas du JSON.",
+        "format": "Ce n’est pas un fichier projet Echidna.",
+        "version": "Ce fichier projet vient d’une autre version d’Echidna.",
+        "invalid": "Le fichier projet contient une valeur incorrecte à {path}.",
+        "parts": "Le projet utilise des composants absents de cette version d’Echidna : {parts}."
+      }
+    },
+    "output": {
+      "title": "Sortie",
+      "download": "Télécharger",
+      "copy": "Copier",
+      "emptyTitle": "Pas encore de sortie",
+      "copied": "Copié",
+      "wiring": "Câblage",
+      "needsBoard": "Le code est écrit pour une carte de développement. Ajoutez un ESP32, un Raspberry Pi ou un Arduino au projet et branchez-y des composants.",
+      "emptyDescription": "Partez d’une carte de développement et branchez-y des capteurs pour obtenir son code en C, C++, Go, Rust et Java.",
+      "startFromBoard": "Partir de {board}",
+      "table": {
+        "empty": "Rien n’est encore câblé.",
+        "slotsCaption": "Branché sur la carte",
+        "netsCaption": "Nets",
+        "part": "Composant",
+        "pin": "Broche",
+        "hostPin": "Broche de la carte",
+        "signal": "Signal",
+        "net": "Net",
+        "pins": "Broches"
+      }
     }
   },
   "Parts": {
@@ -1405,6 +1500,75 @@
     "bluetooth-le-radio": {
       "name": "Radio Bluetooth Low Energy",
       "summary": "Pièce générique ; valeurs estimées"
+    },
+    "ac-loads-cabin": {
+      "name": "Circuit de cabane : éclairage, box, ordinateur, petit réfrigérateur",
+      "summary": "300 W en marche, 700 W au démarrage"
+    },
+    "ac-loads-essentials": {
+      "name": "Circuit domestique essentiel : réfrigérateur, éclairage, Wi-Fi, TV, ventilateurs",
+      "summary": "650 W en marche, 1,5 kW au démarrage"
+    },
+    "ac-loads-whole-home": {
+      "name": "Toute la maison : avec lave-linge, pompe et micro-ondes",
+      "summary": "2,6 kW en marche, 5,5 kW au démarrage"
+    },
+    "buzzer-12v": {
+      "name": "Buzzer actif, 12 V",
+      "summary": "Sonne quand il est alimenté, 30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "Onduleur solaire hybride, 1 kW 12 V",
+      "summary": "Jusqu’à 500 W de PV sous 100 V, pointe de 2 kW"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "Onduleur solaire hybride, 3 kW 24 V",
+      "summary": "Jusqu’à 4 kW de PV sous 500 V, pointe de 6 kW"
+    },
+    "lamp-12v-5w": {
+      "name": "Lampe LED 12 V, 5 W",
+      "summary": "Pour un circuit d’éclairage 12 V"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "Batterie LiFePO4, 12 V 100 Ah",
+      "summary": "1,28 kWh, le BMS autorise 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "Batterie LiFePO4, 24 V 100 Ah",
+      "summary": "2,56 kWh, le BMS autorise 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "Batterie LiFePO4, 24 V 200 Ah",
+      "summary": "5,12 kWh, le BMS autorise 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "MOSFET de puissance niveau logique, IRLZ44N",
+      "summary": "Interrupteur côté masse, 55 V, 47 A, commandé en 3,3 V ou 5 V"
+    },
+    "pir-hc-sr501": {
+      "name": "Détecteur de mouvement PIR HC-SR501",
+      "summary": "Sortie à l’état haut au mouvement ; alimentation de 4,5 à 20 V",
+      "variantLabel": "Capteur",
+      "variants": {
+        "idle": "Aucun mouvement (sortie basse)",
+        "motion": "Mouvement (sortie haute)"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "Champ PV, 10 × 450 W en série",
+      "summary": "4,5 kW, 496 V à vide"
+    },
+    "pv-array-2x200w": {
+      "name": "Champ PV, 2 × 200 W en série",
+      "summary": "400 W, 48,6 V à vide"
+    },
+    "pv-array-6x450w": {
+      "name": "Champ PV, 6 × 450 W en série",
+      "summary": "2,7 kW, 298 V à vide"
+    },
+    "solar-wifi-monitor": {
+      "name": "Module Wi-Fi de supervision d’onduleur",
+      "summary": "Indique la production et la charge de la batterie, 1 W"
     }
   },
   "Builds": {

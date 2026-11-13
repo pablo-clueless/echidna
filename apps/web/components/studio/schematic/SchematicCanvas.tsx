@@ -23,6 +23,7 @@ import {
   routeWire,
   valueParam,
 } from "@/lib/schematic/symbols";
+import { hostLayers, type LayerLabel, placedBounds } from "@/lib/schematic/layers";
 import { deriveNets, paramValue, pinKey, samePin } from "@/lib/project/model";
 import { boundsOf, innerLabels, SymbolGlyph } from "./SymbolGlyph";
 import { useProjectStore } from "@/stores/project";
@@ -71,6 +72,7 @@ export const SchematicCanvas = () => {
   const components = useProjectStore((s) => s.components);
   const wires = useProjectStore((s) => s.wires);
   const schematic = useProjectStore((s) => s.schematic);
+  const slots = useProjectStore((s) => s.slots);
   const { addComponent, moveComponent, rotateComponent, removeComponent, removeWire, connect } =
     useProjectStore.getState();
   const selection = useStudioStore((s) => s.selection);
@@ -110,6 +112,47 @@ export const SchematicCanvas = () => {
     });
     return [...pins.map((p) => p.at), ...corners];
   }, [pins, components, schematic]);
+
+  /**
+   * A band behind each layer of every host's plugged-in parts, around where they are now, so moving a part out of
+   * its layer stretches the band rather than hiding which layer it belongs to.
+   */
+  const layerBands = useMemo(() => {
+    const specOf = (id: string) => partsById.get(components.find((c) => c.id === id)?.specId ?? "");
+    const hosts = new Set(Object.values(slots).map((at) => at.hostId));
+    return [...hosts].flatMap((hostId) => {
+      const host = specOf(hostId);
+      if (!host) return [];
+      const plugged = Object.entries(slots)
+        .filter(([, at]) => at.hostId === hostId)
+        .map(([id, at]) => ({ id, slotId: at.slotId }));
+      return hostLayers(host, plugged).bands.flatMap((band) => {
+        const boxes = band.ids.flatMap((id) => {
+          const at = schematic[id];
+          const spec = specOf(id);
+          return at && spec ? [{ at, ...placedBounds(spec, at.rotation) }] : [];
+        });
+        if (boxes.length === 0) return [];
+        return [
+          {
+            key: `${hostId}:${band.group}:${band.row}`,
+            label: band.label,
+            x: Math.min(...boxes.map((b) => b.at.x - b.w)) - 0.8,
+            y: Math.min(...boxes.map((b) => b.at.y - b.h)) - 1.4,
+            right: Math.max(...boxes.map((b) => b.at.x + b.w)) + 0.8,
+            bottom: Math.max(...boxes.map((b) => b.at.y + b.h)) + 0.6,
+          },
+        ];
+      });
+    });
+  }, [components, schematic, slots]);
+
+  const layerName = (label: LayerLabel) =>
+    label.key === "board"
+      ? t("layers.board", { board: label.board })
+      : label.key === "stacked"
+        ? t("layers.stacked", { layer: label.layer })
+        : t(`layers.${label.key}`);
 
   const worst = useMemo(() => {
     const map = new Map<string, { severity: Exclude<Severity, "pass">; estimated: boolean }>();
@@ -407,11 +450,35 @@ export const SchematicCanvas = () => {
       <rect width="100%" height="100%" fill="url(#schematic-grid)" />
 
       <g
+        data-schematic-content
         transform={transform}
         className="text-foreground"
         strokeLinecap="round"
         strokeLinejoin="round"
       >
+        {layerBands.map((b) => (
+          <g key={b.key} pointerEvents="none">
+            <rect
+              x={b.x * GRID}
+              y={b.y * GRID}
+              width={(b.right - b.x) * GRID}
+              height={(b.bottom - b.y) * GRID}
+              rx={8}
+              strokeWidth={1}
+              strokeDasharray="5 4"
+              className="fill-muted/40 stroke-border"
+            />
+            <text
+              x={(b.x + 0.4) * GRID}
+              y={(b.y - 0.35) * GRID}
+              fontSize={10}
+              className="fill-muted-foreground"
+            >
+              {layerName(b.label)}
+            </text>
+          </g>
+        ))}
+
         {wires.map((w) => {
           const a = pinAt.get(pinKey(w.a));
           const b = pinAt.get(pinKey(w.b));

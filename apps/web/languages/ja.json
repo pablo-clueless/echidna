@@ -404,6 +404,26 @@
       "pmicRail": {
         "name": "PMIC レールの電流予算",
         "explain": "ピーク時、この PMIC レールにつながる部品は、供給できる電流の {percent} を消費します。80% を超えるとレールが発熱して負荷で電圧が下がり、100% を超えると PMIC が遮断するか、電話が性能を落として再起動します。"
+      },
+      "pvVoltage": {
+        "name": "PV ストリング電圧",
+        "explain": "寒い朝、パネルストリングの開放電圧はチャージコントローラーの上限の {percent} に達します。90% を超えると余裕がほとんどなく、100% を超えるとコントローラーが壊れることがあります。直列のパネルを減らすと下がります。"
+      },
+      "pvPower": {
+        "name": "PV アレイ出力",
+        "explain": "アレイの定格出力はチャージコントローラーが使える電力の {percent} です。100% を少し超えるのは一般的で昼のピークが削られるだけですが、130% を超えると発電の多くが無駄になります。"
+      },
+      "inverterLoad": {
+        "name": "インバーター負荷",
+        "explain": "同時に動くすべての負荷がインバーターの連続定格の {percent} を消費します。80% を超えると高温になり、100% を超えると停止します。"
+      },
+      "inverterSurge": {
+        "name": "インバーターサージ",
+        "explain": "負荷を同時に起動するとインバーターのサージ定格の {percent} が必要です。100% を超えると、冷蔵庫やポンプなどのモーターの起動で停止することがあります。"
+      },
+      "batteryCurrent": {
+        "name": "バッテリー電流",
+        "explain": "全負荷時、インバーターはバッテリーの BMS が許す電流の {percent} を引き出します。80% を超えると発熱し、100% を超えると BMS が電源を遮断します。"
       }
     },
     "slots": {
@@ -435,7 +455,10 @@
         "radio": "無線",
         "imu": "モーションセンサー",
         "heart-rate": "心拍センサーのコネクタ",
-        "haptics": "振動モーターのコネクタ"
+        "haptics": "振動モーターのコネクタ",
+        "pv": "PV 入力",
+        "ac-out": "AC 出力",
+        "monitor": "モニターポート"
       },
       "protocols": {
         "i2c": "I²C",
@@ -488,7 +511,12 @@
         "wearable-radio": "ウェアラブル無線モジュール",
         "li-po-1s": "1 セル LiPo",
         "ppg": "光学式心拍センサー",
-        "haptic": "振動モータードライバー"
+        "haptic": "振動モータードライバー",
+        "pv-input": "PV 入力",
+        "battery-12v": "12 V バッテリー",
+        "battery-24v": "24 V バッテリー",
+        "ac-230v": "AC 230 V",
+        "inverter-wifi": "インバーター Wi-Fi ポート"
       },
       "slotLabel": "{host} の{slot}",
       "pluggedIn": "接続済み、{rail} から給電",
@@ -512,7 +540,12 @@
         "thrustToWeight": "重量 {actual}、モーターの最大推力 {limit}。",
         "escCurrent": "各モーターは最大 {actual}、ESC の定格は {limit}。",
         "batteryDischarge": "モーターは最大 {actual}、バッテリーの供給能力は {limit}。",
-        "pmicRail": "PMIC の{rail}レールの部品は最大 {actual} を消費し、レールは {limit} を供給します。"
+        "pmicRail": "PMIC の{rail}レールの部品は最大 {actual} を消費し、レールは {limit} を供給します。",
+        "pvVoltage": "寒い朝にストリングは {actual} に達します。コントローラーの上限は {limit} です。",
+        "pvPower": "アレイの出力は最大 {actual}、コントローラーが使えるのは {limit} です。",
+        "inverterLoad": "負荷は {actual} を消費し、インバーターの連続出力は {limit} です。",
+        "inverterSurge": "負荷の起動には {actual} が必要で、インバーターのサージ出力は {limit} です。",
+        "batteryCurrent": "インバーターはバッテリーから最大 {actual} を引き出し、BMS の許容は {limit} です。"
       },
       "railsTitle": "電源レール",
       "hostTitle": "スロット",
@@ -1405,6 +1438,75 @@
     "bluetooth-le-radio": {
       "name": "Bluetooth Low Energy 無線",
       "summary": "汎用部品。値は推定"
+    },
+    "ac-loads-cabin": {
+      "name": "小屋の回路：照明、ルーター、ノートPC、小型冷蔵庫",
+      "summary": "運転時 300 W、起動時 700 W"
+    },
+    "ac-loads-essentials": {
+      "name": "家庭の必須回路：冷蔵庫、照明、Wi-Fi、テレビ、扇風機",
+      "summary": "運転時 650 W、起動時 1.5 kW"
+    },
+    "ac-loads-whole-home": {
+      "name": "家全体：洗濯機、ポンプ、電子レンジを追加",
+      "summary": "運転時 2.6 kW、起動時 5.5 kW"
+    },
+    "buzzer-12v": {
+      "name": "アクティブブザー、12 V",
+      "summary": "通電で鳴る、30 mA"
+    },
+    "hybrid-inverter-1kw-12v": {
+      "name": "ハイブリッドソーラーインバーター、1 kW 12 V",
+      "summary": "PV 最大 500 W・100 V、サージ 2 kW"
+    },
+    "hybrid-inverter-3kw-24v": {
+      "name": "ハイブリッドソーラーインバーター、3 kW 24 V",
+      "summary": "PV 最大 4 kW・500 V、サージ 6 kW"
+    },
+    "lamp-12v-5w": {
+      "name": "12 V LED ランプ、5 W",
+      "summary": "12 V 照明回路用"
+    },
+    "lifepo4-12v-100ah": {
+      "name": "LiFePO4 バッテリー、12 V 100 Ah",
+      "summary": "1.28 kWh、BMS 許容 100 A"
+    },
+    "lifepo4-24v-100ah": {
+      "name": "LiFePO4 バッテリー、24 V 100 Ah",
+      "summary": "2.56 kWh、BMS 許容 100 A"
+    },
+    "lifepo4-24v-200ah": {
+      "name": "LiFePO4 バッテリー、24 V 200 Ah",
+      "summary": "5.12 kWh、BMS 許容 200 A"
+    },
+    "nmos-irlz44n": {
+      "name": "ロジックレベル パワー MOSFET、IRLZ44N",
+      "summary": "ローサイドスイッチ、55 V、47 A、3.3 V/5 V で駆動可"
+    },
+    "pir-hc-sr501": {
+      "name": "HC-SR501 PIR 人感センサー",
+      "summary": "動きを検知すると出力 High、電源 4.5〜20 V",
+      "variantLabel": "センサー",
+      "variants": {
+        "idle": "動きなし（出力 Low）",
+        "motion": "動きあり（出力 High）"
+      }
+    },
+    "pv-array-10x450w": {
+      "name": "PV アレイ、450 W × 10 直列",
+      "summary": "4.5 kW、開放電圧 496 V"
+    },
+    "pv-array-2x200w": {
+      "name": "PV アレイ、200 W × 2 直列",
+      "summary": "400 W、開放電圧 48.6 V"
+    },
+    "pv-array-6x450w": {
+      "name": "PV アレイ、450 W × 6 直列",
+      "summary": "2.7 kW、開放電圧 298 V"
+    },
+    "solar-wifi-monitor": {
+      "name": "インバーター Wi-Fi モニター",
+      "summary": "出力とバッテリー残量を通知、1 W"
     }
   },
   "Builds": {

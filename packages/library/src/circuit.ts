@@ -14,6 +14,7 @@ export const requiredParams: Record<string, readonly string[]> = {
   currentSource: ["current"],
   diode: ["saturationCurrent"],
   linearRegulator: ["outputVoltage"],
+  pirSensor: ["outputVoltage", "contactResistance", "closed"],
   npn: ["saturationCurrent", "forwardBeta"],
   pnp: ["saturationCurrent", "forwardBeta"],
   nmos: ["thresholdVoltage", "transconductance"],
@@ -37,6 +38,47 @@ export type CircuitBuild = {
   netNodes: Record<string, string>;
   /** Spec used for each solved component, by component ID, with its chosen variant applied. */
   specs: Record<string, ComponentSpec>;
+};
+
+/**
+ * A PIR motion sensor module, such as the HC-SR501: its own regulator makes the output's high level from the
+ * supply, and the output connects to it, through the output stage's resistance, while motion is detected. The
+ * regulator carries the part's ID, its in, out and ground matching the sensor's VCC, OUT and GND pins in order, so
+ * the part's ratings are checked against them; the output switch is internal.
+ * @param id - The component's ID.
+ * @param nodes - Solver nodes for the sensor's VCC, OUT and GND pins.
+ * @param spec - The sensor's spec, with its variant applied.
+ * @param overrides - Parameter overrides from the project.
+ * @returns The regulator and the output switch.
+ */
+const pirSensor = (
+  id: string,
+  nodes: string[],
+  spec: ComponentSpec,
+  overrides: Record<string, number> = {},
+): CircuitElement[] => {
+  const value = (key: string) => overrides[key] ?? spec.params[key]?.value;
+  const [vcc = "", out = "", gnd = ""] = nodes;
+  const high = `i:${id}/high`;
+  const dropout = value("dropoutVoltage");
+  const quiescent = value("quiescentCurrent");
+  return [
+    {
+      id,
+      nodes: [vcc, high, gnd],
+      kind: "linearRegulator",
+      outputVoltage: value("outputVoltage") ?? 0,
+      ...(dropout === undefined ? {} : { dropoutVoltage: dropout }),
+      ...(quiescent === undefined ? {} : { quiescentCurrent: quiescent }),
+    },
+    {
+      id: `${id}:output`,
+      nodes: [high, out],
+      kind: "switch",
+      contactResistance: value("contactResistance") ?? 0,
+      closed: value("closed") ?? 0,
+    },
+  ];
 };
 
 /**
@@ -107,6 +149,10 @@ export const toCircuit = (
       continue;
     }
     const nodes = spec.pins.map((pin) => node(pin.id));
+    if (spec.model === "pirSensor") {
+      elements.push(...pirSensor(c.id, nodes, spec, c.paramOverrides));
+      continue;
+    }
     const values = Object.fromEntries(Object.entries(spec.params).map(([k, v]) => [k, v.value]));
     elements.push({
       id: c.id,

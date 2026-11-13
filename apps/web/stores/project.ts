@@ -25,6 +25,7 @@ import {
 } from "@/lib/project/foundation";
 import { BOARD, clampBoardSize, clampToBoard, freeBoardSpot } from "@/lib/board/placement";
 import { seatOf, seatPlacement, slotConnections, slotOptions } from "@/lib/project/slots";
+import { arrangeLayers, hostLayers, placedBounds } from "@/lib/schematic/layers";
 import { moduleBounds, nextRotation } from "@/lib/schematic/symbols";
 import { regulatorExample } from "@/lib/project/example";
 import { footprints } from "@/lib/board/footprints";
@@ -95,6 +96,11 @@ type ProjectActions = {
   setVariant: (id: string, variant: string) => void;
   swapSpec: (id: string, specId: string) => void;
   placeOnBoard: (id: string, x: number, z: number) => void;
+  /**
+   * Turns a part a quarter turn clockwise on the board, seen from above. A module seated in a host's slot is held by
+   * the host, so the host turns instead, taking everything seated in it along.
+   */
+  rotateOnBoard: (id: string) => void;
   /** Resizes a PCB. A chassis's size is fixed, so it ignores this. */
   resizeBoard: (size: BoardSize) => void;
   setAmbientTemperature: (kelvin: number) => void;
@@ -114,7 +120,11 @@ type ProjectActions = {
   loadPreset: (hostSpecId: string) => void;
   /** Starts a new project from a reference build, such as the gaming desktop, with every module plugged in. */
   loadBuild: (buildId: string) => void;
+  /** Lays out everything plugged into each host in layers beside it in the schematic, as plugging it in does. */
+  arrangeSchematic: () => void;
   loadExample: () => void;
+  /** Replaces the open project with one read from a file. A PCB's size is clamped; a chassis keeps its fixed size. */
+  loadProject: (project: ProjectData) => void;
   clear: () => void;
 };
 
@@ -188,6 +198,35 @@ const reseat = (
     if (seated) board[part] = seatPlacement(host, seated.seat);
   }
   return board;
+};
+
+/**
+ * Lays everything plugged into a host out in layers beside it in the schematic, the host staying where it is. A
+ * part stacked on another draws above it, parts side by side on the board side by side.
+ */
+const layered = (
+  s: Pick<ProjectData, "components" | "schematic" | "slots">,
+  hostId: string,
+): ProjectData["schematic"] => {
+  const specOf = (id: string) => partsById.get(s.components.find((c) => c.id === id)?.specId ?? "");
+  const host = specOf(hostId);
+  const hostAt = s.schematic[hostId];
+  if (!host || !hostAt) return s.schematic;
+  const plugged = Object.entries(s.slots)
+    .filter(([part, at]) => at.hostId === hostId && s.schematic[part])
+    .map(([id, at]) => ({ id, slotId: at.slotId }));
+  const { cells } = hostLayers(host, plugged);
+  const bounds = (id: string) => {
+    const spec = specOf(id);
+    return spec ? placedBounds(spec, s.schematic[id]?.rotation ?? 0) : { w: 2, h: 1 };
+  };
+  const placed = arrangeLayers({ at: hostAt, ...bounds(hostId) }, cells, bounds);
+  const schematic = { ...s.schematic };
+  for (const [id, at] of placed) {
+    const current = schematic[id];
+    if (current) schematic[id] = { ...current, ...at };
+  }
+  return schematic;
 };
 
 let wireCount = 0;
@@ -318,6 +357,19 @@ export const useProjectStore = create<ProjectState>()(
           return { board: reseat({ ...s, board: { ...s.board, [id]: { ...current, x, z } } }, id) };
         }),
 
+      rotateOnBoard: (id) =>
+        set((s) => {
+          const held = seatOf(s, partsById, id)?.hostId ?? id;
+          const current = s.board[held];
+          if (!current) return s;
+          const turned = {
+            ...current,
+            ...clampToBoard(current.x, current.z, s.boardSize),
+            rotation: nextRotation(current.rotation),
+          };
+          return { board: reseat({ ...s, board: { ...s.board, [held]: turned } }, held) };
+        }),
+
       resizeBoard: (size) =>
         set((s) => {
           if (s.foundation !== "pcb") return s;
@@ -364,8 +416,14 @@ export const useProjectStore = create<ProjectState>()(
             ...freed.slots,
             [partId]: { hostId, slotId, ...(railId ? { railId } : {}), wireIds },
           };
-          // A module with a seat in the slot moves into it, such as a graphics card into its PCIe slot.
-          return { wires, slots, board: reseat({ ...state, slots }, hostId) };
+          // A module with a seat in the slot moves into it, such as a graphics card into its PCIe slot, and in the
+          // schematic takes its place in the host's layers.
+          return {
+            wires,
+            slots,
+            board: reseat({ ...state, slots }, hostId),
+            schematic: layered({ ...state, slots }, hostId),
+          };
         });
         return option.fit;
       },
@@ -394,9 +452,8 @@ export const useProjectStore = create<ProjectState>()(
         // A build goes in its device's chassis, never on a PCB.
         const foundation = foundationForDevice(build.deviceType);
         set({ ...empty(), foundation, boardSize: sizeOf(foundation) });
-        // In the schematic the host's box sits on the left and its modules stack in columns beside it, each box
-        // sized by its part, left edges lined up, with room above each for its designator. In the chassis, each
-        // module is seated in its slot.
+        // In the schematic the host's box sits on the left, top-left on the grid, and plugging each module in lays
+        // it out in layers beside it. In the chassis, each module is seated in its slot.
         const hostSpec = partsById.get(build.hostId);
         const host = hostSpec ? moduleBounds(hostSpec) : { w: 4, h: 4 };
         const hostId = get().addComponent(build.hostId, {
@@ -404,28 +461,30 @@ export const useProjectStore = create<ProjectState>()(
           y: 2 + Math.ceil(host.h),
         });
         if (!hostId) return;
-        // Columns wrap at about the host's height, so a build with many modules stays wide rather than tall.
-        const height = Math.max(Math.ceil(host.h) * 2 + 4, 24);
-        let column = 2 + Math.ceil(host.w) * 2 + 4;
-        let widest = 0;
-        let top = 2;
         for (const [slotId, specId] of Object.entries(build.modules)) {
-          const spec = partsById.get(specId);
-          const box = spec ? moduleBounds(spec) : { w: 4, h: 1 };
-          if (top > 2 && top + Math.ceil(box.h) * 2 > height) {
-            column += widest * 2 + 4;
-            widest = 0;
-            top = 2;
-          }
-          widest = Math.max(widest, Math.ceil(box.w));
-          const at = { x: column + Math.ceil(box.w), y: top + Math.ceil(box.h) };
-          top = at.y + Math.ceil(box.h) + 2;
-          const id = get().addComponent(specId, at);
+          const id = get().addComponent(specId, { x: 0, y: 0 });
           if (id) get().plugIn(id, hostId, slotId);
         }
       },
 
+      arrangeSchematic: () =>
+        set((s) => {
+          const hosts = new Set(Object.values(s.slots).map((at) => at.hostId));
+          let schematic = s.schematic;
+          for (const hostId of hosts) schematic = layered({ ...s, schematic }, hostId);
+          return { schematic };
+        }),
+
       loadExample: () => set(regulatorExample()),
+
+      loadProject: (project) =>
+        set({
+          ...project,
+          boardSize:
+            project.foundation === "pcb"
+              ? clampBoardSize(project.boardSize)
+              : sizeOf(project.foundation),
+        }),
 
       clear: () => set(empty()),
     }),

@@ -1,0 +1,84 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "pir-hc-sr501",
+  "name": "HC-SR501 PIR motion sensor",
+  "kind": "sensor",
+  "deviceTypes": ["iot"],
+  "pins": [
+    {
+      "id": "vcc",
+      "name": "VCC"
+    },
+    {
+      "id": "out",
+      "name": "OUT"
+    },
+    {
+      "id": "gnd",
+      "name": "GND"
+    }
+  ],
+  "params": {
+    "outputVoltage": {
+      "value": 3.3,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "HC-SR501 PIR motion sensor module datasheet: output high level 3.3 V, from the module's 7133 regulator"
+    },
+    "dropoutVoltage": {
+      "value": 1.2,
+      "unit": "V",
+      "source": "estimated",
+      "reference": "HC-SR501 PIR motion sensor module datasheet gives a 4.5 V minimum supply; the output is assumed to sag below that"
+    },
+    "quiescentCurrent": {
+      "value": 5e-5,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "HC-SR501 PIR motion sensor module datasheet: static current under 50 µA"
+    },
+    "contactResistance": {
+      "value": 1000,
+      "unit": "Ω",
+      "source": "estimated",
+      "reference": "Output stage modelled as 1 kΩ to the 3.3 V rail when triggered; the module drives a few milliamps"
+    },
+    "closed": {
+      "value": 0,
+      "unit": "1",
+      "source": "datasheet",
+      "reference": "Output: 1 while motion is detected, 0 when idle"
+    }
+  },
+  "ratings": {
+    "maxVoltage": {
+      "value": 20,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "HC-SR501 PIR motion sensor module datasheet: supply 4.5 V to 20 V DC"
+    }
+  },
+  "ratingPins": {
+    "maxVoltage": ["vcc", "gnd"]
+  },
+  "interfaces": [],
+  "variants": [
+    {
+      "id": "idle"
+    },
+    {
+      "id": "motion",
+      "params": {
+        "closed": {
+          "value": 1,
+          "unit": "1",
+          "source": "datasheet",
+          "reference": "Output: 1 while motion is detected, 0 when idle"
+        }
+      }
+    }
+  ],
+  "model": "pirSensor",
+  "footprintId": "header/hc-sr501",
+  "meshUrl": "generic/pin-header"
+}

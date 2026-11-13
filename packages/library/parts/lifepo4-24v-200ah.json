@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "lifepo4-24v-200ah",
+  "name": "LiFePO4 battery, 24 V 200 Ah",
+  "kind": "solarBattery",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "battery-24v"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "voltage": {
+      "value": 25.6,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Typical 25.6 V 200 Ah LiFePO4 battery with a 200 A BMS: nominal 25.6 V"
+    },
+    "energy": {
+      "value": 18432000,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "Typical 25.6 V 200 Ah LiFePO4 battery with a 200 A BMS: 5120 Wh"
+    },
+    "maxCurrent": {
+      "value": 200,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "Typical 25.6 V 200 Ah LiFePO4 battery with a 200 A BMS: continuous discharge 200 A"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/solarBatteryLarge",
+  "meshUrl": "generic/module"
+}

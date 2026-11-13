@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "lifepo4-12v-100ah",
+  "name": "LiFePO4 battery, 12 V 100 Ah",
+  "kind": "solarBattery",
+  "deviceTypes": ["solar"],
+  "pins": [],
+  "params": {},
+  "ratings": {},
+  "interfaces": [
+    {
+      "protocol": "battery-12v"
+    }
+  ],
+  "module": {
+    "role": "battery",
+    "voltage": {
+      "value": 12.8,
+      "unit": "V",
+      "source": "datasheet",
+      "reference": "Typical 12.8 V 100 Ah LiFePO4 battery with a 100 A BMS: nominal 12.8 V"
+    },
+    "energy": {
+      "value": 4608000,
+      "unit": "J",
+      "source": "datasheet",
+      "reference": "Typical 12.8 V 100 Ah LiFePO4 battery with a 100 A BMS: 1280 Wh"
+    },
+    "maxCurrent": {
+      "value": 100,
+      "unit": "A",
+      "source": "datasheet",
+      "reference": "Typical 12.8 V 100 Ah LiFePO4 battery with a 100 A BMS: continuous discharge 100 A"
+    }
+  },
+  "model": "module",
+  "footprintId": "module/solarBatterySmall",
+  "meshUrl": "generic/module"
+}

@@ -1,12 +1,13 @@
 "use client";
 
-import { MousePointerClick, Package, Spline } from "lucide-react";
+import { Code2, MousePointerClick, Package, Spline } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { ValidatorDrawer } from "./validator/ValidatorDrawer";
+import { CodeOutputPanel } from "./CodeOutputPanel";
 import { InspectorPanel } from "./InspectorPanel";
 import { LibrarySidebar } from "./LibrarySidebar";
 import { SchematicPanel } from "./SchematicPanel";
@@ -14,12 +15,13 @@ import { Viewport } from "./Viewport";
 import { TopBar } from "./TopBar";
 import { cn } from "@/lib/utils";
 
-type Sheet = "library" | "schematic" | "inspector";
+type Sheet = "library" | "schematic" | "inspector" | "output";
 
 const sheets: { key: Sheet; icon: ReactNode; panel: ReactNode }[] = [
   { key: "library", icon: <Package />, panel: <LibrarySidebar /> },
   { key: "schematic", icon: <Spline />, panel: <SchematicPanel /> },
   { key: "inspector", icon: <MousePointerClick />, panel: <InspectorPanel /> },
+  { key: "output", icon: <Code2 />, panel: <CodeOutputPanel /> },
 ];
 
 export const MobileStudio = () => {
@@ -38,7 +40,7 @@ export const MobileStudio = () => {
 
       <nav
         aria-label={t("panels")}
-        className="bg-background grid shrink-0 grid-cols-3 border-t pb-[env(safe-area-inset-bottom)]"
+        className="bg-background grid shrink-0 grid-cols-4 border-t pb-[env(safe-area-inset-bottom)]"
       >
         {sheets.map(({ key, icon }) => (
           <button

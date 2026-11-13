@@ -12,6 +12,14 @@ export type CameraCommands = {
   angled: () => void;
   /** A three-quarter view from below, onto the solder side. */
   underside: () => void;
+  /** Orbit the camera a step round the board to the left, so the board appears to turn clockwise. */
+  orbitLeft: () => void;
+  /** Orbit the camera a step round the board to the right. */
+  orbitRight: () => void;
+  /** Tilt the camera a step up, looking more steeply down onto the board. */
+  tiltUp: () => void;
+  /** Tilt the camera a step down, towards the board's edge and then its underside. */
+  tiltDown: () => void;
   /** Slide the view by a fraction of the current viewing distance; `y` is up the screen. */
   pan: (x: number, y: number) => void;
 };
