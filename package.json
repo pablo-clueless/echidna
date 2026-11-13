@@ -6,8 +6,8 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "node init && turbo run dev",
-    "build": "node init && turbo run build",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
