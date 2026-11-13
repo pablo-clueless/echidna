@@ -11,7 +11,7 @@
     "./wasm": "./wasm/solver.js"
   },
   "scripts": {
-    "build": "node init && node scripts/build-wasm.mjs",
+    "build": "node scripts/build-wasm.mjs",
     "typecheck": "tsc",
     "test": "vitest run"
   },
