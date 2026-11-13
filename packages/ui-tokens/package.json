@@ -9,7 +9,7 @@
     "./tokens.css": "./dist/tokens.css"
   },
   "scripts": {
-    "build": "node init && tsx scripts/build-css.ts",
+    "build": "tsx scripts/build-css.ts",
     "typecheck": "tsc",
     "test": "vitest run"
   }
