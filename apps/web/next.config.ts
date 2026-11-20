@@ -5,6 +5,9 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    agentUpgrade: "security",
+  },
   transpilePackages: [
     "@echidna/core",
     "@echidna/library",
