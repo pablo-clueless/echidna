@@ -1,14 +1,14 @@
 import type { NextRequest } from "next/server";
 import { toFile } from "@anthropic-ai/sdk";
 
-import { anthropic, errorCode, errorResponse } from "@/lib/assistant/server";
-import { assistantOpen } from "@/lib/assistant/gate";
 import {
   classifyAttachment,
   MAX_ATTACHMENT_BYTES,
   MAX_IMAGE_BYTES,
   type UploadedAttachment,
 } from "@/lib/assistant/protocol";
+import { anthropic, errorCode, errorResponse } from "@/lib/assistant/server";
+import { assistantOpen } from "@/lib/assistant/gate";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
