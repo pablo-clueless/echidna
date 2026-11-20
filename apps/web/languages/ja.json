@@ -194,7 +194,12 @@
         "fit": "基板全体を表示",
         "top": "上面図",
         "angled": "3D ビュー",
-        "underside": "裏面ビュー"
+        "underside": "裏面ビュー",
+        "orbitLeft": "左に回り込む",
+        "orbitRight": "右に回り込む",
+        "tiltUp": "上に傾ける",
+        "tiltDown": "下に傾ける",
+        "turnPart": "選択した部品を回転"
       },
       "overlays": {
         "label": "オーバーレイ",
@@ -230,6 +235,38 @@
         "drone": "ドローン",
         "smartphone": "スマートフォン",
         "wearable": "ウェアラブル"
+      },
+      "clear": "回路図をクリア",
+      "clearConfirm": "もう一度クリックするとすべて消去します",
+      "arrange": "レイヤーで整列",
+      "layers": {
+        "onBoard": "基板上",
+        "board": "{board, select, main {メイン基板} upper {上段の基板（インターポーザー上）} other {基板 {board}}}",
+        "stacked": "レイヤー {layer}（下のレイヤーに積層）",
+        "flex": "基板外（フレキシブルケーブル接続）",
+        "header": "ヘッダーに接続"
+      }
+    },
+    "output": {
+      "title": "出力",
+      "download": "ダウンロード",
+      "copy": "コピー",
+      "emptyTitle": "出力はまだありません",
+      "emptyDescription": "開発ボードから始めてセンサーを接続すると、C、C++、Go、Rust、Java のコードが得られます。",
+      "copied": "コピーしました",
+      "wiring": "配線",
+      "needsBoard": "コードは開発ボード向けに生成されます。ESP32、Raspberry Pi、Arduino のいずれかをプロジェクトに追加し、部品を接続してください。",
+      "startFromBoard": "{board} から始める",
+      "table": {
+        "empty": "まだ何も配線されていません。",
+        "slotsCaption": "基板に接続",
+        "netsCaption": "ネット",
+        "part": "部品",
+        "pin": "ピン",
+        "hostPin": "基板のピン",
+        "signal": "信号",
+        "net": "ネット",
+        "pins": "ピン"
       }
     },
     "inspector": {
@@ -653,7 +690,32 @@
       "label": "エクスポート",
       "pcb": "基板のガーバー、ドリルファイル、部品表、実装座標ファイルを zip でダウンロードします。",
       "modules": "構成の部品表をダウンロードします。",
-      "unrouted": "{count} 本の接続にまだ銅箔がありません。zip 内の README を参照してください。"
+      "unrouted": "{count} 本の接続にまだ銅箔がありません。zip 内の README を参照してください。",
+      "fabrication": "製造用ファイル",
+      "schematicGroup": "回路図と回路",
+      "svg": "回路図（SVG）",
+      "svgDetail": "画面に表示されているとおりの回路図のベクター画像。",
+      "pdf": "回路図（PDF）",
+      "pdfDetail": "A4 1 ページに収めた、すぐに印刷できる回路図。",
+      "spice": "SPICE ネットリスト",
+      "spiceDetail": "Echidna が解いたとおりの回路。ngspice や LTspice 用。",
+      "spiceSkipped": "{count} 個の部品は回路ではなく構成としてチェックされるため、ネットリストに含まれません。",
+      "wiring": "配線表（CSV）",
+      "wiringDetail": "各ネットとそのピン、および接続された各部品が使う基板のピン。",
+      "project": "プロジェクト（JSON）",
+      "projectDetail": "プロジェクト全体。保存、共有、再読み込みに。",
+      "schema": "プロジェクトファイル形式",
+      "schemaDetail": "プロジェクトファイルを記述する JSON スキーマ。",
+      "schematicClosed": "エクスポートするには回路図パネルを開いてください。",
+      "open": {
+        "label": "プロジェクトを開く",
+        "done": "{name} を開きました。",
+        "json": "このファイルは JSON ではありません。",
+        "format": "Echidna のプロジェクトファイルではありません。",
+        "version": "このプロジェクトファイルは別のバージョンの Echidna のものです。",
+        "invalid": "プロジェクトファイルの {path} に不正な値があります。",
+        "parts": "このプロジェクトは、このバージョンの Echidna にない部品を使っています：{parts}。"
+      }
     },
     "ai-assistant": {
       "title": "AI アシスタント",
@@ -729,6 +791,11 @@
         "size": "ファイルが大きすぎます。画像は 5 MB、その他は 20 MB までです。",
         "count": "一度に添付できるのは {count} 個までです。"
       }
+    },
+    "sidebar": {
+      "title": "サイドバー",
+      "library": "部品",
+      "assistant": "AI アシスタント"
     }
   },
   "Parts": {

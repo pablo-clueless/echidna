@@ -42,7 +42,7 @@ type Drag =
 type PinHit = { ref: PinRef; at: Point };
 
 const PIN_HIT = 0.6;
-const MIN_SCALE = 0.4;
+const MIN_SCALE = 0.15;
 const MAX_SCALE = 3;
 const FIT_MAX_SCALE = 1.6;
 

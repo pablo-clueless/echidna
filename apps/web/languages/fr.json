@@ -791,6 +791,11 @@
         "size": "Ce fichier est trop volumineux : 5 Mo maximum pour les images, 20 Mo pour les autres fichiers.",
         "count": "Vous pouvez joindre jusqu’à {count} fichiers à la fois."
       }
+    },
+    "sidebar": {
+      "title": "Barre latérale",
+      "library": "Composants",
+      "assistant": "Assistant IA"
     }
   },
   "Parts": {

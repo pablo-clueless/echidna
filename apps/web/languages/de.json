@@ -194,7 +194,12 @@
         "fit": "Platine einpassen",
         "top": "Draufsicht",
         "angled": "3D-Ansicht",
-        "underside": "Unteransicht"
+        "underside": "Unteransicht",
+        "orbitLeft": "Nach links kreisen",
+        "orbitRight": "Nach rechts kreisen",
+        "tiltUp": "Nach oben kippen",
+        "tiltDown": "Nach unten kippen",
+        "turnPart": "Ausgewähltes Bauteil drehen"
       },
       "overlays": {
         "label": "Überlagerungen",
@@ -230,6 +235,38 @@
         "drone": "Drohnen",
         "smartphone": "Smartphones",
         "wearable": "Wearables"
+      },
+      "clear": "Schaltplan leeren",
+      "clearConfirm": "Erneut klicken, um alles zu löschen",
+      "arrange": "In Ebenen anordnen",
+      "layers": {
+        "onBoard": "Auf der Platine",
+        "board": "{board, select, main {Hauptplatine} upper {Obere Platine, auf dem Interposer} other {Platine {board}}}",
+        "stacked": "Ebene {layer}, auf die darunter gestapelt",
+        "flex": "Neben der Platine, an Flexkabeln",
+        "header": "In die Stiftleisten gesteckt"
+      }
+    },
+    "output": {
+      "title": "Ausgabe",
+      "download": "Herunterladen",
+      "copy": "Kopieren",
+      "emptyTitle": "Noch keine Ausgabe",
+      "emptyDescription": "Beginne mit einem Entwicklungsboard und stecke Sensoren daran, um Code dafür in C, C++, Go, Rust und Java zu erhalten.",
+      "copied": "Kopiert",
+      "wiring": "Verdrahtung",
+      "needsBoard": "Code wird für ein Entwicklungsboard geschrieben. Füge dem Projekt einen ESP32, Raspberry Pi oder Arduino hinzu und stecke Bauteile daran.",
+      "startFromBoard": "Mit {board} beginnen",
+      "table": {
+        "empty": "Noch ist nichts verdrahtet.",
+        "slotsCaption": "An die Platine gesteckt",
+        "netsCaption": "Netze",
+        "part": "Bauteil",
+        "pin": "Pin",
+        "hostPin": "Platinen-Pin",
+        "signal": "Signal",
+        "net": "Netz",
+        "pins": "Pins"
       }
     },
     "inspector": {
@@ -653,7 +690,32 @@
       "label": "Exportieren",
       "pcb": "Gerber-Dateien, Bohrdatei, Stückliste und Bestückungsdatei der Platine als Zip herunterladen.",
       "modules": "Die Stückliste des Builds herunterladen.",
-      "unrouted": "{count, plural, one {# Verbindung hat} other {# Verbindungen haben}} noch kein Kupfer: siehe README im Zip."
+      "unrouted": "{count, plural, one {# Verbindung hat} other {# Verbindungen haben}} noch kein Kupfer: siehe README im Zip.",
+      "fabrication": "Fertigungsdateien",
+      "schematicGroup": "Schaltplan und Schaltung",
+      "svg": "Schaltplan (SVG)",
+      "svgDetail": "Der Schaltplan als Vektorgrafik, wie er auf dem Bildschirm aussieht.",
+      "pdf": "Schaltplan (PDF)",
+      "pdfDetail": "Der Schaltplan auf einer A4-Seite, druckfertig.",
+      "spice": "SPICE-Netzliste",
+      "spiceDetail": "Die Schaltung, wie Echidna sie berechnet, für ngspice oder LTspice.",
+      "spiceSkipped": "{count, plural, one {# Bauteil wird} other {# Bauteile werden}} als Build geprüft, nicht als Schaltung, und fehlen daher in der Netzliste.",
+      "wiring": "Verdrahtungstabelle (CSV)",
+      "wiringDetail": "Jedes Netz mit seinen Pins und welchen Platinen-Pin jedes gesteckte Bauteil nutzt.",
+      "project": "Projekt (JSON)",
+      "projectDetail": "Das ganze Projekt, zum Aufbewahren, Teilen oder erneuten Öffnen.",
+      "schema": "Projektdateiformat",
+      "schemaDetail": "Das JSON-Schema, das Projektdateien beschreibt.",
+      "schematicClosed": "Öffne den Schaltplan-Bereich, um ihn zu exportieren.",
+      "open": {
+        "label": "Projekt öffnen",
+        "done": "{name} geöffnet.",
+        "json": "Diese Datei ist kein JSON.",
+        "format": "Das ist keine Echidna-Projektdatei.",
+        "version": "Diese Projektdatei stammt aus einer anderen Version von Echidna.",
+        "invalid": "Die Projektdatei hat einen ungültigen Wert bei {path}.",
+        "parts": "Das Projekt verwendet Bauteile, die diese Version von Echidna nicht hat: {parts}."
+      }
     },
     "ai-assistant": {
       "title": "KI-Assistent",
@@ -729,6 +791,11 @@
         "size": "Die Datei ist zu groß: Bilder bis 5 MB, andere Dateien bis 20 MB.",
         "count": "Du kannst bis zu {count} Dateien auf einmal anhängen."
       }
+    },
+    "sidebar": {
+      "title": "Seitenleiste",
+      "library": "Bauteile",
+      "assistant": "KI-Assistent"
     }
   },
   "Parts": {

@@ -122,104 +122,101 @@ export const LibrarySidebar = ({ tab }: Props) => {
     .filter((c) => c.parts.length > 0);
 
   return (
-    <TabPanel
-      aria-label={t("title")}
-      className="text-sidebar-foreground flex h-full flex-col"
-      tab={tab}
-      value="library"
-    >
-      <div className="p-2">
-        <InputGroup className="bg-background h-8">
-          <InputGroupAddon>
-            <Search />
-          </InputGroupAddon>
-          <InputGroupInput
-            type="search"
-            placeholder={t("search")}
-            aria-label={t("search")}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </InputGroup>
-      </div>
-      {groups.length === 0 ? (
-        <PanelEmpty
-          icon={<Package />}
-          title={t("noMatchTitle")}
-          description={t("noMatchDescription")}
-        />
-      ) : (
-        <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
-          {groups.map((group) => (
-            <Collapsible
-              key={group.key}
-              asChild
-              // Searching shows every match, whatever the user has collapsed.
-              open={needle ? true : !collapsed.includes(group.key)}
-              onOpenChange={(open) => setCategoryOpen(group.key, open)}
-            >
-              <section aria-labelledby={`library-${group.key}`} className="mt-2 first:mt-0">
-                <h3 id={`library-${group.key}`}>
-                  <CollapsibleTrigger
-                    disabled={!!needle}
-                    className="group text-muted-foreground hover:text-sidebar-foreground focus-visible:ring-ring disabled:hover:text-muted-foreground flex w-full items-center gap-1 rounded-md px-1 py-1.5 text-xs font-medium outline-none focus-visible:ring-2"
-                  >
-                    <ChevronRight
-                      aria-hidden
-                      className="size-3.5 shrink-0 transition-transform group-data-[state=open]:rotate-90 motion-reduce:transition-none"
-                    />
-                    <span className="flex-1 text-left">{t(`categories.${group.key}`)}</span>
-                    <span className="tabular-nums">{group.parts.length}</span>
-                  </CollapsibleTrigger>
-                </h3>
-                <CollapsibleContent asChild>
-                  <ul className="flex flex-col gap-0.5">
-                    {group.parts.map((p) => {
-                      const fit = fits(p);
-                      return (
-                        <li key={p.id}>
-                          <button
-                            type="button"
-                            draggable={fit}
-                            aria-disabled={!fit}
-                            onDragStart={(e) => {
-                              e.dataTransfer.setData(PART_MIME, p.id);
-                              e.dataTransfer.effectAllowed = "copy";
-                            }}
-                            onClick={() => {
-                              if (fit) add(p.id);
-                            }}
-                            title={fit ? t("addHint") : undefined}
-                            className="hover:bg-sidebar-accent focus-visible:ring-ring flex w-full cursor-grab items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left text-sm outline-none focus-visible:ring-2 active:cursor-grabbing aria-disabled:cursor-not-allowed aria-disabled:opacity-60 aria-disabled:hover:bg-transparent"
-                          >
-                            <PartIcon spec={p} />
-                            <span className="min-w-0 flex-1">
-                              <span className="block truncate">
-                                {tParts(`${partKey(p.id)}.name`)}
-                              </span>
-                              <span
-                                className={
-                                  fit
-                                    ? "text-muted-foreground block truncate text-xs"
-                                    : "text-muted-foreground block text-xs"
-                                }
-                              >
-                                {fit
-                                  ? tParts(`${partKey(p.id)}.summary`)
-                                  : tFoundation(`refused.${foundationsFor(p)[0] ?? "pcb"}`)}
-                              </span>
-                            </span>
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </CollapsibleContent>
-              </section>
-            </Collapsible>
-          ))}
+    <TabPanel className="min-h-0 flex-1" tab={tab} value="library">
+      <aside aria-label={t("title")} className="flex h-full flex-col">
+        <div className="p-2">
+          <InputGroup className="bg-background h-8">
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+            <InputGroupInput
+              type="search"
+              placeholder={t("search")}
+              aria-label={t("search")}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </InputGroup>
         </div>
-      )}
+        {groups.length === 0 ? (
+          <PanelEmpty
+            icon={<Package />}
+            title={t("noMatchTitle")}
+            description={t("noMatchDescription")}
+          />
+        ) : (
+          <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+            {groups.map((group) => (
+              <Collapsible
+                key={group.key}
+                asChild
+                // Searching shows every match, whatever the user has collapsed.
+                open={needle ? true : !collapsed.includes(group.key)}
+                onOpenChange={(open) => setCategoryOpen(group.key, open)}
+              >
+                <section aria-labelledby={`library-${group.key}`} className="mt-2 first:mt-0">
+                  <h3 id={`library-${group.key}`}>
+                    <CollapsibleTrigger
+                      disabled={!!needle}
+                      className="group text-muted-foreground hover:text-sidebar-foreground focus-visible:ring-ring disabled:hover:text-muted-foreground flex w-full items-center gap-1 rounded-md px-1 py-1.5 text-xs font-medium outline-none focus-visible:ring-2"
+                    >
+                      <ChevronRight
+                        aria-hidden
+                        className="size-3.5 shrink-0 transition-transform group-data-[state=open]:rotate-90 motion-reduce:transition-none"
+                      />
+                      <span className="flex-1 text-left">{t(`categories.${group.key}`)}</span>
+                      <span className="tabular-nums">{group.parts.length}</span>
+                    </CollapsibleTrigger>
+                  </h3>
+                  <CollapsibleContent asChild>
+                    <ul className="flex flex-col gap-0.5">
+                      {group.parts.map((p) => {
+                        const fit = fits(p);
+                        return (
+                          <li key={p.id}>
+                            <button
+                              type="button"
+                              draggable={fit}
+                              aria-disabled={!fit}
+                              onDragStart={(e) => {
+                                e.dataTransfer.setData(PART_MIME, p.id);
+                                e.dataTransfer.effectAllowed = "copy";
+                              }}
+                              onClick={() => {
+                                if (fit) add(p.id);
+                              }}
+                              title={fit ? t("addHint") : undefined}
+                              className="hover:bg-sidebar-accent focus-visible:ring-ring flex w-full cursor-grab items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left text-sm outline-none focus-visible:ring-2 active:cursor-grabbing aria-disabled:cursor-not-allowed aria-disabled:opacity-60 aria-disabled:hover:bg-transparent"
+                            >
+                              <PartIcon spec={p} />
+                              <span className="min-w-0 flex-1">
+                                <span className="block truncate">
+                                  {tParts(`${partKey(p.id)}.name`)}
+                                </span>
+                                <span
+                                  className={
+                                    fit
+                                      ? "text-muted-foreground block truncate text-xs"
+                                      : "text-muted-foreground block text-xs"
+                                  }
+                                >
+                                  {fit
+                                    ? tParts(`${partKey(p.id)}.summary`)
+                                    : tFoundation(`refused.${foundationsFor(p)[0] ?? "pcb"}`)}
+                                </span>
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </CollapsibleContent>
+                </section>
+              </Collapsible>
+            ))}
+          </div>
+        )}
+      </aside>
     </TabPanel>
   );
 };

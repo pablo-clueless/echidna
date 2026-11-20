@@ -794,8 +794,8 @@
     },
     "sidebar": {
       "title": "Sidebar",
-      "ai-sssistant": "AI Assistant",
-      "library": "Library"
+      "library": "Components",
+      "assistant": "AI Assistant"
     }
   },
   "Parts": {

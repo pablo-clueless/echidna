@@ -7,32 +7,44 @@ import { cn } from "cn";
 import { LibrarySidebar } from "./LibrarySidebar";
 import { AiAssistant } from "./AiAssistant";
 
+const MODES = ["library", "ai-assistant"] as const;
+
+type Mode = (typeof MODES)[number];
+
+/** The studio's left sidebar: the parts library and the AI assistant, one at a time behind tabs. */
 export const Sidebar = () => {
   const t = useTranslations("Studio.sidebar");
-  const MODES = [
-    { label: t("library"), value: "library" },
-    { label: t("ai-sssistant"), value: "ai-assistant" },
-  ];
-  const [currentMode, setCurrentMode] = useState("library");
+  const [mode, setMode] = useState<Mode>("library");
+  const label = (m: Mode) => (m === "library" ? t("library") : t("assistant"));
 
   return (
-    <aside aria-label={t("title")} className="text-sidebar-foreground flex h-full flex-col">
-      <div className="flex h-10 shrink-0 items-center gap-2 divide-x border-b px-3">
-        {MODES.map((mode) => (
+    <div className="bg-sidebar text-sidebar-foreground flex h-full flex-col">
+      <div
+        aria-label={t("title")}
+        className="flex h-10 shrink-0 items-stretch divide-x border-b"
+        role="tablist"
+      >
+        {MODES.map((m) => (
           <button
+            aria-controls={`tabpanel-${m}`}
+            aria-selected={mode === m}
             className={cn(
-              "h-full flex-1 text-sm font-medium",
-              currentMode === mode.value ? "text-primary" : "",
+              "focus-visible:ring-ring flex-1 px-3 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-inset",
+              mode === m ? "text-primary" : "text-muted-foreground hover:text-sidebar-foreground",
             )}
-            key={mode.value}
-            onClick={() => setCurrentMode(mode.value)}
+            id={`tab-${m}`}
+            key={m}
+            onClick={() => setMode(m)}
+            role="tab"
+            tabIndex={mode === m ? 0 : -1}
+            type="button"
           >
-            {mode.label}
+            {label(m)}
           </button>
         ))}
       </div>
-      <LibrarySidebar tab={currentMode} />
-      <AiAssistant tab={currentMode} />
-    </aside>
+      <LibrarySidebar tab={mode} />
+      <AiAssistant tab={mode} />
+    </div>
   );
 };

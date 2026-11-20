@@ -507,28 +507,24 @@ export const AiAssistant = ({ tab }: Props) => {
   const hasEntries = useAssistantStore((s) => s.entries.length > 0);
 
   return (
-    <TabPanel
-      aria-label={t("title")}
-      className="text-sidebar-foreground min-h-0 flex-1"
-      innerClassName="flex flex-col gap-2 p-2"
-      tab={tab}
-      value="ai-assistant"
-    >
-      <div className="flex shrink-0 items-center justify-between">
-        <h2 className="text-xs font-medium">{t("title")}</h2>
-        <Button
-          disabled={!hasEntries}
-          onClick={reset}
-          size="xs"
-          title={t("newChat")}
-          variant="ghost"
-        >
-          <SquarePen />
-          {t("newChat")}
-        </Button>
-      </div>
-      <MessageList />
-      <PromptBar />
+    <TabPanel className="min-h-0 flex-1" tab={tab} value="ai-assistant">
+      <aside aria-label={t("title")} className="flex h-full flex-col gap-2 p-2">
+        <div className="flex shrink-0 items-center justify-between">
+          <h2 className="text-xs font-medium">{t("title")}</h2>
+          <Button
+            disabled={!hasEntries}
+            onClick={reset}
+            size="xs"
+            title={t("newChat")}
+            variant="ghost"
+          >
+            <SquarePen />
+            {t("newChat")}
+          </Button>
+        </div>
+        <MessageList />
+        <PromptBar />
+      </aside>
     </TabPanel>
   );
 };
