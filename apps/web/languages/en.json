@@ -716,6 +716,86 @@
         "invalid": "The project file has a bad value at {path}.",
         "parts": "The project uses parts this version of Echidna doesn’t have: {parts}."
       }
+    },
+    "ai-assistant": {
+      "title": "AI Assistant",
+      "newChat": "New chat",
+      "emptyTitle": "Ask about your project or describe a change",
+      "emptyBody": "Try “Why is the LED failing?” or “Add a BME280 to the Pi’s I²C header”. You can attach datasheets, photos and schematics.",
+      "placeholder": "Ask or describe a change…",
+      "placeholderAwaiting": "Reply to suggest something else…",
+      "send": "Send",
+      "stop": "Stop",
+      "attach": "Attach files",
+      "removeAttachment": "Remove {name}",
+      "uploading": "Uploading",
+      "modeLabel": "Mode",
+      "modes": {
+        "manual": "Manual",
+        "auto": "Auto"
+      },
+      "modeHints": {
+        "manual": "You review changes before they’re applied",
+        "auto": "Changes are applied straight away"
+      },
+      "activity": {
+        "waiting": "Waiting…",
+        "thinking": "Thinking…",
+        "writing": "Writing…",
+        "tool": "Preparing changes…"
+      },
+      "proposalTitle": "Proposed changes",
+      "apply": "Apply",
+      "reject": "Reject",
+      "awaitingHint": "Or reply to suggest something else.",
+      "status": {
+        "failed": "Couldn’t do this; the assistant was told why."
+      },
+      "undo": "Undo the assistant’s changes",
+      "actions": {
+        "get_project": "Read the project",
+        "get_slot_options": "Checked which slots fit {part}",
+        "select_part": "Selected {part}",
+        "add_part": "Add {part}",
+        "remove_part": "Remove {part}",
+        "connect": "Wire {a} to {b}",
+        "remove_wire": "Remove wire {wire}",
+        "set_param": "Set {param} of {part} to {value}",
+        "reset_param": "Reset {param} of {part}",
+        "set_variant": "Change {part} to {variant}",
+        "swap_part": "Swap {part} for {spec}",
+        "plug_in": "Plug {part} into {slot} on {host}",
+        "unplug": "Unplug {part}",
+        "set_ambient_temperature": "Set the air temperature to {value}",
+        "load_build": "Start over from the {build}",
+        "load_preset": "Start over from {board}",
+        "arrange_schematic": "Tidy the schematic",
+        "unknown": "Run {name}"
+      },
+      "notices": {
+        "unconfigured": "The assistant isn’t set up. Add ANTHROPIC_API_KEY to .env.local and restart the dev server.",
+        "rateLimited": "Too many requests. Wait a moment and try again.",
+        "unavailable": "The assistant can’t be reached right now. Try again shortly.",
+        "badRequest": "The assistant couldn’t read that request. Try starting a new chat.",
+        "tooLarge": "That’s too much to send at once. Try fewer or smaller attachments, or start a new chat.",
+        "forbidden": "The assistant is only available when running Echidna on this machine.",
+        "failed": "Something went wrong. Try again.",
+        "refusal": "The assistant can’t help with that request.",
+        "truncated": "The reply was cut short. Try asking for less at once.",
+        "tooManySteps": "The assistant stopped after too many steps. Check the project and ask it to carry on if needed.",
+        "stopped": "Stopped.",
+        "undone": "The assistant’s changes were undone."
+      },
+      "attachmentErrors": {
+        "type": "That file type can’t be attached. Use images, PDFs or text files.",
+        "size": "That file is too large. Images can be up to 5 MB, other files up to 20 MB.",
+        "count": "You can attach up to {count} files at once."
+      }
+    },
+    "sidebar": {
+      "title": "Sidebar",
+      "library": "Components",
+      "assistant": "AI Assistant"
     }
   },
   "Parts": {

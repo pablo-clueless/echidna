@@ -194,7 +194,12 @@
         "fit": "Platine einpassen",
         "top": "Draufsicht",
         "angled": "3D-Ansicht",
-        "underside": "Unteransicht"
+        "underside": "Unteransicht",
+        "orbitLeft": "Nach links kreisen",
+        "orbitRight": "Nach rechts kreisen",
+        "tiltUp": "Nach oben kippen",
+        "tiltDown": "Nach unten kippen",
+        "turnPart": "Ausgewähltes Bauteil drehen"
       },
       "overlays": {
         "label": "Überlagerungen",
@@ -230,6 +235,38 @@
         "drone": "Drohnen",
         "smartphone": "Smartphones",
         "wearable": "Wearables"
+      },
+      "clear": "Schaltplan leeren",
+      "clearConfirm": "Erneut klicken, um alles zu löschen",
+      "arrange": "In Ebenen anordnen",
+      "layers": {
+        "onBoard": "Auf der Platine",
+        "board": "{board, select, main {Hauptplatine} upper {Obere Platine, auf dem Interposer} other {Platine {board}}}",
+        "stacked": "Ebene {layer}, auf die darunter gestapelt",
+        "flex": "Neben der Platine, an Flexkabeln",
+        "header": "In die Stiftleisten gesteckt"
+      }
+    },
+    "output": {
+      "title": "Ausgabe",
+      "download": "Herunterladen",
+      "copy": "Kopieren",
+      "emptyTitle": "Noch keine Ausgabe",
+      "emptyDescription": "Beginne mit einem Entwicklungsboard und stecke Sensoren daran, um Code dafür in C, C++, Go, Rust und Java zu erhalten.",
+      "copied": "Kopiert",
+      "wiring": "Verdrahtung",
+      "needsBoard": "Code wird für ein Entwicklungsboard geschrieben. Füge dem Projekt einen ESP32, Raspberry Pi oder Arduino hinzu und stecke Bauteile daran.",
+      "startFromBoard": "Mit {board} beginnen",
+      "table": {
+        "empty": "Noch ist nichts verdrahtet.",
+        "slotsCaption": "An die Platine gesteckt",
+        "netsCaption": "Netze",
+        "part": "Bauteil",
+        "pin": "Pin",
+        "hostPin": "Platinen-Pin",
+        "signal": "Signal",
+        "net": "Netz",
+        "pins": "Pins"
       }
     },
     "inspector": {
@@ -653,7 +690,112 @@
       "label": "Exportieren",
       "pcb": "Gerber-Dateien, Bohrdatei, Stückliste und Bestückungsdatei der Platine als Zip herunterladen.",
       "modules": "Die Stückliste des Builds herunterladen.",
-      "unrouted": "{count, plural, one {# Verbindung hat} other {# Verbindungen haben}} noch kein Kupfer: siehe README im Zip."
+      "unrouted": "{count, plural, one {# Verbindung hat} other {# Verbindungen haben}} noch kein Kupfer: siehe README im Zip.",
+      "fabrication": "Fertigungsdateien",
+      "schematicGroup": "Schaltplan und Schaltung",
+      "svg": "Schaltplan (SVG)",
+      "svgDetail": "Der Schaltplan als Vektorgrafik, wie er auf dem Bildschirm aussieht.",
+      "pdf": "Schaltplan (PDF)",
+      "pdfDetail": "Der Schaltplan auf einer A4-Seite, druckfertig.",
+      "spice": "SPICE-Netzliste",
+      "spiceDetail": "Die Schaltung, wie Echidna sie berechnet, für ngspice oder LTspice.",
+      "spiceSkipped": "{count, plural, one {# Bauteil wird} other {# Bauteile werden}} als Build geprüft, nicht als Schaltung, und fehlen daher in der Netzliste.",
+      "wiring": "Verdrahtungstabelle (CSV)",
+      "wiringDetail": "Jedes Netz mit seinen Pins und welchen Platinen-Pin jedes gesteckte Bauteil nutzt.",
+      "project": "Projekt (JSON)",
+      "projectDetail": "Das ganze Projekt, zum Aufbewahren, Teilen oder erneuten Öffnen.",
+      "schema": "Projektdateiformat",
+      "schemaDetail": "Das JSON-Schema, das Projektdateien beschreibt.",
+      "schematicClosed": "Öffne den Schaltplan-Bereich, um ihn zu exportieren.",
+      "open": {
+        "label": "Projekt öffnen",
+        "done": "{name} geöffnet.",
+        "json": "Diese Datei ist kein JSON.",
+        "format": "Das ist keine Echidna-Projektdatei.",
+        "version": "Diese Projektdatei stammt aus einer anderen Version von Echidna.",
+        "invalid": "Die Projektdatei hat einen ungültigen Wert bei {path}.",
+        "parts": "Das Projekt verwendet Bauteile, die diese Version von Echidna nicht hat: {parts}."
+      }
+    },
+    "ai-assistant": {
+      "title": "KI-Assistent",
+      "newChat": "Neuer Chat",
+      "emptyTitle": "Frag zu deinem Projekt oder beschreibe eine Änderung",
+      "emptyBody": "Probier „Warum fällt die LED durch?“ oder „Füge einen BME280 am I²C-Header des Pi hinzu“. Du kannst Datenblätter, Fotos und Schaltpläne anhängen.",
+      "placeholder": "Frage stellen oder Änderung beschreiben…",
+      "placeholderAwaiting": "Antworte, um etwas anderes vorzuschlagen…",
+      "send": "Senden",
+      "stop": "Stoppen",
+      "attach": "Dateien anhängen",
+      "removeAttachment": "{name} entfernen",
+      "uploading": "Wird hochgeladen",
+      "modeLabel": "Modus",
+      "modes": {
+        "manual": "Manuell",
+        "auto": "Auto"
+      },
+      "modeHints": {
+        "manual": "Du prüfst Änderungen, bevor sie übernommen werden",
+        "auto": "Änderungen werden sofort übernommen"
+      },
+      "activity": {
+        "waiting": "Warten…",
+        "thinking": "Denkt nach…",
+        "writing": "Schreibt…",
+        "tool": "Bereitet Änderungen vor…"
+      },
+      "proposalTitle": "Vorgeschlagene Änderungen",
+      "apply": "Übernehmen",
+      "reject": "Ablehnen",
+      "awaitingHint": "Oder antworte, um etwas anderes vorzuschlagen.",
+      "status": {
+        "failed": "Nicht möglich; der Assistent wurde informiert."
+      },
+      "undo": "Änderungen des Assistenten rückgängig machen",
+      "actions": {
+        "get_project": "Projekt gelesen",
+        "get_slot_options": "Passende Steckplätze für {part} geprüft",
+        "select_part": "{part} ausgewählt",
+        "add_part": "{part} hinzufügen",
+        "remove_part": "{part} entfernen",
+        "connect": "{a} mit {b} verbinden",
+        "remove_wire": "Leitung {wire} entfernen",
+        "set_param": "{param} von {part} auf {value} setzen",
+        "reset_param": "{param} von {part} zurücksetzen",
+        "set_variant": "{part} auf {variant} ändern",
+        "swap_part": "{part} durch {spec} ersetzen",
+        "plug_in": "{part} in {slot} auf {host} stecken",
+        "unplug": "{part} abziehen",
+        "set_ambient_temperature": "Lufttemperatur auf {value} setzen",
+        "load_build": "Neu mit {build} beginnen",
+        "load_preset": "Neu mit {board} beginnen",
+        "arrange_schematic": "Schaltplan aufräumen",
+        "unknown": "{name} ausführen"
+      },
+      "notices": {
+        "unconfigured": "Der Assistent ist nicht eingerichtet. Trage ANTHROPIC_API_KEY in .env.local ein und starte den Server neu.",
+        "rateLimited": "Zu viele Anfragen. Warte kurz und versuche es erneut.",
+        "unavailable": "Der Assistent ist gerade nicht erreichbar. Versuche es gleich noch einmal.",
+        "badRequest": "Der Assistent konnte die Anfrage nicht lesen. Starte einen neuen Chat.",
+        "tooLarge": "Das ist zu viel auf einmal. Hänge weniger oder kleinere Dateien an oder starte einen neuen Chat.",
+        "forbidden": "Der Assistent ist nur verfügbar, wenn Echidna auf diesem Rechner läuft.",
+        "failed": "Etwas ist schiefgelaufen. Versuche es erneut.",
+        "refusal": "Bei dieser Anfrage kann der Assistent nicht helfen.",
+        "truncated": "Die Antwort wurde abgeschnitten. Frag nach weniger auf einmal.",
+        "tooManySteps": "Der Assistent hat nach zu vielen Schritten angehalten. Prüfe das Projekt und bitte ihn bei Bedarf, weiterzumachen.",
+        "stopped": "Gestoppt.",
+        "undone": "Die Änderungen des Assistenten wurden rückgängig gemacht."
+      },
+      "attachmentErrors": {
+        "type": "Dieser Dateityp kann nicht angehängt werden. Nutze Bilder, PDFs oder Textdateien.",
+        "size": "Die Datei ist zu groß: Bilder bis 5 MB, andere Dateien bis 20 MB.",
+        "count": "Du kannst bis zu {count} Dateien auf einmal anhängen."
+      }
+    },
+    "sidebar": {
+      "title": "Seitenleiste",
+      "library": "Bauteile",
+      "assistant": "KI-Assistent"
     }
   },
   "Parts": {

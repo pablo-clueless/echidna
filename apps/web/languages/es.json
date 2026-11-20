@@ -194,7 +194,12 @@
         "fit": "Ver toda la placa",
         "top": "Vista superior",
         "angled": "Vista 3D",
-        "underside": "Vista inferior"
+        "underside": "Vista inferior",
+        "orbitLeft": "Orbitar a la izquierda",
+        "orbitRight": "Orbitar a la derecha",
+        "tiltUp": "Inclinar hacia arriba",
+        "tiltDown": "Inclinar hacia abajo",
+        "turnPart": "Girar el componente seleccionado"
       },
       "overlays": {
         "label": "Capas",
@@ -230,6 +235,38 @@
         "drone": "Drones",
         "smartphone": "Teléfonos",
         "wearable": "Wearables"
+      },
+      "clear": "Vaciar el esquema",
+      "clearConfirm": "Vuelve a hacer clic para borrarlo todo",
+      "arrange": "Ordenar en capas",
+      "layers": {
+        "onBoard": "En la placa",
+        "board": "{board, select, main {Placa principal} upper {Placa superior, sobre el interposer} other {Placa {board}}}",
+        "stacked": "Capa {layer}, apilada sobre la de abajo",
+        "flex": "Fuera de la placa, en cables flexibles",
+        "header": "Conectado a los conectores"
+      }
+    },
+    "output": {
+      "title": "Salida",
+      "download": "Descargar",
+      "copy": "Copiar",
+      "emptyTitle": "Aún no hay salida",
+      "emptyDescription": "Empieza con una placa de desarrollo y conéctale sensores para obtener su código en C, C++, Go, Rust y Java.",
+      "copied": "Copiado",
+      "wiring": "Cableado",
+      "needsBoard": "El código se escribe para una placa de desarrollo. Añade un ESP32, una Raspberry Pi o un Arduino al proyecto y conéctale componentes.",
+      "startFromBoard": "Empezar con {board}",
+      "table": {
+        "empty": "Aún no hay nada cableado.",
+        "slotsCaption": "Conectado a la placa",
+        "netsCaption": "Nets",
+        "part": "Componente",
+        "pin": "Pin",
+        "hostPin": "Pin de la placa",
+        "signal": "Señal",
+        "net": "Net",
+        "pins": "Pines"
       }
     },
     "inspector": {
@@ -653,7 +690,112 @@
       "label": "Exportar",
       "pcb": "Descarga los Gerber, el archivo de taladrado, la lista de materiales y el archivo de colocación de la placa en un zip.",
       "modules": "Descarga la lista de materiales del montaje.",
-      "unrouted": "{count, plural, one {# conexión aún no tiene} other {# conexiones aún no tienen}} cobre: consulta el README del zip."
+      "unrouted": "{count, plural, one {# conexión aún no tiene} other {# conexiones aún no tienen}} cobre: consulta el README del zip.",
+      "fabrication": "Archivos de fabricación",
+      "schematicGroup": "Esquema y circuito",
+      "svg": "Esquema (SVG)",
+      "svgDetail": "El esquema como imagen vectorial, tal como se ve en pantalla.",
+      "pdf": "Esquema (PDF)",
+      "pdfDetail": "El esquema en una página A4, listo para imprimir.",
+      "spice": "Netlist SPICE",
+      "spiceDetail": "El circuito tal como lo resuelve Echidna, para ngspice o LTspice.",
+      "spiceSkipped": "{count, plural, one {# componente se comprueba} other {# componentes se comprueban}} como montaje, no como circuito, así que no figura en la netlist.",
+      "wiring": "Tabla de cableado (CSV)",
+      "wiringDetail": "Cada net y sus pines, y qué pin de la placa usa cada componente conectado.",
+      "project": "Proyecto (JSON)",
+      "projectDetail": "Todo el proyecto, para guardarlo, compartirlo o volver a abrirlo.",
+      "schema": "Formato del archivo de proyecto",
+      "schemaDetail": "El esquema JSON que describe los archivos de proyecto.",
+      "schematicClosed": "Abre el panel del esquema para exportarlo.",
+      "open": {
+        "label": "Abrir proyecto",
+        "done": "Se ha abierto {name}.",
+        "json": "Ese archivo no es JSON.",
+        "format": "No es un archivo de proyecto de Echidna.",
+        "version": "Ese archivo de proyecto es de otra versión de Echidna.",
+        "invalid": "El archivo de proyecto tiene un valor incorrecto en {path}.",
+        "parts": "El proyecto usa componentes que esta versión de Echidna no tiene: {parts}."
+      }
+    },
+    "ai-assistant": {
+      "title": "Asistente de IA",
+      "newChat": "Nueva conversación",
+      "emptyTitle": "Pregunta por tu proyecto o describe un cambio",
+      "emptyBody": "Prueba «¿Por qué falla el LED?» o «Añade un BME280 al conector I²C de la Pi». Puedes adjuntar hojas de datos, fotos y esquemas.",
+      "placeholder": "Pregunta o describe un cambio…",
+      "placeholderAwaiting": "Responde para proponer otra cosa…",
+      "send": "Enviar",
+      "stop": "Detener",
+      "attach": "Adjuntar archivos",
+      "removeAttachment": "Quitar {name}",
+      "uploading": "Subiendo",
+      "modeLabel": "Modo",
+      "modes": {
+        "manual": "Manual",
+        "auto": "Auto"
+      },
+      "modeHints": {
+        "manual": "Revisas los cambios antes de aplicarlos",
+        "auto": "Los cambios se aplican al momento"
+      },
+      "activity": {
+        "waiting": "Esperando…",
+        "thinking": "Pensando…",
+        "writing": "Escribiendo…",
+        "tool": "Preparando cambios…"
+      },
+      "proposalTitle": "Cambios propuestos",
+      "apply": "Aplicar",
+      "reject": "Rechazar",
+      "awaitingHint": "O responde para proponer otra cosa.",
+      "status": {
+        "failed": "No se pudo hacer; se ha informado al asistente."
+      },
+      "undo": "Deshacer los cambios del asistente",
+      "actions": {
+        "get_project": "Leer el proyecto",
+        "get_slot_options": "Comprobadas las ranuras para {part}",
+        "select_part": "{part} seleccionado",
+        "add_part": "Añadir {part}",
+        "remove_part": "Quitar {part}",
+        "connect": "Conectar {a} con {b}",
+        "remove_wire": "Quitar el cable {wire}",
+        "set_param": "Poner {param} de {part} a {value}",
+        "reset_param": "Restablecer {param} de {part}",
+        "set_variant": "Cambiar {part} a {variant}",
+        "swap_part": "Sustituir {part} por {spec}",
+        "plug_in": "Conectar {part} en {slot} de {host}",
+        "unplug": "Desconectar {part}",
+        "set_ambient_temperature": "Poner la temperatura del aire a {value}",
+        "load_build": "Empezar de nuevo con {build}",
+        "load_preset": "Empezar de nuevo con {board}",
+        "arrange_schematic": "Ordenar el esquema",
+        "unknown": "Ejecutar {name}"
+      },
+      "notices": {
+        "unconfigured": "El asistente no está configurado. Añade ANTHROPIC_API_KEY a .env.local y reinicia el servidor.",
+        "rateLimited": "Demasiadas solicitudes. Espera un momento y vuelve a intentarlo.",
+        "unavailable": "No se puede contactar con el asistente ahora. Inténtalo en breve.",
+        "badRequest": "El asistente no pudo leer la solicitud. Prueba a empezar una conversación nueva.",
+        "tooLarge": "Es demasiado para enviarlo de una vez. Adjunta menos archivos o más pequeños, o empieza una conversación nueva.",
+        "forbidden": "El asistente solo está disponible cuando Echidna se ejecuta en este equipo.",
+        "failed": "Algo ha salido mal. Inténtalo de nuevo.",
+        "refusal": "El asistente no puede ayudar con esa solicitud.",
+        "truncated": "La respuesta se cortó. Pide menos cosas a la vez.",
+        "tooManySteps": "El asistente se detuvo tras demasiados pasos. Revisa el proyecto y pídele que continúe si hace falta.",
+        "stopped": "Detenido.",
+        "undone": "Se han deshecho los cambios del asistente."
+      },
+      "attachmentErrors": {
+        "type": "No se puede adjuntar ese tipo de archivo. Usa imágenes, PDF o archivos de texto.",
+        "size": "El archivo es demasiado grande: hasta 5 MB las imágenes y 20 MB el resto.",
+        "count": "Puedes adjuntar hasta {count} archivos a la vez."
+      }
+    },
+    "sidebar": {
+      "title": "Barra lateral",
+      "library": "Componentes",
+      "assistant": "Asistente de IA"
     }
   },
   "Parts": {

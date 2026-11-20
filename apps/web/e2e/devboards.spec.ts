@@ -36,7 +36,9 @@ for (const { locale, messages } of locales) {
     test("an incompatible sensor is blocked from a dev-board slot with the reason, and one that fits plugs in", async ({
       page,
     }) => {
+      // The output panel offers the same dev boards, so this is the schematic's button.
       await page
+        .getByTestId("schematic")
         .getByRole("button", {
           name: fill(s.schematic.startFromBoard, { board: partName("raspberry-pi-4") }),
         })
@@ -69,7 +71,9 @@ for (const { locale, messages } of locales) {
     test("swapping the host board says beforehand which boards keep the plugged-in sensor, and why the others don't", async ({
       page,
     }) => {
+      // The output panel offers the same dev boards, so this is the schematic's button.
       await page
+        .getByTestId("schematic")
         .getByRole("button", {
           name: fill(s.schematic.startFromBoard, { board: partName("raspberry-pi-4") }),
         })

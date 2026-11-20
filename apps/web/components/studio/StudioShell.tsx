@@ -10,10 +10,10 @@ import { PersistedPanelGroup } from "./PersistedPanelGroup";
 import { CodeOutputPanel } from "./CodeOutputPanel";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { InspectorPanel } from "./InspectorPanel";
-import { LibrarySidebar } from "./LibrarySidebar";
 import { SchematicPanel } from "./SchematicPanel";
 import { MobileStudio } from "./MobileStudio";
 import { Viewport } from "./Viewport";
+import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 
 const CLAMP = { minSize: "20%", maxSize: "80%" } as const;
@@ -43,7 +43,7 @@ const DesktopStudio = () => {
           collapsedSize="0%"
           onResize={(size) => setLibraryOpen(size.inPixels > 0)}
         >
-          <LibrarySidebar />
+          <Sidebar />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel id="workspace" minSize="50%">

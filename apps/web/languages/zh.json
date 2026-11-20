@@ -194,7 +194,12 @@
         "fit": "显示整块电路板",
         "top": "俯视图",
         "angled": "3D 视图",
-        "underside": "底面视图"
+        "underside": "底面视图",
+        "orbitLeft": "向左环绕",
+        "orbitRight": "向右环绕",
+        "tiltUp": "向上倾斜",
+        "tiltDown": "向下倾斜",
+        "turnPart": "旋转所选元件"
       },
       "overlays": {
         "label": "叠加显示",
@@ -230,6 +235,38 @@
         "drone": "无人机",
         "smartphone": "手机",
         "wearable": "可穿戴设备"
+      },
+      "clear": "清空原理图",
+      "clearConfirm": "再次点击以清除全部内容",
+      "arrange": "按层排列",
+      "layers": {
+        "onBoard": "在电路板上",
+        "board": "{board, select, main {主板} upper {上层板，位于转接板上} other {电路板 {board}}}",
+        "stacked": "第 {layer} 层，叠在下一层之上",
+        "flex": "不在板上，通过柔性排线连接",
+        "header": "插在排针上"
+      }
+    },
+    "output": {
+      "title": "输出",
+      "download": "下载",
+      "copy": "复制",
+      "emptyTitle": "暂无输出",
+      "emptyDescription": "从一块开发板开始并接上传感器，即可获得 C、C++、Go、Rust 和 Java 代码。",
+      "copied": "已复制",
+      "wiring": "接线",
+      "needsBoard": "代码是为开发板编写的。请在项目中添加 ESP32、树莓派或 Arduino，并将元件插到上面。",
+      "startFromBoard": "从 {board} 开始",
+      "table": {
+        "empty": "尚未接线。",
+        "slotsCaption": "插在电路板上",
+        "netsCaption": "网络",
+        "part": "元件",
+        "pin": "引脚",
+        "hostPin": "电路板引脚",
+        "signal": "信号",
+        "net": "网络",
+        "pins": "引脚"
       }
     },
     "inspector": {
@@ -653,7 +690,112 @@
       "label": "导出",
       "pcb": "以 zip 下载电路板的 Gerber 文件、钻孔文件、物料清单和贴片坐标文件。",
       "modules": "下载此构建的物料清单。",
-      "unrouted": "{count} 条连接尚未布铜：请查看 zip 中的 README。"
+      "unrouted": "{count} 条连接尚未布铜：请查看 zip 中的 README。",
+      "fabrication": "制造文件",
+      "schematicGroup": "原理图和电路",
+      "svg": "原理图（SVG）",
+      "svgDetail": "原理图的矢量图，与屏幕上显示的一致。",
+      "pdf": "原理图（PDF）",
+      "pdfDetail": "原理图排在一页 A4 纸上，可直接打印。",
+      "spice": "SPICE 网表",
+      "spiceDetail": "Echidna 求解的电路，可用于 ngspice 或 LTspice。",
+      "spiceSkipped": "{count} 个元件按构建而非电路检查，因此未写入网表。",
+      "wiring": "接线表（CSV）",
+      "wiringDetail": "每个网络及其引脚，以及每个插入的元件使用的电路板引脚。",
+      "project": "项目（JSON）",
+      "projectDetail": "整个项目，可保存、分享或再次打开。",
+      "schema": "项目文件格式",
+      "schemaDetail": "描述项目文件的 JSON Schema。",
+      "schematicClosed": "请打开原理图面板以导出原理图。",
+      "open": {
+        "label": "打开项目",
+        "done": "已打开 {name}。",
+        "json": "该文件不是 JSON。",
+        "format": "这不是 Echidna 项目文件。",
+        "version": "该项目文件来自其他版本的 Echidna。",
+        "invalid": "项目文件在 {path} 处有无效值。",
+        "parts": "该项目使用了此版本 Echidna 没有的元件：{parts}。"
+      }
+    },
+    "ai-assistant": {
+      "title": "AI 助手",
+      "newChat": "新对话",
+      "emptyTitle": "询问你的项目，或描述想做的修改",
+      "emptyBody": "试试“为什么 LED 不通过？”或“在树莓派的 I²C 接口上加一个 BME280”。你可以附上数据手册、照片和原理图。",
+      "placeholder": "提问或描述修改…",
+      "placeholderAwaiting": "回复以提出其他方案…",
+      "send": "发送",
+      "stop": "停止",
+      "attach": "附加文件",
+      "removeAttachment": "移除 {name}",
+      "uploading": "正在上传",
+      "modeLabel": "模式",
+      "modes": {
+        "manual": "手动",
+        "auto": "自动"
+      },
+      "modeHints": {
+        "manual": "修改在应用前由你确认",
+        "auto": "修改会立即应用"
+      },
+      "activity": {
+        "waiting": "等待中…",
+        "thinking": "思考中…",
+        "writing": "撰写中…",
+        "tool": "正在准备修改…"
+      },
+      "proposalTitle": "建议的修改",
+      "apply": "应用",
+      "reject": "拒绝",
+      "awaitingHint": "或回复以提出其他方案。",
+      "status": {
+        "failed": "无法完成；已告知助手原因。"
+      },
+      "undo": "撤销助手的修改",
+      "actions": {
+        "get_project": "读取项目",
+        "get_slot_options": "已检查适合 {part} 的插槽",
+        "select_part": "已选中 {part}",
+        "add_part": "添加 {part}",
+        "remove_part": "移除 {part}",
+        "connect": "将 {a} 连接到 {b}",
+        "remove_wire": "移除导线 {wire}",
+        "set_param": "将 {part} 的{param}设为 {value}",
+        "reset_param": "重置 {part} 的{param}",
+        "set_variant": "将 {part} 改为 {variant}",
+        "swap_part": "将 {part} 换成 {spec}",
+        "plug_in": "将 {part} 插入 {host} 的 {slot}",
+        "unplug": "拔出 {part}",
+        "set_ambient_temperature": "将环境温度设为 {value}",
+        "load_build": "从 {build} 重新开始",
+        "load_preset": "从 {board} 重新开始",
+        "arrange_schematic": "整理原理图",
+        "unknown": "运行 {name}"
+      },
+      "notices": {
+        "unconfigured": "助手尚未配置。请在 .env.local 中添加 ANTHROPIC_API_KEY 并重启开发服务器。",
+        "rateLimited": "请求过多，请稍后再试。",
+        "unavailable": "暂时无法连接助手，请稍后再试。",
+        "badRequest": "助手无法读取该请求，请尝试新建对话。",
+        "tooLarge": "一次发送的内容过多。请减少或缩小附件，或新建对话。",
+        "forbidden": "仅在本机运行 Echidna 时才能使用助手。",
+        "failed": "出错了，请重试。",
+        "refusal": "助手无法处理该请求。",
+        "truncated": "回复被截断。请一次少问一些。",
+        "tooManySteps": "助手执行步骤过多已停止。请检查项目，如有需要让它继续。",
+        "stopped": "已停止。",
+        "undone": "已撤销助手的修改。"
+      },
+      "attachmentErrors": {
+        "type": "无法附加该类型的文件。请使用图片、PDF 或文本文件。",
+        "size": "文件过大：图片最大 5 MB，其他文件最大 20 MB。",
+        "count": "一次最多可附加 {count} 个文件。"
+      }
+    },
+    "sidebar": {
+      "title": "侧边栏",
+      "library": "元件",
+      "assistant": "AI 助手"
     }
   },
   "Parts": {

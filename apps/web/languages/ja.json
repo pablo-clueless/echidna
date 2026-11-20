@@ -194,7 +194,12 @@
         "fit": "基板全体を表示",
         "top": "上面図",
         "angled": "3D ビュー",
-        "underside": "裏面ビュー"
+        "underside": "裏面ビュー",
+        "orbitLeft": "左に回り込む",
+        "orbitRight": "右に回り込む",
+        "tiltUp": "上に傾ける",
+        "tiltDown": "下に傾ける",
+        "turnPart": "選択した部品を回転"
       },
       "overlays": {
         "label": "オーバーレイ",
@@ -230,6 +235,38 @@
         "drone": "ドローン",
         "smartphone": "スマートフォン",
         "wearable": "ウェアラブル"
+      },
+      "clear": "回路図をクリア",
+      "clearConfirm": "もう一度クリックするとすべて消去します",
+      "arrange": "レイヤーで整列",
+      "layers": {
+        "onBoard": "基板上",
+        "board": "{board, select, main {メイン基板} upper {上段の基板（インターポーザー上）} other {基板 {board}}}",
+        "stacked": "レイヤー {layer}（下のレイヤーに積層）",
+        "flex": "基板外（フレキシブルケーブル接続）",
+        "header": "ヘッダーに接続"
+      }
+    },
+    "output": {
+      "title": "出力",
+      "download": "ダウンロード",
+      "copy": "コピー",
+      "emptyTitle": "出力はまだありません",
+      "emptyDescription": "開発ボードから始めてセンサーを接続すると、C、C++、Go、Rust、Java のコードが得られます。",
+      "copied": "コピーしました",
+      "wiring": "配線",
+      "needsBoard": "コードは開発ボード向けに生成されます。ESP32、Raspberry Pi、Arduino のいずれかをプロジェクトに追加し、部品を接続してください。",
+      "startFromBoard": "{board} から始める",
+      "table": {
+        "empty": "まだ何も配線されていません。",
+        "slotsCaption": "基板に接続",
+        "netsCaption": "ネット",
+        "part": "部品",
+        "pin": "ピン",
+        "hostPin": "基板のピン",
+        "signal": "信号",
+        "net": "ネット",
+        "pins": "ピン"
       }
     },
     "inspector": {
@@ -653,7 +690,112 @@
       "label": "エクスポート",
       "pcb": "基板のガーバー、ドリルファイル、部品表、実装座標ファイルを zip でダウンロードします。",
       "modules": "構成の部品表をダウンロードします。",
-      "unrouted": "{count} 本の接続にまだ銅箔がありません。zip 内の README を参照してください。"
+      "unrouted": "{count} 本の接続にまだ銅箔がありません。zip 内の README を参照してください。",
+      "fabrication": "製造用ファイル",
+      "schematicGroup": "回路図と回路",
+      "svg": "回路図（SVG）",
+      "svgDetail": "画面に表示されているとおりの回路図のベクター画像。",
+      "pdf": "回路図（PDF）",
+      "pdfDetail": "A4 1 ページに収めた、すぐに印刷できる回路図。",
+      "spice": "SPICE ネットリスト",
+      "spiceDetail": "Echidna が解いたとおりの回路。ngspice や LTspice 用。",
+      "spiceSkipped": "{count} 個の部品は回路ではなく構成としてチェックされるため、ネットリストに含まれません。",
+      "wiring": "配線表（CSV）",
+      "wiringDetail": "各ネットとそのピン、および接続された各部品が使う基板のピン。",
+      "project": "プロジェクト（JSON）",
+      "projectDetail": "プロジェクト全体。保存、共有、再読み込みに。",
+      "schema": "プロジェクトファイル形式",
+      "schemaDetail": "プロジェクトファイルを記述する JSON スキーマ。",
+      "schematicClosed": "エクスポートするには回路図パネルを開いてください。",
+      "open": {
+        "label": "プロジェクトを開く",
+        "done": "{name} を開きました。",
+        "json": "このファイルは JSON ではありません。",
+        "format": "Echidna のプロジェクトファイルではありません。",
+        "version": "このプロジェクトファイルは別のバージョンの Echidna のものです。",
+        "invalid": "プロジェクトファイルの {path} に不正な値があります。",
+        "parts": "このプロジェクトは、このバージョンの Echidna にない部品を使っています：{parts}。"
+      }
+    },
+    "ai-assistant": {
+      "title": "AI アシスタント",
+      "newChat": "新しいチャット",
+      "emptyTitle": "プロジェクトについて質問するか、変更内容を説明してください",
+      "emptyBody": "「LED が不合格なのはなぜ？」や「Pi の I²C ヘッダーに BME280 を追加して」と試してみてください。データシート、写真、回路図を添付できます。",
+      "placeholder": "質問や変更内容を入力…",
+      "placeholderAwaiting": "別の案を返信で伝える…",
+      "send": "送信",
+      "stop": "停止",
+      "attach": "ファイルを添付",
+      "removeAttachment": "{name} を削除",
+      "uploading": "アップロード中",
+      "modeLabel": "モード",
+      "modes": {
+        "manual": "手動",
+        "auto": "自動"
+      },
+      "modeHints": {
+        "manual": "変更は適用前に確認します",
+        "auto": "変更はすぐに適用されます"
+      },
+      "activity": {
+        "waiting": "待機中…",
+        "thinking": "考え中…",
+        "writing": "作成中…",
+        "tool": "変更を準備中…"
+      },
+      "proposalTitle": "提案された変更",
+      "apply": "適用",
+      "reject": "却下",
+      "awaitingHint": "または返信で別の案を伝えてください。",
+      "status": {
+        "failed": "実行できませんでした。理由はアシスタントに伝えました。"
+      },
+      "undo": "アシスタントの変更を元に戻す",
+      "actions": {
+        "get_project": "プロジェクトを読み取り",
+        "get_slot_options": "{part} に合うスロットを確認",
+        "select_part": "{part} を選択",
+        "add_part": "{part} を追加",
+        "remove_part": "{part} を削除",
+        "connect": "{a} と {b} を配線",
+        "remove_wire": "配線 {wire} を削除",
+        "set_param": "{part} の{param}を {value} に設定",
+        "reset_param": "{part} の{param}をリセット",
+        "set_variant": "{part} を {variant} に変更",
+        "swap_part": "{part} を {spec} に交換",
+        "plug_in": "{part} を {host} の {slot} に挿す",
+        "unplug": "{part} を抜く",
+        "set_ambient_temperature": "周囲温度を {value} に設定",
+        "load_build": "{build} からやり直す",
+        "load_preset": "{board} からやり直す",
+        "arrange_schematic": "回路図を整理",
+        "unknown": "{name} を実行"
+      },
+      "notices": {
+        "unconfigured": "アシスタントが設定されていません。.env.local に ANTHROPIC_API_KEY を追加し、開発サーバーを再起動してください。",
+        "rateLimited": "リクエストが多すぎます。少し待ってから再試行してください。",
+        "unavailable": "現在アシスタントに接続できません。しばらくしてから再試行してください。",
+        "badRequest": "アシスタントがリクエストを読み取れませんでした。新しいチャットを始めてください。",
+        "tooLarge": "一度に送る量が多すぎます。添付を減らすか小さくするか、新しいチャットを始めてください。",
+        "forbidden": "アシスタントは、このマシンで Echidna を実行しているときのみ使えます。",
+        "failed": "問題が発生しました。再試行してください。",
+        "refusal": "このリクエストにはお応えできません。",
+        "truncated": "返答が途中で切れました。一度に頼む内容を減らしてください。",
+        "tooManySteps": "手順が多すぎたためアシスタントが停止しました。プロジェクトを確認し、必要なら続けるよう頼んでください。",
+        "stopped": "停止しました。",
+        "undone": "アシスタントの変更を元に戻しました。"
+      },
+      "attachmentErrors": {
+        "type": "この種類のファイルは添付できません。画像、PDF、テキストファイルを使ってください。",
+        "size": "ファイルが大きすぎます。画像は 5 MB、その他は 20 MB までです。",
+        "count": "一度に添付できるのは {count} 個までです。"
+      }
+    },
+    "sidebar": {
+      "title": "サイドバー",
+      "library": "部品",
+      "assistant": "AI アシスタント"
     }
   },
   "Parts": {
