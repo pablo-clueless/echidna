@@ -716,6 +716,81 @@
         "net": "Net",
         "pins": "Broches"
       }
+    },
+    "ai-assistant": {
+      "title": "Assistant IA",
+      "newChat": "Nouvelle discussion",
+      "emptyTitle": "Posez une question sur votre projet ou décrivez une modification",
+      "emptyBody": "Essayez « Pourquoi la LED est-elle en échec ? » ou « Ajoute un BME280 sur le connecteur I²C du Pi ». Vous pouvez joindre des fiches techniques, des photos et des schémas.",
+      "placeholder": "Posez une question ou décrivez une modification…",
+      "placeholderAwaiting": "Répondez pour proposer autre chose…",
+      "send": "Envoyer",
+      "stop": "Arrêter",
+      "attach": "Joindre des fichiers",
+      "removeAttachment": "Retirer {name}",
+      "uploading": "Envoi en cours",
+      "modeLabel": "Mode",
+      "modes": {
+        "manual": "Manuel",
+        "auto": "Auto"
+      },
+      "modeHints": {
+        "manual": "Vous validez les modifications avant leur application",
+        "auto": "Les modifications sont appliquées immédiatement"
+      },
+      "activity": {
+        "waiting": "En attente…",
+        "thinking": "Réflexion…",
+        "writing": "Rédaction…",
+        "tool": "Préparation des modifications…"
+      },
+      "proposalTitle": "Modifications proposées",
+      "apply": "Appliquer",
+      "reject": "Refuser",
+      "awaitingHint": "Ou répondez pour proposer autre chose.",
+      "status": {
+        "failed": "Impossible ; l’assistant en a été informé."
+      },
+      "undo": "Annuler les modifications de l’assistant",
+      "actions": {
+        "get_project": "Lecture du projet",
+        "get_slot_options": "Emplacements compatibles avec {part} vérifiés",
+        "select_part": "{part} sélectionné",
+        "add_part": "Ajouter {part}",
+        "remove_part": "Supprimer {part}",
+        "connect": "Relier {a} à {b}",
+        "remove_wire": "Supprimer le fil {wire}",
+        "set_param": "Régler {param} de {part} sur {value}",
+        "reset_param": "Réinitialiser {param} de {part}",
+        "set_variant": "Passer {part} en {variant}",
+        "swap_part": "Remplacer {part} par {spec}",
+        "plug_in": "Brancher {part} sur {slot} de {host}",
+        "unplug": "Débrancher {part}",
+        "set_ambient_temperature": "Régler la température de l’air sur {value}",
+        "load_build": "Repartir de la configuration {build}",
+        "load_preset": "Repartir de {board}",
+        "arrange_schematic": "Ranger le schéma",
+        "unknown": "Exécuter {name}"
+      },
+      "notices": {
+        "unconfigured": "L’assistant n’est pas configuré. Ajoutez ANTHROPIC_API_KEY dans .env.local et redémarrez le serveur.",
+        "rateLimited": "Trop de requêtes. Patientez un instant puis réessayez.",
+        "unavailable": "L’assistant est injoignable pour le moment. Réessayez bientôt.",
+        "badRequest": "L’assistant n’a pas pu lire cette requête. Essayez une nouvelle discussion.",
+        "tooLarge": "C’est trop volumineux. Joignez moins de fichiers ou des fichiers plus petits, ou démarrez une nouvelle discussion.",
+        "forbidden": "L’assistant n’est disponible que lorsqu’Echidna tourne sur cette machine.",
+        "failed": "Une erreur est survenue. Réessayez.",
+        "refusal": "L’assistant ne peut pas répondre à cette demande.",
+        "truncated": "La réponse a été tronquée. Demandez moins de choses à la fois.",
+        "tooManySteps": "L’assistant s’est arrêté après trop d’étapes. Vérifiez le projet et demandez-lui de continuer si besoin.",
+        "stopped": "Arrêté.",
+        "undone": "Les modifications de l’assistant ont été annulées."
+      },
+      "attachmentErrors": {
+        "type": "Ce type de fichier ne peut pas être joint. Utilisez des images, des PDF ou des fichiers texte.",
+        "size": "Ce fichier est trop volumineux : 5 Mo maximum pour les images, 20 Mo pour les autres fichiers.",
+        "count": "Vous pouvez joindre jusqu’à {count} fichiers à la fois."
+      }
     }
   },
   "Parts": {

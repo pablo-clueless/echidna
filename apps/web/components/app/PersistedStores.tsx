@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 import { usePreferencesStore } from "@/stores/preferences";
+import { useAssistantStore } from "@/stores/assistant";
 import { useProjectStore } from "@/stores/project";
 import { useLayoutStore } from "@/stores/layout";
 import { useStudioStore } from "@/stores/studio";
@@ -18,6 +19,7 @@ export const PersistedStores = () => {
     void usePreferencesStore.persist.rehydrate();
     void useLayoutStore.persist.rehydrate();
     void useProjectStore.persist.rehydrate();
+    void useAssistantStore.persist.rehydrate();
     if (process.env.NODE_ENV === "development") {
       window.__echidna = {
         ...window.__echidna,
@@ -25,6 +27,7 @@ export const PersistedStores = () => {
         layout: useLayoutStore,
         studio: useStudioStore,
         project: useProjectStore,
+        assistant: useAssistantStore,
       };
     }
   }, []);

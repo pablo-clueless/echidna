@@ -654,6 +654,81 @@
       "pcb": "基板のガーバー、ドリルファイル、部品表、実装座標ファイルを zip でダウンロードします。",
       "modules": "構成の部品表をダウンロードします。",
       "unrouted": "{count} 本の接続にまだ銅箔がありません。zip 内の README を参照してください。"
+    },
+    "ai-assistant": {
+      "title": "AI アシスタント",
+      "newChat": "新しいチャット",
+      "emptyTitle": "プロジェクトについて質問するか、変更内容を説明してください",
+      "emptyBody": "「LED が不合格なのはなぜ？」や「Pi の I²C ヘッダーに BME280 を追加して」と試してみてください。データシート、写真、回路図を添付できます。",
+      "placeholder": "質問や変更内容を入力…",
+      "placeholderAwaiting": "別の案を返信で伝える…",
+      "send": "送信",
+      "stop": "停止",
+      "attach": "ファイルを添付",
+      "removeAttachment": "{name} を削除",
+      "uploading": "アップロード中",
+      "modeLabel": "モード",
+      "modes": {
+        "manual": "手動",
+        "auto": "自動"
+      },
+      "modeHints": {
+        "manual": "変更は適用前に確認します",
+        "auto": "変更はすぐに適用されます"
+      },
+      "activity": {
+        "waiting": "待機中…",
+        "thinking": "考え中…",
+        "writing": "作成中…",
+        "tool": "変更を準備中…"
+      },
+      "proposalTitle": "提案された変更",
+      "apply": "適用",
+      "reject": "却下",
+      "awaitingHint": "または返信で別の案を伝えてください。",
+      "status": {
+        "failed": "実行できませんでした。理由はアシスタントに伝えました。"
+      },
+      "undo": "アシスタントの変更を元に戻す",
+      "actions": {
+        "get_project": "プロジェクトを読み取り",
+        "get_slot_options": "{part} に合うスロットを確認",
+        "select_part": "{part} を選択",
+        "add_part": "{part} を追加",
+        "remove_part": "{part} を削除",
+        "connect": "{a} と {b} を配線",
+        "remove_wire": "配線 {wire} を削除",
+        "set_param": "{part} の{param}を {value} に設定",
+        "reset_param": "{part} の{param}をリセット",
+        "set_variant": "{part} を {variant} に変更",
+        "swap_part": "{part} を {spec} に交換",
+        "plug_in": "{part} を {host} の {slot} に挿す",
+        "unplug": "{part} を抜く",
+        "set_ambient_temperature": "周囲温度を {value} に設定",
+        "load_build": "{build} からやり直す",
+        "load_preset": "{board} からやり直す",
+        "arrange_schematic": "回路図を整理",
+        "unknown": "{name} を実行"
+      },
+      "notices": {
+        "unconfigured": "アシスタントが設定されていません。.env.local に ANTHROPIC_API_KEY を追加し、開発サーバーを再起動してください。",
+        "rateLimited": "リクエストが多すぎます。少し待ってから再試行してください。",
+        "unavailable": "現在アシスタントに接続できません。しばらくしてから再試行してください。",
+        "badRequest": "アシスタントがリクエストを読み取れませんでした。新しいチャットを始めてください。",
+        "tooLarge": "一度に送る量が多すぎます。添付を減らすか小さくするか、新しいチャットを始めてください。",
+        "forbidden": "アシスタントは、このマシンで Echidna を実行しているときのみ使えます。",
+        "failed": "問題が発生しました。再試行してください。",
+        "refusal": "このリクエストにはお応えできません。",
+        "truncated": "返答が途中で切れました。一度に頼む内容を減らしてください。",
+        "tooManySteps": "手順が多すぎたためアシスタントが停止しました。プロジェクトを確認し、必要なら続けるよう頼んでください。",
+        "stopped": "停止しました。",
+        "undone": "アシスタントの変更を元に戻しました。"
+      },
+      "attachmentErrors": {
+        "type": "この種類のファイルは添付できません。画像、PDF、テキストファイルを使ってください。",
+        "size": "ファイルが大きすぎます。画像は 5 MB、その他は 20 MB までです。",
+        "count": "一度に添付できるのは {count} 個までです。"
+      }
     }
   },
   "Parts": {

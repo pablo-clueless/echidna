@@ -15,8 +15,12 @@ import { useProjectStore } from "@/stores/project";
 import { useLayoutStore } from "@/stores/layout";
 import { useStudioStore } from "@/stores/studio";
 import { partKey } from "@/lib/messageKeys";
-import { PanelHeader } from "./PanelHeader";
+import { TabPanel } from "../ui/tab-panel";
 import { PanelEmpty } from "./PanelEmpty";
+
+interface Props {
+  tab: string;
+}
 
 const categories = [
   { key: "power", kinds: ["supply", "regulator", "ground"] },
@@ -73,7 +77,7 @@ const PartIcon = ({ spec }: { spec: ComponentSpec }) => {
   );
 };
 
-export const LibrarySidebar = () => {
+export const LibrarySidebar = ({ tab }: Props) => {
   const t = useTranslations("Studio.library");
   const tParts = useTranslations("Parts");
   const tFoundation = useTranslations("Studio.foundation");
@@ -118,11 +122,12 @@ export const LibrarySidebar = () => {
     .filter((c) => c.parts.length > 0);
 
   return (
-    <aside
+    <TabPanel
       aria-label={t("title")}
-      className="bg-sidebar text-sidebar-foreground flex h-full flex-col"
+      className="text-sidebar-foreground flex h-full flex-col"
+      tab={tab}
+      value="library"
     >
-      <PanelHeader title={t("title")} />
       <div className="p-2">
         <InputGroup className="bg-background h-8">
           <InputGroupAddon>
@@ -215,6 +220,6 @@ export const LibrarySidebar = () => {
           ))}
         </div>
       )}
-    </aside>
+    </TabPanel>
   );
 };

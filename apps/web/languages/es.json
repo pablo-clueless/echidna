@@ -654,6 +654,81 @@
       "pcb": "Descarga los Gerber, el archivo de taladrado, la lista de materiales y el archivo de colocación de la placa en un zip.",
       "modules": "Descarga la lista de materiales del montaje.",
       "unrouted": "{count, plural, one {# conexión aún no tiene} other {# conexiones aún no tienen}} cobre: consulta el README del zip."
+    },
+    "ai-assistant": {
+      "title": "Asistente de IA",
+      "newChat": "Nueva conversación",
+      "emptyTitle": "Pregunta por tu proyecto o describe un cambio",
+      "emptyBody": "Prueba «¿Por qué falla el LED?» o «Añade un BME280 al conector I²C de la Pi». Puedes adjuntar hojas de datos, fotos y esquemas.",
+      "placeholder": "Pregunta o describe un cambio…",
+      "placeholderAwaiting": "Responde para proponer otra cosa…",
+      "send": "Enviar",
+      "stop": "Detener",
+      "attach": "Adjuntar archivos",
+      "removeAttachment": "Quitar {name}",
+      "uploading": "Subiendo",
+      "modeLabel": "Modo",
+      "modes": {
+        "manual": "Manual",
+        "auto": "Auto"
+      },
+      "modeHints": {
+        "manual": "Revisas los cambios antes de aplicarlos",
+        "auto": "Los cambios se aplican al momento"
+      },
+      "activity": {
+        "waiting": "Esperando…",
+        "thinking": "Pensando…",
+        "writing": "Escribiendo…",
+        "tool": "Preparando cambios…"
+      },
+      "proposalTitle": "Cambios propuestos",
+      "apply": "Aplicar",
+      "reject": "Rechazar",
+      "awaitingHint": "O responde para proponer otra cosa.",
+      "status": {
+        "failed": "No se pudo hacer; se ha informado al asistente."
+      },
+      "undo": "Deshacer los cambios del asistente",
+      "actions": {
+        "get_project": "Leer el proyecto",
+        "get_slot_options": "Comprobadas las ranuras para {part}",
+        "select_part": "{part} seleccionado",
+        "add_part": "Añadir {part}",
+        "remove_part": "Quitar {part}",
+        "connect": "Conectar {a} con {b}",
+        "remove_wire": "Quitar el cable {wire}",
+        "set_param": "Poner {param} de {part} a {value}",
+        "reset_param": "Restablecer {param} de {part}",
+        "set_variant": "Cambiar {part} a {variant}",
+        "swap_part": "Sustituir {part} por {spec}",
+        "plug_in": "Conectar {part} en {slot} de {host}",
+        "unplug": "Desconectar {part}",
+        "set_ambient_temperature": "Poner la temperatura del aire a {value}",
+        "load_build": "Empezar de nuevo con {build}",
+        "load_preset": "Empezar de nuevo con {board}",
+        "arrange_schematic": "Ordenar el esquema",
+        "unknown": "Ejecutar {name}"
+      },
+      "notices": {
+        "unconfigured": "El asistente no está configurado. Añade ANTHROPIC_API_KEY a .env.local y reinicia el servidor.",
+        "rateLimited": "Demasiadas solicitudes. Espera un momento y vuelve a intentarlo.",
+        "unavailable": "No se puede contactar con el asistente ahora. Inténtalo en breve.",
+        "badRequest": "El asistente no pudo leer la solicitud. Prueba a empezar una conversación nueva.",
+        "tooLarge": "Es demasiado para enviarlo de una vez. Adjunta menos archivos o más pequeños, o empieza una conversación nueva.",
+        "forbidden": "El asistente solo está disponible cuando Echidna se ejecuta en este equipo.",
+        "failed": "Algo ha salido mal. Inténtalo de nuevo.",
+        "refusal": "El asistente no puede ayudar con esa solicitud.",
+        "truncated": "La respuesta se cortó. Pide menos cosas a la vez.",
+        "tooManySteps": "El asistente se detuvo tras demasiados pasos. Revisa el proyecto y pídele que continúe si hace falta.",
+        "stopped": "Detenido.",
+        "undone": "Se han deshecho los cambios del asistente."
+      },
+      "attachmentErrors": {
+        "type": "No se puede adjuntar ese tipo de archivo. Usa imágenes, PDF o archivos de texto.",
+        "size": "El archivo es demasiado grande: hasta 5 MB las imágenes y 20 MB el resto.",
+        "count": "Puedes adjuntar hasta {count} archivos a la vez."
+      }
     }
   },
   "Parts": {

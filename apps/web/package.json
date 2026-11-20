@@ -14,6 +14,7 @@
     "i18n:report": "tsx scripts/missing-translations.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.11.0",
     "@echidna/core": "workspace:*",
     "@echidna/library": "workspace:*",
     "@echidna/rules": "workspace:*",
