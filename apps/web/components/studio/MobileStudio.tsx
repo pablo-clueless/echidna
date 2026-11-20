@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 type Sheet = "library" | "schematic" | "inspector" | "output";
 
 const sheets: { key: Sheet; icon: ReactNode; panel: ReactNode }[] = [
-  { key: "library", icon: <Package />, panel: <LibrarySidebar /> },
+  { key: "library", icon: <Package />, panel: <LibrarySidebar tab="" /> },
   { key: "schematic", icon: <Spline />, panel: <SchematicPanel /> },
   { key: "inspector", icon: <MousePointerClick />, panel: <InspectorPanel /> },
   { key: "output", icon: <Code2 />, panel: <CodeOutputPanel /> },
